@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CoreLib.Entities.Base;
+using CoreLib.Entities.EchoCore.Account;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore
 {
-    internal class Theme
+    public class Theme : BaseEntity<int>
     {
+        public string Name { get; set; }
+        public IEnumerable<AccountSettings>? AccountSettings { get; set; }
     }
 }
