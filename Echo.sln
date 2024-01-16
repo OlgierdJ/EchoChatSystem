@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainCoreApi", "DomainCoreApi\DomainCoreApi.csproj", "{6F4AEFBE-C30F-4F6C-B5B1-2341E8BF5E9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainCoreApi", "DomainCoreApi\DomainCoreApi.csproj", "{6F4AEFBE-C30F-4F6C-B5B1-2341E8BF5E9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainRTCApi", "DomainRTCApi\DomainRTCApi.csproj", "{CAA4C0C6-599E-43A5-970B-8F7E3BD84F8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainRTCApi", "DomainRTCApi\DomainRTCApi.csproj", "{CAA4C0C6-599E-43A5-970B-8F7E3BD84F8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainPushNotificationApi", "DomainPushNotificationApi\DomainPushNotificationApi.csproj", "{D4A8B7DD-6870-4DAE-955C-F447796B8700}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainPushNotificationApi", "DomainPushNotificationApi\DomainPushNotificationApi.csproj", "{D4A8B7DD-6870-4DAE-955C-F447796B8700}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreLib", "CoreLib\CoreLib.csproj", "{09C8B756-272B-4963-AF38-A0899CB9C745}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreLib", "CoreLib\CoreLib.csproj", "{080898C7-71D7-49EC-A7C1-F305883826B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{D4A8B7DD-6870-4DAE-955C-F447796B8700}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4A8B7DD-6870-4DAE-955C-F447796B8700}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4A8B7DD-6870-4DAE-955C-F447796B8700}.Release|Any CPU.Build.0 = Release|Any CPU
-		{09C8B756-272B-4963-AF38-A0899CB9C745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{09C8B756-272B-4963-AF38-A0899CB9C745}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{09C8B756-272B-4963-AF38-A0899CB9C745}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{09C8B756-272B-4963-AF38-A0899CB9C745}.Release|Any CPU.Build.0 = Release|Any CPU
+		{080898C7-71D7-49EC-A7C1-F305883826B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{080898C7-71D7-49EC-A7C1-F305883826B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{080898C7-71D7-49EC-A7C1-F305883826B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{080898C7-71D7-49EC-A7C1-F305883826B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
