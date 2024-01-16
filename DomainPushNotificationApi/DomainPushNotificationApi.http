@@ -1,0 +1,6 @@
+@DomainPushNotificationApi_HostAddress = http://localhost:5122
+
+GET {{DomainPushNotificationApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
