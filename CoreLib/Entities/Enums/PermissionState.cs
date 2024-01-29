@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.Server
+namespace CoreLib.Entities.Enums
 {
-    internal class ServerChannelCategory
+    public enum PermissionState
     {
+        Disabled,
+        Default,
+        Enabled,
     }
 }

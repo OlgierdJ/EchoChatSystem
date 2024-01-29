@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.Server
 {
-    internal class ServerTextChannel
+    public class ServerTextChannel : BaseChannel
     {
+        public bool IsAgeRestricted { get; set; }
     }
 }

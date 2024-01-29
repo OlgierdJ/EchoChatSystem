@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.Server
 {
-    internal class ServerVoiceChannel
+    public class ServerVoiceChannel
     {
     }
 }
