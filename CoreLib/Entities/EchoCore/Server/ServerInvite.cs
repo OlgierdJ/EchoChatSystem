@@ -10,5 +10,7 @@ namespace CoreLib.Entities.EchoCore.Server
 {
     public class ServerInvite : BaseInvite<Account, string, Server, string>
     {
+        public ulong? ChannelId { get; set; }
+        public ServerTextChannel? Channel { get; set; }
     }
 }

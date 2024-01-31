@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.Chat
 {
-    public class ChatParticipant 
+    public class ChatParticipant : BaseParticipant<Account, string, Chat, ulong>
     {
-       
+
     }
 }

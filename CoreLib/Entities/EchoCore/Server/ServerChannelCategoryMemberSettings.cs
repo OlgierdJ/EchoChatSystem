@@ -8,7 +8,7 @@ namespace CoreLib.Entities.EchoCore.Server
         public int RoleId { get; set; }
 
         public List<ServerChannelCategoryPermission> ChannelCategoryPermissions { get; set; }
-        public ChannelCategory ChannelCategory { get; set; }
+        public ServerChannelCategory ChannelCategory { get; set; }
         public ServerRole Role { get; set; }
     }
 }
