@@ -14,12 +14,12 @@ namespace CoreLib.Entities.Base
 
         public TAuthorEntity? Owner{ get; set; }
     }
-    public abstract class BaseMessage<TAuthorEntity, TAuthorEntityId, TChannelEntity, TChannelEntityId> : BaseMessage<TAuthorEntity, TAuthorEntityId>
+    public abstract class BaseMessage<TAuthorEntity, TAuthorEntityId, TChatEntity, TChatEntityId> : BaseMessage<TAuthorEntity, TAuthorEntityId>
     {
-        public TChannelEntityId SubjectId { get; set; }
-        public TChannelEntity? Subject { get; set; }
+        public TChatEntityId ChatId { get; set; }
+        public TChatEntity? Chat { get; set; }
     }
-    public abstract class BaseMessage<TAuthorEntity, TAuthorEntityId, TChannelEntity, TChannelEntityId, TParentMessageEntity> : BaseMessage<TCommenterEntity, TCommenterEntityId, TSubjectEntity, TSubjectEntityId>
+    public abstract class BaseMessage<TAuthorEntity, TAuthorEntityId, TChatEntity, TChatEntityId, TParentMessageEntity> : BaseMessage<TAuthorEntity, TAuthorEntityId, TChatEntity, TChatEntityId>
     {
         public int? ParentId { get; set; }
 
