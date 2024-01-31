@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.Account
+namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    internal class AccountRole
+    internal class AccountSettings
     {
     }
 }

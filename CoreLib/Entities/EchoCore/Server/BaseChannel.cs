@@ -9,7 +9,7 @@ namespace CoreLib.Entities.EchoCore.Server
         public int SlowMode { get; set; } //default 0
         public bool IsPrivate { get; set; } 
         public int ChannelCategoryId { get; set; }
-        public ChannelCategory? Category { get; set; }
-        public List<ChannelPermission> Permissions { get; set; }
+        public ServerChannelCategory? Category { get; set; }
+        public List<ServerChannelPermission> Permissions { get; set; }
     }
 }

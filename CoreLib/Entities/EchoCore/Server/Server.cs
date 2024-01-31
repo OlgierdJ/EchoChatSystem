@@ -12,10 +12,13 @@ namespace CoreLib.Entities.EchoCore.Server
     {
         public string Name { get; set; }
         public DateTime DateCreated { get; set; }
-        public List<ServerSettings>  ServerSettings { get; set; }
-        public List<ChannelCategory>  ChannelCategories { get; set; } //categories containing channels
+        public List<ServerSettings>  Settings { get; set; }
 
-        public List<ServerTextChannel> ServerTextChannel { get; set; } //direct channels
-        public List<ServerVoiceChannel> ServerVoiceChannel { get; set; } //direct channels
+        public List<ServerInvite> Invites { get; set; }
+        public List<ServerEvent> Events { get; set; }
+
+        public List<ServerChannelCategory>  ChannelCategories { get; set; } //categories containing channels
+        public List<ServerTextChannel> TextChannels { get; set; } //direct channels
+        public List<ServerVoiceChannel> VoiceChannels { get; set; } //direct channels
     }
 }

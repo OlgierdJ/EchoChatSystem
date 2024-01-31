@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.Server
 {
-    public class ChannelPermission : BaseEntity<int>
+    public class ServerChannelPermission : BaseEntity<int>
     {
         public string Name { get; set; }
         public string PermissionCategory { get; set; } //used for grouping permissions together
