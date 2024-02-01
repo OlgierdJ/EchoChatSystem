@@ -11,7 +11,7 @@ namespace CoreLib.Entities.EchoCore.Server
     public class Server : BaseEntity<string>
     {
         public string Name { get; set; }
-        public DateTime DateCreated { get; set; }
+        public DateTime TimeCreated { get; set; }
         public List<ServerSettings>  Settings { get; set; }
 
         public List<ServerInvite> Invites { get; set; }

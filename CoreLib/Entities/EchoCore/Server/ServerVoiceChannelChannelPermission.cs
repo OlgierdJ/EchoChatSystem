@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.Server
 {
-    internal class ServerTextChannelChannelPermission
+    public class ServerVoiceChannelChannelPermission
     {
     }
 }
