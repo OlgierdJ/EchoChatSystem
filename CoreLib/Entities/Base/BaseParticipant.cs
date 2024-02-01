@@ -1,5 +1,4 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.Chat;
 
 namespace CoreLib.Entities.Base
 {

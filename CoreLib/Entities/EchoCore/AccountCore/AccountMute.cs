@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountSettings
+    internal class AccountMute
     {
     }
 }

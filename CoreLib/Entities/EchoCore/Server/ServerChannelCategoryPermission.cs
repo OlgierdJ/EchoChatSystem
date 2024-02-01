@@ -7,6 +7,6 @@ namespace CoreLib.Entities.EchoCore.Server
         //duplicate of channelpermissions such that changes are reflected in both tables though data has to be manually changed aswell
     {
         public int ChannelCategoryMemberSettingsId { get; set; }
-        public ChannelCategoryMemberSettings ChannelCategoryMemberSettings { get; set; }
+        public ServerChannelCategoryMemberSettings ChannelCategoryMemberSettings { get; set; }
     }
 }

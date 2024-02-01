@@ -1,4 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.Chat;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,7 @@ namespace CoreLib.Entities.Base
 {
     public class BaseMessageHolder<TParticipant, TBaseMessage, TBasePinnedMessage, TInvite, TMute> : BaseEntity<ulong>
     {
+        public string Name { get; set; }
         public ICollection<TBaseMessage> Messages { get; set; }
         public ICollection<TBasePinnedMessage> PinnedMessages { get; set; }
         public ICollection<TParticipant> Participants { get; set; }

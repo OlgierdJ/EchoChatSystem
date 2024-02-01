@@ -1,5 +1,5 @@
 ﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.Account;
+using CoreLib.Entities.EchoCore.AccountCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
