@@ -8,9 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+builder.Services.AddMudServices();
 
 var app = builder.Build();
-//builder.Services.AddMudServices();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

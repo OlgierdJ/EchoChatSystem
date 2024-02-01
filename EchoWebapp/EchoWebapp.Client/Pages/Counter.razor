@@ -1,29 +1,80 @@
 ﻿@page "/counter"
-@using CoreLib.Entities.EchoCore.Chat
 @using CoreLib.Entities.EchoCore.AccountCore
-@rendermode InteractiveAuto
-
+@using CoreLib.Entities.EchoCore.ChatCore
+@using MudBlazor
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
-
+@foreach(ChatMessage msg in chat.Messages)
+{   
+    @if (msg.DateSent != DateTime.Now.Date)
+    {
+        <MudPaper Class="d-flex" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+            <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                <MudDivider FlexItem/>
+            </MudPaper>
+             <MudPaper Width="8%"  Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">@msg.DateSent</MudText>
+            </MudPaper>
+                <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                    <MudDivider FlexItem/>
+                </MudPaper>
+        </MudPaper>
+        @* <MudDivider/>
+        <MudDiv> 
+                <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">@msg.DateSent</MudText>
+            </MudDiv> *@
+    }
+    <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 pa-4 my-2" Style="@($"background:{Colors.Shades.Transparent}")">
+        <div class="d-flex flex-grow-1 gap-4">
+        @* Need to implement avatar
+        <MudAvatar>
+            <MudImage Src="images/mony.jpg"></MudImage>
+        </MudAvatar> 
+        *@
+            <MudAvatar Color="Color.Secondary">@msg.Owner?.Member.DisplayName.First()</MudAvatar>
+        <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+            <div class="d-flex flex-grow-1 gap-3">
+                <MudText Color="Color.Secondary">@msg.Owner?.Member.DisplayName </MudText>
+                <MudText Style="@($"color:{Colors.Grey.Default};")">@msg.DateSent</MudText>
+            </div>
+            <MudText>@msg.Content</MudText>
+        </MudPaper>
+        </div>
+    </MudPaper>
+}
 
 @code {
     private int currentCount = 0;
-    // ChatMessage msg = new();
-    // Chat chat = new();
-    private void IncrementCount()
+    Chat chat = new();
+    protected override async Task OnInitializedAsync()
     {
-        // msg.Content = "First Message sent! Yay";
-        // msg.MessageHolder = chat;
-        // msg.DateAdded = DateTime.Now;
-        // msg.Owner = new ChatParticipant() { Id = 1, TimeJoined = DateTime.Now.AddDays(-1), Member = new Account() { Id = "123" } };
-        // chat.Messages.Add(msg);
-        currentCount++;
+        chat.Participants = new List<ChatParticipant>();
+        chat.Messages = new List<ChatMessage>();
+
+        chat.Id = 111;
+        chat.Participants.Add(new ChatParticipant() { Id = 1, TimeJoined = DateTime.Now.AddDays(-1), Member = new Account() { Id = "112", Name = "John Doe", DisplayName = "TheDoe" } });
+        chat.Participants.Add(new ChatParticipant() { Id = 2, TimeJoined = DateTime.Now.AddDays(-3), Member = new Account() { Id = "113", Name = "Bob Builder", DisplayName = "BobTheBuilder" } });
+        chat.Participants.Add(new ChatParticipant() { Id = 3, TimeJoined = DateTime.Now.AddDays(-3).AddHours(2), Member = new Account() { Id = "114", Name = "Mary Jane", DisplayName = "MJ" } });
+
+        ChatMessage msg = new ChatMessage();
+        msg.Content = "First Message sent! Yay";
+        msg.MessageHolder = chat;
+        msg.DateSent = DateTime.Now.AddHours(-2);
+        msg.Owner = chat.Participants.Where(e => e.Id == 1).First();
+        chat.Messages.Add(msg);
+
+        ChatMessage msg1 = new ChatMessage();
+        msg1.Content = "Hey John o/";
+        msg1.MessageHolder = chat;
+        msg1.DateSent = DateTime.Now.AddHours(-2).AddMinutes(1).AddSeconds(32);
+        msg1.Owner = chat.Participants.Where(e => e.Id == 2).First();
+        chat.Messages.Add(msg1);
+
+        ChatMessage msg2 = new ChatMessage();
+        msg2.Content = "Party tonight?";
+        msg2.MessageHolder = chat;
+        msg2.DateSent = DateTime.Now.AddHours(-2).AddMinutes(14);
+        msg2.Owner = chat.Participants.Where(e => e.Id == 3).First();
+        chat.Messages.Add(msg2);
     }
 }
