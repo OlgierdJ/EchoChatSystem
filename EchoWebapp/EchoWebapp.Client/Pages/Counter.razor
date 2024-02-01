@@ -1,0 +1,29 @@
+﻿@page "/counter"
+@using CoreLib.Entities.EchoCore.Chat
+@using CoreLib.Entities.EchoCore.AccountCore
+@rendermode InteractiveAuto
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+
+
+@code {
+    private int currentCount = 0;
+    // ChatMessage msg = new();
+    // Chat chat = new();
+    private void IncrementCount()
+    {
+        // msg.Content = "First Message sent! Yay";
+        // msg.MessageHolder = chat;
+        // msg.DateAdded = DateTime.Now;
+        // msg.Owner = new ChatParticipant() { Id = 1, TimeJoined = DateTime.Now.AddDays(-1), Member = new Account() { Id = "123" } };
+        // chat.Messages.Add(msg);
+        currentCount++;
+    }
+}
