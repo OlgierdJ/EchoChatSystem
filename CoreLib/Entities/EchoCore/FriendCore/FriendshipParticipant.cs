@@ -1,10 +1,11 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Entities.EchoCore.AccountCore;
 
-namespace CoreLib.Entities.EchoCore.AccountCore
+namespace CoreLib.Entities.EchoCore.FriendCore
 {
     public class FriendshipParticipant : BaseEntity<ulong>
     {
-        public Guid AccountId { get; set; }
+        public string AccountId { get; set; }
         public ulong FriendshipId { get; set; }
         public Account Account { get; set; }
         public Friendship Friendship { get; set; }

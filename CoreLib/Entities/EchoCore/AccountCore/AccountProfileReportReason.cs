@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountMute : BaseMute<Account, string, Account, string>
+    public class AccountProfileReportReason : BaseReportReason<AccountProfileReport>
     {
     }
 }

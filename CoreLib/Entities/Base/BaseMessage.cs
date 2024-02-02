@@ -10,7 +10,7 @@ namespace CoreLib.Entities.Base
     {
         public TAuthorEntityId OwnerId { get; set; }
         public string Content { get; set; }
-        public DateTime DateSent { get; set; }
+        public DateTime TimeSent { get; set; }
 
         public TAuthorEntity? Owner{ get; set; }
     }

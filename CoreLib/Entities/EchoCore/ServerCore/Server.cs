@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.Server
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
     public class Server : BaseEntity<string>
     {
@@ -20,5 +20,7 @@ namespace CoreLib.Entities.EchoCore.Server
         public List<ServerChannelCategory>  ChannelCategories { get; set; } //categories containing channels
         public List<ServerTextChannel> TextChannels { get; set; } //direct channels
         public List<ServerVoiceChannel> VoiceChannels { get; set; } //direct channels
+
+        public List<ServerProfile> Members { get; set; } //Joining a server creates a serverprofile for the member and allows them to change the displayed data which is reflected in the server environment
     }
 }
