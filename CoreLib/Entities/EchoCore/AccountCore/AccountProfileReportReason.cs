@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountProfileReportReason : BaseReportReason<AccountProfileReport>
+    public class AccountProfileReportReason : BaseReportReason<byte,AccountProfileReport>
     {
     }
 }

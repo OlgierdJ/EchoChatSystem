@@ -2,7 +2,7 @@
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountNote : BaseNote<Account, string, Account, string>
+    public class AccountNote : BaseNote<ulong, Account, ulong, Account, ulong>
     {
     }
 }

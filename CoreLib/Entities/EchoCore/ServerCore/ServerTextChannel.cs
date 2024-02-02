@@ -7,7 +7,7 @@ using CoreLib.Entities.Base;
 
 namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerTextChannel : BaseChannel
+    public class ServerTextChannel : BaseChannel<ulong>
     {
         public bool IsAgeRestricted { get; set; }
     }

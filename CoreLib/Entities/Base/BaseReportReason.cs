@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseReportReason : BaseEntity<int>
+    public abstract class BaseReportReason<TId> : BaseEntity<TId>
     {
         public string Reason { get; set; }
         public string Description { get; set; }
     }
 
-    public abstract class BaseReportReason<TReportEntity> : BaseReportReason /*where TReportToReasonEntity : BaseReportReportReason*/
+    public abstract class BaseReportReason<TId,TReport> : BaseReportReason<TId> /*where TReportToReasonEntity : BaseReportReportReason*/
     {
-        public IEnumerable<TReportEntity>? Reports { get; set; }
+        public IEnumerable<TReport>? Reports { get; set; }
     }
 }

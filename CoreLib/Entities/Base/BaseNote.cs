@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseNote<TAuthor, TAuthorId, TSubject, TSubjectId> : BaseEntity<ulong>
+    public abstract class BaseNote<TId,TAuthor, TAuthorId, TSubject, TSubjectId> : BaseEntity<TId>
     {
         public TAuthorId AuthorId { get; set; }
         public TSubjectId SubjectId { get; set; }

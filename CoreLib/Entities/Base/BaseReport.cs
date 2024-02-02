@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseReport : BaseEntity<ulong>
+    public abstract class BaseReport<TId> : BaseEntity<TId>
     {
         public string Message { get; set; }
         public DateTime TimeAdded { get; set; }
     }
-    public abstract class BaseReport<TReporterEntity, TReporterEntityId> : BaseReport
+    public abstract class BaseReport<TId, TReporter, TReporterId> : BaseReport<TId>
     {
-        public TReporterEntityId ReporterId { get; set; }
-        public TReporterEntity? Reporter { get; set; }
+        public TReporterId ReporterId { get; set; }
+        public TReporter? Reporter { get; set; }
     }
 
-    public abstract class BaseReport<TReporterEntity, TReporterEntityId, TSubjectEntity, TSubjectEntityId, TReasonEntity> : BaseReport<TReporterEntity, TReporterEntityId> where TReasonEntity : BaseReportReason
+    public abstract class BaseReport<TId, TReporter, TReporterId, TSubject, TSubjectId, TReason, TReasonId> : BaseReport<TId, TReporter, TReporterId> where TReason : BaseReportReason<TReasonId>
     {
-        public IEnumerable<TReasonEntity>? Reasons { get; set; }
-        public TSubjectEntityId SubjectId { get; set; }
-        public TSubjectEntity? Subject { get; set; }
+        public IEnumerable<TReason>? Reasons { get; set; }
+        public TSubjectId SubjectId { get; set; }
+        public TSubject? Subject { get; set; }
     }
 }

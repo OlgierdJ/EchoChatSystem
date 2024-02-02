@@ -6,24 +6,26 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseMessage<TAuthorEntity, TAuthorEntityId> : BaseEntity<ulong>
+    public abstract class BaseMessage<TId> : BaseEntity<TId>
     {
-        public TAuthorEntityId OwnerId { get; set; }
         public string Content { get; set; }
         public DateTime TimeSent { get; set; }
-
-        public TAuthorEntity? Owner{ get; set; }
     }
-    public abstract class BaseMessage<TAuthorEntity, TAuthorEntityId, TMessageHolderEntity, TMessageHolderEntityId> : BaseMessage<TAuthorEntity, TAuthorEntityId>
+    public abstract class BaseMessage<TId, TAuthor, TAuthorId> : BaseMessage<TId>
     {
-        public TMessageHolderEntityId MessageHolderId { get; set; }
-        public TMessageHolderEntity? MessageHolder { get; set; }
+        public TAuthorId OwnerId { get; set; }
+        public TAuthor? Owner { get; set; }
     }
-    public abstract class BaseMessage<TAuthorEntity, TAuthorEntityId, TMessageHolderEntity, TMessageHolderEntityId, TParentMessageEntity> : BaseMessage<TAuthorEntity, TAuthorEntityId, TMessageHolderEntity, TMessageHolderEntityId>
+    public abstract class BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId> : BaseMessage<TId, TAuthor, TAuthorId>
     {
-        public ulong? ParentId { get; set; }
+        public TMessageHolderId MessageHolderId { get; set; }
+        public TMessageHolder? MessageHolder { get; set; }
+    }
+    public abstract class BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId, TParentMessage> : BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId>
+    {
+        public TId? ParentId { get; set; }
 
-        public TParentMessageEntity? Parent { get; set; }
-        public IEnumerable<TParentMessageEntity>? Children { get; set; }
+        public TParentMessage? Parent { get; set; }
+        public IEnumerable<TParentMessage>? Children { get; set; }
     }
 }

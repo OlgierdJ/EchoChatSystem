@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore
 {
-    internal class RolePermission
+    public class RolePermission
     {
     }
 }

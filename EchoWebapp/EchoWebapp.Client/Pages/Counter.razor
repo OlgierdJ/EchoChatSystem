@@ -105,9 +105,9 @@
         chat.Messages = new List<ChatMessage>();
 
         chat.Id = 111;
-        chat.Participants.Add(new ChatParticipant() { Id = 1, TimeJoined = DateTime.Now.AddDays(-16), Member = new Account() { Id = "112", Name = "John Doe", DisplayName = "TheDoe" } });
-        chat.Participants.Add(new ChatParticipant() { Id = 2, TimeJoined = DateTime.Now.AddDays(-3), Member = new Account() { Id = "113", Name = "Bob Builder", DisplayName = "BobTheBuilder" } });
-        chat.Participants.Add(new ChatParticipant() { Id = 3, TimeJoined = DateTime.Now.AddDays(-2).AddHours(2), Member = new Account() { Id = "114", Name = "Mary Jane", DisplayName = "MJ" } });
+        chat.Participants.Add(new ChatParticipant() { Id = 1, TimeJoined = DateTime.Now.AddDays(-16), Member = new Account() { Id = 112, Name = "John Doe", DisplayName = "TheDoe" } });
+        chat.Participants.Add(new ChatParticipant() { Id = 2, TimeJoined = DateTime.Now.AddDays(-3), Member = new Account() { Id = 113, Name = "Bob Builder", DisplayName = "BobTheBuilder" } });
+        chat.Participants.Add(new ChatParticipant() { Id = 3, TimeJoined = DateTime.Now.AddDays(-2).AddHours(2), Member = new Account() { Id = 114, Name = "Mary Jane", DisplayName = "MJ" } });
 
         ChatMessage msg = new ChatMessage();
         msg.Content = "First Message sent! Yay";

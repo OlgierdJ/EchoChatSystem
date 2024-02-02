@@ -1,6 +1,6 @@
 ﻿namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerPinnedMessage
+    public class ServerTextChannelPinboard
     {
     }
 }

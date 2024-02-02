@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class Account : BaseEntity<string>
+    public class Account : BaseEntity<ulong>
     {
         public string Name { get; set; }
         public string DisplayName { get; set; }

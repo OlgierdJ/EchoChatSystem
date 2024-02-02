@@ -2,7 +2,7 @@
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseParticipant<TMember, TMemberId, TSubject, TSubjectId> : BaseEntity<ulong>
+    public abstract class BaseParticipant<TId, TMember, TMemberId, TSubject, TSubjectId> : BaseEntity<TId>
     {
         public TMemberId MemberId { get; set; } //TParticipatorId
         public TSubjectId  SubjectId { get; set; } //TSubject

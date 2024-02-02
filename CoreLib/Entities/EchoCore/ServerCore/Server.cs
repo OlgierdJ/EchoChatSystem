@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class Server : BaseEntity<string>
+    public class Server : BaseEntity<ulong>
     {
         public string Name { get; set; }
         public DateTime TimeCreated { get; set; }

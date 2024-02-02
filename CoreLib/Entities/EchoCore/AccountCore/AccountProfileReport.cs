@@ -2,7 +2,7 @@
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountProfileReport : BaseReport<Account, string, Account, string, AccountProfileReportReason>
+    public class AccountProfileReport : BaseReport<ulong, Account, ulong, Account, ulong, AccountProfileReportReason, byte>
     {
     }
 }

@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerTextChannelMessageReportReason : BaseReportReason<byte,ServerTextChannelMessageReport>
+    public class ServerSoundboardSound : BaseEntity<ulong>
     {
+        public ulong ServerId { get; set; }
+        public string SoundFileUrl { get; set; }
+
+        public Server Server { get; set; }
     }
 }

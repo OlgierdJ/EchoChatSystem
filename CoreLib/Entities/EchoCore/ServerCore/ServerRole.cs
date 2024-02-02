@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerRole : BaseEntity<int>
+    public class ServerRole : BaseRole<ulong, ServerProfile, ServerRolePermission>
     {
     }
 }

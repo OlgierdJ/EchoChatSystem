@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseMessagePin<TPinner, TPinnerId, TMessageHolder, TMessageHolderId, TMessage, TMessageId> : BaseEntity<byte>
+    public abstract class BaseMessagePin<TId, TMessage, TMessageId, TPinboard, TPinboardId> : BaseEntity<TId>
     {
-        public TPinnerId PinnerId { get; set; }
-        public TMessageHolderId MessageHolderId { get; set; }
+        public TPinboardId MessageHolderId { get; set; }
         public TMessageId MessageId { get; set; }
         public DateTime TimePinned { get; set; }
 
-        public TPinner Pinner { get; set; }
-        public TMessageHolder MessageHolder { get; set; }
+        public TPinboard MessageHolder { get; set; }
         public TMessage Message { get; set; }
     }
 }
