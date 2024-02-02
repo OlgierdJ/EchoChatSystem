@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseReport : BaseEntity<int>
+    public abstract class BaseReport : BaseEntity<ulong>
     {
         public string Message { get; set; }
-        public DateTime DateAdded { get; set; }
+        public DateTime TimeAdded { get; set; }
     }
     public abstract class BaseReport<TReporterEntity, TReporterEntityId> : BaseReport
     {

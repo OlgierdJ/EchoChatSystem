@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoreLib.Entities.Base;
 
-namespace CoreLib.Entities.EchoCore.Server
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
     public class ServerTextChannel : BaseChannel
     {

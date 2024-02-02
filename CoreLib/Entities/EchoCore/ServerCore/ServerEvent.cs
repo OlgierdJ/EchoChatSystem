@@ -1,7 +1,7 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.Enums;
 
-namespace CoreLib.Entities.EchoCore.Server
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
     public class ServerEvent : BaseEntity<ulong>
     {

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ChatCore
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ChatMessage : BaseMessage<ChatParticipant, ulong, GroupChat, ulong>
+    public class ServerTextChannelMessage : BaseMessage<Account, string, ServerTextChannel, ulong, ServerTextChannelMessage>
     {
     }
 }

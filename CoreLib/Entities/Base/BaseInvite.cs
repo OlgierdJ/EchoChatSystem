@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public class BaseInvite<TInviter, TInviterId, TSubject,TSubjectId> : BaseEntity<ulong>
+    public abstract class BaseInvite<TInviter, TInviterId, TSubject,TSubjectId> : BaseEntity<ulong>
     {
         public TSubjectId SubjectId { get; set; }
         public TInviterId InviterId { get; set; }

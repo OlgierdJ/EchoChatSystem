@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Interfaces
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public enum InputMode
+    internal class ServerTextChannelChannelPermission
     {
-        VoiceActivity,
-        PushToTalk
     }
 }
