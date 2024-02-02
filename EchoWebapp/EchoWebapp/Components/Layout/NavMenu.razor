@@ -1,8 +1,25 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using MudBlazor
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">EchoWebapp</a>
     </div>
 </div>
+
+<MudPaper Width="300px" Square="true">
+    <MudList>
+        <MudListItem Avatar="@Icons.Material.Filled.TrendingUp">
+            Trending
+        </MudListItem>
+        <MudDivider DividerType="DividerType.Inset" />
+        <MudListItem Avatar="@Icons.Material.Filled.StarRate">
+            Most Stars
+        </MudListItem>
+        <MudDivider DividerType="DividerType.Inset" />
+        <MudListItem Avatar="@Icons.Material.Filled.History">
+            History
+        </MudListItem>
+    </MudList>
+</MudPaper>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 

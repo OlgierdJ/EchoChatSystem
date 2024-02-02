@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatInvite : BaseInvite<ChatParticipant, ulong, GroupChat, ulong>
+    public class ChatInvite : BaseInvite<ChatParticipant, ulong, Chat, ulong>
     { 
     }
 }

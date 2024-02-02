@@ -30,7 +30,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
 
 
 
-        public ICollection<GroupChat>? Chats { get; set; } //mapped through chatparticipant
+        public ICollection<Chat>? Chats { get; set; } //mapped through chatparticipant
         public ICollection<Server>? Server { get; set; } //mapped through serverprofile
 
         public ICollection<Friendship>? Friendships { get; set; } //mapped through friendshipparticipant
