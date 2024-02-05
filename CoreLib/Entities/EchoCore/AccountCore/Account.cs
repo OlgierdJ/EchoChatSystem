@@ -14,8 +14,8 @@ namespace CoreLib.Entities.EchoCore.AccountCore
     {
         public string Name { get; set; }
         public string DisplayName { get; set; }
-        public DateTime CreationDate { get; set; }
-        public DateTime? LastLogonDate { get; set; }
+        public DateTime TimeCreated { get; set; }
+        public DateTime? TimeLastLogon { get; set; }
         public string? UserId { get; set; }
 
         public ICollection<AccountBlock>? BlockedAccounts { get; set; } //This account blocks other accounts through this
@@ -27,6 +27,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<ServerTextChannelMessageReport>? ChannelMessageReports { get; set; }
         public ICollection<AccountProfileReport>? AccountProfileReports { get; set; }
         public ICollection<ChatMessageReport>? ChatMessageReports { get; set; }
+        public ICollection<AccountConnection>?  Connections { get; set; }
 
 
 

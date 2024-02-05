@@ -14,7 +14,7 @@ namespace CoreLib.Entities.Base
         public int TimesUsed { get; set; }
         public int TotalUses { get; set; } //0 means unlimited
     }
-    public abstract class BaseInvite<TId,TInviter, TInviterId, TSubject,TSubjectId>  : BaseInvite<TId>
+    public abstract class BaseInvite<TId, TInviter, TInviterId, TSubject, TSubjectId> : BaseInvite<TId>
     {
         public TSubjectId SubjectId { get; set; }
         public TInviterId InviterId { get; set; }

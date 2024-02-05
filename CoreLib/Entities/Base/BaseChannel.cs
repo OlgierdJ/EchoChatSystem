@@ -3,7 +3,7 @@
     public abstract class BaseChannel<TId> : BaseEntity<TId>
     {
         public string Name { get; set; }
-        public string Topic { get; set; } //channel topic description
+        public string? Topic { get; set; } //channel topic description
         public int SlowMode { get; set; } //default 0
         public bool IsPrivate { get; set; }
     }
