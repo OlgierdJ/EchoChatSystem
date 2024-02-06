@@ -11,6 +11,6 @@ namespace CoreLib.Entities.Base
         public TOwnerId OwnerId { get; set; }
         public TOwner  Owner { get; set; }
 
-        public ICollection<TMessagePin> PinnedMessages { get; set; }
+        public ICollection<TMessagePin>? PinnedMessages { get; set; }
     }
 }

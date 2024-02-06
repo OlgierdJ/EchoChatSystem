@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatMessageReport : BaseReport<ulong,Account, ulong, ChatMessage, ulong, ChatMessageReportReason, byte>
+    public class ChatMessageReport : BaseReport<ulong, Account, ulong, ChatMessage, ulong, ChatMessageReportReason, byte>
     {
     }
 }

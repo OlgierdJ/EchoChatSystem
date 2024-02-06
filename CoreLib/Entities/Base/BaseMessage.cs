@@ -26,6 +26,6 @@ namespace CoreLib.Entities.Base
         public TId? ParentId { get; set; }
 
         public TParentMessage? Parent { get; set; }
-        public IEnumerable<TParentMessage>? Children { get; set; }
+        public ICollection<TParentMessage>? Children { get; set; }
     }
 }

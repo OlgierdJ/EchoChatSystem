@@ -12,7 +12,7 @@ namespace CoreLib.Entities.Base
         public string Name { get; set; }
         public int Importance { get; set; }
 
-        public List<TRecipient>? Recipients { get; set; }
-        public List<TPermission>? Permissions { get; set; }
+        public ICollection<TRecipient>? Recipients { get; set; }
+        public ICollection<TPermission>? Permissions { get; set; }
     }
 }

@@ -14,6 +14,6 @@ namespace CoreLib.Entities.Base
 
     public abstract class BaseReportReason<TId,TReport> : BaseReportReason<TId> /*where TReportToReasonEntity : BaseReportReportReason*/
     {
-        public IEnumerable<TReport>? Reports { get; set; }
+        public ICollection<TReport>? Reports { get; set; }
     }
 }
