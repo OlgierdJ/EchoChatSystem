@@ -24,4 +24,10 @@
     <ProjectReference Include="..\CoreLib\CoreLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EFCORE\Configurations\FriendCore\" />
+    <Folder Include="EFCORE\Configurations\AccountCore\" />
+    <Folder Include="EFCORE\Configurations\ServerCore\" />
+  </ItemGroup>
+
 </Project>
