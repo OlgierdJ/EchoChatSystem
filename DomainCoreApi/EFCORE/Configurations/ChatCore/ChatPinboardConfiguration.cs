@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.AccountCore
+namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class AccountProfileReportReason : BaseReportReason<byte, AccountProfileReport>
+    public class ChatPinboardConfiguration : BasePinboard<ulong, Chat, ulong, ChatMessagePinConfiguration>
     {
     }
 }

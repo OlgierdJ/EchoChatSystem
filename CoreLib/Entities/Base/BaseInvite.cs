@@ -16,11 +16,11 @@ namespace CoreLib.Entities.Base
     }
     public abstract class BaseInvite<TId, TInviter, TInviterId, TSubject, TSubjectId> : BaseInvite<TId>
     {
-        public TSubjectId SubjectId { get; set; }
+        public TSubjectId? SubjectId { get; set; }
         public TInviterId InviterId { get; set; }
 
         public TInviter Inviter { get; set; }
-        public TSubject Subject { get; set; }
+        public TSubject? Subject { get; set; }
     }
 
 }

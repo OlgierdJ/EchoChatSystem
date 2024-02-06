@@ -10,11 +10,12 @@ namespace CoreLib.Entities.Base
     {
         public string Content { get; set; }
         public DateTime TimeSent { get; set; }
+        public bool? IsDeleted { get; set; }
     }
     public abstract class BaseMessage<TId, TAuthor, TAuthorId> : BaseMessage<TId>
     {
-        public TAuthorId OwnerId { get; set; }
-        public TAuthor? Owner { get; set; }
+        public TAuthorId AuthorId { get; set; }
+        public TAuthor? Author { get; set; }
     }
     public abstract class BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId> : BaseMessage<TId, TAuthor, TAuthorId>
     {

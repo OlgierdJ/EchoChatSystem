@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class Chat : BaseMessageHolder<ulong, ChatMessage, Account, ChatPinboard, ChatInvite, ChatMute>
+    public class ChatParticipancy : BaseParticipancy<ulong, Account, ulong, Chat, ulong>
     {
-        //make sure the participants know that there is an ongoing call or video call in the chat dont know how variable? live data? how dafuq
     }
 }

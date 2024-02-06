@@ -18,14 +18,15 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public DateTime? TimeLastLogon { get; set; }
         public string? UserId { get; set; }
         public bool FocusModeEnabled { get; set; } //for not receiving in app sounds
-        public byte ActivityStatusId { get; set; }
+        public byte? ActivityStatusId { get; set; }
 
-        public ActivityStatus? ActivityStatus { get; set; }
+        public AccountActivityStatus? ActivityStatus { get; set; }
 
         public AccountProfile Profile { get; set; } //mapped through connections?
         public ICollection<AccountBlock>? BlockedAccounts { get; set; } //This account blocks other accounts through this
         public ICollection<AccountNote>? NotedAccounts { get; set; } //This account adds notes about other accounts
         public ICollection<AccountMute>? MutedVoices { get; set; } //This account adds mutes for other accounts voice
+        public ICollection<ChatMute>? MutedChats { get; set; } //This account adds mutes for other accounts voice
         public ICollection<AccountSoundboardMute>? MutedSoundboards { get; set; } //This account adds mutes for other accounts soundboard
         public ICollection<IncomingFriendRequest>? IncomingFriendRequests { get; set; }
         public ICollection<OutgoingFriendRequest>? OutgoingFriendRequests { get; set; }
@@ -35,7 +36,12 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<AccountProfileReport>? AccountProfileReports { get; set; }
         public ICollection<ChatMessageReport>? ChatMessageReports { get; set; }
 
-        public ICollection<ChatParticipant>? Chats { get; set; } //mapped through chatparticipant
+        public ICollection<ChatInvite>? ChatInvites { get; set; }
+        public ICollection<ChatMessage>?  ChatMessages { get; set; }
+        public ICollection<ServerTextChannelMessage>?  ChannelMessages { get; set; }
+        public ICollection<ServerInvite>?  ServerInvites { get; set; }
+
+        public ICollection<Chat>? Chats { get; set; } //mapped through chatparticipancy
         public ICollection<ServerProfile>? Servers { get; set; } //mapped through serverprofile
 
         public ICollection<FriendSuggestion>? FriendSuggestions { get; set; } //mapped through connections?

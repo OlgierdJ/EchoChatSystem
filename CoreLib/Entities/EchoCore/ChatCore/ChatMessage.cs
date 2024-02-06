@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatMessage : BaseMessage<ulong, Account, ulong, Chat, ulong>
+    public class ChatMessage : BaseMessage<ulong, Account, ulong, Chat, ulong, ChatMessage>
     {
-        public ICollection<ChatMessageAttachment> MessageAttachments { get; set; }
+        public ICollection<ChatMessageAttachment> Attachments { get; set; }
+        public ICollection<ChatMessageReport> Reports { get; set; }
+        public ChatMessagePin? MessagePin { get; set; }
     }
 }

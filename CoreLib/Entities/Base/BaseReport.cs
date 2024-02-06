@@ -9,7 +9,7 @@ namespace CoreLib.Entities.Base
     public abstract class BaseReport<TId> : BaseEntity<TId>
     {
         public string Message { get; set; }
-        public DateTime TimeAdded { get; set; }
+        public DateTime TimeSent { get; set; }
     }
     public abstract class BaseReport<TId, TReporter, TReporterId> : BaseReport<TId>
     {
