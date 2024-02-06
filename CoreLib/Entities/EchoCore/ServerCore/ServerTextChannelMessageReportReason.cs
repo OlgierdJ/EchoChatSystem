@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerTextChannelMessageReportReason : BaseReportReason<byte,ServerTextChannelMessageReport>
+    public class ServerTextChannelMessageReportReason : BaseReportReason<byte, ServerTextChannelMessageReport>
     {
     }
 }
