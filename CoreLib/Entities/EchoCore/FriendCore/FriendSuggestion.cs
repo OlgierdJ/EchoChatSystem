@@ -14,8 +14,8 @@ namespace CoreLib.Entities.EchoCore.FriendCore
          * accepting the suggestion consumes the friend suggestion
          * but declining it sets a flag allowing it to stay to prevent further suggestions to the same person
          */
-        public string AccountId { get; set; }
-        public string SuggestedFriendId { get; set; }
+        public ulong AccountId { get; set; }
+        public ulong SuggestedFriendId { get; set; }
         public Account Account { get; set; }
         public Account SuggestedFriend { get; set; }
         public DateTime TimeCreated { get; set; }

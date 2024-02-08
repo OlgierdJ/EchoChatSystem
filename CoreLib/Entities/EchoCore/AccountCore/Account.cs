@@ -1,6 +1,7 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.FriendCore;
+using CoreLib.Entities.EchoCore.ReportCore;
 using CoreLib.Entities.EchoCore.ServerCore;
 using System;
 using System.Collections.Generic;
@@ -23,28 +24,39 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public AccountActivityStatus? ActivityStatus { get; set; }
 
         public AccountProfile Profile { get; set; } //mapped through connections?
+
+        public ICollection<AccountConnection>?  Connections { get; set; }
+
+        //Interactivity stuff
         public ICollection<AccountBlock>? BlockedAccounts { get; set; } //This account blocks other accounts through this
         public ICollection<AccountNote>? NotedAccounts { get; set; } //This account adds notes about other accounts
         public ICollection<AccountMute>? MutedVoices { get; set; } //This account adds mutes for other accounts voice
         public ICollection<ChatMute>? MutedChats { get; set; } //This account adds mutes for other accounts voice
         public ICollection<AccountSoundboardMute>? MutedSoundboards { get; set; } //This account adds mutes for other accounts soundboard
+
+        //report stuff
+        public ICollection<ReportedAccountProfile>? ReportedAccountProfiles { get; set; }
+        public ICollection<AccountProfileReport>? AccountProfileReports { get; set; }
+        public ICollection<ReportedMessage>? ReportedMessages { get; set; } //reported messages that are owned by this account
+        public ICollection<MessageReport>? MessageReports { get; set; } //reports sent by this account about other accounts messages
+        
+        //friend stuff //works
         public ICollection<IncomingFriendRequest>? IncomingFriendRequests { get; set; }
         public ICollection<OutgoingFriendRequest>? OutgoingFriendRequests { get; set; }
         public ICollection<Friendship>? Friendships { get; set; } //mapped through friendshipparticipant
-        public ICollection<AccountConnection>?  Connections { get; set; }
-        public ICollection<ServerTextChannelMessageReport>? ChannelMessageReports { get; set; }
-        public ICollection<AccountProfileReport>? AccountProfileReports { get; set; }
-        public ICollection<ChatMessageReport>? ChatMessageReports { get; set; }
+        public ICollection<FriendSuggestion>? FriendSuggestions { get; set; } //mapped through connections?
 
+        //chat stuff
+        public ICollection<Chat>? Chats { get; set; } //mapped through chatparticipancy
         public ICollection<ChatInvite>? ChatInvites { get; set; }
         public ICollection<ChatMessage>?  ChatMessages { get; set; }
-        public ICollection<ServerTextChannelMessage>?  ChannelMessages { get; set; }
-        public ICollection<ServerInvite>?  ServerInvites { get; set; }
 
-        public ICollection<Chat>? Chats { get; set; } //mapped through chatparticipancy
+        //Server stuff
         public ICollection<ServerProfile>? Servers { get; set; } //mapped through serverprofile
+        public ICollection<ServerInvite>?  ServerInvites { get; set; }
+        public ICollection<ServerTextChannelMessage>?  ChannelMessages { get; set; }
 
-        public ICollection<FriendSuggestion>? FriendSuggestions { get; set; } //mapped through connections?
+
 
 
     }
