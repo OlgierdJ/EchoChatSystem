@@ -1,19 +1,19 @@
 ﻿@inherits LayoutComponentBase
 @using MudBlazor
 
-<MudThemeProvider IsDarkMode/>
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
+@* <MudButton @rendermode=InteractiveAuto>
+</MudButton> *@
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
+    <div>
+        <NavMenu @rendermode=InteractiveAuto />
     </div>
 
     <main>
-        <article class="content px-4">
-            @Body
-        </article>
+        @Body
     </main>
 </div>
 
@@ -22,3 +22,10 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+@* 
+<MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode" @rendermode=InteractiveAuto /> *@
+
+@code {
+    public MudTheme _theme = new();
+    private bool _isDarkMode = true;
+}
