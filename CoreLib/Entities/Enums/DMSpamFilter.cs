@@ -9,7 +9,7 @@ namespace CoreLib.Entities.Enums
     public enum DMSpamFilter
     {
         All,
-        Unkown,
-        none
+        Unknown,
+        None
     }
 }

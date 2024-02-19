@@ -8,8 +8,8 @@ namespace CoreLib.Entities.Enums
 {
     public enum DMAllow
     {
-        show,
-        blur,
-        block
+        Show,
+        Blur,
+        Block
     }
 }

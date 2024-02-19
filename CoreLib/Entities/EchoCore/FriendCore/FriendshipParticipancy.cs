@@ -3,7 +3,7 @@ using CoreLib.Entities.EchoCore.AccountCore;
 
 namespace CoreLib.Entities.EchoCore.FriendCore
 {
-    public class FriendshipParticipant : BaseEntity<ulong>
+    public class FriendshipParticipancy : BaseEntity<ulong>
     {
         public string AccountId { get; set; }
         public ulong FriendshipId { get; set; }

@@ -8,5 +8,6 @@ namespace CoreLib.Entities.EchoCore.ServerCore
 {
     public class ServerSettings
     {
+        //pause invites serverwide, pause dms serverwide
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreLib.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,23 +7,27 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseMessage<TId> : BaseEntity<TId>
+    public abstract class BaseMessage<TId> : BaseEntity<TId>, IMessage
     {
         public string Content { get; set; }
         public DateTime TimeSent { get; set; }
-        public bool? IsDeleted { get; set; }
     }
     public abstract class BaseMessage<TId, TAuthor, TAuthorId> : BaseMessage<TId>
+        where TAuthor : IEntity<TAuthorId>
     {
-        public TAuthorId AuthorId { get; set; }
+        public TAuthorId? AuthorId { get; set; }
         public TAuthor? Author { get; set; }
     }
     public abstract class BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId> : BaseMessage<TId, TAuthor, TAuthorId>
+        where TAuthor : IEntity<TAuthorId>
+        where TMessageHolder : IEntity<TMessageHolderId>
     {
-        public TMessageHolderId MessageHolderId { get; set; }
+        public TMessageHolderId? MessageHolderId { get; set; }
         public TMessageHolder? MessageHolder { get; set; }
     }
     public abstract class BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId, TParentMessage> : BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId>
+        where TAuthor : IEntity<TAuthorId>
+        where TMessageHolder : IEntity<TMessageHolderId>
     {
         public TId? ParentId { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatMessageReportReason : BaseReportReason<byte, ChatMessageReport>
-    {
-    }
+    //public class ChatMessageReportReason : BaseReportReason<byte, ChatMessageReport>
+    //{
+    //}
 }
