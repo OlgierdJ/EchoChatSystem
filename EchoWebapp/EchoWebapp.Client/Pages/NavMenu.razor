@@ -1,71 +1,173 @@
-﻿@using MudBlazor
+﻿@using CoreLib.Entities.EchoCore.AccountCore
+@using MudBlazor
 @inject NavigationManager nav
 
- <div class="d-flex flex-grow-1">
-    <MudPaper Class="mud-height-full" Width="72px" MinHeight="970px" MaxHeight="1080px" Square>
-        <MudText Class="pl-5 py-2">Echo</MudText> 
-@*         <MudButton OnClick="@ToggleDrawer">
-            YOU CLICK HERE
+<div class="d-flex flex-grow-1">
+    <MudPaper Class="mud-height-full" Width="72px" MinHeight="970px" MaxHeight="1080px" Square Style="@($"background:{Colors.DeepPurple.Darken3}")">
+         <MudText Class="pl-5 py-2">Echo</MudText>
+         @*         <MudButton OnClick="@ToggleDrawer">
+        YOU CLICK HERE
         </MudButton> *@
-        <MudList Clickable="true">
-            <MudListItem OnClick="@Navigate">
-                <MudAvatar>
-                    <MudIcon Icon="@Icons.Material.Filled.Mail" />
-                </MudAvatar>
-            </MudListItem>
-            <MudListItem @onclick='() => nav.NavigateTo("/")'>
-                <MudAvatar>
-                    <MudIcon Icon="@Icons.Material.Filled.Person"/>
-                </MudAvatar>
-            </MudListItem>
-            <MudDivider DividerType="DividerType.Middle" />
-            @foreach(var c in avatars){
-                <MudListItem Dense="true">
+         <MudList Clickable="true">
+             <MudListItem OnClick="@OpenMessages">
+                 <MudAvatar>
+                     <MudIcon Icon="@Icons.Material.Filled.Mail" />
+                 </MudAvatar>
+             </MudListItem>
+             <MudListItem OnClick="@OpenFriends">
+                 <MudAvatar>
+                     <MudIcon Icon="@Icons.Material.Filled.Person" />
+                 </MudAvatar>
+             </MudListItem>
+             <MudDivider DividerType="DividerType.Middle" />
+             @foreach (var c in servers)
+            {
+                <MudListItem Dense="true" OnClick="@OpenChannels">
                     <MudAvatar Image="@c" Size="Size.Medium" />
                 </MudListItem>
             }
         </MudList>
     </MudPaper>
-    <div class="d-flex flex-grow-1 mud-theme-primary">
-        <MudPaper Class="mud-height-full" MinHeight="970px" MaxHeight="1080px" Square>
-            <MudText Class="px-5 py-2">Direct Messages</MudText>
-            <MudList Clickable="true">
-                <MudListItem>
-                    <MudAvatar>
-                        <MudIcon Icon="@Icons.Material.Filled.Mail" />
-                    </MudAvatar>
-                </MudListItem>
-                <MudListItem OnClick="@Navigate">
-                    <MudAvatar>
-                        <MudIcon Icon="@Icons.Material.Filled.Person" />
-                    </MudAvatar>
-                </MudListItem>
-                <MudDivider DividerType="DividerType.Middle" />
-                @foreach (var c in avatars)
-                {
+    @if (openMessages)
+    {
+        <div class="d-flex flex-grow-1 mud-theme-primary">
+            <MudPaper Class="mud-height-full" MinHeight="970px" MaxHeight="1080px" Width="240px" Square Style="@($"background:{Colors.DeepOrange.Darken3};")">
+                 <MudText Class="px-5 py-2">Direct Messages</MudText>
+                 <MudList Clickable="true">
+                     @foreach (var c in accounts)
+                    {
+                        <MudListItem Dense="true" OnClick="@GoToChat">
+                            <MudAvatar>
+                                <MudImage Src="@c.Profile.AvatarFileURL" />
+                            </MudAvatar>
+                            <MudText Typo="Typo.caption">@c.DisplayName</MudText>
+                            </MudListItem>
+                    }
                     <MudListItem Dense="true">
                         <MudAvatar>
-                            <MudImage Src="@c" />
+                            <MudIcon Icon="@Icons.Material.Filled.Groups" />
                         </MudAvatar>
+                        <MudText Typo="Typo.caption">Holy Cow Group</MudText>
                     </MudListItem>
-                }
-            </MudList>
-        </MudPaper>
-    </div>
+                </MudList>
+            </MudPaper>
+        </div>
+    }
+    @if (openFriends)
+    {
+        <div class="d-flex flex-grow-1 mud-theme-primary">
+            <MudPaper Class="mud-height-full" MinHeight="970px" MaxHeight="1080px" Width="240px" Square Style="@($"background:{Colors.Red.Darken3};")">
+                 <MudText Class="px-5 py-2">Friends</MudText>
+                 <MudList Clickable="true">
+                     @foreach (var c in accounts)
+                    {
+                        <MudListItem Dense="true" OnClick="@GoToChat">
+                            <MudAvatar>
+                                <MudImage Src="@c.Profile.AvatarFileURL" />
+                            </MudAvatar>
+                            <MudText Typo="Typo.caption">@c.DisplayName</MudText>
+                            </MudListItem>
+                    }
+                    <MudListItem Dense="true">
+                        <MudAvatar>
+                            <MudIcon Icon="@Icons.Material.Filled.Groups" />
+                        </MudAvatar>
+                        <MudText Typo="Typo.caption">Holy Cow Group</MudText>
+                    </MudListItem>
+                </MudList>
+            </MudPaper>
+        </div>
+    }
+    @if (openChannels)
+    {
+        <div class="d-flex flex-grow-1 mud-theme-primary">
+            <MudPaper Class="mud-height-full" MinHeight="970px" MaxHeight="1080px" Width="240px" Square Style="@($"background:{Colors.Green.Darken3};")">
+                 <MudText Class="px-5 py-2">[Server Name]</MudText>
+                 <MudList Clickable="true">
+                     <MudListItem Dense="true">
+                         <MudIcon Icon="@Icons.Material.Filled.VolumeUp" />
+                         <MudText Typo="Typo.caption">General</MudText>
+                         <MudList Dense="true" Clickable>
+                             <MudListItem Dense="true">
+                                 <MudAvatar Size="Size.Small">
+                                     <MudImage Src="@accounts[4].Profile.AvatarFileURL" />
+                                 </MudAvatar>
+                                 <MudText Typo="Typo.caption">@accounts[4].DisplayName</MudText>
+                                </MudListItem>
+                                <MudListItem Dense="true">
+                                    <MudAvatar Size="Size.Small">
+                                        <MudImage Src="@accounts[3].Profile.AvatarFileURL" />
+                                    </MudAvatar>
+                                    <MudText Typo="Typo.caption">@accounts[3].DisplayName</MudText>
+                                </MudListItem>
+                            </MudList>
+                        </MudListItem>
+                        <MudListItem Dense="true">
+                            <MudIcon Icon="@Icons.Material.Filled.Grid3x3" />
+                            <MudText Typo="Typo.caption">general</MudText>
+                        </MudListItem>
+                    </MudList>
+                </MudPaper>
+            </div>
+    }
 </div>
 
 @code {
-    bool open = false;
+    bool openMessages = false;
+    bool openFriends = false;
+    bool openChannels = false;
 
+    void OpenFriends()
+    {
+        // nav.NavigateTo("/messages");
+        openFriends = true;
+        openMessages = false;
+        openChannels = false;
+    }
+    void OpenMessages()
+    {
+        // nav.NavigateTo("/messages");
+        openMessages = true;
+        openFriends = false;
+        openChannels = false;
+    }
+    void OpenChannels()
+    {
+        nav.NavigateTo("/channels");
+        openChannels = true;
+        openFriends = false;
+        openMessages = false;
+    }
 
-    void Navigate()
+    void GoToFriends()
     {
         nav.NavigateTo("/messages");
     }
-    private List<string> avatars = new(){ 
-        "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", 
-        "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp",
+    void GoToChat()
+    {
+        nav.NavigateTo("/messages");
+    }
+
+    private List<string> servers = new(){
+        "https://cdn-imgix.headout.com/microbrands-content-image/image/4c39598de5ac2156718d098ce5e26a26-Plan%20your%20Visit.jpg",
+        "https://res.cloudinary.com/teepublic/image/private/s--AP9xJMVN--/c_crop,x_10,y_10/c_fit,w_830/c_crop,g_north_west,h_1038,w_1038,x_-104,y_-311/l_upload:v1565806151:production:blanks:vdbwo35fw6qtflw9kezw/fl_layer_apply,g_north_west,x_-215,y_-422/b_rgb:ffb81c/c_limit,f_auto,h_630,q_auto:good:420,w_630/v1490996013/production/designs/1372936_1.jpg",
         "https://www.usatoday.com/gcdn/-mm-/7fbb4dcd0e29b46245bb2ec4981ee02ad9e486c3/c=518-0-3419-1632/local/-/media/2016/01/24/USATODAY/usatsports/d1flagv2_toothless-jy-5084.jpg",
         "https://2.bp.blogspot.com/-AFwyA1d2ujw/TadONL-wISI/AAAAAAAAAoE/Y8EoUqVdfL8/s1600/courtcdog.png"
-    }; 
+    };
+
+    private List<string> dms = new(){
+        "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg",
+        "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp",
+        "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg",
+        "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg",
+        "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg"
+    };
+
+    public List<Account> accounts = new(){
+        new Account() { Id = 112, Name = "John Doe", DisplayName = "TheDoe", Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", } },
+        new Account() { Id = 113, Name = "Bob Builder", DisplayName = "BobTheBuilder", Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } },
+        new Account() { Id = 114, Name = "Mary Jane", DisplayName = "MJ", Profile = new AccountProfile(){ AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg", } },
+        new Account() { Id = 115, Name = "Billie Jean", DisplayName = "NotMyLover", Profile = new AccountProfile(){ AvatarFileURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg", } },
+        new Account() { Id = 116, Name = "Jeppe", DisplayName = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", } }
+    };
 }
