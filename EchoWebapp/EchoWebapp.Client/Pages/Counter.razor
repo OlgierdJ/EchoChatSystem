@@ -1,4 +1,6 @@
 ﻿@page "/channels"
+@rendermode InteractiveAuto
+@inject IJSRuntime _js
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.ChatCore
 @using MudBlazor
@@ -106,7 +108,7 @@
     {
         return (dt.Date == prevDate.Date) && (dt.Hour == prevDate.Hour) && (dt.Minute < prevDate.AddMinutes(8).Minute);
     }
-    public void SendMessage()
+    private async Task SendMessage()
     {
         // ChatMessage newmsg = new ChatMessage();
         // newmsg.Content = TextValue;
@@ -115,6 +117,7 @@
         // newmsg.Author = chat.Participants.Where(e => e.Id == 112).First();
         // chat.Messages.Add(newmsg);
         test = true;
+        await _js.InvokeVoidAsync("console.log",TextValue);
         TextValue = "";
         StateHasChanged();
     }
