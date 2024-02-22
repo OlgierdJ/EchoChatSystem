@@ -19,7 +19,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public DateTime? TimeLastLogon { get; set; }
         public string? UserId { get; set; }
         public bool FocusModeEnabled { get; set; } //for not receiving in app sounds
-        public byte? ActivityStatusId { get; set; }
+        public byte ActivityStatusId { get; set; }
 
         public AccountActivityStatus? ActivityStatus { get; set; }
 

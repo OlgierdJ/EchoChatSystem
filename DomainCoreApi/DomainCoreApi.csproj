@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EFCORE\Configurations\AccountCore\" />
     <Folder Include="EFCORE\Configurations\ServerCore\" />
   </ItemGroup>
 
