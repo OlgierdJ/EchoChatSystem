@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore
+namespace CoreLib.Entities.EchoCore.UserCore
 {
     public class User : BaseEntity<Guid>
     {

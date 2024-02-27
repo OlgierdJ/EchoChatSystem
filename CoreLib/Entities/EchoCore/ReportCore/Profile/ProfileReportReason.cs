@@ -5,10 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ReportCore
+namespace CoreLib.Entities.EchoCore.ReportCore.Profile
 {
-    public class ReportedAccountProfile : BaseEntity<ulong>
+    public class ProfileReportReason : BaseReportReason<byte, ProfileReport>
     {
-        //not yet implemented
     }
 }

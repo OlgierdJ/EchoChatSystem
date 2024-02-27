@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     public class PrivacySettings : BaseEntity<int>
     {

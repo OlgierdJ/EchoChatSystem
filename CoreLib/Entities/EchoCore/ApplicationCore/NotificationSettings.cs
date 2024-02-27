@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class NotificationSettings :BaseEntity<int>
+    public class NotificationSettings : BaseEntity<int>
     {
         public ulong AccountId { get; set; }
+        public bool FocusModeEnabled { get; set; } //for not receiving in app sounds
         public bool DesktopNotification { get; set; }
         public bool UnreadMessageBadge { get; set; }
         public bool TaskbarFlashing { get; set; }
