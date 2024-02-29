@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ReportCore.CustomStatus
 {
-    public class CustomStatusReport : BaseReport<ulong, Account, ulong, ReportedCustomStatus, ulong, CustomStatusReportReason, byte>
+    public class CustomStatusReport : BaseReport<ulong, Account, ulong, CustomStatusReportReason, byte, ReportedCustomStatus, ulong>
     {
     }
 }

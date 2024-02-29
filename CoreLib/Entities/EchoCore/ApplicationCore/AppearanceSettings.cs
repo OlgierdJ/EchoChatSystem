@@ -21,9 +21,5 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
         public Theme Theme { get; set; }
         public AccountSettings AccountSettings { get; set; }
     }
-    public enum MessageDisplayMode
-    {
-        Cosy,
-        Compact
-    }
+    
 }
