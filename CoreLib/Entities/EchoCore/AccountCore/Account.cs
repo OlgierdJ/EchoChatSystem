@@ -35,6 +35,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<AccountRole>? Roles { get; set; } //System / Application roles (perhaps not needed)
         public ICollection<AccountSession>? Sessions { get; set; } //Sessions for the account logging the device, location from which the session is valid and also when the validity expires, and alternatively allows the user to revoke validity of a session
         public ICollection<AccountBlock>? BlockedAccounts { get; set; } //This account blocks other accounts through this
+        public ICollection<AccountNickname>? NicknamedAccounts { get; set; } //This account adds notes about other accounts
         public ICollection<AccountNote>? NotedAccounts { get; set; } //This account adds notes about other accounts
         public ICollection<AccountMute>? MutedVoices { get; set; } //This account adds mutes for other accounts voice
         public ICollection<ChatMute>? MutedChats { get; set; } //This account adds mutes for other accounts voice
