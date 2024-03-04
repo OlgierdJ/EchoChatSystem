@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerTextChannelMessage : BaseMessage<Account, string, ServerTextChannel, ulong, ServerTextChannelMessage>
+    public class ServerTextChannelMessage : BaseMessage<ulong, Account, ulong, ServerTextChannel, ulong, ServerTextChannelMessage>
     {
+        public ICollection<ServerTextChannelAccountMessageTracker> MessageTrackers { get; set; }
     }
 }

@@ -19,5 +19,6 @@ namespace CoreLib.Entities.EchoCore.ReportCore.Profile
 
 
         public Account Account { get; set; }
+        public ProfileReport Report { get; set; }
     }
 }
