@@ -3,8 +3,8 @@
 @inject NavigationManager nav
 
 <div class="d-flex flex-grow-1">
-    <MudPaper Class="mud-height-full" Width="72px" MinHeight="970px" MaxHeight="1080px" Square Style="@($"background:{Colors.DeepPurple.Darken3}")">
-         <MudText Class="pl-5 py-2">Echo</MudText>
+    <MudPaper Width="72px" Height="100vh" Square Style="background: var(--mud-palette-dark);">
+
          @*         <MudButton OnClick="@ToggleDrawer">
         YOU CLICK HERE
         </MudButton> *@
@@ -23,15 +23,20 @@
              @foreach (var c in servers)
             {
                 <MudListItem Dense="true" OnClick="@OpenChannels">
-                    <MudAvatar Image="@c" Size="Size.Medium" />
+                    <MudAvatar Size="Size.Medium">
+                        <MudImage Src="@c"/>
+                    </MudAvatar>
                 </MudListItem>
             }
         </MudList>
     </MudPaper>
     @if (openMessages)
     {
-        <div class="d-flex flex-grow-1 mud-theme-primary">
-            <MudPaper Class="mud-height-full" MinHeight="970px" MaxHeight="1080px" Width="240px" Square Style="@($"background:{Colors.DeepOrange.Darken3};")">
+        <div class="d-flex">
+             <MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
+                 <MudPaper Square Style="background: var(--mud-palette-surface);" Height="5vh" Class="px-3" Elevation="1">
+                     <MudTextField Style="background: var(--mud-palette-dark);" Placeholder=" Search" Value="searchTerm" KeyDownPreventDefault KeyUpPreventDefault />
+                 </MudPaper>
                  <MudText Class="px-5 py-2">Direct Messages</MudText>
                  <MudList Clickable="true">
                      @foreach (var c in accounts)
@@ -51,15 +56,16 @@
                     </MudListItem>
                 </MudList>
             </MudPaper>
+
         </div>
     }
     @if (openFriends)
     {
-        <div class="d-flex flex-grow-1 mud-theme-primary">
-            <MudPaper Class="mud-height-full" MinHeight="970px" MaxHeight="1080px" Width="240px" Square Style="@($"background:{Colors.Red.Darken3};")">
+        <div class="d-flex flex-grow-1">
+            <MudPaper MinHeight="97vh" Width="280px" Square Style="background: var(--mud-palette-surface);">
                  <MudText Class="px-5 py-2">Friends</MudText>
                  <MudList Clickable="true">
-                     @foreach (var c in accounts)
+                     @foreach (var c in accounts.OrderBy(e => e.DisplayName))
                     {
                         <MudListItem Dense="true" OnClick="@GoToChat">
                             <MudAvatar>
@@ -80,28 +86,32 @@
     }
     @if (openChannels)
     {
-        <div class="d-flex flex-grow-1 mud-theme-primary">
-            <MudPaper Class="mud-height-full" MinHeight="970px" MaxHeight="1080px" Width="240px" Square Style="@($"background:{Colors.Green.Darken3};")">
-                 <MudText Class="px-5 py-2">[Server Name]</MudText>
+        <div class="d-flex flex-grow-1">
+            <MudPaper MinHeight="97vh" Width="280px" Square Style="background: var(--mud-palette-surface);">
+                 <MudText Class="px-5 py-2" Typo="Typo.h4">[Server Name]</MudText>
                  <MudList Clickable="true">
                      <MudListItem Dense="true">
                          <MudIcon Icon="@Icons.Material.Filled.VolumeUp" />
                          <MudText Typo="Typo.caption">General</MudText>
-                         <MudList Dense="true" Clickable>
-                             <MudListItem Dense="true">
+                     </MudListItem>
+                     <MudList Dense="true" Clickable Class="ml-5">
+                         <MudListItem Dense="true">
+                             <MudPaper Class="d-flex align-content-center flex-wrap flex-grow-1 gap-2" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
                                  <MudAvatar Size="Size.Small">
                                      <MudImage Src="@accounts[4].Profile.AvatarFileURL" />
                                  </MudAvatar>
                                  <MudText Typo="Typo.caption">@accounts[4].DisplayName</MudText>
-                                </MudListItem>
-                                <MudListItem Dense="true">
-                                    <MudAvatar Size="Size.Small">
-                                        <MudImage Src="@accounts[3].Profile.AvatarFileURL" />
-                                    </MudAvatar>
-                                    <MudText Typo="Typo.caption">@accounts[3].DisplayName</MudText>
-                                </MudListItem>
-                            </MudList>
-                        </MudListItem>
+                                </MudPaper>
+                            </MudListItem>
+                            <MudListItem Dense="true">
+                                <MudPaper Class="d-flex align-content-center flex-wrap flex-grow-1 gap-2" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
+                                 <MudAvatar Size="Size.Small">
+                                     <MudImage Src="@accounts[3].Profile.AvatarFileURL" />
+                                 </MudAvatar>
+                                 <MudText Typo="Typo.caption">@accounts[3].DisplayName</MudText>
+                                </MudPaper>
+                            </MudListItem>
+                        </MudList>
                         <MudListItem Dense="true">
                             <MudIcon Icon="@Icons.Material.Filled.Grid3x3" />
                             <MudText Typo="Typo.caption">general</MudText>
@@ -113,6 +123,7 @@
 </div>
 
 @code {
+    string searchTerm = "";
     bool openMessages = false;
     bool openFriends = false;
     bool openChannels = false;
