@@ -14,3 +14,4 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public Account Account { get; set; }
     }
 }
+

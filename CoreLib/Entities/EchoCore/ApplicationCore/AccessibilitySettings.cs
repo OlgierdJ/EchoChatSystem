@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.Enums;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,5 +33,8 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
         //Text to speech stuff
         public bool AllowTextToSpeech { get; set; }
         public byte TextToSpeechRate { get; set; }
+
+        public ulong AccountSettingsId { get; set; }
+        public AccountSettings AccountSettings { get; set; }
     }
 }

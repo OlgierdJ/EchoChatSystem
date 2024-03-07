@@ -10,9 +10,10 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     public class Language : BaseEntity<int>
     {
-        public ulong AccountId { get; set; }
+        //her lave det om til at NotificationSettings kigger på AccountSettings i stedefor a kigge Account
+        public ulong AccountSettingsId { get; set; }
         public string Conutry { get; set; }
         public byte[] ConutryFlag { get; set; }
-        public Account? Account { get; set; }
+        public AccountSettings AccountSettings { get; set; }
     }
 }
