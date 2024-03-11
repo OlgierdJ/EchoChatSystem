@@ -16,7 +16,7 @@
 
 <div id="unique_id_scroll_section" class="ma-0" style="max-height:80vh;height:80vh;overflow: auto;">
 
-    @foreach (ChatMessage m in chat?.Messages)
+    @foreach (ChatMessage m in chat.Messages)
     {
         if (m.TimeSent.Date != prevDate.Date)
         {
@@ -108,7 +108,7 @@
         @* <MudIconButton Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" ButtonType="ButtonType.Button" /> *@
 </MudToolBar>
  @code {
-    public string? TextValue { get; set; }
+    public string TextValue { get; set; }
     bool checkTime(DateTime dt)
     {
         return (dt.Date == prevDate.Date) && (dt.Hour == prevDate.Hour) && (dt.Minute < prevDate.AddMinutes(1).Minute);
@@ -136,9 +136,9 @@
                 newmsg.Content = TextValue.Trim();
                 newmsg.MessageHolder = chat;
                 newmsg.TimeSent = DateTime.Now;
-                newmsg.Author = chat?.Participants?.Where(e => e.Id == 112).First();
-                chat?.Messages?.Add(newmsg);
-                await _js.InvokeVoidAsync("console.log", "sent: '"+newmsg.Content+"'");
+                newmsg.Author = chat.Participants.Where(e => e.Id == 112).First();
+                chat.Messages.Add(newmsg);
+                _js.InvokeVoidAsync("console.log", newmsg.Content);
 
                 await Task.Delay(50);
                 TextValue = string.Empty;
@@ -146,7 +146,7 @@
             }
         }
         prevKey = e.Key;
-        // await _js.InvokeVoidAsync("console.log", e.Key);
+        _js.InvokeVoidAsync("console.log", e.Key);
     }
 
     private int currentCount = 0;

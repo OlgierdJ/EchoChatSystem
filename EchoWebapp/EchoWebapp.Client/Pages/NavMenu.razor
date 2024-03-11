@@ -127,13 +127,13 @@
         <div class="d-flex">
             <MudPaper Width="280px" Height="10vh" Square Style="background: var(--mud-palette-dark);">
                  <MudListItem Dense="true">
-                     <MudPaper Class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 mt-1 flex-0" Square Style="background: var(--mud-palette-dark);" )" Elevation="0">
+                     <MudPaper Class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 mt-1 flex-0" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
                         <MudBadge Color="Color.Success" Bordered Overlap="true" Origin="Origin.BottomRight">
                              <MudImage Src="@accounts[0].Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
                         </MudBadge>
                          <MudPaper Class="d-flex flex-column flex-gap-0 flex-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
                             <MudText Typo="Typo.caption">@accounts[0].DisplayName</MudText>
-                            <MudText Typo="Typo.caption">@accounts[0].ActivityStatus?.Description</MudText>
+                            <MudText Typo="Typo.caption">@accounts[0].ActivityStatus.Description</MudText>
                         </MudPaper>
                             <MudPaper Class="d-flex flex-grow-1 gap-2 flex-1" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
                              <MudIconButton Size="Size.Small" Icon=@($"{(!mute ? @Icons.Material.Filled.Mic : @Icons.Material.Filled.MicOff)}") Color=@(!mute ? Color.Default : Color.Error) OnClick="ToggleMute" />
