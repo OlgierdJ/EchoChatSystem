@@ -102,11 +102,13 @@
     }
 
 </div>
-<MudToolBar Class="d-flex flex-column-reverse flex-grow-0 gap-0 my-5">
-    <MudTextField FullWidth @bind-Value="TextValue" Margin="Margin.Dense" Variant="Variant.Filled" OnKeyDown="SendMessage" AutoGrow Placeholder="Message #general" Class="px-5 py-2" Immediate="true" MaxLength="1000" TextUpdateSuppression="false" Style="@($"background:{Color.Dark}")">
+
+<MudToolBar Class="d-flex flex-column-reverse flex-grow-1 gap-0 my-5" Style="@($"background:{Colors.Shades.Transparent}")">
+    <MudTextField FullWidth @bind-Value="TextValue" Margin="Margin.Dense" Variant="Variant.Filled" OnKeyDown="SendMessage" AutoGrow MaxLines="11" Placeholder="Message #general" Class="px-5 py-2" Immediate="true" MaxLength="1000" TextUpdateSuppression="false" Style="background: var(--mud-palette-dark);opacity:1;">
     </MudTextField>
-        @* <MudIconButton Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" ButtonType="ButtonType.Button" /> *@
-</MudToolBar>
+     @* <MudIconButton Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" ButtonType="ButtonType.Button" /> *@
+ </MudToolBar>
+
  @code {
     public string TextValue { get; set; }
     bool checkTime(DateTime dt)
