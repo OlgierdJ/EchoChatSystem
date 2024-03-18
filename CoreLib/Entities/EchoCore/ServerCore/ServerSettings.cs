@@ -10,6 +10,8 @@ namespace CoreLib.Entities.EchoCore.ServerCore
     {
         //pause invites serverwide, pause dms serverwide
         //General settings
+        public ulong ServerId { get; set; }
+        public Server Server { get; set; }
         public ServerVoiceChannel InactiveChannel { get; set; }
         public ulong InactiveChannelId { get; set; } //only voice channel
         public ulong SystemMessagesChannelId { get; set; } //only text channel

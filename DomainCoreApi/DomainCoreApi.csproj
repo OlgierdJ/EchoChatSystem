@@ -24,8 +24,4 @@
     <ProjectReference Include="..\CoreLib\CoreLib.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="EFCORE\Configurations\ServerCore\" />
-  </ItemGroup>
-
 </Project>

@@ -3,7 +3,7 @@ using CoreLib.Entities.EchoCore.AccountCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerAuditLog:BaseEntity<ulong>
+    public class ServerAuditLog : BaseEntity<ulong>
     {
         public ulong AccountId { get; set; }
         public ulong ServerId { get; set; }
