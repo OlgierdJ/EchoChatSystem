@@ -10,10 +10,9 @@ namespace CoreLib.Entities.EchoCore.ReportCore.Profile
 {
     public class ReportedProfile : BaseEntity<ulong>
     {
-        //not yet implemented
         public ulong AccountId { get; set; }
         public string DisplayName { get; set; }
-        public string AvatarFileURL { get; set; }
+        public string AvatarFileURL { get; set; } //reported profile should duplicate fileurl and store seperately such that the user changing profile avatar does not cause the file to get removed from the fileserver
         public string BannerColor { get; set; }
         public string? About { get; set; }
 

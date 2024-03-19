@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BestMessageAttachment<TId, TMessage, TMessageId> : BaseEntity<TId>
+    public abstract class BaseMessageAttachment<TId, TMessage, TMessageId> : BaseEntity<TId>
     {
         public TMessageId MessageId { get; set; }
         //public string AttachmentType { get; set; }
