@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountConnection : BaseEntity<ulong>
+    public class AccountConnection : BaseEntity<ulong> //mayb review
     {
         public ulong AccountId { get; set; }
         public string ExternalProvider { get; set; }
