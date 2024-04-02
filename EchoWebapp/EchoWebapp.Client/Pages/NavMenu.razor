@@ -1,6 +1,7 @@
 ﻿@using CoreLib.Entities.EchoCore.AccountCore
 @using MudBlazor
 @inject NavigationManager nav
+@inject IDialogService DialogService
 
 <div class="d-flex">
     <MudPaper Width="72px" Height="100vh" Square Style="background: var(--mud-palette-dark);">
@@ -24,7 +25,7 @@
             {
                 <MudListItem Dense="true" OnClick="@OpenChannels">
                     <MudAvatar Size="Size.Medium">
-                        <MudImage Src="@c"/>
+                        <MudImage Src="@c" />
                     </MudAvatar>
                 </MudListItem>
             }
@@ -35,7 +36,7 @@
         @if (openMessages)
         {
             <div class="d-flex flex-grow-1">
-                 <MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
+                <MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
                      <MudPaper Square Style="background: var(--mud-palette-surface);" Height="5vh" Class="px-3" Elevation="1">
                          <MudTextField Style="background: var(--mud-palette-dark);" Placeholder=" Search" Value="searchTerm" KeyDownPreventDefault KeyUpPreventDefault />
                      </MudPaper>
@@ -111,7 +112,7 @@
                                          <MudImage Src="@accounts[3].Profile.AvatarFileURL" />
                                      </MudAvatar>
                                      <MudText Typo="Typo.caption">@accounts[3].DisplayName</MudText>
-                                        <MudIcon Icon="@Icons.Material.Filled.MicOff" Size="Size.Small"/>
+                                        <MudIcon Icon="@Icons.Material.Filled.MicOff" Size="Size.Small" />
                                     </MudPaper>
                                 </MudListItem>
                             </MudList>
@@ -125,28 +126,43 @@
         }
 
         <div class="d-flex">
+
+            <MudDialogProvider Position="DialogPosition.BottomLeft" NoHeader="true" CloseOnEscapeKey="true"/>
+
             <MudPaper Width="280px" Height="10vh" Square Style="background: var(--mud-palette-dark);">
                  <MudListItem Dense="true">
-                     <MudPaper Class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 mt-1 flex-0" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
-                        <MudBadge Color="Color.Success" Bordered Overlap="true" Origin="Origin.BottomRight">
-                             <MudImage Src="@accounts[0].Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
-                        </MudBadge>
-                         <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
-                            <MudText Typo="Typo.caption">@accounts[0].DisplayName</MudText>
-                            <MudText Typo="Typo.caption">@accounts[0].ActivityStatus.Description</MudText>
-                        </MudPaper>
+                     <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
+
+                         <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenDialog">
+                             
+                            <MudBadge Color="Color.Success" Bordered Overlap="true" Origin="Origin.BottomRight">
+                                <MudImage Src="@accounts[0].Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+                            </MudBadge>
+
+                            <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
+                                <MudText Typo="Typo.caption">@accounts[0].DisplayName</MudText>
+                                <MudText Typo="Typo.caption">@accounts[0].ActivityStatus.Description</MudText>
+                            </MudPaper>
+                         </div>
+                         <style>
+                             .hoverable:hover{
+                                    background: rgba(255,255,255,0.1)
+                             }
+                         </style>
+
+
                             <MudPaper Class="d-flex flex-grow-1 gap-2 flex-1" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
                              <MudIconButton Size="Size.Small" Icon=@($"{(!mute ? @Icons.Material.Filled.Mic : @Icons.Material.Filled.MicOff)}") Color=@(!mute ? Color.Default : Color.Error) OnClick="ToggleMute" />
                              <MudIconButton Size="Size.Small" Icon=@($"{(!deaf ? @Icons.Material.Filled.Headset : @Icons.Material.Filled.HeadsetOff)}") Color=@(!deaf ? Color.Default : Color.Error) OnClick=" ToggleDeaf" />
                              <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Settings" OnClick="ToggleSettings" />
-                        </MudPaper>
-                    </MudPaper>
-                </MudListItem>
-            </MudPaper>
-        </div>
+                         </MudPaper>
+                     </MudPaper>
+                 </MudListItem>
+             </MudPaper>
+         </div>
 
      </div>
-</div>
+ </div>
 
  @code {
     string searchTerm = "";
@@ -155,6 +171,12 @@
     bool openMessages = false;
     bool openFriends = false;
     bool openChannels = false;
+
+    private void OpenDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraExtraLarge };
+        DialogService.Show<Profile>("Simple Dialog", options);
+    }
 
     void OpenFriends()
     {
@@ -190,7 +212,7 @@
 
     void ToggleMute()
     {
-        mute = !mute;  
+        mute = !mute;
     }
     void ToggleDeaf()
     {
