@@ -30,3 +30,4 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore
                    .HasForeignKey(ccms => ccms.ChannelCategoryId);
         }
     }
+}

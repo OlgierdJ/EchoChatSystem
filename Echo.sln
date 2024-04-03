@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainPushNotificationApi",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreLib", "CoreLib\CoreLib.csproj", "{080898C7-71D7-49EC-A7C1-F305883826B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoWebapp", "EchoWebapp\EchoWebapp\EchoWebapp.csproj", "{727A20F3-48DE-42CB-8A28-633AA37E56ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoWebapp", "EchoWebapp\EchoWebapp\EchoWebapp.csproj", "{727A20F3-48DE-42CB-8A28-633AA37E56ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoWebapp.Client", "EchoWebapp\EchoWebapp.Client\EchoWebapp.Client.csproj", "{74B17CB5-D8CA-4DE9-BDAB-1A924F6C4514}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoWebapp.Client", "EchoWebapp\EchoWebapp.Client\EchoWebapp.Client.csproj", "{74B17CB5-D8CA-4DE9-BDAB-1A924F6C4514}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuthServer", "OAuthServer\OAuthServer.csproj", "{6AF31512-6B80-429D-87C7-86A67C340FF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{74B17CB5-D8CA-4DE9-BDAB-1A924F6C4514}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74B17CB5-D8CA-4DE9-BDAB-1A924F6C4514}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74B17CB5-D8CA-4DE9-BDAB-1A924F6C4514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AF31512-6B80-429D-87C7-86A67C340FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AF31512-6B80-429D-87C7-86A67C340FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AF31512-6B80-429D-87C7-86A67C340FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AF31512-6B80-429D-87C7-86A67C340FF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
