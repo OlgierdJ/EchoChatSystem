@@ -7,7 +7,7 @@ using CoreLib.Interfaces.Bases;
 
 namespace DomainCoreApi.Repositories.Bases
 {
-    public class BaseEntityRepository<T> : IRepository<T> where T : class, IEntity, new()
+    public abstract class BaseEntityRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
         protected readonly EchoDbContext _context;
 
