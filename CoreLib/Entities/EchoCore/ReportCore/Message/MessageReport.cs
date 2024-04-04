@@ -10,6 +10,5 @@ namespace CoreLib.Entities.EchoCore.ReportCore.Message
 {
     public class MessageReport : BaseReport<ulong, Account, ulong, MessageReportReason, byte, ReportedMessage, ulong>
     {
-        public ICollection<MessageReportReason> Reasons { get; set; }
     }
 }

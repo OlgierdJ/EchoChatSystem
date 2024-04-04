@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountActivityStatus : BaseEntity<byte>
+    public class AccountActivityStatus : BaseEntity<byte> //maybe review
     {
         public string Name { get; set; }
         public string? Description { get; set; }

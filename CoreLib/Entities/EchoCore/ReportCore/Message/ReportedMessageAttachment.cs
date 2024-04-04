@@ -2,7 +2,7 @@
 
 namespace CoreLib.Entities.EchoCore.ReportCore.Message
 {
-    public class ReportedMessageAttachment : BestMessageAttachment<ulong, ReportedMessage, ulong>
+    public class ReportedMessageAttachment : BaseMessageAttachment<ulong, ReportedMessage, ulong>
     {
     }
 }

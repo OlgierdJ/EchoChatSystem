@@ -11,7 +11,7 @@ namespace CoreLib.Entities.Base
         public TAuthorId AuthorId { get; set; }
         public TSubjectId SubjectId { get; set; }
 
-        public string Note { get; set; }
+        public string Nickname { get; set; }
 
         public TAuthor Author { get; set; }
         public TSubject Subject { get; set; }

@@ -12,7 +12,7 @@ namespace CoreLib.Entities.Base
         public string InviteCode { get; set; }
         public DateTime? ExpirationTime { get; set; } // null = permanent
         public int TimesUsed { get; set; }
-        public int TotalUses { get; set; } //0 means unlimited
+        public int TotalUses { get; set; } //0 means unlimited //mayb review / set to nullable?
     }
     public abstract class BaseInvite<TId, TInviter, TInviterId, TSubject, TSubjectId> : BaseInvite<TId>
     {

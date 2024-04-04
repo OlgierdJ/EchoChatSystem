@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatMessageAttachment : BestMessageAttachment<ulong, ChatMessage, ulong>
+    public class ChatMessageAttachment : BaseMessageAttachment<ulong, ChatMessage, ulong>
     {
     }
 }
