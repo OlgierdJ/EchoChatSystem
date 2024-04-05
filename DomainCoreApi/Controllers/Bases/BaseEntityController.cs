@@ -1,6 +1,7 @@
 ﻿using CoreLib.Interfaces.Bases;
 using CoreLib.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using CoreLib.Entities.Enums;
 
 namespace DomainCoreApi.Controllers.Bases
 {

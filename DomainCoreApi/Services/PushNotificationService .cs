@@ -1,9 +1,9 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Entities.EchoCore;
-using CoreLib.Enums;
 using CoreLib.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using CoreLib.Entities.Enums;
 
 namespace DomainCoreApi.Services
 {

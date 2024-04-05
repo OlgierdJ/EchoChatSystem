@@ -1,4 +1,4 @@
-﻿using CoreLib.Enums;
+﻿using CoreLib.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

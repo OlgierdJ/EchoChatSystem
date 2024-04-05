@@ -9,6 +9,7 @@ namespace CoreLib.Entities.EchoCore.UserCore
 {
     public class SecurityCredentials : BaseEntity<string>
     {
+        public ulong UserId { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] Salt { get; set; }
     }

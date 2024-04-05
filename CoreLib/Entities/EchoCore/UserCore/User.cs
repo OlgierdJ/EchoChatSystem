@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.UserCore
 {
-    public class User : BaseEntity<Guid>
+    public class User : BaseEntity<ulong>
     {
         public string Email { get; set; }
         public string? PhoneNumber { get; set; }
