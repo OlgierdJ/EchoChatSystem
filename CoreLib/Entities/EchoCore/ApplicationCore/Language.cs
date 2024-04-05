@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.ServerCore.Integrations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,11 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class Language : BaseEntity<int>
+    public class Language : BaseEntity<uint>
     {
-        //her lave det om til at NotificationSettings kigger på AccountSettings i stedefor a kigge Account
-        public ulong AccountSettingsId { get; set; }
-        public string Conutry { get; set; }
-        public byte[] ConutryFlag { get; set; }
-        public AccountSettings AccountSettings { get; set; }
+        public string Name { get; set; } //English (United States), 普通话, Dansk
+        public string LanguageCode { get; set; } //en-US, zh-CN, da-DK
+        public ICollection<AccountSettings> AccountSettings { get; set; } //accounts that uses this language
+        public ICollection<ServerBot> ServerBots { get; set; } //bots that supports uses this language
     }
 }
