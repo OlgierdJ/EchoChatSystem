@@ -7,7 +7,6 @@
 <PageTitle>Counter</PageTitle>
 
 <div style="height:5vh;">
-
     <MudText Typo="Typo.h5" Class="mt-2 ml-2">
         <MudIcon Icon="@Icons.Material.Filled.Grid3x3" />
         general
@@ -22,42 +21,42 @@
         {
             @if (m.TimeSent.Date == DateTime.Now.Date)
             {
-                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
+                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                         <MudDivider FlexItem />
                      </MudPaper>
-                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                          <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">Today</MudText>
                      </MudPaper>
-                     <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                          <MudDivider FlexItem />
                      </MudPaper>
                  </MudPaper>
             }
             else if (m.TimeSent.Date == DateTime.Now.AddDays(-1).Date)
             {
-                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
+                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                         <MudDivider FlexItem />
                      </MudPaper>
-                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                          <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">Yesterday</MudText>
                      </MudPaper>
-                     <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                          <MudDivider FlexItem />
                      </MudPaper>
                  </MudPaper>
             }
             else
             {
-                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
+                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                         <MudDivider FlexItem />
                      </MudPaper>
-                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                          <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">@m.TimeSent.Day @m.TimeSent.ToString("MMMM") @m.TimeSent.Year</MudText>
                         </MudPaper>
-                        <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                        <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                             <MudDivider FlexItem />
                      </MudPaper>
                  </MudPaper>

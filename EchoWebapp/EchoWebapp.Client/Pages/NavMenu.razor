@@ -1,7 +1,6 @@
 ﻿@using CoreLib.Entities.EchoCore.AccountCore
 @using MudBlazor
 @inject NavigationManager nav
-@inject IDialogService DialogService
 
 <div class="d-flex">
     <MudPaper Width="72px" Height="100vh" Square Style="background: var(--mud-palette-dark);">
@@ -126,9 +125,6 @@
         }
 
         <div class="d-flex">
-
-            <MudDialogProvider Position="DialogPosition.BottomLeft" NoHeader="true" CloseOnEscapeKey="true"/>
-
             <MudPaper Width="280px" Height="10vh" Square Style="background: var(--mud-palette-dark);">
                  <MudListItem Dense="true">
                      <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
@@ -141,7 +137,7 @@
 
                             <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
                                 <MudText Typo="Typo.caption">@accounts[0].DisplayName</MudText>
-                                <MudText Typo="Typo.caption">@accounts[0].ActivityStatus.Description</MudText>
+                                <MudText Typo="Typo.caption">@accounts[0].ActivityStatus?.Description</MudText>
                             </MudPaper>
                          </div>
                          <style>
@@ -149,7 +145,6 @@
                                     background: rgba(255,255,255,0.1)
                              }
                          </style>
-
 
                             <MudPaper Class="d-flex flex-grow-1 gap-2 flex-1" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
                              <MudIconButton Size="Size.Small" Icon=@($"{(!mute ? @Icons.Material.Filled.Mic : @Icons.Material.Filled.MicOff)}") Color=@(!mute ? Color.Default : Color.Error) OnClick="ToggleMute" />
@@ -160,11 +155,13 @@
                  </MudListItem>
              </MudPaper>
          </div>
-
      </div>
  </div>
 
  @code {
+    [CascadingParameter]
+    IDialogService DialogService { get; set; }
+
     string searchTerm = "";
     bool mute = false;
     bool deaf = false;

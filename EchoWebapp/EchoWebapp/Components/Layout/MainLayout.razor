@@ -1,8 +1,10 @@
 ﻿@inherits LayoutComponentBase
 @using MudBlazor
+@inject IDialogService DialogService
 
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" DefaultScrollbar=false />
 <MudSnackbarProvider />
+<MudDialogProvider @ref="_dialog" Position="DialogPosition.BottomLeft" NoHeader="true" CloseOnEscapeKey="true" />
 @* <MudButton @rendermode=InteractiveAuto>
 </MudButton> *@
 
@@ -13,8 +15,10 @@
     </div> 
 
     <main>
-        @Body
-    </main>
+         <CascadingValue Value="DialogService">
+            @Body
+        </CascadingValue>
+     </main>
 </div>
 
 <div id="blazor-error-ui">
@@ -27,5 +31,6 @@
 
 @code {
     public MudTheme _theme = new();
+    public MudDialogProvider _dialog = new();
     private bool _isDarkMode = true;
 }
