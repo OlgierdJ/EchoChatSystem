@@ -1,0 +1,39 @@
+﻿<div class="modal" style="display: @(Visible ? "block" : "none")">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Title</h5>
+
+            </div>
+            <div class="modal-body">
+                <p>@Message</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CloseErrorPopup">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public string? Message { get; set; }
+
+    public string? Title { get; set; }
+
+    public bool Visible { get; set; }
+
+    public void ShowErrorPopup(string errormessage, string title)
+    {
+        Visible = true;
+        Message = errormessage;
+        Title = title;
+        StateHasChanged();
+    }
+
+    private void CloseErrorPopup()
+    {
+        Visible = false;
+        Message = "";
+        StateHasChanged();
+    }
+}
