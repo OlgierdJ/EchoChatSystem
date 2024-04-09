@@ -10,9 +10,9 @@ namespace CoreLib.Entities.EchoCore.ChatCore
 {
     public class ChatMessage : BaseMessage<ulong, Account, ulong, Chat, ulong, ChatMessage>
     {
-        public ICollection<ChatMessageAttachment> Attachments { get; set; }
+        public ICollection<ChatMessageAttachment>? Attachments { get; set; }
         //public ICollection<ChatMessageReport> Reports { get; set; }
         public ChatMessagePin? MessagePin { get; set; }
-        public ICollection<ChatAccountMessageTracker> MessageTrackers { get; set; }
+        public ICollection<ChatAccountMessageTracker>? MessageTrackers { get; set; }
     }
 }
