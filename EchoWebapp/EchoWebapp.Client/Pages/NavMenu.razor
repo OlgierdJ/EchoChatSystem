@@ -47,7 +47,7 @@
                                 <MudAvatar>
                                     <MudImage Src="@c.Profile.AvatarFileURL" />
                                 </MudAvatar>
-                                <MudText Typo="Typo.caption">@c.DisplayName</MudText>
+                                <MudText Typo="Typo.caption">@c.Name</MudText>
                                 </MudListItem>
                         }
                         <MudListItem Dense="true">
@@ -67,13 +67,13 @@
                 <MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
                      <MudText Class="px-5 py-2">Friends</MudText>
                      <MudList Clickable="true">
-                         @foreach (var c in accounts.OrderBy(e => e.DisplayName))
+                         @foreach (var c in accounts.OrderBy(e => e.Name))
                         {
                             <MudListItem Dense="true" OnClick="@GoToChat">
                                 <MudAvatar>
                                     <MudImage Src="@c.Profile.AvatarFileURL" />
                                 </MudAvatar>
-                                <MudText Typo="Typo.caption">@c.DisplayName</MudText>
+                                <MudText Typo="Typo.caption">@c.Name</MudText>
                                 </MudListItem>
                         }
                         <MudListItem Dense="true">
@@ -102,7 +102,7 @@
                                      <MudAvatar Size="Size.Small">
                                          <MudImage Src="@accounts[4].Profile.AvatarFileURL" />
                                      </MudAvatar>
-                                     <MudText Typo="Typo.caption">@accounts[4].DisplayName</MudText>
+                                     <MudText Typo="Typo.caption">@accounts[4].Name</MudText>
                                     </MudPaper>
                                 </MudListItem>
                                 <MudListItem Dense="true">
@@ -110,7 +110,7 @@
                                      <MudAvatar Size="Size.Small">
                                          <MudImage Src="@accounts[3].Profile.AvatarFileURL" />
                                      </MudAvatar>
-                                     <MudText Typo="Typo.caption">@accounts[3].DisplayName</MudText>
+                                     <MudText Typo="Typo.caption">@accounts[3].Name</MudText>
                                         <MudIcon Icon="@Icons.Material.Filled.MicOff" Size="Size.Small" />
                                     </MudPaper>
                                 </MudListItem>
@@ -136,7 +136,7 @@
                             </MudBadge>
 
                             <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
-                                <MudText Typo="Typo.caption">@accounts[0].DisplayName</MudText>
+                                <MudText Typo="Typo.caption">@accounts[0].Name</MudText>
                                 <MudText Typo="Typo.caption">@accounts[0].ActivityStatus?.Description</MudText>
                             </MudPaper>
                          </div>
@@ -236,10 +236,10 @@
     };
 
     public List<Account> accounts = new(){
-        new Account() { Id = 112, Name = "John Doe", DisplayName = "TheDoe", Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", }, ActivityStatus = new AccountActivityStatus(){ Description = "Online", Icon = "", IconColor = Color.Success.ToString() /* Hvordan fanden vil vi gemme og bruge farven? */ }, },
-        new Account() { Id = 113, Name = "Bob Builder", DisplayName = "BobTheBuilder", Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } },
-        new Account() { Id = 114, Name = "Mary Jane", DisplayName = "MJ", Profile = new AccountProfile(){ AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg", } },
-        new Account() { Id = 115, Name = "Billie Jean", DisplayName = "NotMyLover",  Profile = new AccountProfile(){ AvatarFileURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg", } },
-        new Account() { Id = 116, Name = "Jeppe", DisplayName = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", } }
+        new Account() { Id = 112, Name = "TheDoe", Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", }, ActivityStatus = new AccountActivityStatus(){ Description = "Online", Icon = "", IconColor = Color.Success.ToString() /* Hvordan fanden vil vi gemme og bruge farven? */ }, },
+        new Account() { Id = 113, Name = "BobTheBuilder", Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } },
+        new Account() { Id = 114, Name = "Mary Jane", Profile = new AccountProfile(){ AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg", } },
+        new Account() { Id = 115, Name = "Billie Jean",  Profile = new AccountProfile(){ AvatarFileURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg", } },
+        new Account() { Id = 116, Name = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", } }
     };
 }

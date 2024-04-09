@@ -84,10 +84,10 @@
             <MudImage Src="images/mony.jpg"></MudImage>
             </MudAvatar>
             *@
-                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">@m.Author?.DisplayName.First()</MudAvatar>
+                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">@m.Author?.Name.First()</MudAvatar>
                         <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
                             <div class="d-flex flex-grow-1 gap-3">
-                                <MudText Color="Color.Primary">@m.Author?.DisplayName </MudText>
+                                <MudText Color="Color.Primary">@m.Author?.Name </MudText>
                                 <MudText Style="@($"color:{Colors.Grey.Default};")">@m.TimeSent.ToString("HH:mm")</MudText>
                             </div>
                             <MudText Typo="Typo.body1">@((MarkupString)m.Content.Replace(Environment.NewLine, "<br />"))</MudText>
@@ -162,9 +162,9 @@
         chat.Messages = new List<ChatMessage>();
 
         chat.Id = 111;
-        chat.Participants.Add(new Account() { Id = 112, Name = "John Doe", DisplayName = "TheDoe" });
-        chat.Participants.Add(new Account() { Id = 113, Name = "Bob Builder", DisplayName = "BobTheBuilder" });
-        chat.Participants.Add(new Account() { Id = 114, Name = "Mary Jane", DisplayName = "MJ" });
+        chat.Participants.Add(new Account() { Id = 112, Name = "TheDoe"});
+        chat.Participants.Add(new Account() { Id = 113, Name = "BobTheBuilder"});
+        chat.Participants.Add(new Account() { Id = 114, Name = "Mary Jane"});
 
         ChatMessage msg = new ChatMessage();
         msg.Content = "First Message sent! Yay";

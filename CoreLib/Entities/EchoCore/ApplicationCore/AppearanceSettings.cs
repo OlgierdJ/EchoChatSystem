@@ -14,7 +14,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
         public ulong ThemeId { get; set; }
         public string InAppIcon { get; set; }
         public bool DarkSideBar { get; set; }
-        public MessageDisplayMode MessageDisplayMode { get; set; }
+        //public MessageDisplayMode MessageDisplayMode { get; set; }
         public byte PixelChatFontScale { get; set; }
         public byte PixelGroupSpaceScale { get; set; }
 
