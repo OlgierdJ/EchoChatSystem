@@ -1,6 +1,8 @@
 ﻿@using CoreLib.Entities.EchoCore.AccountCore
 @using MudBlazor
 @inject NavigationManager nav
+@inject IDialogService DialogService
+
 
 <div class="d-flex">
     <MudPaper Width="72px" Height="100vh" Square Style="background: var(--mud-palette-dark);">
@@ -129,6 +131,9 @@
                  <MudListItem Dense="true">
                      <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
 
+
+                         <MudDialogProvider Position="DialogPosition.BottomLeft" NoHeader="true" CloseOnEscapeKey="true" />
+                         
                          <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenDialog">
                              
                             <MudBadge Color="Color.Success" Bordered Overlap="true" Origin="Origin.BottomRight">
@@ -159,8 +164,8 @@
  </div>
 
  @code {
-    [CascadingParameter]
-    IDialogService DialogService { get; set; }
+    // [CascadingParameter]
+    // IDialogService DialogService { get; set; }
 
     string searchTerm = "";
     bool mute = false;

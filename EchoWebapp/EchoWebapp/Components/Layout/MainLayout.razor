@@ -4,7 +4,6 @@
 
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" DefaultScrollbar=false />
 <MudSnackbarProvider />
-<MudDialogProvider @ref="_dialog" Position="DialogPosition.BottomLeft" NoHeader="true" CloseOnEscapeKey="true" />
 @* <MudButton @rendermode=InteractiveAuto>
 </MudButton> *@
 
@@ -31,6 +30,5 @@
 
 @code {
     public MudTheme _theme = new();
-    public MudDialogProvider _dialog = new();
     private bool _isDarkMode = true;
 }
