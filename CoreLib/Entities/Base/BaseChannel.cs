@@ -1,4 +1,6 @@
-﻿namespace CoreLib.Entities.Base
+﻿using CoreLib.Entities.EchoCore.ServerCore;
+
+namespace CoreLib.Entities.Base
 {
     public abstract class BaseChannel<TId> : BaseEntity<TId>
     {
@@ -11,9 +13,13 @@
     {
         public ICollection<TChannelPermission>? Permissions { get; set; }
     }
-    public abstract class BaseChannel<TId, TChannelPermission, TChannelCategory, TChannelCategoryId> : BaseChannel<TId, TChannelPermission>
+    public abstract class BaseChannel<TId, TChannelPermission, TChannelOwner, TChannelOwnerId> : BaseChannel<TId, TChannelPermission>
+    {
+        public TChannelOwnerId? OwnerId { get; set; }
+        public TChannelOwner? Owner { get; set; }
+    }
+    public abstract class BaseChannel<TId, TChannelPermission, TChannelCategory, TChannelCategoryId, TChannelOwner, TChannelOwnerId> : BaseChannel<TId, TChannelPermission, TChannelOwner, TChannelOwnerId>
     {//integrations? webhooks? invites? channelfollows?
-
         public TChannelCategoryId? CategoryId { get; set; }
         public TChannelCategory? Category { get; set; }
     }

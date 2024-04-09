@@ -1,6 +1,8 @@
-﻿namespace CoreLib.Entities.EchoCore.ServerCore
+﻿using CoreLib.Entities.Base;
+
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerTextChannelPinboard
+    public class ServerTextChannelPinboard : BasePinboard<ulong, ServerTextChannel, ulong, ServerTextChannelMessage>
     {
     }
 }

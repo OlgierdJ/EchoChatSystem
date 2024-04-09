@@ -13,5 +13,8 @@ namespace CoreLib.Entities.EchoCore.ServerCore
         //maybe extend to allow "guest link" for voicechannel which basically works as the user is allowed into only that specific channel but once they leave they are kicked from the server
         public ulong? ChannelId { get; set; }
         public ServerTextChannel? Channel { get; set; } //if the invite is to a specific textchannel
+        //or should it be in the baseinvite?\\
+        public ulong ServerId { get; set; }
+        public Server Server { get; set; }
     }
 }

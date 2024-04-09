@@ -1,4 +1,5 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Entities.EchoCore.ReportCore.Profile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,5 @@ namespace CoreLib.Entities.EchoCore.AccountCore
 
         public Account Account { get; set; }
 
-        public ICollection<AccountProfileReport> ProfileReports { get;}
     }
 }

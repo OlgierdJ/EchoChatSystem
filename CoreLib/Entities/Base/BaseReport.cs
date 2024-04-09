@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,9 +18,13 @@ namespace CoreLib.Entities.Base
         public TReporter Reporter { get; set; }
     }
 
-    public abstract class BaseReport<TId, TReporter, TReporterId, TSubject, TSubjectId, TReason, TReasonId> : BaseReport<TId, TReporter, TReporterId> where TReason : BaseReportReason<TReasonId>
+    public abstract class BaseReport<TId, TReporter, TReporterId, TReason, TReasonId> : BaseReport<TId, TReporter, TReporterId> where TReason : BaseReportReason<TReasonId>
     {
         public ICollection<TReason> Reasons { get; set; }
+    }
+
+    public abstract class BaseReport<TId, TReporter, TReporterId, TReason, TReasonId, TSubject, TSubjectId> : BaseReport<TId, TReporter, TReporterId, TReason, TReasonId> where TReason : BaseReportReason<TReasonId>
+    {
         public TSubjectId SubjectId { get; set; }
         public TSubject Subject { get; set; }
     }
