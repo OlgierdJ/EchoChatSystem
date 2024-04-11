@@ -1,7 +1,8 @@
-﻿@using MudBlazor
+﻿@using CoreLib.Entities.EchoCore.AccountCore
+@using MudBlazor
 @rendermode InteractiveAuto
 
-<div style="display: @(Visible ? "block" : "none"); bottom: 0;  left: 20px; position:fixed; z-index: 1">
+<div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 25px; width: 300px; position:fixed; z-index: 1">
     <div class="modal-dialog">
         <div class="modal-content" style="background: var(--mud-palette-surface);">
             <div class="modal-header">
@@ -16,13 +17,18 @@
                 <!-- Menu doesnt seem to work in our solution. Might be due to rendermode -->
                 <!-- Button and div menu does work tho LUL -->
 
-                <MudButton Color="Color.Secondary" @onclick="@(()=>Hover=!Hover)">TÆÆÆST</MudButton>
-                <div id="myDropdown" class="dropdown-content" style="display: @(Hover ? "block" : "none")">
-                    <a href="#home">Home</a>
-                    <a href="#about">About</a>
-                    <a href="#contact">Contact</a>
+                <MudButton Color="StringToColor(currentStatus.IconColor)" @onclick="@(()=>Hover=!Hover)">Status: @currentStatus.Name</MudButton>
+                <div id="myDropdown" class="modal-content pa-3" style="display: @(Hover ? "block" : "none"); bottom: 150px;  left: 327px; width: 125px; position:fixed; background: var(--mud-palette-surface);">
+                    <div class="d-flex flex-column my-2">
+                        @foreach (var s in status)
+                        {
+                            <MudButton @onclick="@(()=>SwtichStatus(s))">
+                                <MudIcon Icon="@s.Icon" Color="@StringToColor(s.IconColor)" />
+                                <MudText Class="ml-2">@s.Name</MudText>
+                            </MudButton>
+                        }
+                    </div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" @onclick="CloseErrorPopup">Close</button>
@@ -39,6 +45,45 @@
     public bool Visible { get; set; }
     public bool Hover { get; set; }
 
+    public static List<AccountActivityStatus> status = new() { 
+        //"rgba(11,186,131,1)"
+        new AccountActivityStatus { Icon = Icons.Material.Filled.Circle, IconColor = "Success", Name = "Online", Id = 0 },
+        new AccountActivityStatus { Icon = Icons.Material.Filled.Brightness2, IconColor = "Warning", Name = "Away", Id = 1 },
+        new AccountActivityStatus { Icon = Icons.Material.Filled.RemoveCircle, IconColor = "Error", Name = "Busy", Id = 2 },
+        new AccountActivityStatus { Icon = Icons.Material.Filled.StopCircle, IconColor = "Dark", Name = "Offline", Id = 3 },
+    };
+
+    public AccountActivityStatus currentStatus = status.FirstOrDefault();
+
+    public Color StringToColor(string s)
+    {
+        switch (s)
+        {
+            case "Success":
+                return Color.Success;
+
+            case "Warning":
+                return Color.Warning;
+
+            case "Error":
+                return Color.Error;
+
+            //may need to revisit
+            case "Dark":
+                return Color.Default;
+
+            default:
+                return Color.Default;
+        }   
+    }
+
+    public void SwtichStatus(AccountActivityStatus s)
+    {
+        currentStatus = s;
+        Hover = false;
+        StateHasChanged();
+    }
+
     public void ShowErrorPopup(string errormessage, string title)
     {
         Visible = true;
@@ -49,7 +94,6 @@
 
     private void CloseErrorPopup()
     {
-        //Hover = !Hover;
         Visible = false;
         Message = "";
         StateHasChanged();
