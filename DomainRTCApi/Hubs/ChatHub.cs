@@ -10,6 +10,7 @@ namespace DomainRTCApi.Hubs
         //https://learn.microsoft.com/en-us/aspnet/core/signalr/authn-and-authz?view=aspnetcore-8.0#use-claims-to-customize-identity-handling
         #region docs for Stream data
         //https://learn.microsoft.com/en-us/aspnet/core/signalr/streaming?view=aspnetcore-8.0
+        //https://github.com/Shhzdmrz/SignalRCoreWebRTC/tree/master
         public async Task UploadStream(ChannelReader<string> stream)
         {
             while (await stream.WaitToReadAsync())
@@ -39,7 +40,7 @@ namespace DomainRTCApi.Hubs
             await base.OnConnectedAsync();
         }
 
-        #region Group methods 
+        #region chat methods 
         public async Task JoinGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
@@ -51,15 +52,17 @@ namespace DomainRTCApi.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
             await Clients.Caller.LeaveGroup(groupName);
         }
-        public async Task SpeakToGroup(string groupName, string message)
-        {
-            await Clients.Group(groupName).ReceiveMessage(message);
-        }
+
         #endregion
 
-        #region Server methods
-
-        
+        #region Voice methods
+        public async Task SpeakToGroup(string groupName, IAsyncEnumerable<string> stream)
+        {
+           await foreach(var item in stream)
+            {
+                await Clients.Group(groupName).ReceiveMessage(item);
+            }
+        }
         #endregion
     }
 }
