@@ -2,8 +2,8 @@
 @using MudBlazor
 @rendermode InteractiveAuto
 
-<div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 0px; width: 100vw; height: 100vh; position:fixed; z-index: 2; background: var(--mud-palette-error);" @onclick="@(()=> Visible = false)">
-<div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 25px; width: 300px; position:fixed; z-index: 1;">
+
+    <div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 25px; width: 300px; position:fixed; z-index: 2; ">
     <div class="modal-dialog" style="background: var(--mud-palette-surface);">
         <div class="modal-content" style="background: var(--mud-palette-transparent);">
             <div class="modal-header justify-start">
@@ -42,8 +42,8 @@
         </div>
     </div>
 </div>
+<div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 0px; width: 100vw; height: 100vh; position:fixed; z-index: 1; background: var(--mud-palette-transparent);" @onclick="@(()=> Visible = false)">
 </div>
-
 @code {
     public string? Message { get; set; }
     public string? Date { get; set; }
