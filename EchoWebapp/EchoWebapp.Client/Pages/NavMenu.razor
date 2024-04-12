@@ -133,8 +133,8 @@
 
 
                          @* <MudDialogProvider Position="DialogPosition.BottomLeft" NoHeader="true" CloseOnEscapeKey="true" /> *@
-                         <Popup @ref=popup />
-                         <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenDialog">
+                        <Popup @ref=popup />
+                         <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile">
                              
                             <MudBadge Color="Color.Success" Bordered Overlap="true" Origin="Origin.BottomRight">
                                 <MudImage Src="@accounts[0].Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
@@ -174,10 +174,10 @@
     bool openFriends = false;
     bool openChannels = false;
 
-    private void OpenDialog()
+    private void OpenProfile()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraExtraLarge };
-        popup.ShowErrorPopup("Test for Popup","her vil din profil-info vise");
+        popup.ShowPopup("Echo member since",accounts[0].TimeCreated.Date.ToString("dd MMMM yyyy"), accounts[0].Name);
         //DialogService.Show<Profile>("Simple Dialog", options);
     }
 
@@ -202,7 +202,6 @@
         openFriends = false;
         openMessages = false;
     }
-
 
     void GoToFriends()
     {
@@ -242,7 +241,10 @@
     };
 
     public List<Account> accounts = new(){
-        new Account() { Id = 112, Name = "TheDoe", Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", }, ActivityStatus = new AccountActivityStatus(){ Description = "Online", Icon = "", IconColor = Color.Success.ToString() /* Hvordan fanden vil vi gemme og bruge farven? */ }, },
+        new Account() { Id = 112, Name = "TheDoe", Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", },
+            ActivityStatus = new AccountActivityStatus(){ Description = "Online", Icon = "", IconColor = Color.Success.ToString()
+            /* Hvordan fanden vil vi gemme og bruge farven? */ 
+        }, TimeCreated = DateTime.Now.AddDays(-17) },
         new Account() { Id = 113, Name = "BobTheBuilder", Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } },
         new Account() { Id = 114, Name = "Mary Jane", Profile = new AccountProfile(){ AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg", } },
         new Account() { Id = 115, Name = "Billie Jean",  Profile = new AccountProfile(){ AvatarFileURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg", } },

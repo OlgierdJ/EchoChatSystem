@@ -5,18 +5,23 @@
 <div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 25px; width: 300px; position:fixed; z-index: 1">
     <div class="modal-dialog">
         <div class="modal-content" style="background: var(--mud-palette-surface);">
-            <div class="modal-header">
-                <h5 class="modal-title">@Title</h5>
-            </div>
-            <div class="modal-body">
-                <p>@Message</p>
+            <div class="modal-header justify-start">
                 <MudAvatar>
                     <MudImage Src="https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg" />
                 </MudAvatar>
+                <h5 class="modal-title pl-3">@Name</h5>
+            </div>
+            <div class="modal-body">
+                @if(Message is not null)
+                {
+                    <MudText Typo="Typo.button">@((MarkupString)Message.Replace(Environment.NewLine, "<br />"))</MudText>
+                    <MudText Typo="Typo.body1">@((MarkupString)Date.Replace(Environment.NewLine, "<br />"))</MudText>
+                }
 
                 <!-- Menu doesnt seem to work in our solution. Might be due to rendermode -->
                 <!-- Button and div menu does work tho LUL -->
-
+            </div>
+            <div class="modal-footer justify-start">
                 <MudButton Color="StringToColor(currentStatus.IconColor)" @onclick="@(()=>Hover=!Hover)">Status: @currentStatus.Name</MudButton>
                 <div id="myDropdown" class="modal-content pa-3" style="display: @(Hover ? "block" : "none"); bottom: 150px;  left: 327px; width: 125px; position:fixed; background: var(--mud-palette-surface);">
                     <div class="d-flex flex-column my-2">
@@ -39,8 +44,8 @@
 
 @code {
     public string? Message { get; set; }
-
-    public string? Title { get; set; }
+    public string? Date { get; set; }
+    public string? Name { get; set; }
 
     public bool Visible { get; set; }
     public bool Hover { get; set; }
@@ -68,7 +73,6 @@
             case "Error":
                 return Color.Error;
 
-            //may need to revisit
             case "Dark":
                 return Color.Default;
 
@@ -84,18 +88,21 @@
         StateHasChanged();
     }
 
-    public void ShowErrorPopup(string errormessage, string title)
+    public void ShowPopup(string message, string date, string name)
     {
         Visible = true;
-        Message = errormessage;
-        Title = title;
+        Message = message;
+        Date = date;
+        Name = name;
         StateHasChanged();
     }
 
-    private void CloseErrorPopup()
+    public void CloseErrorPopup()
     {
         Visible = false;
-        Message = "";
+        Message = ""; 
+        Date = "";
+        Name = "";
         StateHasChanged();
     }
 }
