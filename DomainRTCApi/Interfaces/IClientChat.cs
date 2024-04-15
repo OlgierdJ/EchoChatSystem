@@ -6,6 +6,6 @@
         Task JoinGroup(string groupName);
         Task LeaveGroup(string groupName);
         Task LeaveGroups(string[] groupNames);
-        Task SpeakToGroup(string groupName, string message);
+        Task StreamToGroup(string groupName, string message);
     }
 }

@@ -11,25 +11,25 @@ namespace DomainRTCApi.Hubs
         #region docs for Stream data
         //https://learn.microsoft.com/en-us/aspnet/core/signalr/streaming?view=aspnetcore-8.0
         //https://github.com/Shhzdmrz/SignalRCoreWebRTC/tree/master
-        public async Task UploadStream(ChannelReader<string> stream)
-        {
-            while (await stream.WaitToReadAsync())
-            {
-                while (stream.TryRead(out var item))
-                {
-                    // do something with the stream item
-                    Console.WriteLine(item);
-                }
-            }
-        }
+        //public async Task UploadStream(ChannelReader<string> stream)
+        //{
+        //    while (await stream.WaitToReadAsync())
+        //    {
+        //        while (stream.TryRead(out var item))
+        //        {
+        //            // do something with the stream item
+        //            Console.WriteLine(item);
+        //        }
+        //    }
+        //}
 
-        public async Task UploadStream(IAsyncEnumerable<string> stream)
-        {
-            await foreach (var item in stream)
-            {
-                Console.WriteLine(item);
-            }
-        }
+        //public async Task UploadStream(IAsyncEnumerable<string> stream)
+        //{
+        //    await foreach (var item in stream)
+        //    {
+        //        Console.WriteLine(item);
+        //    }
+        //}
         #endregion
 
         public async override Task OnConnectedAsync()
@@ -40,7 +40,7 @@ namespace DomainRTCApi.Hubs
             await base.OnConnectedAsync();
         }
 
-        #region chat methods 
+        #region Group methods 
         public async Task JoinGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
@@ -52,11 +52,10 @@ namespace DomainRTCApi.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
             await Clients.Caller.LeaveGroup(groupName);
         }
-
         #endregion
 
         #region Voice methods
-        public async Task SpeakToGroup(string groupName, IAsyncEnumerable<string> stream)
+        public async Task StreamToGroup(string groupName, IAsyncEnumerable<string> stream)
         {
            await foreach(var item in stream)
             {
