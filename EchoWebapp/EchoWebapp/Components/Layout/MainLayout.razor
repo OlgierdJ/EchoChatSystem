@@ -1,20 +1,23 @@
 ﻿@inherits LayoutComponentBase
 @using MudBlazor
+@inject IDialogService DialogService
 
-<MudThemeProvider IsDarkMode/>
-<MudDialogProvider />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" DefaultScrollbar=false />
 <MudSnackbarProvider />
+@* <MudButton @rendermode=InteractiveAuto>
+</MudButton> *@
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<MudPaper Width="100vw" MinHeight="3vh" MaxHeight="6vh" Square Style="background: var(--mud-palette-dark);" Elevation="0"><MudText Class="pl-5 py-1">Echo</MudText></MudPaper>
+ <div class="page" style=@($"color-scheme: {(_isDarkMode ? "dark" : "light")}")>
+     <div>
+        <NavMenu @rendermode=InteractiveAuto />
+    </div> 
 
     <main>
-        <article class="content px-4">
+         <CascadingValue Value="DialogService">
             @Body
-        </article>
-    </main>
+        </CascadingValue>
+     </main>
 </div>
 
 <div id="blazor-error-ui">
@@ -22,3 +25,10 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@* <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode" @rendermode=InteractiveAuto /> *@
+
+@code {
+    public MudTheme _theme = new();
+    private bool _isDarkMode = true;
+}

@@ -6,6 +6,8 @@
 
 main {
     flex: 1;
+    overflow: hidden;
+    height: calc(100vh-30px);
 }
 
 .sidebar {
@@ -49,6 +51,7 @@ main {
 @media (min-width: 641px) {
     .page {
         flex-direction: row;
+        overflow: hidden;
     }
 
     .sidebar {
