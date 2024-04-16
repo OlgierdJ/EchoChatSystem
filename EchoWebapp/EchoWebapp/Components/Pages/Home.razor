@@ -1,7 +1,103 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Threading.Channels
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@implements IAsyncDisposable
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="form-group">
+    <label>
+        User:
+        <input @bind="userInput" />
+    </label>
+</div>
+<div class="form-group">
+    <label>
+        Message:
+        <input @bind="messageInput" size="50" />
+    </label>
+</div>
+<button @onclick="Send" disabled="@(!IsConnected)">Send</button>
 
-Welcome to your new app.
+<hr>
+
+<ul id="messagesList">
+    @foreach (var message in messages)
+    {
+        <li>@message</li>
+    }
+</ul>
+
+@code {
+    private HubConnection? hubConnection;
+    private List<string> messages = new List<string>();
+    private string? userInput;
+    private string? messageInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:7265/chat")
+            .Build();
+
+        hubConnection.On<string>("ReceiveMessage", (message) =>
+        {
+            var encodedMsg = $"{message}";
+            messages.Add(encodedMsg);
+            InvokeAsync(StateHasChanged);
+        });
+        hubConnection.On<string>("ReceiveSoundStream", async(frames) =>
+       {
+           if (frames != null)
+           {
+               // Put the bytes in a memory stream
+               // var stream = new MemoryStream(Convert.FromBase64String(frames));
+               // // // Play the audio file
+               // using var streamRef = new DotNetStreamReference(stream: stream);
+               await JS.InvokeVoidAsync("playAudio", frames);
+           }
+       });
+
+        await hubConnection.StartAsync();
+    }
+
+    async IAsyncEnumerable<string> clientStreamData()
+    {
+        for (var i = 0; i < 5; i++)
+        {
+            using StreamReader reader = File.OpenText("C:\\Users\\rrb\\Desktop\\sample.mp3");
+           
+            while (!reader.EndOfStream)
+                yield return await reader.ReadLineAsync();
+        }
+        //After the for loop has completed and the local function exits the stream completion will be sent.
+    }
+
+    private async Task Send()
+    {
+        if (hubConnection is not null)
+        {
+            var load = clientStreamData();
+            await hubConnection.SendAsync("StreamToAll", load);
+            // var channel = Channel.CreateBounded<string>(10);
+            // await hubConnection.SendAsync("StreamToAll", channel.Reader);
+            // await channel.Writer.WriteAsync("some data");
+            // await channel.Writer.WriteAsync("some more data");
+            // channel.Writer.Complete();
+        }
+    }
+
+    public bool IsConnected =>
+        hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+}
