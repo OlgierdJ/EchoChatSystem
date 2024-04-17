@@ -55,14 +55,14 @@ namespace DomainRTCApi.Hubs
         #endregion
 
         #region Voice methods
-        public async Task StreamToAll(IAsyncEnumerable<string> stream)
+        public async Task StreamToAll(IAsyncEnumerable<byte[]> stream)
         {
             await foreach (var item in stream)
             {
                 await Clients.All.ReceiveSoundStream(item);
             }
         }
-        public async Task StreamToGroup(string groupName, IAsyncEnumerable<string> stream)
+        public async Task StreamToGroup(string groupName, IAsyncEnumerable<byte[]> stream)
         {
            await foreach(var item in stream)
             {
