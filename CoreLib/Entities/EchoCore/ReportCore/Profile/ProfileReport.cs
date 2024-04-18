@@ -3,7 +3,7 @@ using CoreLib.Entities.EchoCore.AccountCore;
 
 namespace CoreLib.Entities.EchoCore.ReportCore.Profile
 {
-    public class ProfileReport : BaseReport<ulong, Account, ulong, ProfileReportReason, byte, ReportedProfile, ulong>
+    public class ProfileReport : BasePunishableReport<ulong, Account, ulong, ProfileReportReason, byte, ReportedProfile, ulong, AccountViolation, ulong>
     {
     }
 }
