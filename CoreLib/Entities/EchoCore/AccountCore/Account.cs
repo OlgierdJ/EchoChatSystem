@@ -1,4 +1,5 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.FriendCore;
 using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
@@ -32,7 +33,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public AccountSettings Settings { get; set; }
 
         //Interactivity stuff - also private settings and information about this account only used by the user and the application / api
-        public ICollection<AccountRole>? Roles { get; set; } //System / Application roles (perhaps not needed)
+        public ICollection<Role>? Roles { get; set; } //System / Application roles (perhaps not needed)
         public ICollection<AccountViolation>? Violations { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
         public ICollection<AccountSession>? Sessions { get; set; } //Sessions for the account logging the device, location from which the session is valid and also when the validity expires, and alternatively allows the user to revoke validity of a session
         public ICollection<AccountBlock>? BlockedAccounts { get; set; } //This account blocks other accounts through this

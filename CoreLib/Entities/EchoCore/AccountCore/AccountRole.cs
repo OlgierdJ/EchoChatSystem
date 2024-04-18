@@ -1,4 +1,5 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Entities.EchoCore.ApplicationCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
