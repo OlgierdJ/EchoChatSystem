@@ -31,29 +31,115 @@ namespace DomainRTCApi.Hubs
         //    }
         //}
         #endregion
+        public ChatHubGroupManager GroupManager { get; set; }
+        public ChatHubClientManager ClientManager { get; set; }
+        public Dictionary<string, string> ClientMappings { get; set; }
+        public ChatHub(ChatHubGroupManager gm, ChatHubClientManager cm)
+        { 
+            GroupManager = gm;
+            ClientManager = cm;
+        }
+
+        private async Task InvokeJoinGroup(string clientId, string groupName)
+        {
+            if (!GroupManager.ClientGroupMappings.TryAdd(clientId, groupName))
+            {
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupManager.ClientGroupMappings.GetValueOrDefault(clientId));
+                GroupManager.ClientGroupMappings.Remove(clientId);
+                GroupManager.ClientGroupMappings.Add(clientId, groupName);
+            }
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            await Clients.Group(groupName).JoinGroup(groupName, clientId);
+        }
 
         public async override Task OnConnectedAsync()
         {
+            //map context connection id to client account in core api
+            //string user = Context.User.Identity.Name;
+            //ClientMappings.Add(user, Context.ConnectionId);
             await Clients.Client(Context.ConnectionId).ReceiveMessage(
                 $"you are connecting with Id{Context.User?.Identity?.Name}");
-
             await base.OnConnectedAsync();
+        }
+        public async override Task OnDisconnectedAsync(Exception? exception)
+        {
+            //remove mapping of context connection id to client account
+            await base.OnDisconnectedAsync(exception);
         }
 
         #region Group methods 
         public async Task JoinGroup(string groupName)
         {
+            //join group function
+            //add the sender to the group
+            //proc joingroup event on all participants in group //(maybe exclude specific participants based on settings to avoid wasting bandwidth)
+            //^(plays sound locally on client and then spawns the joining client from their view)
+            
+            if (!GroupManager.ClientGroupMappings.TryAdd(Context.UserIdentifier, groupName))
+            {
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupManager.ClientGroupMappings.GetValueOrDefault(Context.UserIdentifier));
+                GroupManager.ClientGroupMappings.Remove(Context.UserIdentifier);
+                GroupManager.ClientGroupMappings.Add(Context.UserIdentifier, groupName);
+            }
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            await Clients.Caller.JoinGroup(groupName);
-            await Clients.Group(groupName).ReceiveMessage(Context.User.Identity.Name + "has joined.");
+            await Clients.Group(groupName).JoinGroup(groupName, Context.UserIdentifier);
+            //await Clients.Group(groupName).ReceiveMessage(Context.User.Identity.Name + "has joined.");
         }
         public async Task LeaveGroup(string groupName)
         {
+            //leave group function
+            //proc leavegroup event on all participants in group //(maybe exclude specific participants based on settings to avoid wasting bandwidth)
+            //^(plays sound locally on client and then removes the leaving client from their view)
+            //remove the sender from the group
+            GroupManager.ClientGroupMappings.Remove(Context.UserIdentifier);
+            await Clients.Group(groupName).LeaveGroup(groupName, Context.UserIdentifier);
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-            await Clients.Caller.LeaveGroup(groupName);
         }
         #endregion
+        public async Task MoveParticipant(string userIdentifier, string groupName)
+        {
+            //move participant function
+            //moved user has to be connected for this to work (not just online on the system but connected to a group within the RTCServer chathub)
+            //Also moving user has to be part of the same server and have permissions to move the user (later)
+            //idk check coreapi for permission or maybe do it in UI on the client (later)
+            var test = Clients.User(userIdentifier);
+            if (test == null)
+                return;
+            var testInGrp = GroupManager.ClientGroupMappings.TryGetValue(userIdentifier, out _);
+            if (testInGrp == false)
+                return;
+            //proc moveparticipant event on all participants in group //(maybe exclude specific participants based on settings to avoid wasting bandwidth)
+            //^(plays sound locally on client and then removes the leaving client from their view)
+            //remove the sender from the previous group
+            //add the sender to the specified group
+            //log the audit in the database of the coreapi
 
+            if (!GroupManager.ClientGroupMappings.TryAdd(userIdentifier, groupName))
+            {
+                await Groups.RemoveFromGroupAsync(userIdentifier, GroupManager.ClientGroupMappings.GetValueOrDefault(userIdentifier));
+                GroupManager.ClientGroupMappings.Remove(Context.UserIdentifier);
+                GroupManager.ClientGroupMappings.Add(Context.UserIdentifier, groupName);
+            }
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            await Clients.Group(groupName).JoinGroup(groupName);
+
+            await Clients.Group(groupName).LeaveGroup(groupName);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+        }
+
+        public async Task KickParticipant(string user, string groupName)
+        {
+            //move participant function
+            //proc moveparticipant event on all participants in group //(maybe exclude specific participants based on settings to avoid wasting bandwidth)
+            //^(plays sound locally on client and then removes the leaving client from their view)
+            //remove the sender from the previous group
+            //add the sender to the specified group
+            //log the audit in the database of the coreapi
+
+            await Clients.Group(groupName).LeaveGroup(groupName);
+            Clients.
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+        }
         #region Voice methods
         public async Task StreamToAll(IAsyncEnumerable<byte[]> stream)
         {
@@ -64,6 +150,8 @@ namespace DomainRTCApi.Hubs
         }
         public async Task StreamToGroup(string groupName, IAsyncEnumerable<byte[]> stream)
         {
+           //Speak to call function
+           //stream to all group participants excluding the sender and deafened participants
            await foreach(var item in stream)
             {
                 await Clients.Group(groupName).ReceiveSoundStream(item);
