@@ -40,16 +40,30 @@ namespace DomainRTCApi.Hubs
             ClientManager = cm;
         }
 
-        private async Task InvokeJoinGroup(string clientId, string groupName)
+        private async Task JoinGroup(string clientHandle, string groupName)
         {
-            if (!GroupManager.ClientGroupMappings.TryAdd(clientId, groupName))
+            //join group function
+            //add the sender to the group
+            //proc joingroup event on all participants in group //(maybe exclude specific participants based on settings to avoid wasting bandwidth)
+            //^(plays sound locally on client and then spawns the joining client from their view)
+            if (!GroupManager.ClientGroupMappings.TryAdd(clientHandle, groupName))
             {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupManager.ClientGroupMappings.GetValueOrDefault(clientId));
-                GroupManager.ClientGroupMappings.Remove(clientId);
-                GroupManager.ClientGroupMappings.Add(clientId, groupName);
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupManager.ClientGroupMappings.GetValueOrDefault(clientHandle));
+                GroupManager.ClientGroupMappings.Remove(clientHandle);
+                GroupManager.ClientGroupMappings.Add(clientHandle, groupName);
             }
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            await Clients.Group(groupName).JoinGroup(groupName, clientId);
+            await Clients.Group(groupName).JoinGroup(groupName, clientHandle);
+        }
+        private async Task LeaveGroup(string connectionId, string clientHandle, string groupName)
+        {
+            //leave group function
+            //proc leavegroup event on all participants in group //(maybe exclude specific participants based on settings to avoid wasting bandwidth)
+            //^(plays sound locally on client and then removes the leaving client from their view)
+            //remove the sender from the group
+            GroupManager.ClientGroupMappings.Remove(Context.UserIdentifier);
+            await Clients.Group(groupName).LeaveGroup(groupName, Context.UserIdentifier);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
 
         public async override Task OnConnectedAsync()
@@ -68,32 +82,14 @@ namespace DomainRTCApi.Hubs
         }
 
         #region Group methods 
-        public async Task JoinGroup(string groupName)
+        public async Task InvokeJoinGroup(string groupName)
         {
-            //join group function
-            //add the sender to the group
-            //proc joingroup event on all participants in group //(maybe exclude specific participants based on settings to avoid wasting bandwidth)
-            //^(plays sound locally on client and then spawns the joining client from their view)
-            
-            if (!GroupManager.ClientGroupMappings.TryAdd(Context.UserIdentifier, groupName))
-            {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupManager.ClientGroupMappings.GetValueOrDefault(Context.UserIdentifier));
-                GroupManager.ClientGroupMappings.Remove(Context.UserIdentifier);
-                GroupManager.ClientGroupMappings.Add(Context.UserIdentifier, groupName);
-            }
-            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            await Clients.Group(groupName).JoinGroup(groupName, Context.UserIdentifier);
+            await JoinGroup(Context.UserIdentifier, groupName);
             //await Clients.Group(groupName).ReceiveMessage(Context.User.Identity.Name + "has joined.");
         }
-        public async Task LeaveGroup(string groupName)
+        public async Task InvokeLeaveGroup(string groupName)
         {
-            //leave group function
-            //proc leavegroup event on all participants in group //(maybe exclude specific participants based on settings to avoid wasting bandwidth)
-            //^(plays sound locally on client and then removes the leaving client from their view)
-            //remove the sender from the group
-            GroupManager.ClientGroupMappings.Remove(Context.UserIdentifier);
-            await Clients.Group(groupName).LeaveGroup(groupName, Context.UserIdentifier);
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+            
         }
         #endregion
         public async Task MoveParticipant(string userIdentifier, string groupName)
