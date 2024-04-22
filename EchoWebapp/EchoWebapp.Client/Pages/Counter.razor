@@ -7,7 +7,6 @@
 <PageTitle>Counter</PageTitle>
 
 <div style="height:5vh;">
-
     <MudText Typo="Typo.h5" Class="mt-2 ml-2">
         <MudIcon Icon="@Icons.Material.Filled.Grid3x3" />
         general
@@ -22,42 +21,42 @@
         {
             @if (m.TimeSent.Date == DateTime.Now.Date)
             {
-                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
+                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                         <MudDivider FlexItem />
                      </MudPaper>
-                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                          <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">Today</MudText>
                      </MudPaper>
-                     <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                          <MudDivider FlexItem />
                      </MudPaper>
                  </MudPaper>
             }
             else if (m.TimeSent.Date == DateTime.Now.AddDays(-1).Date)
             {
-                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
+                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                         <MudDivider FlexItem />
                      </MudPaper>
-                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                          <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">Yesterday</MudText>
                      </MudPaper>
-                     <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                          <MudDivider FlexItem />
                      </MudPaper>
                  </MudPaper>
             }
             else
             {
-                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
+                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                         <MudDivider FlexItem />
                      </MudPaper>
-                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                          <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">@m.TimeSent.Day @m.TimeSent.ToString("MMMM") @m.TimeSent.Year</MudText>
                         </MudPaper>
-                        <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                        <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")">
                             <MudDivider FlexItem />
                      </MudPaper>
                  </MudPaper>
@@ -85,10 +84,10 @@
             <MudImage Src="images/mony.jpg"></MudImage>
             </MudAvatar>
             *@
-                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">@m.Author?.DisplayName.First()</MudAvatar>
+                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">@m.Author?.Name.First()</MudAvatar>
                         <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
                             <div class="d-flex flex-grow-1 gap-3">
-                                <MudText Color="Color.Primary">@m.Author?.DisplayName </MudText>
+                                <MudText Color="Color.Primary">@m.Author?.Name </MudText>
                                 <MudText Style="@($"color:{Colors.Grey.Default};")">@m.TimeSent.ToString("HH:mm")</MudText>
                             </div>
                             <MudText Typo="Typo.body1">@((MarkupString)m.Content.Replace(Environment.NewLine, "<br />"))</MudText>
@@ -110,6 +109,7 @@
  </MudToolBar>
 
  @code {
+    
     public string TextValue { get; set; }
     bool checkTime(DateTime dt)
     {
@@ -162,9 +162,9 @@
         chat.Messages = new List<ChatMessage>();
 
         chat.Id = 111;
-        chat.Participants.Add(new Account() { Id = 112, Name = "John Doe", DisplayName = "TheDoe" });
-        chat.Participants.Add(new Account() { Id = 113, Name = "Bob Builder", DisplayName = "BobTheBuilder" });
-        chat.Participants.Add(new Account() { Id = 114, Name = "Mary Jane", DisplayName = "MJ" });
+        chat.Participants.Add(new Account() { Id = 112, Name = "TheDoe"});
+        chat.Participants.Add(new Account() { Id = 113, Name = "BobTheBuilder"});
+        chat.Participants.Add(new Account() { Id = 114, Name = "Mary Jane"});
 
         ChatMessage msg = new ChatMessage();
         msg.Content = "First Message sent! Yay";

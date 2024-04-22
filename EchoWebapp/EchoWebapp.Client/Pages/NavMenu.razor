@@ -1,6 +1,8 @@
 ﻿@using CoreLib.Entities.EchoCore.AccountCore
 @using MudBlazor
 @inject NavigationManager nav
+@inject IDialogService DialogService
+
 
 <div class="d-flex">
     <MudPaper Width="72px" Height="100vh" Square Style="background: var(--mud-palette-dark);">
@@ -24,7 +26,7 @@
             {
                 <MudListItem Dense="true" OnClick="@OpenChannels">
                     <MudAvatar Size="Size.Medium">
-                        <MudImage Src="@c"/>
+                        <MudImage Src="@c" />
                     </MudAvatar>
                 </MudListItem>
             }
@@ -35,7 +37,7 @@
         @if (openMessages)
         {
             <div class="d-flex flex-grow-1">
-                 <MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
+                <MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
                      <MudPaper Square Style="background: var(--mud-palette-surface);" Height="5vh" Class="px-3" Elevation="1">
                          <MudTextField Style="background: var(--mud-palette-dark);" Placeholder=" Search" Value="searchTerm" KeyDownPreventDefault KeyUpPreventDefault />
                      </MudPaper>
@@ -47,7 +49,7 @@
                                 <MudAvatar>
                                     <MudImage Src="@c.Profile.AvatarFileURL" />
                                 </MudAvatar>
-                                <MudText Typo="Typo.caption">@c.DisplayName</MudText>
+                                <MudText Typo="Typo.caption">@c.Name</MudText>
                                 </MudListItem>
                         }
                         <MudListItem Dense="true">
@@ -67,13 +69,13 @@
                 <MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
                      <MudText Class="px-5 py-2">Friends</MudText>
                      <MudList Clickable="true">
-                         @foreach (var c in accounts.OrderBy(e => e.DisplayName))
+                         @foreach (var c in accounts.OrderBy(e => e.Name))
                         {
                             <MudListItem Dense="true" OnClick="@GoToChat">
                                 <MudAvatar>
                                     <MudImage Src="@c.Profile.AvatarFileURL" />
                                 </MudAvatar>
-                                <MudText Typo="Typo.caption">@c.DisplayName</MudText>
+                                <MudText Typo="Typo.caption">@c.Name</MudText>
                                 </MudListItem>
                         }
                         <MudListItem Dense="true">
@@ -102,7 +104,7 @@
                                      <MudAvatar Size="Size.Small">
                                          <MudImage Src="@accounts[4].Profile.AvatarFileURL" />
                                      </MudAvatar>
-                                     <MudText Typo="Typo.caption">@accounts[4].DisplayName</MudText>
+                                     <MudText Typo="Typo.caption">@accounts[4].Name</MudText>
                                     </MudPaper>
                                 </MudListItem>
                                 <MudListItem Dense="true">
@@ -110,8 +112,8 @@
                                      <MudAvatar Size="Size.Small">
                                          <MudImage Src="@accounts[3].Profile.AvatarFileURL" />
                                      </MudAvatar>
-                                     <MudText Typo="Typo.caption">@accounts[3].DisplayName</MudText>
-                                        <MudIcon Icon="@Icons.Material.Filled.MicOff" Size="Size.Small"/>
+                                     <MudText Typo="Typo.caption">@accounts[3].Name</MudText>
+                                        <MudIcon Icon="@Icons.Material.Filled.MicOff" Size="Size.Small" />
                                     </MudPaper>
                                 </MudListItem>
                             </MudList>
@@ -127,34 +129,58 @@
         <div class="d-flex">
             <MudPaper Width="280px" Height="10vh" Square Style="background: var(--mud-palette-dark);">
                  <MudListItem Dense="true">
-                     <MudPaper Class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 mt-1 flex-0" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
-                        <MudBadge Color="Color.Success" Bordered Overlap="true" Origin="Origin.BottomRight">
-                             <MudImage Src="@accounts[0].Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
-                        </MudBadge>
-                         <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
-                            <MudText Typo="Typo.caption">@accounts[0].DisplayName</MudText>
-                            <MudText Typo="Typo.caption">@accounts[0].ActivityStatus.Description</MudText>
-                        </MudPaper>
+                     <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
+
+
+                         @* <MudDialogProvider Position="DialogPosition.BottomLeft" NoHeader="true" CloseOnEscapeKey="true" /> *@
+
+                        <Popup @ref=popup />
+                         <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile">
+                             
+                            <MudBadge Color="Color.Success" Bordered Overlap="true" Origin="Origin.BottomRight">
+                                <MudImage Src="@accounts[0].Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+                            </MudBadge>
+
+                            <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
+                                <MudText Typo="Typo.caption">@accounts[0].Name</MudText>
+                                <MudText Typo="Typo.caption">@accounts[0].ActivityStatus?.Description</MudText>
+                            </MudPaper>
+                         </div>
+                         <style>
+                             .hoverable:hover{
+                                    background: rgba(255,255,255,0.1)
+                             }
+                         </style>
+
                             <MudPaper Class="d-flex flex-grow-1 gap-2 flex-1" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
                              <MudIconButton Size="Size.Small" Icon=@($"{(!mute ? @Icons.Material.Filled.Mic : @Icons.Material.Filled.MicOff)}") Color=@(!mute ? Color.Default : Color.Error) OnClick="ToggleMute" />
                              <MudIconButton Size="Size.Small" Icon=@($"{(!deaf ? @Icons.Material.Filled.Headset : @Icons.Material.Filled.HeadsetOff)}") Color=@(!deaf ? Color.Default : Color.Error) OnClick=" ToggleDeaf" />
                              <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Settings" OnClick="ToggleSettings" />
-                        </MudPaper>
-                    </MudPaper>
-                </MudListItem>
-            </MudPaper>
-        </div>
-
+                         </MudPaper>
+                     </MudPaper>
+                 </MudListItem>
+             </MudPaper>
+         </div>
      </div>
-</div>
+ </div>
 
  @code {
+    // [CascadingParameter]
+    // IDialogService DialogService { get; set; }
+    Popup popup = new();
     string searchTerm = "";
     bool mute = false;
     bool deaf = false;
     bool openMessages = false;
     bool openFriends = false;
     bool openChannels = false;
+
+    private void OpenProfile()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraExtraLarge };
+        popup.ShowPopup("Echo member since",accounts[0].TimeCreated.Date.ToString("dd MMMM yyyy"), accounts[0].Name);
+        //DialogService.Show<Profile>("Simple Dialog", options);
+    }
 
     void OpenFriends()
     {
@@ -178,7 +204,6 @@
         openMessages = false;
     }
 
-
     void GoToFriends()
     {
         nav.NavigateTo("/messages");
@@ -190,7 +215,7 @@
 
     void ToggleMute()
     {
-        mute = !mute;  
+        mute = !mute;
     }
     void ToggleDeaf()
     {
@@ -217,10 +242,13 @@
     };
 
     public List<Account> accounts = new(){
-        new Account() { Id = 112, Name = "John Doe", DisplayName = "TheDoe", Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", }, ActivityStatus = new AccountActivityStatus(){ Description = "Online", Icon = "", IconColor = Color.Success.ToString() /* Hvordan fanden vil vi gemme og bruge farven? */ }, },
-        new Account() { Id = 113, Name = "Bob Builder", DisplayName = "BobTheBuilder", Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } },
-        new Account() { Id = 114, Name = "Mary Jane", DisplayName = "MJ", Profile = new AccountProfile(){ AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg", } },
-        new Account() { Id = 115, Name = "Billie Jean", DisplayName = "NotMyLover",  Profile = new AccountProfile(){ AvatarFileURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg", } },
-        new Account() { Id = 116, Name = "Jeppe", DisplayName = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", } }
+        new Account() { Id = 112, Name = "TheDoe", Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", },
+            ActivityStatus = new AccountActivityStatus(){ Description = "Online", Icon = "", IconColor = Color.Success.ToString()
+            /* Hvordan fanden vil vi gemme og bruge farven? */ 
+        }, TimeCreated = DateTime.Now.AddDays(-17) },
+        new Account() { Id = 113, Name = "BobTheBuilder", Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } },
+        new Account() { Id = 114, Name = "Mary Jane", Profile = new AccountProfile(){ AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg", } },
+        new Account() { Id = 115, Name = "Billie Jean",  Profile = new AccountProfile(){ AvatarFileURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg", } },
+        new Account() { Id = 116, Name = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", } }
     };
 }

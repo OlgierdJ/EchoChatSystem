@@ -1,6 +1,8 @@
-﻿namespace DomainCoreApi.EFCORE
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace DomainCoreApi.EFCORE
 {
-    public class EchoDbContext
+    public class EchoDbContext : DbContext
     {
     }
 }

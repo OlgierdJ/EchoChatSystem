@@ -1,0 +1,29 @@
+﻿@page "/profile"
+@rendermode InteractiveAuto
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudAvatar>
+            <MudImage Src="https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg" />
+        </MudAvatar>
+
+        <!-- Menu doesnt seem to work in our solution. Might be due to rendermode -->
+        
+         <MudMenu Color="Color.Secondary" Label="Status" FullWidth ActivationEvent="MouseEvent.MouseOver">
+             <MudMenuItem>Online</MudMenuItem>
+             <MudMenuItem>Idle</MudMenuItem>
+             <MudMenuItem>Do Not Disturb</MudMenuItem>
+             <MudMenuItem>Invisible</MudMenuItem>
+         </MudMenu> 
+        
+
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}

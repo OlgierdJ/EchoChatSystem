@@ -10,7 +10,9 @@
     <ProjectReference Include="..\..\CoreLib\CoreLib.csproj" />
     <ProjectReference Include="..\EchoWebapp.Client\EchoWebapp.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
     <PackageReference Include="MudBlazor" Version="6.15.0" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
 
 </Project>
