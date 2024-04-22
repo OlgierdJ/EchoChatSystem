@@ -1,11 +1,9 @@
 ﻿using CoreLib.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Linq;
-using DomainCoreApi.EFCORE;
 using CoreLib.Interfaces.Bases;
+using DomainCoreApi.EFCORE;
 
-namespace DomainCoreApi.Repositories.Bases
+namespace CoreLib.Repositories.Bases
 {
     public abstract class BaseEntityRepository<T> : IRepository<T> where T : class, IEntity, new()
     {

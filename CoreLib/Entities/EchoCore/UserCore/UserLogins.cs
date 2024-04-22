@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.UserCore
 {
-    internal class UserLogins
+    public class UserLogins
     {
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+
     }
 }

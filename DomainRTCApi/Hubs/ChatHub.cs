@@ -1,14 +1,17 @@
 ﻿using DomainRTCApi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Channels;
 
 namespace DomainRTCApi.Hubs
 {
+    [Authorize]
     public class ChatHub : Hub<IClientChat>
     {
+
+        #region docs for Stream data
         //https://learn.microsoft.com/en-us/aspnet/core/signalr/groups?view=aspnetcore-8.0
         //https://learn.microsoft.com/en-us/aspnet/core/signalr/authn-and-authz?view=aspnetcore-8.0#use-claims-to-customize-identity-handling
-        #region docs for Stream data
         //https://learn.microsoft.com/en-us/aspnet/core/signalr/streaming?view=aspnetcore-8.0
         //https://github.com/Shhzdmrz/SignalRCoreWebRTC/tree/master
         //public async Task UploadStream(ChannelReader<string> stream)
@@ -35,12 +38,11 @@ namespace DomainRTCApi.Hubs
         public async override Task OnConnectedAsync()
         {
             await Clients.Client(Context.ConnectionId).ReceiveMessage(
-                $"you are connecting with Id{Context.User?.Identity?.Name}");
+                $"you are connecting with Id {Context.User.Identity.Name}");
 
             await base.OnConnectedAsync();
         }
 
-        #region Group methods 
         public async Task JoinGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
@@ -52,9 +54,6 @@ namespace DomainRTCApi.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
             await Clients.Caller.LeaveGroup(groupName);
         }
-        #endregion
-
-        #region Voice methods
         public async Task StreamToAll(IAsyncEnumerable<byte[]> stream)
         {
             await foreach (var item in stream)
@@ -69,6 +68,5 @@ namespace DomainRTCApi.Hubs
                 await Clients.Group(groupName).ReceiveSoundStream(item);
             }
         }
-        #endregion
     }
 }

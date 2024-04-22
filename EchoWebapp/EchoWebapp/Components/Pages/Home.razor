@@ -65,13 +65,13 @@
             await JS.InvokeAsync<string>("SetDotNetHelper", _objRef);
         }
     }
-
     protected override async Task OnInitializedAsync()
     {
-
-
         hubConnection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:7265/chat")
+            .WithUrl("https://localhost:7265/chat", opts =>
+            {
+                opts.AccessTokenProvider = () => Task.FromResult("aaaaBBBBccccDDDDDD");
+            })
             .Build();
 
         hubConnection.On<string>("ReceiveMessage", (message) =>
