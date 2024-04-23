@@ -1,7 +1,10 @@
-﻿namespace DomainRTCApi
+﻿using System.Collections.Concurrent;
+
+namespace DomainRTCApi
 {
     public class ChatHubClientManager
     {
-        public Dictionary<string, string> ClientGroupMappings { get; set; }
+        public ConcurrentDictionary<string, string> ClientConnectionMappings { get; set; } //maps clienthandles to connections
+        public ConcurrentDictionary<string,bool> IgnoreDCEventList { get; set; } //handles clientconnections to ignore on dc
     }
 }

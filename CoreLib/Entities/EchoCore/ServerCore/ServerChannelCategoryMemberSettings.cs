@@ -2,7 +2,7 @@
 
 namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerChannelCategoryMemberSettings : BaseEntity<int>
+    public class ServerChannelCategoryMemberSettings : BaseEntity<uint>
     {
         public int ChannelCategoryId { get; set; }
         public int RoleId { get; set; }

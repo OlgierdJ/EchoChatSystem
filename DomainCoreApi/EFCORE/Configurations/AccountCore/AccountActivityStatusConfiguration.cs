@@ -13,7 +13,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.Property(b => b.Description).HasMaxLength(200).IsRequired(false);
             builder.Property(b => b.Icon).HasMaxLength(200).IsRequired();
             builder.Property(b => b.IconColor).HasMaxLength(16).IsRequired();
-            builder.HasMany(b => b.Accounts).WithOne(b=>b.ActivityStatus).HasForeignKey(b=>b.ActivityStatusId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(b => b.Accounts).WithOne(b=>b.ActivityStatus).HasForeignKey(b=>b.ActivityStatusId).OnDelete(DeleteBehavior.Restrict).IsRequired();
         }
     }
 }

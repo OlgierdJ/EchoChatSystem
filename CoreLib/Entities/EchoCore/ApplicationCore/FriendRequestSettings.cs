@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class FriendRequestSettings : BaseEntity<int>
+    public class FriendRequestSettings : BaseEntity<ulong>
     {
-        public ulong AccountId { get; set; }
+        public ulong AccountSettingsId { get; set; }
+        public AccountSettings AccountSettings { get; set; }
+        //public ulong AccountId { get; set; }
         public bool Everyone { get; set; }
         public bool FriendsOfFriends { get; set; }
         public bool ServerMembers { get; set; }
-        public Account? RequestedAccount { get; set; }
+        //public Account? RequestedAccount { get; set; }
     }
 }

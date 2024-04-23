@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class NotificationSettings : BaseEntity<int>
+    public class NotificationSettings : BaseEntity<ulong>
     {
         //her lave det om til at NotificationSettings kigger på AccountSettings i stedefor a kigge Account
         public ulong AccountSettingsId { get; set; }

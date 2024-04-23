@@ -12,23 +12,23 @@ namespace DomainCoreApi.EFCORE.Configurations.FriendCore
             builder
                 .HasKey(b => b.Id);
             builder
-                .Property(b => b.TimeCreated)
+                .Property(b => b.TimeSuggested)
                 .ValueGeneratedOnAdd()
                 .IsRequired();
             builder
                .Property(b => b.Declined)
                .IsRequired();
-            builder.HasOne(b => b.SuggestedFriend)
+            builder.HasOne(b => b.Suggestion)
                 .WithMany()
-                .HasForeignKey(b => b.SuggestedFriendId)
+                .HasForeignKey(b => b.SuggestionId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
-            builder.HasOne(b => b.Account)
+            builder.HasOne(b => b.Receiver)
                 .WithMany(e => e.FriendSuggestions)
-                .HasForeignKey(b => b.AccountId)
+                .HasForeignKey(b => b.ReceiverId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
-            builder.HasIndex(b=>new { b.AccountId, b.SuggestedFriendId }).IsUnique();
+            builder.HasIndex(b=>new { b.ReceiverId, b.SuggestionId }).IsUnique();
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore
 {
-    public class Connections : BaseEntity<int>
+    public class Connections : BaseEntity<uint>
     {
         //platform connections like facebook or x or steam
         public Guid AccountId { get; set; }

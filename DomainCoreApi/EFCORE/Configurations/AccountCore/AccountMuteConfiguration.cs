@@ -11,8 +11,8 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.HasKey(b => b.Id);
             builder.Property(b => b.TimeMuted).ValueGeneratedOnAdd().IsRequired();
             builder.Property(b => b.ExpirationTime).IsRequired(false);
-            builder.HasOne(b => b.Subject).WithMany(b => b.MutedVoices).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(b => b.Muter).WithMany().HasForeignKey(b => b.MuterId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(b => b.Subject).WithMany().HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Muter).WithMany(b => b.MutedVoices).HasForeignKey(b => b.MuterId).OnDelete(DeleteBehavior.Cascade).IsRequired();
         }
     }
 }

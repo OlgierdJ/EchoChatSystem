@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.Base;
+using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.Enums;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class AccessibilitySettings
+    public class AccessibilitySettings : BaseEntity<ulong>
     {
         //Color stuff
         public byte SaturationPercent { get; set; }
