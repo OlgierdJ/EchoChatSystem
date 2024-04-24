@@ -1,6 +1,7 @@
 using CoreLib.Interfaces;
 using DomainCoreApi.EFCORE;
 using DomainCoreApi.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,13 @@ builder.Services.AddDbContext<EchoDbContext>(options => options.UseSqlServer(con
 // Add services to the container.
 builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
 
+builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
 
+builder.Services.AddAuthorizationBuilder().AddPolicy("api", p =>
+{
+    p.RequireAuthenticatedUser();
+    p.AddAuthenticationSchemes(IdentityConstants.BearerScheme);
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -34,6 +41,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers().RequireAuthorization("api");
 
 app.Run();

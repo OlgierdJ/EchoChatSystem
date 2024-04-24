@@ -28,7 +28,7 @@ namespace CoreLib.Handlers
             var creds = await _PasswordRepo.GetAllAsync();
             var UserPassword = creds.First(obj => obj.UserId == UserId);
 
-            using (var pbkdf2 = new Rfc2898DeriveBytes(Password, UserPassword.PasswordSalt, 10000))
+            using (var pbkdf2 = new Rfc2898DeriveBytes(Password, UserPassword.Salt, 10000))
             {
                 byte[] hash = pbkdf2.GetBytes(20);
 
