@@ -71,7 +71,7 @@
                      <MudList Clickable="true">
                          @foreach (var c in accounts.OrderBy(e => e.Name))
                         {
-                            <MudListItem Dense="true" OnClick="@GoToChat">
+                            <MudListItem Dense="true" OnClick="@GoToFriends">
                                 <MudAvatar>
                                     <MudImage Src="@c.Profile.AvatarFileURL" />
                                 </MudAvatar>
@@ -206,7 +206,7 @@
 
     void GoToFriends()
     {
-        nav.NavigateTo("/messages");
+        nav.NavigateTo("/friends");
     }
     void GoToChat()
     {
@@ -223,6 +223,8 @@
     }
     void ToggleSettings()
     {
+
+        nav.NavigateTo("/login");
         //DO SETTINGS POPUP?
     }
 

@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoWebapp", "EchoWebapp\Ec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoWebapp.Client", "EchoWebapp\EchoWebapp.Client\EchoWebapp.Client.csproj", "{74B17CB5-D8CA-4DE9-BDAB-1A924F6C4514}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuthServer", "OAuthServer\OAuthServer.csproj", "{6AF31512-6B80-429D-87C7-86A67C340FF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuthServer", "OAuthServer\OAuthServer.csproj", "{6AF31512-6B80-429D-87C7-86A67C340FF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

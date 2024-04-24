@@ -2,8 +2,9 @@
 @using MudBlazor
 @inject IDialogService DialogService
 
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" DefaultScrollbar=false />
+<MudThemingProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" DefaultScrollbar=false />
 <MudSnackbarProvider />
+<MudPopoverProvider/>
 @* <MudButton @rendermode=InteractiveAuto>
 </MudButton> *@
 
