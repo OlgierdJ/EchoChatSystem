@@ -24,14 +24,16 @@
             </div>
             <div class="modal-footer justify-start">
                 <MudButton Color="StringToColor(currentStatus.IconColor)" @onclick="@(()=>Hover=!Hover)">Status: @currentStatus.Name</MudButton>
-                <div id="myDropdown" class="modal-content pa-3" style="display: @(Hover ? "block" : "none"); bottom: 150px;  left: 327px; width: 125px; position:fixed; background: var(--mud-palette-surface);">
+                <div id="myDropdown" class="modal-content pa-3" style="display: @(Hover ? "block" : "none"); bottom: 126px;  left: 327px; width: 125px; position:fixed; background: var(--mud-palette-surface);">
                     <div class="d-flex flex-column my-2">
                         @foreach (var s in status)
                         {
-                            <MudButton @onclick="@(()=>SwtichStatus(s))">
-                                <MudIcon Icon="@s.Icon" Color="@StringToColor(s.IconColor)" />
-                                <MudText Class="ml-2">@s.Name</MudText>
-                            </MudButton>
+                            <MudItem>
+                                <MudButton @onclick="@(()=>SwtichStatus(s))">
+                                    <MudIcon Icon="@s.Icon" Color="@StringToColor(s.IconColor)" />
+                                    <MudText Class="ml-2">@s.Name</MudText>
+                                </MudButton>
+                            </MudItem>
                         }
                     </div>
                 </div>
