@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.UserCore
 {
-    public class SecurityCredentials : BaseEntity<string>
+    public class SecurityCredentials : BaseEntity<ulong>
     {
         public ulong UserId { get; set; }
         public byte[] PasswordHash { get; set; }

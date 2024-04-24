@@ -2,6 +2,7 @@
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Repositories.Bases;
 using DomainCoreApi.EFCORE;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace DomainCoreApi.Repositories
@@ -12,14 +13,20 @@ namespace DomainCoreApi.Repositories
         {
         }
 
-        public override Task<IEnumerable<User>> GetAllWithIncludeAsync(Expression<Func<User, bool>> expression = null)
+        public override async Task<IEnumerable<User>> GetAllWithIncludeAsync(Expression<Func<User, bool>> expression = null)
         {
-            throw new NotImplementedException();
+            return await QueryAll()
+               .Include(e => e.Account)
+               .Where(expression)
+               .ToListAsync();
         }
 
-        public override Task<User> GetSingleWithIncludeAsync(Expression<Func<User, bool>> expression)
+        public override async Task<User> GetSingleWithIncludeAsync(Expression<Func<User, bool>> expression)
         {
-            throw new NotImplementedException();
+            return await QueryAll()
+                .Include(e => e.Account)
+                .Where(expression)
+                .FirstOrDefaultAsync();
         }
     }
 }
