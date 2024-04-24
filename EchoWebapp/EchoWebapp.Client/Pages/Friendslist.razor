@@ -14,7 +14,7 @@
                 <MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
                      <MudTextField Placeholder=" Search" Value="searchTerm" KeyDownPreventDefault KeyUpPreventDefault />
                 </MudPaper>
-                <MudText Class="px-5 py-2">Online - @(accounts.Where(e => e.ActivityStatus.Name != "Offline").Count())</MudText>
+                <MudText Class="px-5 py-2" Typo="Typo.button">Online - @(accounts.Where(e => e.ActivityStatus.Name != "Offline").Count())</MudText>
                 <MudList Clickable="true">
                     @foreach (var c in accounts.Where(e => e.ActivityStatus.Name != "Offline").OrderBy(x => x.Name))
                     {
@@ -33,8 +33,8 @@
             <MudTabPanel Text="All">
                 <MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
                      <MudTextField Placeholder=" Search" Value="searchTerm" KeyDownPreventDefault KeyUpPreventDefault />
-                 </MudPaper>
-                <MudText Class="px-5 py-2">All - @accounts.Count()</MudText>
+                </MudPaper>
+                <MudText Class="px-5 py-2" Typo="Typo.button">All - @accounts.Count()</MudText>
                 <MudList Clickable="true">
                     @foreach (var c in accounts.OrderBy(x => x.Name))
                     {

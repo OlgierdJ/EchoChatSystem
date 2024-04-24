@@ -7,9 +7,9 @@
 <div style="height:5vh;">
     <MudPaper Class="pa-2 d-flex align-content-center flex-wrap flex-grow-1 gap-2" Square Style="@($"background:{Colors.Shades.Transparent}")" Elevation="1">
          <MudAvatar Size="Size.Small">
-             <MudImage Src="@acc.Profile.AvatarFileURL" />
+             <MudImage Src="@acc1.Profile.AvatarFileURL" />
          </MudAvatar>
-         <MudText Typo="Typo.caption">@acc.Name</MudText>
+         <MudText Typo="Typo.caption">@acc1.Name</MudText>
         </MudPaper>
 </div>
 
@@ -78,12 +78,16 @@
         {
             <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 px-4 pt-4 mt-2" Style="@($"background:{Colors.Shades.Transparent}")">
                 <div class="d-flex flex-grow-1 gap-4">
-                    @* Need to implement avatar
-            <MudAvatar>
-            <MudImage Src="images/mony.jpg"></MudImage>
-            </MudAvatar>
-            *@
-                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">@m.Author?.Name.First()</MudAvatar>
+                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">
+                        @if (m.Author?.Profile != null)
+                        {
+                            <MudImage Src="@m.Author.Profile.AvatarFileURL"></MudImage>
+                        }
+                        else{                        
+                            @m.Author?.Name.First()
+                        }
+                    </MudAvatar>
+                       
                         <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
                             <div class="d-flex flex-grow-1 gap-3">
                                 <MudText Color="Color.Primary">@m.Author?.Name </MudText>
@@ -100,19 +104,21 @@
     }
 </div>
 
-    @code {
-    public Account acc = new();
+@code {
+    public Account acc1 = new();
+    public Account acc2 = new();
 
     protected override async Task OnInitializedAsync()
     {
-        acc = new Account { Id = 112, Name = "TheDoe", Profile = new AccountProfile() { AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", } };
-        
+        acc1 = new Account { Id = 112, Name = "TheDoe", Profile = new AccountProfile() { AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", } };
+        acc2 = new Account { Id = 113, Name = "Yourname", Profile = new AccountProfile() { AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } };
+
         chat.Participants = new List<Account>();
         chat.Messages = new List<ChatMessage>();
 
         chat.Id = 111;
-        chat.Participants.Add(new Account() { Id = 112, Name = "TheDoe" });
-        chat.Participants.Add(new Account() { Id = 113, Name = "Yourname" });
+        chat.Participants.Add(acc1);
+        chat.Participants.Add(new Account { Id = 113, Name = "Yourname" });
 
         ChatMessage msg = new ChatMessage();
         msg.Content = "Hey";
