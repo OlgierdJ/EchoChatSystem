@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ReportCore.Message
 {
-    public class MessageReport : BaseReport<ulong, Account, ulong, MessageReportReason, byte, ReportedMessage, ulong>
+    public class MessageReport : BasePunishableReport<ulong, Account, ulong, MessageReportReason, byte, ReportedMessage, ulong, AccountViolation, ulong>
     {
     }
 }

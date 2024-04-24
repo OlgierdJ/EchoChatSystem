@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class BillingInformation : BaseEntity<int>
+    public class BillingInformation : BaseEntity<ulong>
     {
         public ulong AccountSettingsId { get; set; }
         public AccountSettings AccountSettings { get; set; }

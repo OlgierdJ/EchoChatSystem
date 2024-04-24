@@ -1,5 +1,7 @@
 using CoreLib.Interfaces;
+using DomainCoreApi.EFCORE;
 using DomainCoreApi.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-
+var connectionString = builder.Configuration.GetConnectionString("EchoDBConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<EchoDbContext>(options => options.UseSqlServer(connectionString));
 // Add services to the container.
 builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
 

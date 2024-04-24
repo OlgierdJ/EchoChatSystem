@@ -17,5 +17,6 @@ namespace CoreLib.Entities.EchoCore.UserCore
         public DateTime PasswordSetDate { get; set; }
         public DateTime DateOfBirth { get; set; }
         public Account? Account { get; set; }
+        public SecurityCredentials? SecurityCredentials { get; set; }
     }
 }

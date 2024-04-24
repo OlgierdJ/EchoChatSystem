@@ -26,7 +26,7 @@ namespace CoreLib.Entities.EchoCore.ChatCore
             builder.HasOne(b => b.MessageHolder).WithMany(e => e.Messages).HasForeignKey(b => b.MessageHolderId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasOne(b => b.Parent).WithMany(e => e.Children).HasForeignKey(b => b.ParentId).OnDelete(DeleteBehavior.Restrict).IsRequired();
             builder.HasMany(b => b.Attachments).WithOne(e => e.Message).HasForeignKey(b => b.MessageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasMany(b => b.Reports).WithOne(e => e.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            //builder.HasMany(b => b.Reports).WithOne(e => e.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
 
             builder.HasOne(b => b.MessagePin).WithOne(e => e.Message).HasForeignKey<ChatMessagePin>(b => b.MessageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
         }

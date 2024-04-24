@@ -1,4 +1,5 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.FriendCore;
 using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
@@ -32,7 +33,10 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public AccountSettings Settings { get; set; }
 
         //Interactivity stuff - also private settings and information about this account only used by the user and the application / api
-        public ICollection<AccountRole>? Roles { get; set; } //System / Application roles (perhaps not needed)
+        public ICollection<Role>? Roles { get; set; } //System / Application roles (perhaps not needed)
+        public ICollection<AccountViolation>? Violations { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
+        public ICollection<AccountViolation>? IssuedViolations { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
+        public ICollection<AccountViolationAppealReview>? ReviewedAppeals { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
         public ICollection<AccountSession>? Sessions { get; set; } //Sessions for the account logging the device, location from which the session is valid and also when the validity expires, and alternatively allows the user to revoke validity of a session
         public ICollection<AccountBlock>? BlockedAccounts { get; set; } //This account blocks other accounts through this
         public ICollection<AccountNickname>? NicknamedAccounts { get; set; } //This account adds notes about other accounts
@@ -41,13 +45,13 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<ChatMute>? MutedChats { get; set; } //This account adds mutes for other accounts voice
         public ICollection<AccountSoundboardMute>? MutedSoundboards { get; set; } //This account adds mutes for other accounts soundboard
         public ICollection<ChatAccountMessageTracker> ChatMessageTrackers { get; set; }
-        public ICollection<ServerTextChannelAccountMessageTracker> TextChannelMessageTrackers { get; set; }
+        //public ICollection<ServerTextChannelAccountMessageTracker> TextChannelMessageTrackers { get; set; }
 
         //report stuff - also private settings and information about this account only used by the user and the application / api
         public ICollection<ReportedCustomStatus>?  ReportedCustomStatuses { get; set; } //reported customstatuses that are owned by this account
         public ICollection<CustomStatusReport>?  CustomStatusReports { get; set; } //reports sent by this account about other customstatuses
-        public ICollection<ReportedProfile>? ReportedAccountProfiles { get; set; } //reported accountprofiles that are owned by this account
-        public ICollection<ProfileReport>? AccountProfileReports { get; set; } //reports sent by this account about other accountprofiles
+        public ICollection<ReportedProfile>? ReportedProfiles { get; set; } //reported accountprofiles that are owned by this account
+        public ICollection<ProfileReport>? ProfileReports { get; set; } //reports sent by this account about other accountprofiles
         public ICollection<ReportedMessage>? ReportedMessages { get; set; } //reported messages that are owned by this account
         public ICollection<MessageReport>? MessageReports { get; set; } //reports sent by this account about other accounts messages
 
@@ -63,9 +67,9 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<ChatMessage>?  ChatMessages { get; set; }
 
         //Server stuff - public to other members of the server
-        public ICollection<ServerProfile>? Servers { get; set; } //mapped through serverprofile
-        public ICollection<ServerInvite>?  ServerInvites { get; set; }
-        public ICollection<ServerTextChannelMessage>?  ChannelMessages { get; set; }
+        //public ICollection<ServerProfile>? Servers { get; set; } //mapped through serverprofile //NOTE COMMENTED OUT TEMPORARILY
+        //public ICollection<ServerInvite>?  ServerInvites { get; set; }
+        //public ICollection<ServerTextChannelMessage>?  ChannelMessages { get; set; }
 
 
 

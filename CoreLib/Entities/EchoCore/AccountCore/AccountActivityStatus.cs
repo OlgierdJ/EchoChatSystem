@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountActivityStatus : BaseEntity<byte> //maybe review
+    public class AccountActivityStatus : BaseEntity<byte> //maybe review 
+        //accounts share the same few activity status (offline, idle, online, do not disturb, and invisible)
     {
         public string Name { get; set; }
         public string? Description { get; set; }

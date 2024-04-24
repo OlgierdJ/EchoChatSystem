@@ -1,14 +1,13 @@
 ﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class Role : BaseRole<ulong, Account, RolePermission>
+    public class Permission : BasePermission<ulong, Role>
     {
     }
 }

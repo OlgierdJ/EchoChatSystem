@@ -4,8 +4,9 @@
     {
         Task ReceiveMessage(string message);
         Task ReceiveSoundStream(byte[] message);
-        Task JoinGroup(string groupName);
-        Task LeaveGroup(string groupName);
+        Task ParticipantJoinedGroup(string groupName, string clientHandle);
+        Task ParticipantLeftGroup(string groupName, string clientHandle);
+        Task KillConnection();
         Task LeaveGroups(string[] groupNames);
         Task StreamToGroup(string groupName, string message);
     }

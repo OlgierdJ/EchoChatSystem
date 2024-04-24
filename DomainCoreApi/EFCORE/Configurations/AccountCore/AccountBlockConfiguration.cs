@@ -10,8 +10,8 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
         {
             builder.HasKey(b => b.Id);
             builder.Property(b=>b.TimeBlocked).ValueGeneratedOnAdd();
-            builder.HasOne(b => b.Blocker).WithMany().HasForeignKey(b=>b.BlockerId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasOne(b => b.Blocked).WithMany(b=>b.BlockedAccounts).HasForeignKey(b=>b.BlockedId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Blocker).WithMany(e=>e.BlockedAccounts).HasForeignKey(b=>b.BlockerId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Blocked).WithMany().HasForeignKey(b=>b.BlockedId).OnDelete(DeleteBehavior.Cascade).IsRequired();
         }
     }
 }

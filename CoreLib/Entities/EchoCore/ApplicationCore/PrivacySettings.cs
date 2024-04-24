@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class PrivacySettings : BaseEntity<int>
+    public class PrivacySettings : BaseEntity<ulong>
     {
-        public ulong AccountId { get; set; }
+        public ulong AccountSettingsId { get; set; }
+        public AccountSettings AccountSettings { get; set; }
+        //public ulong AccountId { get; set; }
         public DMAllow DMFromFriends { get; set; }
         public DMAllow DMFromUnknownUsers { get; set; }
         public DMAllow DMFromServerChatroom { get; set; }
         public DMSpamFilter DMSpamFilter { get; set; }
-        public Account? Account { get; set; }
+        //public Account? Account { get; set; }
     }
 }

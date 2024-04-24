@@ -13,7 +13,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.Property(b=>b.ExternalToken).HasMaxLength(256).IsRequired();
             builder.Property(b=>b.InternalProvider).HasMaxLength(256).IsRequired();
             builder.Property(b=>b.InternalToken).HasMaxLength(256).IsRequired();
-            builder.HasOne(b=>b.Account).WithMany(b=>b.Connections).HasForeignKey(b=>b.AccountId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(b=>b.Account).WithMany(b=>b.Connections).HasForeignKey(b=>b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired();
         }
     }
 }
