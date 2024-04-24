@@ -16,7 +16,7 @@ namespace CoreLib.Entities.EchoCore.ChatCore
             builder
                 .HasKey(b => b.Id);
             builder.HasOne(b => b.Owner).WithOne(b=>b.Pinboard).HasForeignKey<ChatPinboard>(b => b.OwnerId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasMany(b => b.PinnedMessages).WithOne(b=> b.Pinboard).HasForeignKey(b => b.PinboardId).OnDelete(DeleteBehavior.Cascade).IsRequired(); 
+            builder.HasMany(b => b.PinnedMessages).WithOne(b=> b.Pinboard).HasForeignKey(b => b.PinboardId).OnDelete(DeleteBehavior.ClientCascade).IsRequired(); 
         }
     }
 }

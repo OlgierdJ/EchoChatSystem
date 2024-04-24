@@ -45,7 +45,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<ChatMute>? MutedChats { get; set; } //This account adds mutes for other accounts voice
         public ICollection<AccountSoundboardMute>? MutedSoundboards { get; set; } //This account adds mutes for other accounts soundboard
         public ICollection<ChatAccountMessageTracker> ChatMessageTrackers { get; set; }
-        //public ICollection<ServerTextChannelAccountMessageTracker> TextChannelMessageTrackers { get; set; }
+        public ICollection<ServerTextChannelAccountMessageTracker> TextChannelMessageTrackers { get; set; }
 
         //report stuff - also private settings and information about this account only used by the user and the application / api
         public ICollection<ReportedCustomStatus>?  ReportedCustomStatuses { get; set; } //reported customstatuses that are owned by this account
@@ -67,9 +67,9 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<ChatMessage>?  ChatMessages { get; set; }
 
         //Server stuff - public to other members of the server
-        //public ICollection<ServerProfile>? Servers { get; set; } //mapped through serverprofile //NOTE COMMENTED OUT TEMPORARILY
-        //public ICollection<ServerInvite>?  ServerInvites { get; set; }
-        //public ICollection<ServerTextChannelMessage>?  ChannelMessages { get; set; }
+        public ICollection<ServerProfile>? Servers { get; set; } //mapped through serverprofile //NOTE COMMENTED OUT TEMPORARILY
+        public ICollection<ServerInvite>? ServerInvites { get; set; }
+        public ICollection<ServerTextChannelMessage>? ChannelMessages { get; set; }
 
 
 

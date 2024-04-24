@@ -15,7 +15,7 @@ namespace DomainCoreApi.EFCORE.Configurations.FriendCore
             builder.HasOne(b => b.Receiver)
                 .WithMany(b => b.IncomingFriendRequests)
                 .HasForeignKey(b => b.ReceiverId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
             builder.HasOne(b => b.SenderRequest)
                 .WithOne(b => b.ReceiverRequest)

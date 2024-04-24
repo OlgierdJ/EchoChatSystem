@@ -21,12 +21,12 @@ namespace DomainCoreApi.EFCORE.Configurations.FriendCore
             builder.HasOne(b => b.Suggestion)
                 .WithMany()
                 .HasForeignKey(b => b.SuggestionId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
             builder.HasOne(b => b.Receiver)
                 .WithMany(e => e.FriendSuggestions)
                 .HasForeignKey(b => b.ReceiverId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
             builder.HasIndex(b=>new { b.ReceiverId, b.SuggestionId }).IsUnique();
         }

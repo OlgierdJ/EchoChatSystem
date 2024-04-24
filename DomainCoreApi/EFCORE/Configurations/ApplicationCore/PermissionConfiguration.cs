@@ -1,0 +1,27 @@
+﻿using CoreLib.Entities.Base;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CoreLib.Entities.EchoCore.ApplicationCore
+{
+    //public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
+    //{
+    //    public void Configure(EntityTypeBuilder<Permission> builder)
+    //    {
+    //        builder.HasKey(b => b.Id);
+
+    //        //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
+
+    //        builder.HasMany(b => b.Roles).WithMany(e => e.Permissions).UsingEntity<RolePermission>(j =>
+    //        {
+    //            j.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId);
+    //            j.HasOne(e => e.Permission).WithMany().HasForeignKey(e => e.PermissionId);
+    //        });
+    //    }
+    //}
+}
