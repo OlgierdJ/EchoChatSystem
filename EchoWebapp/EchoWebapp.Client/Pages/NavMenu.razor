@@ -6,10 +6,6 @@
 
 <div class="d-flex">
     <MudPaper Width="72px" Height="100vh" Square Style="background: var(--mud-palette-dark);">
-
-         @*         <MudButton OnClick="@ToggleDrawer">
-        YOU CLICK HERE
-        </MudButton> *@
          <MudList Clickable="true">
              <MudListItem OnClick="@OpenMessages">
                  <MudAvatar>
@@ -22,7 +18,7 @@
                  </MudAvatar>
              </MudListItem>
              <MudDivider DividerType="DividerType.Middle" />
-             @foreach (var c in servers)
+            @foreach (var c in servers)
             {
                 <MudListItem Dense="true" OnClick="@OpenChannels">
                     <MudAvatar Size="Size.Medium">
@@ -223,7 +219,6 @@
     }
     void ToggleSettings()
     {
-
         nav.NavigateTo("/login");
         //DO SETTINGS POPUP?
     }
