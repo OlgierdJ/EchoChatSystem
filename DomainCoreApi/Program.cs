@@ -1,11 +1,21 @@
+using CoreLib.Handlers;
 using CoreLib.Interfaces;
+using CoreLib.Interfaces.Repositorys;
+using CoreLib.Interfaces.Services;
 using DomainCoreApi.EFCORE;
+using DomainCoreApi.Repositories;
 using DomainCoreApi.Services;
+using DomainCoreApi.Swagger;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var config = builder.Configuration;
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -15,13 +25,37 @@ builder.Services.AddDbContext<EchoDbContext>(options => options.UseSqlServer(con
 // Add services to the container.
 builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
 
-builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
-
-builder.Services.AddAuthorizationBuilder().AddPolicy("api", p =>
+builder.Services.AddAuthentication(x =>
 {
-    p.RequireAuthenticatedUser();
-    p.AddAuthenticationSchemes(IdentityConstants.BearerScheme);
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.TokenValidationParameters = new()
+    {
+        ValidIssuer = config["JwtSettings:Issuer"],
+        ValidAudience = config["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey
+        (Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
+    };
 });
+
+builder.Services.AddAuthorization();
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+//Add Repository to the container.
+builder.Services.AddTransient(typeof(IUserRepository), typeof(UserRepository));
+
+//Add services to the container.
+builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
+
+
+
+builder.Services.AddTransient(typeof(IPasswordHandler), typeof(Passwordhandler));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -39,8 +73,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers().RequireAuthorization("api");
+app.MapControllers();
 
 app.Run();
