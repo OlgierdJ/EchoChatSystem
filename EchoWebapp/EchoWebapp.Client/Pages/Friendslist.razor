@@ -1,0 +1,105 @@
+﻿@page "/friends"
+@using CoreLib.Entities.EchoCore.AccountCore
+@using CoreLib.Entities.EchoCore.ChatCore
+@using MudBlazor
+@inject NavigationManager nav
+@rendermode InteractiveAuto
+
+<div class="d-flex flex-grow-1">
+    <MudPaper Width="580px" Square >
+
+
+        <MudTabs Elevation="0" ApplyEffectsToContainer="true" PanelClass="pa-6" Position=Position.Top >
+            <MudTabPanel Text="Online">
+                <MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
+                     <MudTextField Placeholder=" Search" Value="searchTerm" KeyDownPreventDefault KeyUpPreventDefault />
+                </MudPaper>
+                <MudText Class="px-5 py-2">Online - @(accounts.Where(e => e.ActivityStatus.Name != "Offline").Count())</MudText>
+                <MudList Clickable="true">
+                    @foreach (var c in accounts.Where(e => e.ActivityStatus.Name != "Offline").OrderBy(x => x.Name))
+                    {
+                        <MudDivider />
+                        <MudListItem Dense="true" Class="mb-3 mt-2">
+                            <div class="d-flex flex-grow-1">
+                                <MudBadge Color="@StringToColor(c.ActivityStatus.IconColor)" Bordered Overlap="true" Origin="Origin.BottomRight">
+                                     <MudImage Src="@c.Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+                                </MudBadge>
+                                <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)(c.Name + "\r\n" + c.ActivityStatus.Name).Replace(Environment.NewLine, "<br />"))</MudText>
+                            </div>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudTabPanel>
+            <MudTabPanel Text="All">
+                <MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
+                     <MudTextField Placeholder=" Search" Value="searchTerm" KeyDownPreventDefault KeyUpPreventDefault />
+                 </MudPaper>
+                <MudText Class="px-5 py-2">All - @accounts.Count()</MudText>
+                <MudList Clickable="true">
+                    @foreach (var c in accounts.OrderBy(x => x.Name))
+                    {
+                        <MudDivider />
+                        <MudListItem Dense="true" Class="mb-3 mt-2">
+                            <div class="d-flex flex-grow-1">
+                                <MudBadge Color="@StringToColor(c.ActivityStatus.IconColor)" Bordered Overlap="true" Origin="Origin.BottomRight">
+                                     <MudImage Src="@c.Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+                                </MudBadge>
+                                <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)(c.Name + "\r\n" + c.ActivityStatus.Name).Replace(Environment.NewLine, "<br />"))</MudText>
+                            </div>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudTabPanel>
+            <MudTabPanel Text="Pending?">
+                <MudText>Content Three</MudText>
+            </MudTabPanel>
+        </MudTabs>
+    </MudPaper>
+</div>
+
+
+@code{
+    string searchTerm = "";
+
+    public List<Account> accounts = new(){
+        new Account() { Id = 112, Name = "TheDoe", 
+        Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", },
+            ActivityStatus = new AccountActivityStatus(){ Name = "Online", Icon = "", IconColor = Color.Success.ToString()
+            /* Hvordan fanden vil vi gemme og bruge farven? */
+        }, TimeCreated = DateTime.Now.AddDays(-17) },
+        new Account() { Id = 113, Name = "BobTheBuilder", 
+            Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", },
+            ActivityStatus = new AccountActivityStatus(){ Name = "Online", Icon = "", IconColor = Color.Success.ToString()
+        }, TimeCreated = DateTime.Now.AddDays(-16) },
+        new Account() { Id = 114, Name = "Mary Jane", Profile = new AccountProfile(){ AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg", },
+            ActivityStatus = new AccountActivityStatus(){ Name = "Away", Icon = "", IconColor = Color.Warning.ToString()
+        }, TimeCreated = DateTime.Now.AddDays(-12) },
+        new Account() { Id = 115, Name = "Billie Jean",  Profile = new AccountProfile(){ AvatarFileURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg", },
+            ActivityStatus = new AccountActivityStatus(){ Name = "Offline", Icon = "", IconColor = "Dark"
+        }, TimeCreated = DateTime.Now.AddDays(-5) },
+        new Account() { Id = 116, Name = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", },
+            ActivityStatus = new AccountActivityStatus(){ Name = "Busy", Icon = "", IconColor = Color.Error.ToString()
+        }, TimeCreated = DateTime.Now.AddDays(-4) }
+    };
+
+    public Color StringToColor(string s)
+    {
+        switch (s)
+        {
+            case "Success":
+                return Color.Success;
+
+            case "Warning":
+                return Color.Warning;
+
+            case "Error":
+                return Color.Error;
+
+            case "Dark":
+                return Color.Default;
+
+            default:
+                return Color.Default;
+        }
+    }
+}
