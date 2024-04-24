@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class Theme : BaseEntity<int>
+    public class Theme : BaseEntity<uint>
     {
         public string Name { get; set; }
-        public IEnumerable<AccountSettings>? AccountSettings { get; set; }
+        public IEnumerable<AppearanceSettings>?  AppearanceSettings { get; set; }
     }
 }

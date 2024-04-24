@@ -21,7 +21,11 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.HasOne(b => b.Profile).WithOne(b=>b.Account).HasForeignKey<AccountProfile>(b=>b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
             builder.HasMany(e => e.Connections).WithOne(e => e.Account).HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
             builder.HasOne(b => b.Settings).WithOne(b=>b.Account).HasForeignKey<AccountSettings>(b=>b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
-            builder.HasMany(e => e.Roles).WithMany(e => e.Recipients).UsingEntity<AccountRole>();
+            //builder.HasMany(e => e.Roles).WithMany(e => e.Recipients).UsingEntity<AccountRole>(j =>
+            //{
+            //    j.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId);
+            //    j.HasOne(e => e.Account).WithMany().HasForeignKey(e => e.AccountId);
+            //});
             builder.HasMany(e => e.Violations).WithOne(e => e.Subject).HasForeignKey(e=>e.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
             builder.HasMany(e => e.IssuedViolations).WithOne(e => e.Issuer).HasForeignKey(e=>e.IssuerId).OnDelete(DeleteBehavior.Cascade).IsRequired();
             builder.HasMany(e => e.ReviewedAppeals).WithOne(e => e.Reviewer).HasForeignKey(e=>e.ReviewerId).OnDelete(DeleteBehavior.Cascade).IsRequired();
@@ -42,7 +46,11 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.HasMany(e => e.MessageReports).WithOne(e => e.Reporter).HasForeignKey(e=>e.ReporterId).OnDelete(DeleteBehavior.Cascade).IsRequired();
             builder.HasMany(e => e.IncomingFriendRequests).WithOne(e => e.Receiver).HasForeignKey(e=>e.ReceiverId).OnDelete(DeleteBehavior.Cascade).IsRequired();
             builder.HasMany(e => e.OutgoingFriendRequests).WithOne(e => e.Sender).HasForeignKey(e=>e.SenderId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasMany(e => e.Friendships).WithMany(e => e.Participants).UsingEntity<FriendshipParticipancy>();
+            //builder.HasMany(e => e.Friendships).WithMany(e => e.Participants).UsingEntity<FriendshipParticipancy>(j =>
+            //{
+            //    j.HasOne(e => e.Friendship).WithMany().HasForeignKey(e => e.FriendshipId);
+            //    j.HasOne(e => e.Account).WithMany().HasForeignKey(e => e.AccountId);
+            //});
             builder.HasMany(e => e.FriendSuggestions).WithOne(e => e.Receiver).HasForeignKey(e=>e.ReceiverId).OnDelete(DeleteBehavior.Cascade).IsRequired();
             builder.HasMany(e => e.Chats).WithMany(e => e.Participants).UsingEntity<ChatParticipancy>();
             builder.HasMany(e => e.ChatInvites).WithOne(e => e.Inviter).HasForeignKey(e=>e.InviterId).OnDelete(DeleteBehavior.Cascade).IsRequired();

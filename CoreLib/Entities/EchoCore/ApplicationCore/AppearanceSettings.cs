@@ -11,7 +11,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
     public class AppearanceSettings : BaseEntity<ulong>
     {
         public ulong AccountSettingsId { get; set; }
-        public ulong ThemeId { get; set; }
+        public uint ThemeId { get; set; }
         public string InAppIcon { get; set; }
         public bool DarkSideBar { get; set; }
         //public MessageDisplayMode MessageDisplayMode { get; set; }
