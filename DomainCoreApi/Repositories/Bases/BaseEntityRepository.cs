@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using CoreLib.Interfaces.Bases;
 using DomainCoreApi.EFCORE;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreLib.Repositories.Bases
 {
