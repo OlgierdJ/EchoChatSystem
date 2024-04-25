@@ -15,7 +15,7 @@ namespace CoreLib.Entities.EchoCore.ChatCore
         public void Configure(EntityTypeBuilder<ChatParticipancy> builder)
         {
             builder
-                .HasKey(b => b.Id);
+                .HasKey(b => new { b.ParticipantId, b.SubjectId });
             builder
                .Property(b => b.TimeJoined).ValueGeneratedOnAdd()
                .IsRequired();

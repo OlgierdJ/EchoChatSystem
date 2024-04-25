@@ -12,6 +12,6 @@ namespace CoreLib.Entities.EchoCore.ServerCore
         public ulong ChannelCategoryId { get; set; }
         public ServerChannelCategory ChannelCategory { get; set; }
         public bool IsAgeRestricted { get; set; }
-        public ICollection<ServerTextChannelAccountMessageTracker> MessageTrackers { get; set; }
+        public ICollection<ServerTextChannelAccountMessageTracker>? MessageTrackers { get; set; }
     }
 }

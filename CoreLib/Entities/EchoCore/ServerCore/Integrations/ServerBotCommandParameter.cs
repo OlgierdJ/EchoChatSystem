@@ -9,6 +9,6 @@ namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
         public string Description { get; set; }
         public bool Required { get; set; }
         public uint Importance { get; set; }
-        public ICollection<ServerBotCommandParameterValue>  ParameterValues { get; set; }
+        public ICollection<ServerBotCommandParameterValue>?  ParameterValues { get; set; }
     }
 }

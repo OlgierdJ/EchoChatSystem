@@ -16,10 +16,10 @@ namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
         public string Name { get; set; }
         public string? Description { get; set; }
         public DateTime? TimeAdded { get; set; }
-        public ICollection<ServerBotCommand> Commands { get; set; }
-        public ICollection<ServerBotMediaLink> Links { get; set; }
-        public ICollection<ServerBotImage> Images { get; set; }
-        public ICollection<Language> SupportedLanguages { get; set; }
+        public ICollection<ServerBotCommand>? Commands { get; set; }
+        public ICollection<ServerBotMediaLink>? Links { get; set; }
+        public ICollection<ServerBotImage>? Images { get; set; }
+        public ICollection<Language>? SupportedLanguages { get; set; }
         public Account BotActorAccount { get; set; }
         public Server? SupportServer { get; set; }
     }

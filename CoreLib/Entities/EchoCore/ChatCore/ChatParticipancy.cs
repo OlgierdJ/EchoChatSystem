@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatParticipancy : BaseParticipancy<ulong, Account, ulong, Chat, ulong>
+    public class ChatParticipancy : BaseParticipancy<Account, ulong, Chat, ulong>
     {
     }
 }

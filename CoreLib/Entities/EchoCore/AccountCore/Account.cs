@@ -6,6 +6,7 @@ using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
 using CoreLib.Entities.EchoCore.ReportCore.Message;
 using CoreLib.Entities.EchoCore.ReportCore.Profile;
 using CoreLib.Entities.EchoCore.ServerCore;
+using CoreLib.Entities.EchoCore.UserCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +21,18 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public string Name { get; set; } //unique name handle used by others to add you
         public DateTime TimeCreated { get; set; }
         public DateTime? TimeLastLogon { get; set; } //maybe add table to map sessions with login times, logoff times, devices etc to allow the user to disconnect unused devices and see their device history
-        public string? UserId { get; set; } //used for mapping personal information to the account (real name address password loginusername etc)
+        public ulong? UserId { get; set; } //used for mapping personal information to the account (real name address password loginusername etc)
         public byte ActivityStatusId { get; set; }
         public ulong? CustomStatusId { get; set; }
 
+        public User? User { get; set; }
         public AccountActivityStatus ActivityStatus { get; set; }
         public AccountCustomStatus? CustomStatus { get; set; }
-        public AccountProfile Profile { get; set; } //mapped through connections?
+        public AccountProfile Profile { get; set; } //should be created on account creation
 
         //private settings and information about this account only used by the user and the application / api
         public ICollection<AccountConnection>?  Connections { get; set; }
-        public AccountSettings Settings { get; set; }
+        public AccountSettings Settings { get; set; } //should be created on account creation
 
         //Interactivity stuff - also private settings and information about this account only used by the user and the application / api
         public ICollection<Role>? Roles { get; set; } //System / Application roles (perhaps not needed)
@@ -44,8 +46,8 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<AccountMute>? MutedVoices { get; set; } //This account adds mutes for other accounts voice
         public ICollection<ChatMute>? MutedChats { get; set; } //This account adds mutes for other accounts voice
         public ICollection<AccountSoundboardMute>? MutedSoundboards { get; set; } //This account adds mutes for other accounts soundboard
-        public ICollection<ChatAccountMessageTracker> ChatMessageTrackers { get; set; }
-        public ICollection<ServerTextChannelAccountMessageTracker> TextChannelMessageTrackers { get; set; }
+        public ICollection<ChatAccountMessageTracker>? ChatMessageTrackers { get; set; }
+        public ICollection<ServerTextChannelAccountMessageTracker>? TextChannelMessageTrackers { get; set; }
 
         //report stuff - also private settings and information about this account only used by the user and the application / api
         public ICollection<ReportedCustomStatus>?  ReportedCustomStatuses { get; set; } //reported customstatuses that are owned by this account
