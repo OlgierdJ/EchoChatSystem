@@ -1,10 +1,10 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.UserCore;
-using CoreLib.Handlers;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
 using CoreLib.Models;
+using DomainCoreApi.Handlers;
 using DomainCoreApi.Services.Bases;
 
 namespace DomainCoreApi.Services
@@ -13,11 +13,9 @@ namespace DomainCoreApi.Services
     {
 
         private readonly IPasswordHandler _pwdHandler;
-        private readonly IAccountService _accountService;
-        public UserService(IUserRepository repository, IPasswordHandler pwdHandler,IAccountService accountService) : base(repository)
+        public UserService(IUserRepository repository, IPasswordHandler pwdHandler) : base(repository)
         {
             _pwdHandler = pwdHandler;
-            _accountService = accountService;
         }
 
         public Task<User> CreateUserAsync(User input, string pword)
@@ -25,7 +23,7 @@ namespace DomainCoreApi.Services
             throw new NotImplementedException();
         }
 
-        public async Task<string> LoginUserAsync(UserLogins attempt)
+        public async Task<string> LoginUserAsync(UserLoginModel attempt)
         {
             var user = await _repository.GetSingleWithIncludeAsync(e => e.Email == attempt.Email);
             if (user is not null && await _pwdHandler.CheckPassword(attempt.Password, user.Id))

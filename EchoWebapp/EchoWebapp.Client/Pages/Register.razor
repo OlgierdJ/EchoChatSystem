@@ -1,5 +1,7 @@
-﻿@page "/register"
+﻿@* @page "/register"
+@using CoreLib.Entities.EchoCore.UserCore
 @using CoreLib.Models
+@using CoreLib.WebAPI
 @using MudBlazor
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
@@ -36,6 +38,7 @@
     public DateTime? date { get; set; } = DateTime.UtcNow.AddYears(-18);
 
     public RegisterUserModel User = new();
+    public readonly EchoAPI _echoAPI = new();
 
     bool success;
     string[] errors = { };
@@ -79,7 +82,7 @@
     }
 
     //maybe receive status and display error
-    void RegisterUser()
+    async Task RegisterUser()
     {
         User.Email = email;
         User.Password = password;
@@ -88,10 +91,11 @@
         User.DateOfBirth = date.Value;
         User.DisplayName = displayName != "" ? displayName : null;
         //send user to api
+        var data = await _echoAPI.CreateUserAsync(User);
     }
 
     void GoToLogin()
     {
         nav.NavigateTo("/login");
     }
-}
+} *@
