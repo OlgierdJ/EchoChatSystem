@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.UserCore
+namespace CoreLib.Models
 {
-    public class UserLogins
+    public class UserLoginModel
     {
         public string Email { get; set; }
 
