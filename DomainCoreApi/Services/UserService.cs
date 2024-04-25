@@ -1,17 +1,23 @@
-﻿using CoreLib.Entities.EchoCore.UserCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.UserCore;
+using CoreLib.Handlers;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
+using CoreLib.Models;
 using DomainCoreApi.Services.Bases;
 
 namespace DomainCoreApi.Services
 {
     public class UserService : BaseEntityService<User, ulong>, IUserService
     {
+
         private readonly IPasswordHandler _pwdHandler;
-        public UserService(IUserRepository repository, IPasswordHandler pwdHandler) : base(repository)
+        private readonly IAccountService _accountService;
+        public UserService(IUserRepository repository, IPasswordHandler pwdHandler,IAccountService accountService) : base(repository)
         {
             _pwdHandler = pwdHandler;
+            _accountService = accountService;
         }
 
         public Task<User> CreateUserAsync(User input, string pword)
@@ -19,18 +25,14 @@ namespace DomainCoreApi.Services
             throw new NotImplementedException();
         }
 
-        public async Task<User> LoginUserAsync(UserLogins attempt)
+        public async Task<string> LoginUserAsync(UserLogins attempt)
         {
-            //var user = await _repository.GetSingleWithIncludeAsync(e => e.Email == attempt.Email);
-            //if (user is not null && await _pwdHandler.CheckPassword(attempt.Password,user.Id))
-            //{
-            //    //send a jwt back to the website
-            //    return user;
-            //}
-            User user = new() { Email = "admin@tec.dk",Id=1,DateOfBirth=DateTime.UtcNow,PasswordSetDate=DateTime.UtcNow };
-            if (attempt.Email == user.Email )
+            var user = await _repository.GetSingleWithIncludeAsync(e => e.Email == attempt.Email);
+            if (user is not null && await _pwdHandler.CheckPassword(attempt.Password, user.Id))
             {
-                return user;
+                //send a jwt back to the website
+                TokenHandler tokenHandler = new();
+                return tokenHandler.CreateToken<Account>(user.Account);
             }
 
             throw new Exception("You suck at hacking bruv");

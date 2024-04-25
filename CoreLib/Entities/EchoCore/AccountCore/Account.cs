@@ -20,7 +20,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public string Name { get; set; } //unique name handle used by others to add you
         public DateTime TimeCreated { get; set; }
         public DateTime? TimeLastLogon { get; set; } //maybe add table to map sessions with login times, logoff times, devices etc to allow the user to disconnect unused devices and see their device history
-        public string? UserId { get; set; } //used for mapping personal information to the account (real name address password loginusername etc)
+        public ulong? UserId { get; set; } //used for mapping personal information to the account (real name address password loginusername etc)
         public byte ActivityStatusId { get; set; }
         public ulong? CustomStatusId { get; set; }
 
@@ -70,9 +70,6 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<ServerProfile>? Servers { get; set; } //mapped through serverprofile //NOTE COMMENTED OUT TEMPORARILY
         public ICollection<ServerInvite>? ServerInvites { get; set; }
         public ICollection<ServerTextChannelMessage>? ChannelMessages { get; set; }
-
-
-
 
     }
 }
