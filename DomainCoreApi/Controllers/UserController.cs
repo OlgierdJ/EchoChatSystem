@@ -3,6 +3,7 @@ using CoreLib.Handlers;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.Controllers.Bases;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +13,7 @@ using System.Text;
 
 namespace DomainCoreApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : BaseEntityController<User, ulong>
@@ -25,6 +27,7 @@ namespace DomainCoreApi.Controllers
             _userService = service;
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login(UserLogins login)
         {
