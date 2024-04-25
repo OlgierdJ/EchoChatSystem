@@ -79,19 +79,23 @@
         {
             <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 px-4 pt-4 mt-2" Style="@($"background:{Colors.Shades.Transparent}")">
                 <div class="d-flex flex-grow-1 gap-4">
-                    @* Need to implement avatar
-            <MudAvatar>
-            <MudImage Src="images/mony.jpg"></MudImage>
-            </MudAvatar>
-            *@
-                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">@m.Author?.Name.First()</MudAvatar>
+                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">
+                        @if (m.Author?.Profile != null)
+                        {
+                            <MudImage Src="@m.Author.Profile.AvatarFileURL"></MudImage>
+                        }
+                        else
+                        {
+                            @m.Author?.Name.First()
+                        }
+                    </MudAvatar>
                         <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
                             <div class="d-flex flex-grow-1 gap-3">
                                 <MudText Color="Color.Primary">@m.Author?.Name </MudText>
                                 <MudText Style="@($"color:{Colors.Grey.Default};")">@m.TimeSent.ToString("HH:mm")</MudText>
                             </div>
                             <MudText Typo="Typo.body1">@((MarkupString)m.Content.Replace(Environment.NewLine, "<br />"))</MudText>
-                        </MudPaper>
+                        </MudPaper> 
                     </div>
                 </MudPaper>
         }
@@ -109,7 +113,7 @@
  </MudToolBar>
 
  @code {
-    
+
     public string TextValue { get; set; }
     bool checkTime(DateTime dt)
     {
@@ -162,9 +166,9 @@
         chat.Messages = new List<ChatMessage>();
 
         chat.Id = 111;
-        chat.Participants.Add(new Account() { Id = 112, Name = "TheDoe"});
-        chat.Participants.Add(new Account() { Id = 113, Name = "BobTheBuilder"});
-        chat.Participants.Add(new Account() { Id = 114, Name = "Mary Jane"});
+        chat.Participants.Add(new Account() { Id = 112, Name = "TheDoe", Profile = new AccountProfile() { AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg" } });
+        chat.Participants.Add(new Account() { Id = 113, Name = "BobTheBuilder", Profile = new AccountProfile() { AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" } });
+        chat.Participants.Add(new Account() { Id = 114, Name = "Mary Jane", Profile = new AccountProfile() { AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg" } });
 
         ChatMessage msg = new ChatMessage();
         msg.Content = "First Message sent! Yay";

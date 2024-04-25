@@ -1,6 +1,6 @@
 ﻿@page "/login"
-@    using CoreLib.Entities.EchoCore.UserCore
-@    using MudBlazor
+@using CoreLib.Models
+@using MudBlazor
 @inject NavigationManager nav
 @rendermode InteractiveAuto
 
@@ -10,13 +10,17 @@
         <MudTextField @bind-Value="Email" Label="Email" Variant="Variant.Filled" InputType="InputType.Email" /> <!--  Adornment="Adornment.End" AdornmentIcon="Icons.Material.Filled.Email" -->
         <MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Filled" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="PasswordVisibility" AdornmentAriaLabel="Show Password" />
         <MudButton class="pt-2" Variant="Variant.Filled" OnClick="AuthorizeLogin">Login</MudButton>
+        <MudText>
+            Need an account?
+            <MudButton class="pt-2" Variant="Variant.Text" OnClick="GoToRegister">Register</MudButton>
+        </MudText>
     </MudPaper>
 </div>
 
 @code {
     public string Password { get; set; } = "superstrong123";
     public string Email { get; set; } = "test@tec.dk";
-    UserLogins user = new();
+    UserLoginModel user = new();
 
     bool visible;
     InputType PasswordInput = InputType.Password;
@@ -45,5 +49,10 @@
         user.Password = Password;
 
         //send user to api
+    }
+
+    void GoToRegister()
+    {
+        nav.NavigateTo("/register");
     }
 }

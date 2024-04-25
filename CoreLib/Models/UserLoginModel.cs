@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Models
 {
-    public class UserLogins
+    public class UserLoginModel
     {
         public string Email { get; set; }
 

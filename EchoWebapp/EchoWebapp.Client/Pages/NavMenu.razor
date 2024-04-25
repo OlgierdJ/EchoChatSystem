@@ -6,10 +6,6 @@
 
 <div class="d-flex">
     <MudPaper Width="72px" Height="100vh" Square Style="background: var(--mud-palette-dark);">
-
-         @*         <MudButton OnClick="@ToggleDrawer">
-        YOU CLICK HERE
-        </MudButton> *@
          <MudList Clickable="true">
              <MudListItem OnClick="@OpenMessages">
                  <MudAvatar>
@@ -22,7 +18,7 @@
                  </MudAvatar>
              </MudListItem>
              <MudDivider DividerType="DividerType.Middle" />
-             @foreach (var c in servers)
+            @foreach (var c in servers)
             {
                 <MudListItem Dense="true" OnClick="@OpenChannels">
                     <MudAvatar Size="Size.Medium">
@@ -69,7 +65,7 @@
                 <MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
                      <MudText Class="px-5 py-2">Friends</MudText>
                      <MudList Clickable="true">
-                         @foreach (var c in accounts.OrderBy(e => e.Name))
+                        @foreach (var c in accounts.OrderBy(e => e.Name))
                         {
                             <MudListItem Dense="true" OnClick="@GoToFriends">
                                 <MudAvatar>
@@ -184,14 +180,14 @@
 
     void OpenFriends()
     {
-        // nav.NavigateTo("/messages");
+        nav.NavigateTo("/friends");
         openFriends = true;
         openMessages = false;
         openChannels = false;
     }
     void OpenMessages()
     {
-        // nav.NavigateTo("/messages");
+        nav.NavigateTo("/messages");
         openMessages = true;
         openFriends = false;
         openChannels = false;
@@ -223,7 +219,6 @@
     }
     void ToggleSettings()
     {
-
         nav.NavigateTo("/login");
         //DO SETTINGS POPUP?
     }

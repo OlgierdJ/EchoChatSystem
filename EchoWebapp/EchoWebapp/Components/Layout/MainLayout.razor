@@ -3,10 +3,9 @@
 @inject IDialogService DialogService
 
 <MudThemingProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" DefaultScrollbar=false />
-<MudSnackbarProvider />
-<MudPopoverProvider/>
-@* <MudButton @rendermode=InteractiveAuto>
-</MudButton> *@
+<MudSnackbarProvider @rendermode=InteractiveAuto />
+<MudPopoverProvider @rendermode=InteractiveAuto />
+@* <MudDialogProvider @rendermode=InteractiveAuto /> *@
 
 <MudPaper Width="100vw" MinHeight="3vh" MaxHeight="6vh" Square Style="background: var(--mud-palette-dark);" Elevation="0"><MudText Class="pl-5 py-1">Echo</MudText></MudPaper>
  <div class="page" style=@($"color-scheme: {(_isDarkMode ? "dark" : "light")}")>
