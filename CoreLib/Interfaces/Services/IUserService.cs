@@ -6,7 +6,7 @@ namespace CoreLib.Interfaces.Services
 {
     public interface IUserService : IEntityService<User,ulong>
     {
-        Task<User> LoginUserAsync(UserLoginModel attempt);
+        Task<string> LoginUserAsync(UserLogins attempt);
         Task<User> CreateUserAsync(User input, string pword);
     }
 }
