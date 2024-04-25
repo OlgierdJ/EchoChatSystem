@@ -2,6 +2,7 @@
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
+using CoreLib.Models;
 using DomainCoreApi.Services.Bases;
 
 namespace DomainCoreApi.Services
@@ -19,7 +20,7 @@ namespace DomainCoreApi.Services
             throw new NotImplementedException();
         }
 
-        public async Task<User> LoginUserAsync(UserLogins attempt)
+        public async Task<User> LoginUserAsync(UserLoginModel attempt)
         {
             //var user = await _repository.GetSingleWithIncludeAsync(e => e.Email == attempt.Email);
             //if (user is not null && await _pwdHandler.CheckPassword(attempt.Password,user.Id))

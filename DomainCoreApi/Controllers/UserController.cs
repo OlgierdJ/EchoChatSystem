@@ -2,6 +2,7 @@
 using CoreLib.Handlers;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
+using CoreLib.Models;
 using DomainCoreApi.Controllers.Bases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +30,7 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(UserLogins login)
+        public async Task<IActionResult> Login(UserLoginModel login)
         {
             try
             {
