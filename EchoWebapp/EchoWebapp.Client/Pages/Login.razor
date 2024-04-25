@@ -1,6 +1,7 @@
 ﻿@page "/login"
 @using CoreLib.Models
 @using MudBlazor
+@using CoreLib.WebAPI
 @inject NavigationManager nav
 @rendermode InteractiveAuto
 
@@ -20,6 +21,7 @@
 @code {
     public string Password { get; set; } = "superstrong123";
     public string Email { get; set; } = "test@tec.dk";
+    public readonly EchoAPI _echoAPI = new()
     UserLoginModel user = new();
 
     bool visible;
@@ -43,12 +45,15 @@
     }
 
     //maybe receive status and display error
-    void AuthorizeLogin()
+    async Task AuthorizeLogin()
     {
         user.Email = Email;
         user.Password = Password;
 
         //send user to api
+        var data = await _echoAPI.LoginAsync(user);
+        Console.WriteLine(data);
+        //await localStorage.SetAsync("AccountId", data);
     }
 
     void GoToRegister()
