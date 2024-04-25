@@ -58,7 +58,7 @@ namespace CoreLib.WebAPI
             return null;
         }
 
-        public async Task<User> CreateUserAsync(User user, string pass)
+        public async Task<User> CreateUserAsync(RegisterUserModel user)
         {
             //User user = new()
             //{
