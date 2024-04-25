@@ -1,22 +1,31 @@
 ﻿@page "/register"
 @using CoreLib.Models
 @using MudBlazor
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
 @inject NavigationManager nav
 @rendermode InteractiveAuto
 
 <div id="unique_id_scroll_section" class="ma-0" style="height:100vh;overflow: auto;">
     <MudPaper Width="60%" Style="margin: 20%; padding: 50px 100px 50px 100px">
-        <MudText Align="Align.Center" Typo="Typo.h4">ECHO REGISTER</MudText>
-        <MudTextField @bind-Value="email" Label="EMAIL " Variant="Variant.Filled" InputType="InputType.Email" Required RequiredError="Please enter your email" /> <!--  Adornment="Adornment.End" AdornmentIcon="Icons.Material.Filled.Email" -->
-        <MudTextField @bind-Value="displayName" Label="DISPLAY NAME " Variant="Variant.Filled" InputType="InputType.Text" /> <!--  Adornment="Adornment.End" AdornmentIcon="Icons.Material.Filled.Email" -->
-        <MudTextField @bind-Value="username" Label="USERNAME " Variant="Variant.Filled" InputType="InputType.Text" Required RequiredError="Please choose a valid Username" /> <!--  Adornment="Adornment.End" AdornmentIcon="Icons.Material.Filled.Email" -->
-        <MudTextField @bind-Value="password" Label="PASSWORD " Variant="Variant.Filled" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="PasswordVisibility" AdornmentAriaLabel="Show Password" Required RequiredError="Please enter a password" />
-        <MudDatePicker @bind-Date="date" Label="DATE OF BIRTH " Variant="Variant.Filled" DateFormat="dd/MM/yyyy" Editable=false Required RequiredError="Please pick your date of birth" MinDate="@DateTime.UtcNow.AddYears(-18)"/>
-         <MudCheckBox @bind-Value="allowmail" Label="Allow Echo to send you mail" />
-        <MudButton class="pt-2" Variant="Variant.Filled" OnClick="RegisterUser">Register</MudButton>
-        <MudButton class="pt-2" Variant="Variant.Text" OnClick="GoToLogin">Already have an account?</MudButton>
-    </MudPaper>
-</div>
+        <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+            <MudText Align="Align.Center" Typo="Typo.h4">ECHO REGISTER</MudText>
+            <MudTextField @bind-Value="email" Label="EMAIL " Variant="Variant.Filled" InputType="InputType.Email" Required RequiredError="Please enter your email" Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" /> 
+            <MudTextField @bind-Value="displayName" Label="DISPLAY NAME " Variant="Variant.Filled" InputType="InputType.Text" /> 
+            <MudTextField @bind-Value="username" Label="USERNAME " Variant="Variant.Filled" InputType="InputType.Text" Required RequiredError="Please choose a valid Username" /> 
+            <MudTextField T="string" Label="PASSWORD " HelperText="Choose a strong password" @bind-Value="password"
+                           InputType="@PasswordInput" Variant="Variant.Filled"
+                           Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                           RequiredError="Password is required!"
+                           Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" 
+                           OnAdornmentClick="PasswordVisibility" AdornmentAriaLabel="Show Password" />
+             <MudDatePicker @bind-Date="date" Label="DATE OF BIRTH " Variant="Variant.Filled" DateFormat="dd/MM/yyyy" Editable=false Required RequiredError="Please pick your date of birth" MaxDate="@DateTime.UtcNow.AddYears(-18)" />
+             <MudCheckBox @bind-Value="allowmail" Label="Allow Echo to send you mail" />
+             <MudButton class="pt-2" Variant="Variant.Filled" OnClick="RegisterUser" Color="Color.Success" Disabled="!success">Register</MudButton>
+             <MudButton class="pt-2" Variant="Variant.Text" OnClick="GoToLogin" Color="Color.Primary">Already have an account?</MudButton>
+         </MudForm>
+     </MudPaper>
+ </div>
 
  @code {
     public string password { get; set; } = "";
@@ -24,9 +33,13 @@
     public string displayName { get; set; } = "";
     public string username { get; set; } = "";
     public bool allowmail { get; set; } = true;
-    public DateTime? date { get; set; } = DateTime.UtcNow;
+    public DateTime? date { get; set; } = DateTime.UtcNow.AddYears(-18);
 
     public RegisterUserModel User = new();
+
+    bool success;
+    string[] errors = { };
+    MudForm form;
 
     bool visible;
     InputType PasswordInput = InputType.Password;
@@ -46,6 +59,23 @@
             PasswordInputIcon = Icons.Material.Filled.Visibility;
             PasswordInput = InputType.Text;
         }
+    }
+
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+        if (pw.Length < 8)
+            yield return "Password must be at least of length 8";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit";
     }
 
     //maybe receive status and display error
