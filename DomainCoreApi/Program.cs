@@ -49,9 +49,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 //Add Repository to the container.
 builder.Services.AddTransient(typeof(IUserRepository), typeof(UserRepository));
-
+builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));
 //Add services to the container.
 builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
+builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
 
 
 

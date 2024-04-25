@@ -1,4 +1,4 @@
-﻿@page "/login"
+﻿@* @page "/login"
 @using CoreLib.Models
 @using MudBlazor
 @using CoreLib.WebAPI
@@ -21,7 +21,7 @@
 @code {
     public string Password { get; set; } = "superstrong123";
     public string Email { get; set; } = "test@tec.dk";
-    public readonly EchoAPI _echoAPI = new()
+    public readonly EchoAPI _echoAPI = new();
     UserLoginModel user = new();
 
     bool visible;
@@ -60,4 +60,4 @@
     {
         nav.NavigateTo("/register");
     }
-}
+} *@
