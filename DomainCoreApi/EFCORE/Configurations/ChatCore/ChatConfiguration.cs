@@ -15,9 +15,13 @@ namespace DomainCoreApi.EFCORE.Configurations.ChatCore
                 .Property(b => b.Name)
                 .IsRequired();
             builder
+               .Property(b => b.IconUrl)
+               .IsRequired();
+            builder
                 .Property(b => b.TimeCreated).ValueGeneratedOnAdd()
                 .IsRequired();
 
+            builder.HasMany(b => b.MessageTrackers).WithOne(b => b.Holder).HasForeignKey(b => b.HolderId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //cascade delete messages if the chat is deleted
             builder.HasMany(b => b.Messages).WithOne(b => b.MessageHolder).HasForeignKey(b => b.MessageHolderId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //cascade delete messages if the chat is deleted
             builder.HasMany(b => b.Mutes).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
             builder.HasMany(b => b.Invites).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired();

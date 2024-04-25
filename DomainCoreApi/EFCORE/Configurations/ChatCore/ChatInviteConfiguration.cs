@@ -28,8 +28,8 @@ namespace CoreLib.Entities.EchoCore.ChatCore
             builder
                .Property(b => b.TotalUses)
                .IsRequired();
-            builder.HasOne(b => b.Inviter).WithMany().HasForeignKey(b => b.InviterId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //maybe check if invites are automatically deleted when the one who creates it leaves a chat or server.
-            builder.HasOne(b => b.Subject).WithMany(b => b.Invites).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired();
+            builder.HasOne(b => b.Inviter).WithMany(e=>e.ChatInvites).HasForeignKey(b => b.InviterId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //maybe check if invites are automatically deleted when the one who creates it leaves a chat or server.
+            builder.HasOne(b => b.Subject).WithMany(b => b.Invites).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
         }
     }
 }
