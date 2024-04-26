@@ -1,4 +1,5 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces.Repositorys;
 using CoreLib.Repositories.Bases;
 using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace DomainCoreApi.Repositories
 {
-    public class AccountRepository : BaseEntityRepository<Account>
+    public class AccountRepository : BaseEntityRepository<Account>, IAccountRepository
     {
         public AccountRepository(EchoDbContext context) : base(context)
         {

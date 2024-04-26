@@ -84,7 +84,7 @@ namespace CoreLib.WebAPI
         }
 
 
-        public async Task<User> GetUserWithIncludeAsync(Guid Id)
+        public async Task<User> GetUserWithIncludeAsync(ulong Id)
         {
             var response = await client.GetAsync($"user/a/{Id}").ConfigureAwait(false);
             if (response.IsSuccessStatusCode)

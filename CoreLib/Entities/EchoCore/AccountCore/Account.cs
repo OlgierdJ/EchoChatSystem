@@ -22,7 +22,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public DateTime? TimeLastLogon { get; set; } //maybe add table to map sessions with login times, logoff times, devices etc to allow the user to disconnect unused devices and see their device history
         public ulong? UserId { get; set; } //used for mapping personal information to the account (real name address password loginusername etc)
         public byte ActivityStatusId { get; set; }
-        public ulong? CustomStatusId { get; set; }
+        public ulong? CustomStatusId { get; set; } = 1;
 
         public AccountActivityStatus ActivityStatus { get; set; }
         public AccountCustomStatus? CustomStatus { get; set; }
@@ -44,8 +44,8 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<AccountMute>? MutedVoices { get; set; } //This account adds mutes for other accounts voice
         public ICollection<ChatMute>? MutedChats { get; set; } //This account adds mutes for other accounts voice
         public ICollection<AccountSoundboardMute>? MutedSoundboards { get; set; } //This account adds mutes for other accounts soundboard
-        public ICollection<ChatAccountMessageTracker> ChatMessageTrackers { get; set; }
-        public ICollection<ServerTextChannelAccountMessageTracker> TextChannelMessageTrackers { get; set; }
+        public ICollection<ChatAccountMessageTracker>? ChatMessageTrackers { get; set; }
+        public ICollection<ServerTextChannelAccountMessageTracker>? TextChannelMessageTrackers { get; set; }
 
         //report stuff - also private settings and information about this account only used by the user and the application / api
         public ICollection<ReportedCustomStatus>?  ReportedCustomStatuses { get; set; } //reported customstatuses that are owned by this account

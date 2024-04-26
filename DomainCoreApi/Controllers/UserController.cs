@@ -27,6 +27,26 @@ namespace DomainCoreApi.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("CreateUser")]
+        public async Task<IActionResult> CreateUserAsync(RegisterUserModel input)
+        {
+            try
+            {
+                var result = await _userService.CreateUserAsync(input);
+                if (result is null)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok("all looks good");
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message); ;
+            }
+        }
+
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login(UserLoginModel login)
         {

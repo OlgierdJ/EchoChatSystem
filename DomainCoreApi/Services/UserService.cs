@@ -13,13 +13,21 @@ namespace DomainCoreApi.Services
     {
 
         private readonly IPasswordHandler _pwdHandler;
-        public UserService(IUserRepository repository, IPasswordHandler pwdHandler) : base(repository)
+        private readonly IAccountService _accountService;
+        private readonly CreateUserHandler _createUserHandler = new();
+        public UserService(IUserRepository repository, IPasswordHandler pwdHandler, IAccountService accountService) : base(repository)
         {
             _pwdHandler = pwdHandler;
+            _accountService = accountService;
         }
 
-        public Task<User> CreateUserAsync(User input, string pword)
+        public async Task<User> CreateUserAsync(RegisterUserModel input)
         {
+            Console.WriteLine(input);
+            var data = await _createUserHandler.CreateHandler(input);
+            //var result = await _repository.AddAsync(data.Item1);
+            data.Item2.UserId = 1;
+            await _accountService.AddAsync(data.Item2);
             throw new NotImplementedException();
         }
 
