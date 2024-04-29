@@ -1,6 +1,7 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.UserCore;
+using CoreLib.Entities.Enums;
 using CoreLib.Models;
 
 namespace DomainCoreApi.Handlers
@@ -18,8 +19,6 @@ namespace DomainCoreApi.Handlers
 
         public async Task<Account> CreateAccount(string Username,string? DisplayName)
         {
-            // Account \\
-            /* Username */
             Account account = new Account()
             {
                 Name = Username,
@@ -30,37 +29,96 @@ namespace DomainCoreApi.Handlers
                     Icon = "Icons.Material.Filled.Circle",
                     IconColor = "Success"
                 },
-                // AccountProfile \\
-                /* displayname?  */
                 Profile = new()
                 {
                     DisplayName = !String.IsNullOrEmpty(DisplayName) ? DisplayName : Username,
                     AvatarFileURL = GetIconFromList(),
                     BannerColor = "Success",
-
                 },
                 Settings = new()
                 {
-                    AccessibilitySettings = new AccessibilitySettings(),
+                    AccessibilitySettings = new AccessibilitySettings()
+                    {
+                        SaturationPercent = 255,
+                        ApplySaturationToCustomColors = false,
+                        AlwaysUnderlineLinks = true,
+                        SyncProfileTheme = true,
+                        SyncContrastSettings = true,
+                        RoleColorMode = RoleColorMode.ShowRoleColorsInNames,
+                        SyncReducedMotionWithPC = true,
+                        ReducedMotion = true,
+                        AutoPlayGIFsOnAppFocus = true,
+                        PlayAnimatedEmojis = true,
+                        StickerAnimationMode = StickerAnimationMode.AlwaysAnimate,
+                        ShowSendMessageButton = true,
+                        AllowTextToSpeech = false,
+                        TextToSpeechRate = 255,
+                    },
                     AppearanceSettings = new AppearanceSettings()
                     {
-
+                        ThemeId = 1,
+                        InAppIcon = "",
+                        DarkSideBar = true,
+                        PixelChatFontScale = 255,
+                        PixelGroupSpaceScale = 255,
                     },
-                    AdvancedSettings = new AdvancedSettings(),
+                    AdvancedSettings = new AdvancedSettings()
+                    {
+                        DeveloperMode = false,
+                        AutoNavigateServerHome = false,
+                    },
                     BillingInformation = new BillingInformation(),
                     ChatSettings = new ChatSettings(),
-                    FriendRequestSettings = new FriendRequestSettings(),
+                    FriendRequestSettings = new FriendRequestSettings()
+                    {
+                        Everyone = true,
+                        FriendsOfFriends = false,
+                        ServerMembers = false,
+                    },
                     KeybindSettings = new KeybindSettings(),
                     Language = new Language()
                     {
-                        Name= "English (United States)",
+                        Name = "English (United States)",
                         LanguageCode = "en-US",
                     },
-                    NotificationSettings = new NotificationSettings(),
-                    PrivacySettings = new PrivacySettings(),
-                    SoundboardSettings = new SoundboardSettings(),
-                    StreamerModeSettings = new StreamerModeSettings(),
-                    VoiceSettings = new VoiceSettings(),
+                    NotificationSettings = new NotificationSettings()
+                    {
+                        FocusModeEnabled = false,
+                        DesktopNotification = true,
+                        UnreadMessageBadge = true,
+                        TaskbarFlashing = true,
+                    },
+                    PrivacySettings = new PrivacySettings()
+                    {
+                        DMFromFriends = DMAllow.Show,
+                        DMFromUnknownUsers = DMAllow.Show,
+                        DMFromServerChatroom = DMAllow.Show,
+                    },
+                    SoundboardSettings = new SoundboardSettings()
+                    {
+                        SoundboardVolume = 100,
+                        Soundboard = 100,
+                    },
+                    StreamerModeSettings = new StreamerModeSettings()
+                    {
+                        StreamerMode = false,
+                        HidePersonalInformation = true,
+                        HideInviteLinks = false,
+                        DisableNotifications = false,
+                        DisableSounds = false,
+                    },
+                    VoiceSettings = new VoiceSettings()
+                    {
+                        InputDevice = "",
+                        OutputDevice = "",
+                        InputVolume = 100,
+                        OutputVolume = 100,
+                        InputMode = InputMode.VoiceActivity,
+                        EchoCancellation = true,
+                        NoiseSuppression = NoiseSuppression.Standard,
+                        AdvancedVoiceActivity = false,
+                        AutomaticGainControl = false,
+                    },
                     VideoSettings = new VideoSettings(),
                     ActivitySettings = new ActivitySettings()
                 },
