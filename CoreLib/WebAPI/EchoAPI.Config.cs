@@ -23,7 +23,7 @@ namespace CoreLib.WebAPI
         public EchoAPI(/*MessageStore NotificationPipeline = null*/)
         {
             //client.BaseAddress = new Uri("http://10.233.42.99/api/");
-            client.BaseAddress = new Uri("https://localhost:44310/api/");
+            client.BaseAddress = new Uri("https://localhost:7269/api/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             // _notificationPipeline = NotificationPipeline;
