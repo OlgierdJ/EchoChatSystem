@@ -10,7 +10,7 @@
 
 <div id="unique_id_scroll_section" class="ma-0" style="height:100vh;overflow: auto;">
     <MudPaper Width="60%" Style="margin: 20%; padding: 50px 100px 50px 100px">
-        <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+        <MudForm @bind-IsValid="@success" @bind-Errors="@errors">
             <MudText Align="Align.Center" Typo="Typo.h4">ECHO REGISTER</MudText>
             <MudTextField @bind-Value="email" Label="EMAIL " Variant="Variant.Filled" InputType="InputType.Email" Required RequiredError="Please enter your email" Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" /> 
             <MudTextField @bind-Value="displayName" Label="DISPLAY NAME " Variant="Variant.Filled" InputType="InputType.Text" /> 
@@ -42,7 +42,6 @@
 
     bool success;
     string[] errors = { };
-    MudForm form;
 
     bool visible;
     InputType PasswordInput = InputType.Password;
