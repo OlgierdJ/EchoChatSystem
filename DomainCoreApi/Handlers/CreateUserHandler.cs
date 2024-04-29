@@ -12,9 +12,9 @@ namespace DomainCoreApi.Handlers
         public async Task<(User,Account)> CreateHandler(RegisterUserModel input)
         {
 
-            var us = await CreateUser(input.Email, input.DateOfBirth);
+            var user = await CreateUser(input.Email, input.DateOfBirth);
             var acc = await CreateAccount(input.Username, input.DisplayName);
-            return (us, acc);
+            return (user, acc);
         }
 
         public async Task<Account> CreateAccount(string Username,string? DisplayName)
@@ -23,11 +23,10 @@ namespace DomainCoreApi.Handlers
             {
                 Name = Username,
                 TimeCreated = DateTime.UtcNow,
-                ActivityStatus = new()
+                ActivityStatusId = 0,
+                CustomStatus = new()
                 {
-                    Name = "Online",
-                    Icon = "Icons.Material.Filled.Circle",
-                    IconColor = "Success"
+                    CustomMessage = "Online"
                 },
                 Profile = new()
                 {
@@ -119,8 +118,18 @@ namespace DomainCoreApi.Handlers
                         AdvancedVoiceActivity = false,
                         AutomaticGainControl = false,
                     },
-                    VideoSettings = new VideoSettings(),
+                    VideoSettings = new VideoSettings()
+                    {
+                        AlwaysPreviewVideo = false,
+                        CameraDevice = ""
+                    },
                     ActivitySettings = new ActivitySettings()
+                    {
+                        DisplayCurrentActivityAsAStatusMessage = true,
+                        ShareActivityStatusOnLargeServerJoin = true,
+                        AllowFriendsToJoinGame = true,
+                        AllowVoiceChannelParticipantsToJoinGame = true,
+                    }
                 },
             };
             return account;
@@ -128,10 +137,9 @@ namespace DomainCoreApi.Handlers
 
         public async Task<User> CreateUser(string Email,DateTime DateOfBirth)
         {
-            // user \\
-            /* Email  DateOfBirth */
            User user = new User()
-            {
+           {
+               
                 Email = Email,
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = false,

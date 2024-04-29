@@ -1,6 +1,7 @@
 ﻿using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
+using CoreLib.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,21 +13,19 @@ namespace CoreLib.Handlers
 {
     public class Passwordhandler : IPasswordHandler
     {
-        //
         //https://code-maze.com/csharp-hashing-salting-passwords-best-practices/
         private readonly ISecurityCredentialsRepository _PasswordRepo;
         public Passwordhandler(ISecurityCredentialsRepository PasswordRepo)
         {
             _PasswordRepo = PasswordRepo;
         }
-        public Passwordhandler()
+        public Passwordhandler(ISecurityCredentialsService security)
         {
 
         }
         public async Task<bool> CheckPassword(string Password, ulong UserId)
         {
-            var creds = await _PasswordRepo.GetAllAsync();
-            var UserPassword = creds.First(obj => obj.UserId == UserId);
+            var UserPassword = await _PasswordRepo.GetSingleAsync(obj => obj.UserId == UserId);
 
             using (var pbkdf2 = new Rfc2898DeriveBytes(Password, UserPassword.Salt, 10000))
             {
@@ -57,6 +56,7 @@ namespace CoreLib.Handlers
                     Salt = salt,
                     UserId = Userid
                 };
+                await _PasswordRepo.AddAsync(credentials);
                 return credentials;
             }
 

@@ -23,12 +23,22 @@ namespace DomainCoreApi.Services
 
         public async Task<User> CreateUserAsync(RegisterUserModel input)
         {
-            Console.WriteLine(input);
-            var data = await _createUserHandler.CreateHandler(input);
-            //var result = await _repository.AddAsync(data.Item1);
-            data.Item2.UserId = 1;
-            await _accountService.AddAsync(data.Item2);
-            throw new NotImplementedException();
+            try
+            {
+
+                Console.WriteLine(input);
+                var data = await _createUserHandler.CreateHandler(input);
+                var result = await _repository.AddAsync(data.Item1);
+                data.Item2.UserId = result.Id;
+                await _pwdHandler.CreatePassword(input.Password, data.Item1.Id);
+                await _accountService.AddAsync(data.Item2);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }   
         }
 
         public async Task<string> LoginUserAsync(UserLoginModel attempt)

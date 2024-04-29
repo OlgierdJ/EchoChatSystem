@@ -22,7 +22,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public DateTime? TimeLastLogon { get; set; } //maybe add table to map sessions with login times, logoff times, devices etc to allow the user to disconnect unused devices and see their device history
         public ulong? UserId { get; set; } //used for mapping personal information to the account (real name address password loginusername etc)
         public byte ActivityStatusId { get; set; }
-        public ulong? CustomStatusId { get; set; } = 1;
+        public ulong? CustomStatusId { get; set; }
 
         public AccountActivityStatus ActivityStatus { get; set; }
         public AccountCustomStatus? CustomStatus { get; set; }

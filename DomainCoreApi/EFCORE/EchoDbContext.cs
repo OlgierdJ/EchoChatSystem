@@ -2,6 +2,7 @@
 using CoreLib.Entities.EchoCore.ServerCore;
 using CoreLib.Entities.EchoCore.ServerCore.Integrations;
 using DomainCoreApi.EFCORE.Configurations.AccountCore;
+using DomainCoreApi.EFCORE.Configurations.UserCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DomainCoreApi.EFCORE
@@ -15,6 +16,8 @@ namespace DomainCoreApi.EFCORE
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AccountConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SecurityCredentialsConfiguration).Assembly);
             modelBuilder.Ignore<ServerBot>();
             modelBuilder.Ignore<ServerBotCommand>();
             modelBuilder.Ignore<ServerBotCommandParameter>();
