@@ -13,7 +13,7 @@ namespace DomainCoreApi.EFCORE.Configurations.FriendCore
                 .HasKey(b => new { b.ReceiverId, b.SuggestionId });
             builder
                 .Property(b => b.TimeSuggested)
-                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("getdate()")
                 .IsRequired();
             builder
                .Property(b => b.Declined)

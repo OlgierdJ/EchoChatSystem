@@ -13,10 +13,12 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
         public ulong AccountSettingsId { get; set; }
 
         public bool StreamerMode { get; set; }
+        public bool AutomaticallyEnableAndDisableIfStreaming { get; set; }
         public bool HidePersonalInformation { get; set; }
         public bool HideInviteLinks { get; set; }
         public bool DisableSounds { get; set; }
         public bool DisableNotifications { get; set; }
+        public bool HideEchoWindowFromScreenCapture { get; set; }
 
         public AccountSettings AccountSettings { get; set; }
     }

@@ -4,6 +4,7 @@ using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    partial class EchoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240430170553_v3")]
+    partial class v3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -299,9 +302,14 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("AccountId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<decimal>("RecipientsId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.HasKey("RoleId", "AccountId");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("RecipientsId");
 
                     b.ToTable("AccountRole");
                 });
@@ -833,21 +841,6 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.RolePermission", b =>
-                {
-                    b.Property<decimal>("PermissionId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal>("RoleId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("PermissionId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RolePermission");
-                });
-
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.SoundboardSettings", b =>
                 {
                     b.Property<decimal>("Id")
@@ -1029,18 +1022,26 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatAccountMessageTracker", b =>
                 {
-                    b.Property<decimal>("OwnerId")
+                    b.Property<decimal>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("CoOwnerId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
+
+                    b.Property<decimal>("HolderId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("OwnerId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<decimal>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.HasKey("OwnerId", "CoOwnerId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CoOwnerId");
+                    b.HasIndex("HolderId");
+
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("SubjectId");
 
@@ -1806,6 +1807,21 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("MessageReportMessageReportReason");
                 });
 
+            modelBuilder.Entity("PermissionRole", b =>
+                {
+                    b.Property<decimal>("PermissionsId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("RolesId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.HasKey("PermissionsId", "RolesId");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("PermissionRole");
+                });
+
             modelBuilder.Entity("ProfileReportProfileReportReason", b =>
                 {
                     b.Property<byte>("ReasonsId")
@@ -1965,6 +1981,12 @@ namespace DomainCoreApi.Migrations
                         .WithMany()
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
+                        .WithMany()
+                        .HasForeignKey("RecipientsId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Role", "Role")
@@ -2194,25 +2216,6 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("AccountSettings");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.RolePermission", b =>
-                {
-                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Permission", "Permission")
-                        .WithMany()
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.SoundboardSettings", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
@@ -2259,9 +2262,9 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatAccountMessageTracker", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "CoOwner")
+                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Holder")
                         .WithMany("MessageTrackers")
-                        .HasForeignKey("CoOwnerId")
+                        .HasForeignKey("HolderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2276,7 +2279,7 @@ namespace DomainCoreApi.Migrations
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("CoOwner");
+                    b.Navigation("Holder");
 
                     b.Navigation("Owner");
 
@@ -2674,6 +2677,21 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ReportCore.Message.MessageReport", null)
                         .WithMany()
                         .HasForeignKey("ReportsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PermissionRole", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    [Migration("20240424121934_init2")]
-    partial class init2
+    [Migration("20240430172146_v4")]
+    partial class v4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,36 +24,6 @@ namespace DomainCoreApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AccountFriendship", b =>
-                {
-                    b.Property<decimal>("FriendshipsId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal>("ParticipantsId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("FriendshipsId", "ParticipantsId");
-
-                    b.HasIndex("ParticipantsId");
-
-                    b.ToTable("AccountFriendship");
-                });
-
-            modelBuilder.Entity("AccountRole", b =>
-                {
-                    b.Property<decimal>("RecipientsId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal>("RolesId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("RecipientsId", "RolesId");
-
-                    b.HasIndex("RolesId");
-
-                    b.ToTable("AccountRole");
-                });
 
             modelBuilder.Entity("BugReportBugReportReason", b =>
                 {
@@ -91,14 +61,15 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeCreated")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime?>("TimeLastLogon")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
+                    b.Property<decimal?>("UserId")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("decimal(20,0)");
 
                     b.HasKey("Id");
 
@@ -106,6 +77,10 @@ namespace DomainCoreApi.Migrations
 
                     b.HasIndex("CustomStatusId")
                         .IsUnique();
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Account");
                 });
@@ -141,27 +116,20 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountBlock", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<decimal>("BlockerId")
                         .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<decimal>("BlockedId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("BlockerId")
-                        .HasColumnType("decimal(20,0)");
-
                     b.Property<DateTime>("TimeBlocked")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
-                    b.HasKey("Id");
+                    b.HasKey("BlockerId", "BlockedId");
 
                     b.HasIndex("BlockedId");
-
-                    b.HasIndex("BlockerId");
 
                     b.ToTable("AccountBlock");
                 });
@@ -227,28 +195,21 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountMute", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<DateTime?>("ExpirationTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal>("MuterId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<decimal>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateTime>("TimeMuted")
-                        .ValueGeneratedOnAdd()
+                    b.Property<DateTime?>("ExpirationTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.Property<DateTime>("TimeMuted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
-                    b.HasIndex("MuterId");
+                    b.HasKey("MuterId", "SubjectId");
 
                     b.HasIndex("SubjectId");
 
@@ -257,13 +218,10 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountNickname", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<decimal>("AuthorId")
                         .HasColumnType("decimal(20,0)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AuthorId")
+                    b.Property<decimal>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<string>("Nickname")
@@ -271,12 +229,7 @@ namespace DomainCoreApi.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
 
-                    b.Property<decimal>("SubjectId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
+                    b.HasKey("AuthorId", "SubjectId");
 
                     b.HasIndex("SubjectId");
 
@@ -285,13 +238,10 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountNote", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<decimal>("AuthorId")
                         .HasColumnType("decimal(20,0)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AuthorId")
+                    b.Property<decimal>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<string>("Note")
@@ -299,12 +249,7 @@ namespace DomainCoreApi.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
 
-                    b.Property<decimal>("SubjectId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
+                    b.HasKey("AuthorId", "SubjectId");
 
                     b.HasIndex("SubjectId");
 
@@ -349,6 +294,21 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("AccountProfile");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountRole", b =>
+                {
+                    b.Property<decimal>("RoleId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("AccountId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.HasKey("RoleId", "AccountId");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("AccountRole");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountSession", b =>
                 {
                     b.Property<decimal>("Id")
@@ -380,7 +340,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeStarted")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime?>("TimeStopped")
                         .HasColumnType("datetime2");
@@ -418,28 +379,21 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountSoundboardMute", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<DateTime?>("ExpirationTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal>("MuterId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<decimal>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateTime>("TimeMuted")
-                        .ValueGeneratedOnAdd()
+                    b.Property<DateTime?>("ExpirationTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.Property<DateTime>("TimeMuted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
-                    b.HasIndex("MuterId");
+                    b.HasKey("MuterId", "SubjectId");
 
                     b.HasIndex("SubjectId");
 
@@ -882,6 +836,21 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("Role");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.RolePermission", b =>
+                {
+                    b.Property<decimal>("PermissionId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("RoleId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.HasKey("PermissionId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolePermission");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.SoundboardSettings", b =>
                 {
                     b.Property<decimal>("Id")
@@ -1053,7 +1022,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeCreated")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("Id");
 
@@ -1090,18 +1060,12 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatInvite", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
+                    b.Property<string>("InviteCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<DateTime?>("ExpirationTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("InviteCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("InviterId")
                         .HasColumnType("decimal(20,0)");
@@ -1115,7 +1079,7 @@ namespace DomainCoreApi.Migrations
                     b.Property<int>("TotalUses")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("InviteCode");
 
                     b.HasIndex("InviterId");
 
@@ -1147,7 +1111,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("Id");
 
@@ -1184,52 +1149,37 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMessagePin", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<decimal>("PinboardId")
                         .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<decimal>("MessageId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("PinboardId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("Id");
+                    b.HasKey("PinboardId", "MessageId");
 
                     b.HasIndex("MessageId")
                         .IsUnique();
-
-                    b.HasIndex("PinboardId");
 
                     b.ToTable("ChatMessagePin");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMute", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<DateTime?>("ExpirationTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal>("MuterId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<decimal>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<DateTime>("TimeMuted")
-                        .ValueGeneratedOnAdd()
+                    b.Property<DateTime?>("ExpirationTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.Property<DateTime>("TimeMuted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
-                    b.HasIndex("MuterId");
+                    b.HasKey("MuterId", "SubjectId");
 
                     b.HasIndex("SubjectId");
 
@@ -1238,12 +1188,6 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatParticipancy", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
                     b.Property<decimal>("ParticipantId")
                         .HasColumnType("decimal(20,0)");
 
@@ -1252,11 +1196,10 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeJoined")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParticipantId");
+                    b.HasKey("ParticipantId", "SubjectId");
 
                     b.HasIndex("SubjectId");
 
@@ -1284,26 +1227,21 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.FriendSuggestion", b =>
                 {
-                    b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<bool>("Declined")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("ReceiverId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<decimal>("SuggestionId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<bool>("Declined")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("TimeSuggested")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
-                    b.HasKey("Id");
+                    b.HasKey("ReceiverId", "SuggestionId");
 
                     b.HasIndex("SuggestionId");
 
@@ -1322,11 +1260,33 @@ namespace DomainCoreApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<DateTime>("TimeCreated")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("Id");
 
                     b.ToTable("Friendship");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.FriendshipParticipancy", b =>
+                {
+                    b.Property<decimal>("ParticipantId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("SubjectId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime>("TimeJoined")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.HasKey("ParticipantId", "SubjectId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("FriendshipParticipancy");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.IncomingFriendRequest", b =>
@@ -1406,7 +1366,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("Id");
 
@@ -1453,7 +1414,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<decimal>("ViolationId")
                         .HasColumnType("decimal(20,0)");
@@ -1527,7 +1489,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("Id");
 
@@ -1574,7 +1537,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<decimal>("ViolationId")
                         .HasColumnType("decimal(20,0)");
@@ -1630,7 +1594,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("Id");
 
@@ -1681,7 +1646,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<decimal>("ViolationId")
                         .HasColumnType("decimal(20,0)");
@@ -1749,6 +1715,63 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ReportedProfile");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.UserCore.SecurityCredentials", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("Salt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<decimal>("UserId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("SecurityCredentials");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.UserCore.User", b =>
+                {
+                    b.Property<decimal>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(20,0)");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("PasswordSetDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User");
+                });
+
             modelBuilder.Entity("CustomStatusReportCustomStatusReportReason", b =>
                 {
                     b.Property<byte>("ReasonsId")
@@ -1794,21 +1817,6 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("MessageReportMessageReportReason");
                 });
 
-            modelBuilder.Entity("PermissionRole", b =>
-                {
-                    b.Property<decimal>("PermissionsId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal>("RolesId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("PermissionsId", "RolesId");
-
-                    b.HasIndex("RolesId");
-
-                    b.ToTable("PermissionRole");
-                });
-
             modelBuilder.Entity("ProfileReportProfileReportReason", b =>
                 {
                     b.Property<byte>("ReasonsId")
@@ -1822,36 +1830,6 @@ namespace DomainCoreApi.Migrations
                     b.HasIndex("ReportsId");
 
                     b.ToTable("ProfileReportProfileReportReason");
-                });
-
-            modelBuilder.Entity("AccountFriendship", b =>
-                {
-                    b.HasOne("CoreLib.Entities.EchoCore.FriendCore.Friendship", null)
-                        .WithMany()
-                        .HasForeignKey("FriendshipsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
-                        .WithMany()
-                        .HasForeignKey("ParticipantsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AccountRole", b =>
-                {
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
-                        .WithMany()
-                        .HasForeignKey("RecipientsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("BugReportBugReportReason", b =>
@@ -1883,9 +1861,15 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CoreLib.Entities.EchoCore.UserCore.User", "User")
+                        .WithOne("Account")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.AccountCore.Account", "UserId");
+
                     b.Navigation("ActivityStatus");
 
                     b.Navigation("CustomStatus");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountBlock", b =>
@@ -1984,6 +1968,25 @@ namespace DomainCoreApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountRole", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountSession", b =>
@@ -2202,6 +2205,25 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("AccountSettings");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.RolePermission", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.SoundboardSettings", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
@@ -2283,8 +2305,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Subject")
                         .WithMany("Invites")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Inviter");
 
@@ -2302,8 +2323,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "MessageHolder")
                         .WithMany("Messages")
                         .HasForeignKey("MessageHolderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", "Parent")
                         .WithMany("Children")
@@ -2413,6 +2433,25 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Receiver");
 
                     b.Navigation("Suggestion");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.FriendshipParticipancy", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Participant")
+                        .WithMany()
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.FriendCore.Friendship", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Participant");
+
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.IncomingFriendRequest", b =>
@@ -2596,6 +2635,15 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.UserCore.SecurityCredentials", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.UserCore.User", null)
+                        .WithOne("SecurityCredentials")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.UserCore.SecurityCredentials", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CustomStatusReportCustomStatusReportReason", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.ReportCore.CustomStatus.CustomStatusReportReason", null)
@@ -2637,21 +2685,6 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ReportCore.Message.MessageReport", null)
                         .WithMany()
                         .HasForeignKey("ReportsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PermissionRole", b =>
-                {
-                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Permission", null)
-                        .WithMany()
-                        .HasForeignKey("PermissionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -2866,6 +2899,13 @@ namespace DomainCoreApi.Migrations
                 {
                     b.Navigation("Report")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.UserCore.User", b =>
+                {
+                    b.Navigation("Account");
+
+                    b.Navigation("SecurityCredentials");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,7 +10,7 @@
 //        {
 //            builder.HasKey(s => s.Id);
 //            builder.Property(s => s.Name).HasMaxLength(255).IsRequired();
-//            builder.Property(s => s.TimeCreated).ValueGeneratedOnAdd().IsRequired();
+//            builder.Property(s => s.TimeCreated).HasDefaultValueSql("getdate()").IsRequired();
 
 //            // Configure relationships
 //            //builder.HasMany(s => s.Settings)

@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,11 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
         public uint ThemeId { get; set; }
         public string InAppIcon { get; set; }
         public bool DarkSideBar { get; set; }
-        //public MessageDisplayMode MessageDisplayMode { get; set; }
+        public MessageDisplayMode MessageDisplayMode { get; set; }
+        public bool ShowAvatarsInCompactMode { get; set; }
         public byte PixelChatFontScale { get; set; }
-        public byte PixelGroupSpaceScale { get; set; }
+        public byte PixelSpaceBetweenMessageGroupsScale { get; set; }
+        public byte ZoomLevel { get; set; }
 
         public Theme Theme { get; set; }
         public AccountSettings AccountSettings { get; set; }

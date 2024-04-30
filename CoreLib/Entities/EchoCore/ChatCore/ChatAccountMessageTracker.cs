@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatAccountMessageTracker : BaseEntityTracker<ulong, Account, ulong, ChatMessage, ulong, Chat, ulong>
+    public class ChatAccountMessageTracker : BaseEntityTracker<Account, ulong, Chat, ulong, ChatMessage, ulong>
     {
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DomainCoreApi.Migrations
 {
     /// <inheritdoc />
-    public partial class init2 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -187,33 +187,21 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Account",
+                name: "User",
                 columns: table => new
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TimeLastLogon = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ActivityStatusId = table.Column<byte>(type: "tinyint", nullable: false),
-                    CustomStatusId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordSetDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Account", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Account_AccountActivityStatus_ActivityStatusId",
-                        column: x => x.ActivityStatusId,
-                        principalTable: "AccountActivityStatus",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Account_AccountCustomStatus_CustomStatusId",
-                        column: x => x.CustomStatusId,
-                        principalTable: "AccountCustomStatus",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -260,18 +248,71 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AccountBlock",
+                name: "Account",
                 columns: table => new
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeLastLogon = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserId = table.Column<decimal>(type: "decimal(20,0)", maxLength: 256, nullable: true),
+                    ActivityStatusId = table.Column<byte>(type: "tinyint", nullable: false),
+                    CustomStatusId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Account", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Account_AccountActivityStatus_ActivityStatusId",
+                        column: x => x.ActivityStatusId,
+                        principalTable: "AccountActivityStatus",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Account_AccountCustomStatus_CustomStatusId",
+                        column: x => x.CustomStatusId,
+                        principalTable: "AccountCustomStatus",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Account_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SecurityCredentials",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Salt = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SecurityCredentials", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SecurityCredentials_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountBlock",
+                columns: table => new
+                {
                     BlockerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     BlockedId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     TimeBlocked = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccountBlock", x => x.Id);
+                    table.PrimaryKey("PK_AccountBlock", x => new { x.BlockerId, x.BlockedId });
                     table.ForeignKey(
                         name: "FK_AccountBlock_Account_BlockedId",
                         column: x => x.BlockedId,
@@ -309,35 +350,9 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AccountFriendship",
-                columns: table => new
-                {
-                    FriendshipsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    ParticipantsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AccountFriendship", x => new { x.FriendshipsId, x.ParticipantsId });
-                    table.ForeignKey(
-                        name: "FK_AccountFriendship_Account_ParticipantsId",
-                        column: x => x.ParticipantsId,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AccountFriendship_Friendship_FriendshipsId",
-                        column: x => x.FriendshipsId,
-                        principalTable: "Friendship",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AccountMute",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     MuterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     TimeMuted = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -345,7 +360,7 @@ namespace DomainCoreApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccountMute", x => x.Id);
+                    table.PrimaryKey("PK_AccountMute", x => new { x.MuterId, x.SubjectId });
                     table.ForeignKey(
                         name: "FK_AccountMute_Account_MuterId",
                         column: x => x.MuterId,
@@ -362,15 +377,13 @@ namespace DomainCoreApi.Migrations
                 name: "AccountNickname",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     AuthorId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Nickname = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccountNickname", x => x.Id);
+                    table.PrimaryKey("PK_AccountNickname", x => new { x.AuthorId, x.SubjectId });
                     table.ForeignKey(
                         name: "FK_AccountNickname_Account_AuthorId",
                         column: x => x.AuthorId,
@@ -387,15 +400,13 @@ namespace DomainCoreApi.Migrations
                 name: "AccountNote",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     AuthorId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccountNote", x => x.Id);
+                    table.PrimaryKey("PK_AccountNote", x => new { x.AuthorId, x.SubjectId });
                     table.ForeignKey(
                         name: "FK_AccountNote_Account_AuthorId",
                         column: x => x.AuthorId,
@@ -435,12 +446,18 @@ namespace DomainCoreApi.Migrations
                 name: "AccountRole",
                 columns: table => new
                 {
-                    RecipientsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    RolesId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    RecipientsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccountRole", x => new { x.RecipientsId, x.RolesId });
+                    table.PrimaryKey("PK_AccountRole", x => new { x.RoleId, x.AccountId });
+                    table.ForeignKey(
+                        name: "FK_AccountRole_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AccountRole_Account_RecipientsId",
                         column: x => x.RecipientsId,
@@ -448,8 +465,8 @@ namespace DomainCoreApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AccountRole_Role_RolesId",
-                        column: x => x.RolesId,
+                        name: "FK_AccountRole_Role_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "Role",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -510,8 +527,6 @@ namespace DomainCoreApi.Migrations
                 name: "AccountSoundboardMute",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     MuterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     TimeMuted = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -519,7 +534,7 @@ namespace DomainCoreApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccountSoundboardMute", x => x.Id);
+                    table.PrimaryKey("PK_AccountSoundboardMute", x => new { x.MuterId, x.SubjectId });
                     table.ForeignKey(
                         name: "FK_AccountSoundboardMute_Account_MuterId",
                         column: x => x.MuterId,
@@ -582,9 +597,7 @@ namespace DomainCoreApi.Migrations
                 name: "ChatInvite",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    InviteCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InviteCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     ExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TimesUsed = table.Column<int>(type: "int", nullable: false),
                     TotalUses = table.Column<int>(type: "int", nullable: false),
@@ -593,7 +606,7 @@ namespace DomainCoreApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChatInvite", x => x.Id);
+                    table.PrimaryKey("PK_ChatInvite", x => x.InviteCode);
                     table.ForeignKey(
                         name: "FK_ChatInvite_Account_InviterId",
                         column: x => x.InviterId,
@@ -647,8 +660,6 @@ namespace DomainCoreApi.Migrations
                 name: "ChatMute",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     MuterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     TimeMuted = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -656,7 +667,7 @@ namespace DomainCoreApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChatMute", x => x.Id);
+                    table.PrimaryKey("PK_ChatMute", x => new { x.MuterId, x.SubjectId });
                     table.ForeignKey(
                         name: "FK_ChatMute_Account_MuterId",
                         column: x => x.MuterId,
@@ -675,15 +686,13 @@ namespace DomainCoreApi.Migrations
                 name: "ChatParticipancy",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     ParticipantId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     TimeJoined = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChatParticipancy", x => x.Id);
+                    table.PrimaryKey("PK_ChatParticipancy", x => new { x.ParticipantId, x.SubjectId });
                     table.ForeignKey(
                         name: "FK_ChatParticipancy_Account_ParticipantId",
                         column: x => x.ParticipantId,
@@ -719,19 +728,42 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FriendshipParticipancy",
+                columns: table => new
+                {
+                    ParticipantId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    TimeJoined = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FriendshipParticipancy", x => new { x.ParticipantId, x.SubjectId });
+                    table.ForeignKey(
+                        name: "FK_FriendshipParticipancy_Account_ParticipantId",
+                        column: x => x.ParticipantId,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FriendshipParticipancy_Friendship_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "Friendship",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FriendSuggestion",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Declined = table.Column<bool>(type: "bit", nullable: false),
                     ReceiverId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SuggestionId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Declined = table.Column<bool>(type: "bit", nullable: false),
                     TimeSuggested = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FriendSuggestion", x => x.Id);
+                    table.PrimaryKey("PK_FriendSuggestion", x => new { x.ReceiverId, x.SuggestionId });
                     table.ForeignKey(
                         name: "FK_FriendSuggestion_Account_ReceiverId",
                         column: x => x.ReceiverId,
@@ -834,6 +866,7 @@ namespace DomainCoreApi.Migrations
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SaturationPercent = table.Column<byte>(type: "tinyint", nullable: false),
                     ApplySaturationToCustomColors = table.Column<bool>(type: "bit", nullable: false),
                     AlwaysUnderlineLinks = table.Column<bool>(type: "bit", nullable: false),
@@ -847,8 +880,7 @@ namespace DomainCoreApi.Migrations
                     StickerAnimationMode = table.Column<int>(type: "int", nullable: false),
                     ShowSendMessageButton = table.Column<bool>(type: "bit", nullable: false),
                     AllowTextToSpeech = table.Column<bool>(type: "bit", nullable: false),
-                    TextToSpeechRate = table.Column<byte>(type: "tinyint", nullable: false),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                    TextToSpeechRate = table.Column<byte>(type: "tinyint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1255,14 +1287,12 @@ namespace DomainCoreApi.Migrations
                 name: "ChatMessagePin",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     PinboardId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     MessageId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChatMessagePin", x => x.Id);
+                    table.PrimaryKey("PK_ChatMessagePin", x => new { x.PinboardId, x.MessageId });
                     table.ForeignKey(
                         name: "FK_ChatMessagePin_ChatMessage_MessageId",
                         column: x => x.MessageId,
@@ -1581,14 +1611,16 @@ namespace DomainCoreApi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Account_UserId",
+                table: "Account",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AccountBlock_BlockedId",
                 table: "AccountBlock",
                 column: "BlockedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AccountBlock_BlockerId",
-                table: "AccountBlock",
-                column: "BlockerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccountConnection_AccountId",
@@ -1596,34 +1628,14 @@ namespace DomainCoreApi.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccountFriendship_ParticipantsId",
-                table: "AccountFriendship",
-                column: "ParticipantsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AccountMute_MuterId",
-                table: "AccountMute",
-                column: "MuterId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AccountMute_SubjectId",
                 table: "AccountMute",
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccountNickname_AuthorId",
-                table: "AccountNickname",
-                column: "AuthorId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AccountNickname_SubjectId",
                 table: "AccountNickname",
                 column: "SubjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AccountNote_AuthorId",
-                table: "AccountNote",
-                column: "AuthorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccountNote_SubjectId",
@@ -1637,9 +1649,14 @@ namespace DomainCoreApi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccountRole_RolesId",
+                name: "IX_AccountRole_AccountId",
                 table: "AccountRole",
-                column: "RolesId");
+                column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccountRole_RecipientsId",
+                table: "AccountRole",
+                column: "RecipientsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccountSession_AccountId",
@@ -1656,11 +1673,6 @@ namespace DomainCoreApi.Migrations
                 name: "IX_AccountSettings_LanguageId",
                 table: "AccountSettings",
                 column: "LanguageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AccountSoundboardMute_MuterId",
-                table: "AccountSoundboardMute",
-                column: "MuterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccountSoundboardMute_SubjectId",
@@ -1785,24 +1797,9 @@ namespace DomainCoreApi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatMessagePin_PinboardId",
-                table: "ChatMessagePin",
-                column: "PinboardId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChatMute_MuterId",
-                table: "ChatMute",
-                column: "MuterId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ChatMute_SubjectId",
                 table: "ChatMute",
                 column: "SubjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChatParticipancy_ParticipantId",
-                table: "ChatParticipancy",
-                column: "ParticipantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChatParticipancy_SubjectId",
@@ -1857,6 +1854,11 @@ namespace DomainCoreApi.Migrations
                 table: "FriendRequestSettings",
                 column: "AccountSettingsId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendshipParticipancy_SubjectId",
+                table: "FriendshipParticipancy",
+                column: "SubjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FriendSuggestion_ReceiverId_SuggestionId",
@@ -1976,6 +1978,12 @@ namespace DomainCoreApi.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SecurityCredentials_UserId",
+                table: "SecurityCredentials",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SoundboardSettings_AccountSettingsId",
                 table: "SoundboardSettings",
                 column: "AccountSettingsId",
@@ -2011,9 +2019,6 @@ namespace DomainCoreApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "AccountConnection");
-
-            migrationBuilder.DropTable(
-                name: "AccountFriendship");
 
             migrationBuilder.DropTable(
                 name: "AccountMute");
@@ -2082,6 +2087,9 @@ namespace DomainCoreApi.Migrations
                 name: "FriendRequestSettings");
 
             migrationBuilder.DropTable(
+                name: "FriendshipParticipancy");
+
+            migrationBuilder.DropTable(
                 name: "FriendSuggestion");
 
             migrationBuilder.DropTable(
@@ -2112,6 +2120,9 @@ namespace DomainCoreApi.Migrations
                 name: "ReportedMessageAttachment");
 
             migrationBuilder.DropTable(
+                name: "SecurityCredentials");
+
+            migrationBuilder.DropTable(
                 name: "SoundboardSettings");
 
             migrationBuilder.DropTable(
@@ -2122,9 +2133,6 @@ namespace DomainCoreApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "VoiceSettings");
-
-            migrationBuilder.DropTable(
-                name: "Friendship");
 
             migrationBuilder.DropTable(
                 name: "AccountViolationAppeal");
@@ -2155,6 +2163,9 @@ namespace DomainCoreApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "FeedbackReport");
+
+            migrationBuilder.DropTable(
+                name: "Friendship");
 
             migrationBuilder.DropTable(
                 name: "OutgoingFriendRequest");
@@ -2209,6 +2220,9 @@ namespace DomainCoreApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "AccountCustomStatus");
+
+            migrationBuilder.DropTable(
+                name: "User");
         }
     }
 }

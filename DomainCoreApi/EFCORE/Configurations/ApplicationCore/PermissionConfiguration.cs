@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    //public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
-    //{
-    //    public void Configure(EntityTypeBuilder<Permission> builder)
-    //    {
-    //        builder.HasKey(b => b.Id);
+    public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
+    {
+        public void Configure(EntityTypeBuilder<Permission> builder)
+        {
+            builder.HasKey(b => b.Id);
 
-    //        //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
+            //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
 
-    //        builder.HasMany(b => b.Roles).WithMany(e => e.Permissions).UsingEntity<RolePermission>(j =>
-    //        {
-    //            j.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId);
-    //            j.HasOne(e => e.Permission).WithMany().HasForeignKey(e => e.PermissionId);
-    //        });
-    //    }
-    //}
+            builder.HasMany(b => b.Roles).WithMany(e => e.Permissions).UsingEntity<RolePermission>(
+            
+                l => l.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId),
+                  r => r.HasOne(e => e.Permission).WithMany().HasForeignKey(e => e.PermissionId)
+            );
+        }
+    }
 }

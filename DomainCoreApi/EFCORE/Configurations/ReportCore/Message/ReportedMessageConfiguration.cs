@@ -25,8 +25,7 @@ namespace CoreLib.Entities.EchoCore.ReportCore.Message
                 .Property(b => b.MessageType)
                 .IsRequired();
             builder
-                .Property(b => b.TimeSent).ValueGeneratedOnAdd()
-                .IsRequired();
+                .Property(b => b.TimeSent).HasDefaultValueSql("getdate()").IsRequired();
 
             builder.HasOne(b => b.Author).WithMany(e => e.ReportedMessages).HasForeignKey(b => b.AuthorId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             //builder.HasMany(b => b.Reports).WithOne(e => e.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();

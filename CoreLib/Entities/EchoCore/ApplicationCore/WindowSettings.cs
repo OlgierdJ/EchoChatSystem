@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class AdvancedSettings : BaseEntity<ulong>
+    public class WindowSettings : BaseEntity<ulong>
     {
         public ulong AccountSettingsId { get; set; }
-        public bool DeveloperMode { get; set; }
-        public bool HardwareAcceleration { get; set; }
-        public bool AutoNavigateServerHome { get; set; }
+        public bool OpenEcho { get; set; }
+        public bool StartMinimized { get; set; }
+        public bool MinimizeOnClose { get; set; }
+
         public AccountSettings AccountSettings { get; set; }
     }
 }

@@ -16,10 +16,11 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
         public byte SaturationPercent { get; set; }
         public bool ApplySaturationToCustomColors { get; set; }
         public bool AlwaysUnderlineLinks { get; set; }
-        public bool SyncProfileTheme { get; set; }
+        public RoleColorMode RoleColorMode { get; set; }
+
+        public bool SyncProfileThemes { get; set; }
         public bool SyncContrastSettings { get; set; }
 
-        public RoleColorMode RoleColorMode { get; set; }
 
         //Animation stuff
         public bool SyncReducedMotionWithPC { get; set; }
@@ -31,6 +32,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
 
         //Visibility stuff
         public bool ShowSendMessageButton { get; set; }
+        public bool UseLegacyChatInput { get; set; }
 
         //Text to speech stuff
         public bool AllowTextToSpeech { get; set; }

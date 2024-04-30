@@ -20,7 +20,7 @@ namespace CoreLib.Entities.EchoCore.ReportCore.Message
             builder
                 .Property(b => b.Message);
             builder
-              .Property(b => b.TimeSent).ValueGeneratedOnAdd();
+              .Property(b => b.TimeSent).HasDefaultValueSql("getdate()").IsRequired();
             builder.HasOne(e => e.Reporter).WithMany().HasForeignKey(e => e.ReporterId).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasOne(e => e.Subject).WithOne(e => e.Report).HasForeignKey<MessageReport>(e => e.SubjectId);
             builder.HasMany(e => e.Reasons).WithMany(e => e.Reports);
