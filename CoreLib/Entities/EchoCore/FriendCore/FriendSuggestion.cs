@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.FriendCore
 {
-    public class FriendSuggestion : BaseSuggestion<ulong, Account, ulong, Account, ulong>
+    public class FriendSuggestion : BaseSuggestion<Account, ulong, Account, ulong>
     {
         /*
          * accepting the suggestion consumes the friend suggestion

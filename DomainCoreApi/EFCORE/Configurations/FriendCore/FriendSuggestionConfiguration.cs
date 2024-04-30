@@ -10,7 +10,7 @@ namespace DomainCoreApi.EFCORE.Configurations.FriendCore
         public void Configure(EntityTypeBuilder<FriendSuggestion> builder)
         {
             builder
-                .HasKey(b => b.Id);
+                .HasKey(b => new { b.ReceiverId, b.SuggestionId });
             builder
                 .Property(b => b.TimeSuggested)
                 .ValueGeneratedOnAdd()

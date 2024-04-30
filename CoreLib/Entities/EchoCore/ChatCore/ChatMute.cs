@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatMute : BaseMute<ulong, Account, ulong, Chat, ulong>
+    public class ChatMute : BaseMute<Account, ulong, Chat, ulong>
     {
     }
 }

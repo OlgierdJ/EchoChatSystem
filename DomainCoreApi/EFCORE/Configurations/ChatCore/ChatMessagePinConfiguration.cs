@@ -10,7 +10,7 @@ namespace CoreLib.Entities.EchoCore.ChatCore
         public void Configure(EntityTypeBuilder<ChatMessagePin> builder)
         {
             builder
-                .HasKey(b => b.Id);
+                .HasKey(b => new { b.PinboardId, b.MessageId });
             builder.HasOne(b => b.Pinboard).WithMany(e => e.PinnedMessages).HasForeignKey(b => b.PinboardId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
        
 

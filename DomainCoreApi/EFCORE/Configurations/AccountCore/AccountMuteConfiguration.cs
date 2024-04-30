@@ -8,7 +8,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
     {
         public void Configure(EntityTypeBuilder<AccountMute> builder)
         {
-            builder.HasKey(b => b.Id);
+            builder.HasKey(b => new { b.MuterId, b.SubjectId });
             builder.Property(b => b.TimeMuted).ValueGeneratedOnAdd().IsRequired();
             builder.Property(b => b.ExpirationTime).IsRequired(false);
             builder.HasOne(b => b.Subject).WithMany().HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();

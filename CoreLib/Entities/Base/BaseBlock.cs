@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseBlock<TId, TBlockerEntity, TBlockerEntityId, TBlockedEntity, TBlockedEntityId> : BaseEntity<TId> //done
+    public abstract class BaseBlock<TBlockerEntity, TBlockerEntityId, TBlockedEntity, TBlockedEntityId> //done
     {
         public TBlockerEntityId BlockerId { get; set; }
         public TBlockedEntityId BlockedId { get; set; }

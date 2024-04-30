@@ -2,7 +2,7 @@
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountSoundboardMute : BaseMute<ulong, Account, ulong, Account, ulong>
+    public class AccountSoundboardMute : BaseMute<Account, ulong, Account, ulong>
     {
     }
 }
