@@ -1,4 +1,5 @@
 ﻿@using CoreLib.Entities.EchoCore.AccountCore
+@using CoreLib.WebAPI
 @using MudBlazor
 @rendermode InteractiveAuto
 
@@ -47,6 +48,7 @@
 <div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 0px; width: 100vw; height: 100vh; position:fixed; z-index: 1; background: var(--mud-palette-transparent);" @onclick="@(()=> {Visible = false; Hover = false;})">
 </div>
 @code {
+    public readonly EchoAPI _echoAPI = new();
     public string? Message { get; set; }
     public string? Date { get; set; }
     public string? Name { get; set; }
@@ -85,9 +87,15 @@
         }   
     }
 
-    public void SwtichStatus(AccountActivityStatus s)
+    public async void SwtichStatus(AccountActivityStatus s)
     {
         currentStatus = s;
+        // hardcoded id, fetch from storage of sorts?
+        ulong testid = 4;
+        var acc = await _echoAPI.GetEntityAsync<Account>(testid);
+        acc.ActivityStatusId = s.Id;
+        var data = await _echoAPI.UpdateAsync<Account>(acc);
+
         Hover = false;
         StateHasChanged();
     }

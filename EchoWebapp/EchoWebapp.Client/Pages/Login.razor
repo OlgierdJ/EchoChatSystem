@@ -10,7 +10,7 @@
     <MudPaper Width="60%" Style="margin: 20%; padding: 50px 100px 50px 100px">
         <MudForm @bind-IsValid="@success" @bind-Errors="@errors">
             <MudText Align="Align.Center" Typo="Typo.h4">ECHO LOGIN</MudText>
-            <MudTextField @bind-Value="email" Label="EMAIL " Variant="Variant.Filled" InputType="InputType.Email" Required RequiredError="Please enter your email" Validation="@(new EmailAddressAttribute() {ErrorMessage = "Enter a valid email address"})" />
+            <MudTextField @ref="emailField" @bind-Value="email" Label="EMAIL " Variant="Variant.Filled" InputType="InputType.Email" Required RequiredError="Please enter your email" Validation="@(new EmailAddressAttribute() {ErrorMessage = "Enter a valid email address"})" />
              <MudTextField T="string" Label="PASSWORD " HelperText="Never share your password!" @bind-Value="password"
                            InputType="@PasswordInput" Variant="Variant.Filled"
                            Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
@@ -18,7 +18,7 @@
                            Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon"
                            OnAdornmentClick="PasswordVisibility" AdornmentAriaLabel="Show Password" />
              <MudText>
-                 <MudButton class="pt-0 pb-4" Variant="Variant.Text" OnClick="GoToRegister" Color="Color.Primary">Forgor your password?</MudButton>
+                 <MudButton class="pt-0 pb-4" Variant="Variant.Text" OnClick="ResetPassword" Color="Color.Primary">Forgor your password?</MudButton>
              </MudText>
              <MudButton class="pt-2 mb-4" Variant="Variant.Filled" OnClick="AuthorizeLogin" Color="Color.Success" Disabled="!success">Login</MudButton>
              <MudText>
@@ -32,6 +32,7 @@
  @code {
     public string password { get; set; } = "";
     public string email { get; set; } = "";
+    public MudTextField<string> emailField;
     public readonly EchoAPI _echoAPI = new();
     UserLoginModel User = new();
 
@@ -79,6 +80,19 @@
         var data = await _echoAPI.LoginAsync(User);
         Console.WriteLine(data);
         //await localStorage.SetAsync("AccountId", data);
+    }
+
+    async void ResetPassword()
+    {
+        emailField.Validate();
+        if (emailField.ValidationErrors.Count == 0)
+        {
+            //send confirmation mail, to the mail in email field
+            Thread.Sleep(500);
+            //once confirmed, forward to resetpassword, or through link in mail
+            nav.NavigateTo("/reset-password");
+        }
+
     }
 
     void GoToRegister()

@@ -52,7 +52,7 @@ namespace CoreLib.WebAPI
             catch (Exception e)
             {
                 //_notificationPipeline?.SetCurrentMessage(e.Message, Models.Stores.MessageType.Error);
-                await Console.Out.WriteLineAsync(e.Message); 
+                await Console.Out.WriteLineAsync(e.Message);
             }
 
             return null;
@@ -93,6 +93,28 @@ namespace CoreLib.WebAPI
                 return result;
             }
             return new User();
+        }
+
+        public async Task<bool> UpdatePasswordAsync(UpdatePasswordModel u)
+        {
+
+            var load = JsonSerializer.Serialize(u, SerializerOptions);
+            HttpContent content = new StringContent(load, Encoding.UTF8, "application/json");
+            try
+            {
+                var response = await client.PutAsync("user/updatepassword", content).ConfigureAwait(false);
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                //_notificationPipeline?.SetCurrentMessage(e.Message, Models.Stores.MessageType.Error);
+                await Console.Out.WriteLineAsync(e.Message);
+            }
+
+            return false;
         }
 
     }

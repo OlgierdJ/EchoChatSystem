@@ -67,5 +67,25 @@ namespace DomainCoreApi.Controllers
                 return Problem(ex.Message);
             }
         }
+
+        [AllowAnonymous]
+        [HttpPut("UpdatePassword")]
+        public async Task<IActionResult> UpdatePasswordAsync(UpdatePasswordModel u)
+        {
+            try
+            {
+                var result = await _userService.UpdatePassword(u);
+                if (!result)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok("all looks good");
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message); ;
+            }
+        }
     }
 }

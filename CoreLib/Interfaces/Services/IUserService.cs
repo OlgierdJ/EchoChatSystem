@@ -8,5 +8,6 @@ namespace CoreLib.Interfaces.Services
     {
         Task<string> LoginUserAsync(UserLoginModel attempt);
         Task<User> CreateUserAsync(RegisterUserModel input);
+        Task<bool> UpdatePassword(UpdatePasswordModel update);
     }
 }

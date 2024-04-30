@@ -11,5 +11,6 @@ namespace CoreLib.Interfaces
     {
         Task<bool> CheckPassword(string Password, ulong UserId);
         Task<SecurityCredentials> CreatePassword(string Password, ulong UserId);
+        Task<SecurityCredentials> UpdatePassword(string Password, ulong UserId);
     }
 }
