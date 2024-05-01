@@ -33,7 +33,7 @@ namespace CoreLib.WebAPI
             return 0;
         }
 
-        public async Task<User> LoginAsync(UserLoginModel log)
+        public async Task<string> LoginAsync(UserLoginModel log)
         {
             //User user = new()
             //{
@@ -46,7 +46,8 @@ namespace CoreLib.WebAPI
                 var response = await client.PostAsync("user/login", content).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonSerializer.Deserialize<User>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+                    var data = JsonSerializer.Deserialize<string>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+                    return data;
                 }
             }
             catch (Exception e)
