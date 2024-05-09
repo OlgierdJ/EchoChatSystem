@@ -107,6 +107,20 @@ namespace CoreLib.WebAPI
             return new List<T>();
         }
 
+        public async Task<List<T>> GetEntitiesByAccountIdAsync<T>(ulong id) where T : IEntity, new()
+        {
+            var response = await client.GetAsync($"{GetController<T>()}/ByAccountId/{id}").ConfigureAwait(false);
+            if (response.IsSuccessStatusCode)
+            {
+                var res = await response.Content.ReadAsStringAsync();
+                if (res != "")
+                {
+                    List<T> t = JsonSerializer.Deserialize<List<T>>(res, SerializerOptions);
+                    return t;
+                }
+            }
+            return new List<T>();
+        }
         public async Task<List<T>> GetEntitiesWithIncludeAsync<T>() where T : IEntity, new()
         {
             var response = await client.GetAsync($"{GetController<T>()}/include").ConfigureAwait(false);

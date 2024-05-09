@@ -4,6 +4,8 @@
 @using CoreLib.WebAPI
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager nav
+@inject EchoAPI _echoAPI
+@inject Provider.AccountIdContainer AccountContainer
 @rendermode InteractiveAuto
 
 <div id="unique_id_scroll_section" class="ma-0" style="height:100vh;overflow: auto;">
@@ -33,7 +35,6 @@
     public string password { get; set; } = "";
     public string email { get; set; } = "";
     public MudTextField<string> emailField;
-    public readonly EchoAPI _echoAPI = new();
     UserLoginModel User = new();
 
     bool success;
@@ -78,6 +79,7 @@
 
         //send user to api
         var data = await _echoAPI.LoginAsync(User);
+        AccountContainer.SetValue(data);
         Console.WriteLine(data);
         //await localStorage.SetAsync("AccountId", data);
     }
