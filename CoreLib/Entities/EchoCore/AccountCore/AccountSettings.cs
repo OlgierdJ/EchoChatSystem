@@ -10,7 +10,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
 {
     public class AccountSettings : BaseEntity<ulong>
     {
-        public ulong AccountId { get; set; }
+        //public ulong AccountId { get; set; }
         public uint LanguageId { get; set; }
         public Account  Account { get; set; }
 

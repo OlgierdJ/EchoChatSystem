@@ -353,21 +353,12 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<long>("LanguageId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId")
-                        .IsUnique();
 
                     b.HasIndex("LanguageId");
 
@@ -480,12 +471,6 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.AccessibilitySettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<bool>("AllowTextToSpeech")
@@ -521,7 +506,7 @@ namespace DomainCoreApi.Migrations
                     b.Property<bool>("SyncContrastSettings")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("SyncProfileTheme")
+                    b.Property<bool>("SyncProfileThemes")
                         .HasColumnType("bit");
 
                     b.Property<bool>("SyncReducedMotionWithPC")
@@ -530,10 +515,10 @@ namespace DomainCoreApi.Migrations
                     b.Property<byte>("TextToSpeechRate")
                         .HasColumnType("tinyint");
 
-                    b.HasKey("Id");
+                    b.Property<bool>("UseLegacyChatInput")
+                        .HasColumnType("bit");
 
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.ToTable("AccessibilitySettings");
                 });
@@ -541,12 +526,6 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.ActivitySettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<bool>("AllowFriendsToJoinGame")
@@ -563,21 +542,12 @@ namespace DomainCoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
-
                     b.ToTable("ActivitySettings");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.AdvancedSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<bool>("AutoNavigateServerHome")
@@ -586,10 +556,10 @@ namespace DomainCoreApi.Migrations
                     b.Property<bool>("DeveloperMode")
                         .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                    b.Property<bool>("HardwareAcceleration")
+                        .HasColumnType("bit");
 
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.ToTable("AdvancedSettings");
                 });
@@ -597,12 +567,6 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.AppearanceSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<bool>("DarkSideBar")
@@ -612,19 +576,25 @@ namespace DomainCoreApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MessageDisplayMode")
+                        .HasColumnType("int");
+
                     b.Property<byte>("PixelChatFontScale")
                         .HasColumnType("tinyint");
 
-                    b.Property<byte>("PixelGroupSpaceScale")
+                    b.Property<byte>("PixelSpaceBetweenMessageGroupsScale")
                         .HasColumnType("tinyint");
+
+                    b.Property<bool>("ShowAvatarsInCompactMode")
+                        .HasColumnType("bit");
 
                     b.Property<long>("ThemeId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                    b.Property<byte>("ZoomLevel")
+                        .HasColumnType("tinyint");
 
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.HasIndex("ThemeId");
 
@@ -634,18 +604,9 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.BillingInformation", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
 
                     b.ToTable("BillingInformation");
                 });
@@ -653,18 +614,9 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.ChatSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
 
                     b.ToTable("ChatSettings");
                 });
@@ -672,12 +624,6 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.FriendRequestSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<bool>("Everyone")
@@ -691,27 +637,15 @@ namespace DomainCoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
-
                     b.ToTable("FriendRequestSettings");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.KeybindSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
 
                     b.ToTable("KeybindSettings");
                 });
@@ -740,12 +674,6 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.NotificationSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<bool>("DesktopNotification")
@@ -761,9 +689,6 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
 
                     b.ToTable("NotificationSettings");
                 });
@@ -788,12 +713,6 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.PrivacySettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("DMFromFriends")
@@ -809,9 +728,6 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
 
                     b.ToTable("PrivacySettings");
                 });
@@ -851,12 +767,6 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.SoundboardSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<decimal>("Soundboard")
@@ -867,27 +777,24 @@ namespace DomainCoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
-
                     b.ToTable("SoundboardSettings");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.StreamerModeSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<bool>("AutomaticallyEnableAndDisableIfStreaming")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("DisableNotifications")
                         .HasColumnType("bit");
 
                     b.Property<bool>("DisableSounds")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("HideEchoWindowFromScreenCapture")
                         .HasColumnType("bit");
 
                     b.Property<bool>("HideInviteLinks")
@@ -900,9 +807,6 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
 
                     b.ToTable("StreamerModeSettings");
                 });
@@ -927,12 +831,6 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.VideoSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<bool>("AlwaysPreviewVideo")
@@ -944,27 +842,21 @@ namespace DomainCoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
-
                     b.ToTable("VideoSettings");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.VoiceSettings", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<bool>("AdvancedVoiceActivity")
                         .HasColumnType("bit");
 
                     b.Property<bool>("AutomaticGainControl")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AutomaticallyDetermineInputSensitivity")
                         .HasColumnType("bit");
 
                     b.Property<bool>("EchoCancellation")
@@ -994,9 +886,6 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountSettingsId")
-                        .IsUnique();
 
                     b.ToTable("VoiceSettings");
                 });
@@ -1993,7 +1882,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Account")
                         .WithOne("Settings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2080,7 +1969,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("AccessibilitySettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.AccessibilitySettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.AccessibilitySettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2091,7 +1980,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("ActivitySettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.ActivitySettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.ActivitySettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2102,7 +1991,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("AdvancedSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.AdvancedSettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.AdvancedSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2113,7 +2002,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("AppearanceSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.AppearanceSettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.AppearanceSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2132,7 +2021,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("BillingInformation")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.BillingInformation", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.BillingInformation", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2143,7 +2032,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("ChatSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.ChatSettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.ChatSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2154,7 +2043,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("FriendRequestSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.FriendRequestSettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.FriendRequestSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2165,7 +2054,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("KeybindSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.KeybindSettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.KeybindSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2176,7 +2065,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("NotificationSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.NotificationSettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.NotificationSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2187,7 +2076,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("PrivacySettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.PrivacySettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.PrivacySettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2217,7 +2106,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("SoundboardSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.SoundboardSettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.SoundboardSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2228,7 +2117,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("StreamerModeSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.StreamerModeSettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.StreamerModeSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2239,7 +2128,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("VideoSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.VideoSettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.VideoSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2250,7 +2139,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("VoiceSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.VoiceSettings", "AccountSettingsId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.VoiceSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

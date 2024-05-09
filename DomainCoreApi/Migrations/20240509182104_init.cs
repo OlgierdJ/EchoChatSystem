@@ -61,7 +61,7 @@ namespace DomainCoreApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IconUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -100,7 +100,7 @@ namespace DomainCoreApi.Migrations
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -224,24 +224,24 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PermissionRole",
+                name: "RolePermission",
                 columns: table => new
                 {
-                    PermissionsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    RolesId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    PermissionId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PermissionRole", x => new { x.PermissionsId, x.RolesId });
+                    table.PrimaryKey("PK_RolePermission", x => new { x.PermissionId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_PermissionRole_Permission_PermissionsId",
-                        column: x => x.PermissionsId,
+                        name: "FK_RolePermission_Permission_PermissionId",
+                        column: x => x.PermissionId,
                         principalTable: "Permission",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PermissionRole_Role_RolesId",
-                        column: x => x.RolesId,
+                        name: "FK_RolePermission_Role_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "Role",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -254,7 +254,7 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     TimeLastLogon = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserId = table.Column<decimal>(type: "decimal(20,0)", maxLength: 256, nullable: true),
                     ActivityStatusId = table.Column<byte>(type: "tinyint", nullable: false),
@@ -308,7 +308,7 @@ namespace DomainCoreApi.Migrations
                 {
                     BlockerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     BlockedId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    TimeBlocked = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TimeBlocked = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -355,7 +355,7 @@ namespace DomainCoreApi.Migrations
                 {
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     MuterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    TimeMuted = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeMuted = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     ExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -447,8 +447,7 @@ namespace DomainCoreApi.Migrations
                 columns: table => new
                 {
                     AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    RecipientsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -458,12 +457,6 @@ namespace DomainCoreApi.Migrations
                         column: x => x.AccountId,
                         principalTable: "Account",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_AccountRole_Account_RecipientsId",
-                        column: x => x.RecipientsId,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AccountRole_Role_RoleId",
                         column: x => x.RoleId,
@@ -482,7 +475,7 @@ namespace DomainCoreApi.Migrations
                     SessionToken = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     DeviceId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Location = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    TimeStarted = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeStarted = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     ExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TimeStopped = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -501,17 +494,15 @@ namespace DomainCoreApi.Migrations
                 name: "AccountSettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     LanguageId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AccountSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AccountSettings_Account_AccountId",
-                        column: x => x.AccountId,
+                        name: "FK_AccountSettings_Account_Id",
+                        column: x => x.Id,
                         principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -529,7 +520,7 @@ namespace DomainCoreApi.Migrations
                 {
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     MuterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    TimeMuted = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeMuted = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     ExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -580,7 +571,7 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     ReporterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
@@ -628,7 +619,7 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     AuthorId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     MessageHolderId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ParentId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
@@ -662,7 +653,7 @@ namespace DomainCoreApi.Migrations
                 {
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     MuterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    TimeMuted = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeMuted = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     ExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -688,7 +679,7 @@ namespace DomainCoreApi.Migrations
                 {
                     ParticipantId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    TimeJoined = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TimeJoined = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -714,7 +705,7 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     ReporterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
@@ -733,7 +724,7 @@ namespace DomainCoreApi.Migrations
                 {
                     ParticipantId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    TimeJoined = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TimeJoined = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -759,7 +750,7 @@ namespace DomainCoreApi.Migrations
                     ReceiverId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SuggestionId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Declined = table.Column<bool>(type: "bit", nullable: false),
-                    TimeSuggested = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TimeSuggested = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -823,7 +814,7 @@ namespace DomainCoreApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MessageType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     AuthorId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
@@ -864,21 +855,20 @@ namespace DomainCoreApi.Migrations
                 name: "AccessibilitySettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SaturationPercent = table.Column<byte>(type: "tinyint", nullable: false),
                     ApplySaturationToCustomColors = table.Column<bool>(type: "bit", nullable: false),
                     AlwaysUnderlineLinks = table.Column<bool>(type: "bit", nullable: false),
-                    SyncProfileTheme = table.Column<bool>(type: "bit", nullable: false),
-                    SyncContrastSettings = table.Column<bool>(type: "bit", nullable: false),
                     RoleColorMode = table.Column<int>(type: "int", nullable: false),
+                    SyncProfileThemes = table.Column<bool>(type: "bit", nullable: false),
+                    SyncContrastSettings = table.Column<bool>(type: "bit", nullable: false),
                     SyncReducedMotionWithPC = table.Column<bool>(type: "bit", nullable: false),
                     ReducedMotion = table.Column<bool>(type: "bit", nullable: false),
                     AutoPlayGIFsOnAppFocus = table.Column<bool>(type: "bit", nullable: false),
                     PlayAnimatedEmojis = table.Column<bool>(type: "bit", nullable: false),
                     StickerAnimationMode = table.Column<int>(type: "int", nullable: false),
                     ShowSendMessageButton = table.Column<bool>(type: "bit", nullable: false),
+                    UseLegacyChatInput = table.Column<bool>(type: "bit", nullable: false),
                     AllowTextToSpeech = table.Column<bool>(type: "bit", nullable: false),
                     TextToSpeechRate = table.Column<byte>(type: "tinyint", nullable: false)
                 },
@@ -886,8 +876,8 @@ namespace DomainCoreApi.Migrations
                 {
                     table.PrimaryKey("PK_AccessibilitySettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AccessibilitySettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_AccessibilitySettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -897,9 +887,7 @@ namespace DomainCoreApi.Migrations
                 name: "ActivitySettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     DisplayCurrentActivityAsAStatusMessage = table.Column<bool>(type: "bit", nullable: false),
                     ShareActivityStatusOnLargeServerJoin = table.Column<bool>(type: "bit", nullable: false),
                     AllowFriendsToJoinGame = table.Column<bool>(type: "bit", nullable: false),
@@ -909,8 +897,8 @@ namespace DomainCoreApi.Migrations
                 {
                     table.PrimaryKey("PK_ActivitySettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ActivitySettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_ActivitySettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -920,18 +908,17 @@ namespace DomainCoreApi.Migrations
                 name: "AdvancedSettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     DeveloperMode = table.Column<bool>(type: "bit", nullable: false),
+                    HardwareAcceleration = table.Column<bool>(type: "bit", nullable: false),
                     AutoNavigateServerHome = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AdvancedSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AdvancedSettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_AdvancedSettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -941,21 +928,22 @@ namespace DomainCoreApi.Migrations
                 name: "AppearanceSettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ThemeId = table.Column<long>(type: "bigint", nullable: false),
                     InAppIcon = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DarkSideBar = table.Column<bool>(type: "bit", nullable: false),
+                    MessageDisplayMode = table.Column<int>(type: "int", nullable: false),
+                    ShowAvatarsInCompactMode = table.Column<bool>(type: "bit", nullable: false),
                     PixelChatFontScale = table.Column<byte>(type: "tinyint", nullable: false),
-                    PixelGroupSpaceScale = table.Column<byte>(type: "tinyint", nullable: false)
+                    PixelSpaceBetweenMessageGroupsScale = table.Column<byte>(type: "tinyint", nullable: false),
+                    ZoomLevel = table.Column<byte>(type: "tinyint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AppearanceSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AppearanceSettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_AppearanceSettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -972,15 +960,13 @@ namespace DomainCoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BillingInformation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BillingInformation_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_BillingInformation_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -991,15 +977,13 @@ namespace DomainCoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ChatSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ChatSettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_ChatSettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1009,9 +993,7 @@ namespace DomainCoreApi.Migrations
                 name: "FriendRequestSettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Everyone = table.Column<bool>(type: "bit", nullable: false),
                     FriendsOfFriends = table.Column<bool>(type: "bit", nullable: false),
                     ServerMembers = table.Column<bool>(type: "bit", nullable: false)
@@ -1020,8 +1002,8 @@ namespace DomainCoreApi.Migrations
                 {
                     table.PrimaryKey("PK_FriendRequestSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FriendRequestSettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_FriendRequestSettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1032,15 +1014,13 @@ namespace DomainCoreApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_KeybindSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_KeybindSettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_KeybindSettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1050,9 +1030,7 @@ namespace DomainCoreApi.Migrations
                 name: "NotificationSettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     FocusModeEnabled = table.Column<bool>(type: "bit", nullable: false),
                     DesktopNotification = table.Column<bool>(type: "bit", nullable: false),
                     UnreadMessageBadge = table.Column<bool>(type: "bit", nullable: false),
@@ -1062,8 +1040,8 @@ namespace DomainCoreApi.Migrations
                 {
                     table.PrimaryKey("PK_NotificationSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_NotificationSettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_NotificationSettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1073,9 +1051,7 @@ namespace DomainCoreApi.Migrations
                 name: "PrivacySettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     DMFromFriends = table.Column<int>(type: "int", nullable: false),
                     DMFromUnknownUsers = table.Column<int>(type: "int", nullable: false),
                     DMFromServerChatroom = table.Column<int>(type: "int", nullable: false),
@@ -1085,8 +1061,8 @@ namespace DomainCoreApi.Migrations
                 {
                     table.PrimaryKey("PK_PrivacySettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrivacySettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_PrivacySettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1096,9 +1072,7 @@ namespace DomainCoreApi.Migrations
                 name: "SoundboardSettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SoundboardVolume = table.Column<byte>(type: "tinyint", nullable: false),
                     Soundboard = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
@@ -1106,8 +1080,8 @@ namespace DomainCoreApi.Migrations
                 {
                     table.PrimaryKey("PK_SoundboardSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SoundboardSettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_SoundboardSettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1117,21 +1091,21 @@ namespace DomainCoreApi.Migrations
                 name: "StreamerModeSettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     StreamerMode = table.Column<bool>(type: "bit", nullable: false),
+                    AutomaticallyEnableAndDisableIfStreaming = table.Column<bool>(type: "bit", nullable: false),
                     HidePersonalInformation = table.Column<bool>(type: "bit", nullable: false),
                     HideInviteLinks = table.Column<bool>(type: "bit", nullable: false),
                     DisableSounds = table.Column<bool>(type: "bit", nullable: false),
-                    DisableNotifications = table.Column<bool>(type: "bit", nullable: false)
+                    DisableNotifications = table.Column<bool>(type: "bit", nullable: false),
+                    HideEchoWindowFromScreenCapture = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StreamerModeSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StreamerModeSettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_StreamerModeSettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1141,9 +1115,7 @@ namespace DomainCoreApi.Migrations
                 name: "VideoSettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     AlwaysPreviewVideo = table.Column<bool>(type: "bit", nullable: false),
                     CameraDevice = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -1151,8 +1123,8 @@ namespace DomainCoreApi.Migrations
                 {
                     table.PrimaryKey("PK_VideoSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VideoSettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_VideoSettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1162,14 +1134,13 @@ namespace DomainCoreApi.Migrations
                 name: "VoiceSettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     InputDevice = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OutputDevice = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InputVolume = table.Column<byte>(type: "tinyint", nullable: false),
                     OutputVolume = table.Column<byte>(type: "tinyint", nullable: false),
                     InputMode = table.Column<int>(type: "int", nullable: false),
+                    AutomaticallyDetermineInputSensitivity = table.Column<bool>(type: "bit", nullable: false),
                     InputSensitivity = table.Column<byte>(type: "tinyint", nullable: false),
                     EchoCancellation = table.Column<bool>(type: "bit", nullable: false),
                     NoiseSuppression = table.Column<int>(type: "int", nullable: false),
@@ -1180,8 +1151,8 @@ namespace DomainCoreApi.Migrations
                 {
                     table.PrimaryKey("PK_VoiceSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VoiceSettings_AccountSettings_AccountSettingsId",
-                        column: x => x.AccountSettingsId,
+                        name: "FK_VoiceSettings_AccountSettings_Id",
+                        column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1235,15 +1206,13 @@ namespace DomainCoreApi.Migrations
                 name: "ChatAccountMessageTracker",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     OwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    HolderId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                    CoOwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChatAccountMessageTracker", x => x.Id);
+                    table.PrimaryKey("PK_ChatAccountMessageTracker", x => new { x.OwnerId, x.CoOwnerId });
                     table.ForeignKey(
                         name: "FK_ChatAccountMessageTracker_Account_OwnerId",
                         column: x => x.OwnerId,
@@ -1256,8 +1225,8 @@ namespace DomainCoreApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ChatAccountMessageTracker_Chat_HolderId",
-                        column: x => x.HolderId,
+                        name: "FK_ChatAccountMessageTracker_Chat_CoOwnerId",
+                        column: x => x.CoOwnerId,
                         principalTable: "Chat",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1362,7 +1331,7 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     ReporterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ViolationId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
@@ -1396,7 +1365,7 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     ReporterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ViolationId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
@@ -1449,7 +1418,7 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     ReporterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ViolationId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
@@ -1594,12 +1563,6 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccessibilitySettings_AccountSettingsId",
-                table: "AccessibilitySettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Account_ActivityStatusId",
                 table: "Account",
                 column: "ActivityStatusId");
@@ -1654,20 +1617,9 @@ namespace DomainCoreApi.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccountRole_RecipientsId",
-                table: "AccountRole",
-                column: "RecipientsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AccountSession_AccountId",
                 table: "AccountSession",
                 column: "AccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AccountSettings_AccountId",
-                table: "AccountSettings",
-                column: "AccountId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccountSettings_LanguageId",
@@ -1707,33 +1659,9 @@ namespace DomainCoreApi.Migrations
                 column: "ReviewerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ActivitySettings_AccountSettingsId",
-                table: "ActivitySettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AdvancedSettings_AccountSettingsId",
-                table: "AdvancedSettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AppearanceSettings_AccountSettingsId",
-                table: "AppearanceSettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AppearanceSettings_ThemeId",
                 table: "AppearanceSettings",
                 column: "ThemeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BillingInformation_AccountSettingsId",
-                table: "BillingInformation",
-                column: "AccountSettingsId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BugReport_ReporterId",
@@ -1746,14 +1674,9 @@ namespace DomainCoreApi.Migrations
                 column: "ReportsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatAccountMessageTracker_HolderId",
+                name: "IX_ChatAccountMessageTracker_CoOwnerId",
                 table: "ChatAccountMessageTracker",
-                column: "HolderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChatAccountMessageTracker_OwnerId",
-                table: "ChatAccountMessageTracker",
-                column: "OwnerId");
+                column: "CoOwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChatAccountMessageTracker_SubjectId",
@@ -1813,12 +1736,6 @@ namespace DomainCoreApi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatSettings_AccountSettingsId",
-                table: "ChatSettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CustomStatusReport_ReporterId",
                 table: "CustomStatusReport",
                 column: "ReporterId");
@@ -1850,12 +1767,6 @@ namespace DomainCoreApi.Migrations
                 column: "ReportsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendRequestSettings_AccountSettingsId",
-                table: "FriendRequestSettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FriendshipParticipancy_SubjectId",
                 table: "FriendshipParticipancy",
                 column: "SubjectId");
@@ -1883,12 +1794,6 @@ namespace DomainCoreApi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_KeybindSettings_AccountSettingsId",
-                table: "KeybindSettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MessageReport_ReporterId",
                 table: "MessageReport",
                 column: "ReporterId");
@@ -1910,12 +1815,6 @@ namespace DomainCoreApi.Migrations
                 column: "ReportsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotificationSettings_AccountSettingsId",
-                table: "NotificationSettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OutgoingFriendRequest_SenderId",
                 table: "OutgoingFriendRequest",
                 column: "SenderId");
@@ -1924,17 +1823,6 @@ namespace DomainCoreApi.Migrations
                 name: "IX_PaymentMethod_BillingInformationId",
                 table: "PaymentMethod",
                 column: "BillingInformationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PermissionRole_RolesId",
-                table: "PermissionRole",
-                column: "RolesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PrivacySettings_AccountSettingsId",
-                table: "PrivacySettings",
-                column: "AccountSettingsId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProfileReport_ReporterId",
@@ -1978,33 +1866,14 @@ namespace DomainCoreApi.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RolePermission_RoleId",
+                table: "RolePermission",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SecurityCredentials_UserId",
                 table: "SecurityCredentials",
                 column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SoundboardSettings_AccountSettingsId",
-                table: "SoundboardSettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StreamerModeSettings_AccountSettingsId",
-                table: "StreamerModeSettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VideoSettings_AccountSettingsId",
-                table: "VideoSettings",
-                column: "AccountSettingsId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VoiceSettings_AccountSettingsId",
-                table: "VoiceSettings",
-                column: "AccountSettingsId",
                 unique: true);
         }
 
@@ -2108,9 +1977,6 @@ namespace DomainCoreApi.Migrations
                 name: "PaymentMethod");
 
             migrationBuilder.DropTable(
-                name: "PermissionRole");
-
-            migrationBuilder.DropTable(
                 name: "PrivacySettings");
 
             migrationBuilder.DropTable(
@@ -2118,6 +1984,9 @@ namespace DomainCoreApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "ReportedMessageAttachment");
+
+            migrationBuilder.DropTable(
+                name: "RolePermission");
 
             migrationBuilder.DropTable(
                 name: "SecurityCredentials");
@@ -2180,16 +2049,16 @@ namespace DomainCoreApi.Migrations
                 name: "BillingInformation");
 
             migrationBuilder.DropTable(
-                name: "Permission");
-
-            migrationBuilder.DropTable(
-                name: "Role");
-
-            migrationBuilder.DropTable(
                 name: "ProfileReportReason");
 
             migrationBuilder.DropTable(
                 name: "ProfileReport");
+
+            migrationBuilder.DropTable(
+                name: "Permission");
+
+            migrationBuilder.DropTable(
+                name: "Role");
 
             migrationBuilder.DropTable(
                 name: "Chat");

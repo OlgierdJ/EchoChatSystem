@@ -12,7 +12,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     public class VoiceSettings : BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public string InputDevice { get; set; }
         public string OutputDevice { get; set; }
         public byte InputVolume { get; set; } //max 100

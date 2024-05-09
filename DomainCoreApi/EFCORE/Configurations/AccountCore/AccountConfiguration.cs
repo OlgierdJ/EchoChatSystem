@@ -20,7 +20,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.HasOne(b => b.CustomStatus).WithOne(b=>b.Account).HasForeignKey<Account>(b=>b.CustomStatusId).OnDelete(DeleteBehavior.Cascade).IsRequired(false); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
             builder.HasOne(b => b.Profile).WithOne(b=>b.Account).HasForeignKey<AccountProfile>(b=>b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
             builder.HasMany(e => e.Connections).WithOne(e => e.Account).HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
-            builder.HasOne(b => b.Settings).WithOne(b=>b.Account).HasForeignKey<AccountSettings>(b=>b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
+            builder.HasOne(b => b.Settings).WithOne(b=>b.Account).HasForeignKey<AccountSettings>(b=>b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
             builder.HasMany(e => e.Roles).WithMany(e => e.Recipients).UsingEntity<AccountRole>(
                 l => l.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId),
                  r => r.HasOne(e => e.Account).WithMany().HasForeignKey(e => e.AccountId)
