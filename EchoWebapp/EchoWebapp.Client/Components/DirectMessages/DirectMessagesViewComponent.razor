@@ -1,12 +1,17 @@
-﻿@page "/test"
+﻿@using MudBlazor
+@using EchoWebapp.Client.Components.DirectMessages.Friends
+@using EchoWebapp.Client.Components.DirectMessages.Chats
+@rendermode InteractiveAuto
 @*
     Layout for the friends section that exists within the DirectMessagesViewComponent in the indexcomponent.
 
     This component holds several sections via navigation in tabs that displays online users,
     all users, pending requests, friend suggestions, blocked users and the option to add friends.
 *@
-<h3>Component</h3>
-<ServerListComponent></ServerListComponent>
-@code {
 
+@* <h3>DirectMessageViewComponent</h3> *@
+<ChatListComponent/>
+<FriendsViewComponent/>
+
+@code {
 }

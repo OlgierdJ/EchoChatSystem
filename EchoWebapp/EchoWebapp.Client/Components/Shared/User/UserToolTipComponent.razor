@@ -1,4 +1,52 @@
-﻿<h3>Component</h3>
+﻿@*
+    User tooltip layout which can be accessed from many parts of the program by selecting a user in the form of a membercomponent, messagecomponent's sender, friendcomponent,
+    blockeduser from blockedlistcomponent, servervoicechatparticipantcomponent
+    and entering the tooltip.
+
+    The tooltip should have varied options depending on if the tooltip regards the user or another user, aswell as if the tooltip is displayed within a server, a call or other parts of the program.
+
+    The possible options should be:
+
+    --server standard functionality
+    add roles
+    server mute
+    server deafen
+
+    --server other functionality
+    kick from server
+    ban from server
+    move to channel
+    disconnect
+    timeout from server?
+    edit server nickname (changes a users server profile nickname but not anything else)
+
+    --server self functionality
+    edit server own profile
+
+
+    --standard functionality
+    open profile
+    mention (auto navigate to messagelist and @user in input)
+
+    --self functionality
+    mute self
+    deafen self
+
+    --other functionality
+    call (navigate to private chat and automatically start call)
+    message (navigate to private chat)
+    mute other
+    deafen other
+    block
+    remove friend / add friend
+    disable video
+    mute soundboard
+    change user volume
+    add/change nickname
+    add/change note
+    invite to server
+*@
+<h3>Component</h3>
 
 @code {
 
