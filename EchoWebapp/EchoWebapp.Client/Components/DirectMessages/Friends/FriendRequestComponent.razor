@@ -1,4 +1,5 @@
-﻿@*
+﻿@using CoreLib.Entities.EchoCore.AccountCore
+@*
     Friend Request layout for when it exists within the scrollable list in the FriendRequestListComponent.
 
     This component should hold reflect either an outgoing or incoming request.
@@ -7,8 +8,30 @@
 
     If the request is incoming the request should allow the user to accept or decline it.
 *@
-<h3>Component</h3>
+<MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
+     <MudTextField Placeholder=" Search" Value="searchTerm"
+                    KeyDownPreventDefault
+                    KeyUpPreventDefault />
+ </MudPaper>
+ <MudText Class="px-5 py-2" Typo="Typo.button">All - @accounts.Count()</MudText>
+    <MudList Clickable="true">
+        @foreach (var c in accounts.OrderBy(x => x.Name))
+    {
+        <MudDivider />
+        <MudListItem Dense="true" Class="mb-3 mt-2">
+            <div class="d-flex flex-grow-1">
+                <MudBadge Color="@stringToColor.ConvertStringToColor(c.ActivityStatus.IconColor)"
+                            Bordered Overlap="true" Origin="Origin.BottomRight">
+                     <MudImage Src="@c.Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+                 </MudBadge>
+                 <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)(c.Name + "\r\n" + c.ActivityStatus.Name).Replace(Environment.NewLine, "<br />"))</MudText>
+             </div>
+         </MudListItem>
+    }
+</MudList>
 
 @code {
-
+    string searchTerm = "";
+    public List<Account> accounts = new();
+    public readonly StringToColor stringToColor = new();
 }
