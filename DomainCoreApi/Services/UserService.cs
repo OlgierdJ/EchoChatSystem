@@ -6,6 +6,7 @@ using CoreLib.Interfaces.Services;
 using CoreLib.Models;
 using DomainCoreApi.Handlers;
 using DomainCoreApi.Services.Bases;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DomainCoreApi.Services
 {
@@ -52,6 +53,19 @@ namespace DomainCoreApi.Services
             }
 
             throw new Exception("You suck at hacking bruv");
+        }
+        public async Task<bool> UpdatePassword(UpdatePasswordModel update)
+        {
+            try
+            {
+                var result = await _pwdHandler.UpdatePassword(update.Password, update.Id);
+                return result is not null;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
     }
 }
