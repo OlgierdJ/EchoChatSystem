@@ -11,6 +11,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddMudServices();
+
 builder.Services.AddSingleton<AccountIdContainer>();
 builder.Services.AddSingleton<EchoAPI>();
 
