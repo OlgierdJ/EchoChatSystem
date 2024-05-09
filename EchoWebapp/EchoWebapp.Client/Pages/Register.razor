@@ -6,6 +6,7 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager nav
+@inject EchoAPI _echoAPI
 @rendermode InteractiveAuto
 
 <div id="unique_id_scroll_section" class="ma-0" style="height:100vh;overflow: auto;">
@@ -38,7 +39,7 @@
     public DateTime? date { get; set; } = DateTime.UtcNow.AddYears(-18);
 
     public RegisterUserModel User = new();
-    public readonly EchoAPI _echoAPI = new();
+    // public readonly EchoAPI _echoAPI = new();
 
     bool success;
     string[] errors = { };
