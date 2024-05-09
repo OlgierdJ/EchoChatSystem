@@ -16,8 +16,6 @@ namespace DomainCoreApi.EFCORE
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AccountConfiguration).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserConfiguration).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SecurityCredentialsConfiguration).Assembly);
             modelBuilder.Ignore<ServerBot>();
             modelBuilder.Ignore<ServerBotCommand>();
             modelBuilder.Ignore<ServerBotCommandParameter>();
