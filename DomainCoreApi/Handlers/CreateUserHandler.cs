@@ -23,7 +23,7 @@ namespace DomainCoreApi.Handlers
             {
                 Name = Username,
                 TimeCreated = DateTime.UtcNow,
-                ActivityStatusId = 0,
+                ActivityStatusId = 1,
                 CustomStatus = new()
                 {
                     CustomMessage = "Online"
