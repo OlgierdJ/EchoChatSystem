@@ -1,4 +1,8 @@
-﻿@*
+﻿@using CoreLib.Entities.EchoCore.ServerCore
+@inject EchoAPI _echoAPI
+@inject AccountIdContainer AccountContainer
+@inject NavigationManager nav
+@*
     Layout for the Scrollable list that exists within the indexcomponent.
 
     This component holds all servers allows the user to group servers in folders.
@@ -7,8 +11,68 @@
 
     Furthermore a user can create a server by clicking add server from within the list.
 *@
-<h3>ServerListComponent</h3>
-
+<MudPaper Width="72px" Height="100vh" Square Style="background: var(--mud-palette-dark);">
+     <MudList Clickable="true">
+         <MudListItem OnClick="@OpenMessages">
+             <MudAvatar>
+                 <MudIcon Icon="@Icons.Material.Filled.Mail" />
+             </MudAvatar>
+         </MudListItem>
+         <MudListItem OnClick="@OpenFriends">
+             <MudAvatar>
+                 <MudIcon Icon="@Icons.Material.Filled.Person" />
+             </MudAvatar>
+         </MudListItem>
+         <MudDivider DividerType="DividerType.Middle" />
+         @foreach (var c in dummyserversdata)
+        {
+            <MudListItem Dense="true" OnClick="@OpenChannels">
+                <MudAvatar Size="Size.Medium">
+                    <MudImage Src="@c" />
+                </MudAvatar>
+            </MudListItem>
+        }
+    </MudList>
+</MudPaper>
 @code {
 
+    // public List<Server> servers = new();
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     servers = await _echoAPI.GetEntitiesByAccountIdAsync<Server>(AccountContainer.Value);
+    //     await base.OnInitializedAsync();
+    // }
+    bool openMessages = false;
+    bool openFriends = false;
+    bool openChannels = false;
+
+    private List<string> dummyserversdata = new(){
+        "https://cdn-imgix.headout.com/microbrands-content-image/image/4c39598de5ac2156718d098ce5e26a26-Plan%20your%20Visit.jpg",
+        "https://res.cloudinary.com/teepublic/image/private/s--AP9xJMVN--/c_crop,x_10,y_10/c_fit,w_830/c_crop,g_north_west,h_1038,w_1038,x_-104,y_-311/l_upload:v1565806151:production:blanks:vdbwo35fw6qtflw9kezw/fl_layer_apply,g_north_west,x_-215,y_-422/b_rgb:ffb81c/c_limit,f_auto,h_630,q_auto:good:420,w_630/v1490996013/production/designs/1372936_1.jpg",
+        "https://www.usatoday.com/gcdn/-mm-/7fbb4dcd0e29b46245bb2ec4981ee02ad9e486c3/c=518-0-3419-1632/local/-/media/2016/01/24/USATODAY/usatsports/d1flagv2_toothless-jy-5084.jpg",
+        "https://2.bp.blogspot.com/-AFwyA1d2ujw/TadONL-wISI/AAAAAAAAAoE/Y8EoUqVdfL8/s1600/courtcdog.png"
+    };
+
+    void OpenFriends()
+    {
+        // nav.NavigateTo("/friends");
+        // openFriends = true;
+        // openMessages = false;
+        // openChannels = false;
+    }
+    void OpenMessages()
+    {
+        // nav.NavigateTo("/messages");
+        // openMessages = true;
+        // openFriends = false;
+        // openChannels = false;
+    }
+    void OpenChannels()
+    {
+        // nav.NavigateTo("/channels");
+        // openChannels = true;
+        // openFriends = false;
+        // openMessages = false;
+    }
 }

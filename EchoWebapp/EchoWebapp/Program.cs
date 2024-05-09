@@ -1,4 +1,6 @@
+using CoreLib.WebAPI;
 using EchoWebapp.Client.Pages;
+using EchoWebapp.Client.Provider;
 using EchoWebapp.Components;
 using MudBlazor.Services;
 
@@ -9,6 +11,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddMudServices();
+
+builder.Services.AddSingleton<AccountIdContainer>();
+builder.Services.AddSingleton<EchoAPI>();
 
 var app = builder.Build();
 
