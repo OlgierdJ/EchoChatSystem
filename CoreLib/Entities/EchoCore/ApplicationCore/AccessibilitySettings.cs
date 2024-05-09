@@ -11,7 +11,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     public class AccessibilitySettings : BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         //Color stuff
         public byte SaturationPercent { get; set; }
         public bool ApplySaturationToCustomColors { get; set; }

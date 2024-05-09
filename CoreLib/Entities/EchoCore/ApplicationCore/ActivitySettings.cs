@@ -10,7 +10,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     public class ActivitySettings : BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public bool DisplayCurrentActivityAsAStatusMessage { get; set; }
         public bool ShareActivityStatusOnLargeServerJoin { get; set; }
         public bool AllowFriendsToJoinGame { get; set; }

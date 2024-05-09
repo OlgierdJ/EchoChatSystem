@@ -10,7 +10,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     public class WindowSettings : BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public bool OpenEcho { get; set; }
         public bool StartMinimized { get; set; }
         public bool MinimizeOnClose { get; set; }

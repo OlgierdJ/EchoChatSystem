@@ -10,7 +10,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     public class KeybindSettings : BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public AccountSettings AccountSettings { get; set; }
     }
 }

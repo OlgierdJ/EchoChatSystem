@@ -10,7 +10,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     public class StreamerModeSettings : BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
 
         public bool StreamerMode { get; set; }
         public bool AutomaticallyEnableAndDisableIfStreaming { get; set; }

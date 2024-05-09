@@ -2,6 +2,7 @@
 using CoreLib.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using CoreLib.Entities.Enums;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DomainCoreApi.Controllers.Bases
 {

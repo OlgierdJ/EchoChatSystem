@@ -11,7 +11,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     public class GameOverlaySettings : BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public bool EnableGameOverlay { get; set; }
         public string ToggleOverlayLockKeybind { get; set; } //Example "Shift + L"
         public AvatarSizeMode AvatarSizeMode { get; set; }

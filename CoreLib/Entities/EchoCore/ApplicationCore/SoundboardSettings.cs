@@ -10,7 +10,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     public class SoundboardSettings : BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public byte SoundboardVolume { get; set; } //max 200
         public ulong Soundboard { get; set; } //max 200
         public AccountSettings AccountSettings { get; set; }
