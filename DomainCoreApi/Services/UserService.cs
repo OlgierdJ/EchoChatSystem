@@ -26,7 +26,6 @@ namespace DomainCoreApi.Services
         {
             try
             {
-
                 Console.WriteLine(input);
                 var data = await _createUserHandler.CreateHandler(input);
                 var result = await _repository.AddAsync(data.Item1);
