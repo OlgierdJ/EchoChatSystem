@@ -1,12 +1,48 @@
-﻿@*
+﻿@using CoreLib.Entities.EchoCore.AccountCore
+@using MudBlazor
+@*
     Layout for the Scrollable list that exists within the directmessagesviewcomponent.
 
     This component holds all chats and allows the user to search within the chats to filter them.
 
     Clicking chats within this component should call for parent navigation to the chatviewcomponent.
 *@
-<h3>ChatListComponent</h3>
-
+@* <h3>ChatListComponent</h3> *@
+    <MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
+            <MudText Class="px-5 py-2">Friends</MudText>
+            <MudList Clickable="true">
+            @foreach (var c in accounts.OrderBy(e => e.Name))
+            {
+                <MudListItem Dense="true" OnClick="@GoToFriends">
+                    <MudAvatar>
+                        <MudImage Src="@c.Profile.AvatarFileURL" />
+                    </MudAvatar>
+                    <MudText Typo="Typo.caption">@c.Name</MudText>
+                </MudListItem>
+            }
+            <MudListItem Dense="true">
+                <MudAvatar>
+                    <MudIcon Icon="@Icons.Material.Filled.Groups" />
+                </MudAvatar>
+                <MudText Typo="Typo.caption">Holy Cow Group</MudText>
+            </MudListItem>
+        </MudList>
+    </MudPaper>
 @code {
 
+    //DUMMY DATA. Replace accounts with chats
+     public List<Account> accounts = new(){
+        new Account() { Id = 112, Name = "TheDoe", Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", },
+            ActivityStatus = new AccountActivityStatus(){ Description = "Online", Icon = "", IconColor = Color.Success.ToString()
+        }, TimeCreated = DateTime.Now.AddDays(-17) },
+        new Account() { Id = 113, Name = "BobTheBuilder", Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } },
+        new Account() { Id = 114, Name = "Mary Jane", Profile = new AccountProfile(){ AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg", } },
+        new Account() { Id = 115, Name = "Billie Jean",  Profile = new AccountProfile(){ AvatarFileURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg", } },
+        new Account() { Id = 116, Name = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", } }
+    };
+
+    void GoToFriends()
+    {
+        // nav.NavigateTo("/friends");
+    }
 }
