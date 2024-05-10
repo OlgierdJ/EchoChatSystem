@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ReportCore.Message
+namespace CoreLib.Entities.EchoCore.ReportCore.Message
 {
-    public class ReportedMessage //: BaseMessage<ulong, Account, ulong>
+    public class ReportedMessage : BaseMessage<ulong, Account, ulong>
     //when a message is reported the unencrypted content of the message, timestamp, and the attachments are to be duplicated into one of these.
     //and saved with their own encryption that support-people has access to.
     {

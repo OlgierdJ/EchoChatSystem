@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ApplicationCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
     /// <summary>
     /// application-wide account used for allowing the user to access specific parts of the program.
@@ -18,7 +18,7 @@ namespace CoreLib.DTO.EchoCore.ApplicationCore
     ///     should be checked when making decisions regarding allowing the user something or not.
     /// </para>
     /// </summary>
-    public class Role //: BaseRole<ulong, Account, Permission>
+    public class Role : BaseRole<ulong, Account, Permission>
     {
     }
 }

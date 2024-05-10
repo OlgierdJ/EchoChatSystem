@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
-    public class VoiceSettings : BaseEntity<ulong>
+    public class VoiceSettingsDTO //: BaseEntity<ulong>
     {
         public ulong AccountSettingsId { get; set; }
         public string InputDevice { get; set; }

@@ -1,8 +1,8 @@
 ﻿using CoreLib.Entities.Base;
 
-namespace CoreLib.Entities.EchoCore.ServerCore
+namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public class ServerChannelCategoryMemberSettings : BaseEntity<uint>
+    public class ServerChannelCategoryMemberSettings //: BaseEntity<uint>
     {
         public int ChannelCategoryId { get; set; }
         public int RoleId { get; set; }

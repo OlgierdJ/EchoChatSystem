@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore
+namespace CoreLib.DTO.EchoCore
 {
-    public class PaymentMethod : BaseEntity<ulong>
+    public class PaymentMethod //: BaseEntity<ulong>
     {
     }
 }

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ApplicationCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class AccessibilitySettings //: BaseEntity<ulong>
+    public class AccessibilitySettings : BaseEntity<ulong>
     {
         //public ulong AccountSettingsId { get; set; }
         //Color stuff

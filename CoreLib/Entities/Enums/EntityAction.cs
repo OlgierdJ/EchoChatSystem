@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.Enums
+namespace CoreLib.Entities.Enums
 {
     public enum EntityAction
     {

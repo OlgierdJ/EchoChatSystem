@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ServerCore
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
     public class ServerSettings
     {
@@ -12,7 +12,7 @@ namespace CoreLib.DTO.EchoCore.ServerCore
         //General settings
         public ulong ServerId { get; set; }
         public Server Server { get; set; }
-       // public ServerVoiceChannel InactiveChannel { get; set; }
+        public ServerVoiceChannel InactiveChannel { get; set; }
         public ulong InactiveChannelId { get; set; } //only voice channel
         public ulong SystemMessagesChannelId { get; set; } //only text channel
         public bool SendRandomWelcomeMessageWhenSomeoneJoins {  get; set; }

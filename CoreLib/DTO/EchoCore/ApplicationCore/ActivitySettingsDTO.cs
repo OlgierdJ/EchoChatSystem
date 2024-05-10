@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
-    public class ActivitySettings : BaseEntity<ulong>
+    public class ActivitySettingsDTO //: BaseEntity<ulong>
     {
         public ulong AccountSettingsId { get; set; }
         public bool DisplayCurrentActivityAsAStatusMessage { get; set; }

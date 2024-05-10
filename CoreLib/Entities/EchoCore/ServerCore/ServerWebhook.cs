@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ServerCore
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
     public class ServerWebhook : BaseEntity<ulong>
     {
@@ -17,6 +17,6 @@ namespace CoreLib.DTO.EchoCore.ServerCore
         //https://discord.com/api/webhooks/1214486375198363708/bO7ioVXfzPFnxfI2Gitcy9wLwLU7oD_5p5BjljQeVX_aTALnhtHQItHAtXCQtNqH4wDg
         //https://discord.com/api/webhooks/1214487431173382194/thdqRsUDC9Z_dgIGG76JvLaCgY6ne0RAQkig6vxBnwViBdjZgN5s4CSiHDtdxWiStBfQ
         public Server  Server { get; set; }
-       // public ServerTextChannel  TextChannel { get; set; }
+        public ServerTextChannel TextChannel { get; set; }
     }
 }

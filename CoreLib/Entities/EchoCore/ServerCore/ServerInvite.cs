@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ServerCore
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
     public class ServerInvite : BaseInvite<Account, ulong, Server, ulong>
     {
@@ -14,7 +14,7 @@ namespace CoreLib.DTO.EchoCore.ServerCore
         public ulong? ChannelId { get; set; }
         public ServerTextChannel? Channel { get; set; } //if the invite is to a specific textchannel
         //or should it be in the baseinvite?\\
-        //public ulong ServerId { get; set; }
-        //public Server Server { get; set; }
+        public ulong ServerId { get; set; }
+        public Server Server { get; set; }
     }
 }

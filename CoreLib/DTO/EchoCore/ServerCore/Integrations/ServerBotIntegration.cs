@@ -1,9 +1,9 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 
-namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
+namespace CoreLib.DTO.EchoCore.ServerCore.Integrations
 {
-    public class ServerBotIntegration : BaseEntity<ulong>
+    public class ServerBotIntegration //: BaseEntity<ulong>
     {
         public ulong ServerBotId { get; set; }
         public ulong ServerId { get; set; }

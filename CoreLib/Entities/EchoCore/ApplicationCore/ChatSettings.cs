@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ApplicationCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class ChatSettings //: BaseEntity<ulong>
+    public class ChatSettings : BaseEntity<ulong>
     {
-        //public ulong AccountSettingsId { get; set; }
+        public ulong AccountSettingsId { get; set; }
         public AccountSettings AccountSettings { get; set; }
     }
 }

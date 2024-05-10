@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
-    public class FriendRequestSettings : BaseEntity<ulong>
+    public class FriendRequestSettingsDTO //: BaseEntity<ulong>
     {
         public ulong AccountSettingsId { get; set; }
         public AccountSettings AccountSettings { get; set; }

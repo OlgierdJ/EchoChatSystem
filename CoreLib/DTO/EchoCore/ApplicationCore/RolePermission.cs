@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
-    public class RolePermission //: BaseEntity<ulong>
+    public class RolePermissionDTO //: BaseEntity<ulong>
     {
         public ulong RoleId { get; set; }
         public ulong PermissionId { get; set; }
-        public Role Role { get; set; }
-        public Permission Permission { get; set; }
+        public RoleDTO Role { get; set; }
+        public PermissionDTO Permission { get; set; }
     }
 }

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore
+namespace CoreLib.Entities.EchoCore
 {
-    public class SubscriptionPlan //: BaseEntity<long>
+    public class SubscriptionPlan : BaseEntity<long>
     {
         //is it recurring or onetime
         //paid? free?

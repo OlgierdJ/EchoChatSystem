@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ReportCore.Message
+namespace CoreLib.Entities.EchoCore.ReportCore.Message
 {
-    public class MessageReport //: BasePunishableReport<ulong, Account, ulong, MessageReportReason, byte, ReportedMessage, ulong, AccountViolation, ulong>
+    public class MessageReport : BasePunishableReport<ulong, Account, ulong, MessageReportReason, byte, ReportedMessage, ulong, AccountViolation, ulong>
     {
     }
 }

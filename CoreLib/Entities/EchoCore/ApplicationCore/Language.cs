@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ApplicationCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class Language //: BaseEntity<uint>
+    public class Language : BaseEntity<uint>
     {
         public string Name { get; set; } //English (United States), 普通话, Dansk
         public string LanguageCode { get; set; } //en-US, zh-CN, da-DK

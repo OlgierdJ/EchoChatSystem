@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ChatCore
+namespace CoreLib.DTO.EchoCore.ChatCore
 {
     //public class ChatInvite : BaseInvite<ulong, Account, ulong, Chat, ulong>
     //{

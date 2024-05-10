@@ -41,7 +41,7 @@ namespace DomainCoreApi.Handlers
                         SaturationPercent = 255,
                         ApplySaturationToCustomColors = false,
                         AlwaysUnderlineLinks = true,
-                        SyncProfileTheme = true,
+                        SyncProfileThemes = true,
                         SyncContrastSettings = true,
                         RoleColorMode = RoleColorMode.ShowRoleColorsInNames,
                         SyncReducedMotionWithPC = true,
@@ -59,7 +59,7 @@ namespace DomainCoreApi.Handlers
                         InAppIcon = "",
                         DarkSideBar = true,
                         PixelChatFontScale = 255,
-                        PixelGroupSpaceScale = 255,
+                        //PixelGroupSpaceScale = 255,
                     },
                     AdvancedSettings = new AdvancedSettings()
                     {

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
-    public class Theme : BaseEntity<uint>
+    public class ThemeDTO //: BaseEntity<uint>
     {
         public string Name { get; set; }
-        public IEnumerable<AppearanceSettings>?  AppearanceSettings { get; set; }
+        public IEnumerable<AppearanceSettingsDTO>?  AppearanceSettings { get; set; }
     }
 }

@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ApplicationCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class AppearanceSettings //: BaseEntity<ulong>
+    public class AppearanceSettings : BaseEntity<ulong>
     {
-        //public ulong AccountSettingsId { get; set; }
+        public ulong AccountSettingsId { get; set; }
         public uint ThemeId { get; set; }
         public string InAppIcon { get; set; }
         public bool DarkSideBar { get; set; }
@@ -21,8 +21,8 @@ namespace CoreLib.DTO.EchoCore.ApplicationCore
         public byte PixelSpaceBetweenMessageGroupsScale { get; set; }
         public byte ZoomLevel { get; set; }
 
-        //public Theme Theme { get; set; }
-        //public AccountSettings AccountSettings { get; set; }
+        public Theme Theme { get; set; }
+        public AccountSettings AccountSettings { get; set; }
     }
     
 }

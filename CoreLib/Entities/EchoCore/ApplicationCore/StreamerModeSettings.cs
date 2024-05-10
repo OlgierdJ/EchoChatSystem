@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ApplicationCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class StreamerModeSettings //: BaseEntity<ulong>
+    public class StreamerModeSettings : BaseEntity<ulong>
     {
         //public ulong AccountSettingsId { get; set; }
 

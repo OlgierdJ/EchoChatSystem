@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.Enums
+namespace CoreLib.DTO.Enums
 {
     public enum PermissionState
     {

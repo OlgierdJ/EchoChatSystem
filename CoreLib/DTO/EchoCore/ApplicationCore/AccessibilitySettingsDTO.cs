@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
-    public class AccessibilitySettings : BaseEntity<ulong>
+    public class AccessibilitySettingsDTO //: BaseEntity<ulong>
     {
         //Color stuff
         public byte SaturationPercent { get; set; }

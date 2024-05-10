@@ -1,8 +1,8 @@
 ﻿using CoreLib.Entities.Base;
 
-namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
+namespace CoreLib.DTO.EchoCore.ServerCore.Integrations
 {
-    public class ServerBotIntegrationCommandVoiceChannelOverride : BaseEntity<ulong>
+    public class ServerBotIntegrationCommandVoiceChannelOverride //: BaseEntity<ulong>
     {
         public ulong ServerBotIntegrationId { get; set; }
         public ulong ServerBotCommandId { get; set; }

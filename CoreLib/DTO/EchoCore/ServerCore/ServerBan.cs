@@ -1,9 +1,9 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 
-namespace CoreLib.Entities.EchoCore.ServerCore
+namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public class ServerBan : BaseEntity<ulong>
+    public class ServerBan //: BaseEntity<ulong>
     {
         public ulong AccountId { get; set; }
         public string? Reason { get; set; }

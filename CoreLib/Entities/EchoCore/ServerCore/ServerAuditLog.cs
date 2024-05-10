@@ -1,9 +1,9 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 
-namespace CoreLib.DTO.EchoCore.ServerCore
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerAuditLog //: BaseEntity<ulong>
+    public class ServerAuditLog : BaseEntity<ulong>
     {
         public ulong AccountId { get; set; }
         public ulong ServerId { get; set; }

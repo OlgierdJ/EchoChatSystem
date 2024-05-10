@@ -1,8 +1,8 @@
 ﻿using CoreLib.Entities.Base;
 
-namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
+namespace CoreLib.DTO.EchoCore.ServerCore.Integrations
 {
-    public class ServerBotIntegrationTextChannelWebhook : BaseEntity<ulong>
+    public class ServerBotIntegrationTextChannelWebhook //: BaseEntity<ulong>
     {
         public ulong ServerBotIntegrationId { get; set; }
         public ulong TextChannelId { get; set; }

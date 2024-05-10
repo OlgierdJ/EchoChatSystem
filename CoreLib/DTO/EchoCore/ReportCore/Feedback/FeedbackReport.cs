@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Feedback
+namespace CoreLib.DTO.EchoCore.ReportCore.Feedback
 {
-    public class FeedbackReport : BaseReport<ulong, Account, ulong, FeedbackReportReason, byte>
+    public class FeedbackReport //: BaseReport<ulong, Account, ulong, FeedbackReportReason, byte>
     {
     }
 }

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ApplicationCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class Permission //: BasePermission<ulong, Role>
+    public class Permission : BasePermission<ulong, Role>
     {
     }
 }

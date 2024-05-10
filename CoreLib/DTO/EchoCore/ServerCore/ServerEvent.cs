@@ -1,9 +1,9 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.Enums;
 
-namespace CoreLib.Entities.EchoCore.ServerCore
+namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public class ServerEvent : BaseEntity<ulong>
+    public class ServerEvent //: BaseEntity<ulong>
     {
         public ulong ServerId { get; set; }
         public string Topic { get; set; }

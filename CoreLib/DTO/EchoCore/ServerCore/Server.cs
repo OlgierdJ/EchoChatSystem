@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ServerCore
+namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public class Server : BaseEntity<ulong>
+    public class Server //: BaseEntity<ulong>
     {
         public string Name { get; set; }
         public DateTime TimeCreated { get; set; }
@@ -23,6 +23,6 @@ namespace CoreLib.Entities.EchoCore.ServerCore
         public ICollection<ServerTextChannel> TextChannels { get; set; } //direct channels
         public ICollection<ServerVoiceChannel> VoiceChannels { get; set; } //direct channels
 
-        public ICollection<ServerProfile> Members { get; set; } //Joining a server creates a serverprofile for the member and allows them to change the displayed data which is reflected in the server environment
+        //public ICollection<ServerProfile> Members { get; set; } //Joining a server creates a serverprofile for the member and allows them to change the displayed data which is reflected in the server environment
     }
 }

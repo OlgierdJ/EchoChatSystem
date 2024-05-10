@@ -1,8 +1,8 @@
 ﻿using CoreLib.Entities.Base;
 
-namespace CoreLib.DTO.EchoCore.ServerCore.Integrations
+namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
 {
-    public class ServerBotIntegrationTextChannel //: BaseEntity<ulong>
+    public class ServerBotIntegrationTextChannel : BaseEntity<ulong>
     {
         public ulong ServerBotIntegrationId { get; set; }
         public ulong TextChannelId { get; set; }
@@ -12,6 +12,6 @@ namespace CoreLib.DTO.EchoCore.ServerCore.Integrations
         /// </summary>
         public bool Permitted { get; set; }
         public ServerBotIntegration ServerBotIntegration { get; set; }
-        //public ServerTextChannel  TextChannel { get; set; }
+        public ServerTextChannel  TextChannel { get; set; }
     }
 }

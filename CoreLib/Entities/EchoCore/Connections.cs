@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore
+namespace CoreLib.Entities.EchoCore
 {
-    public class Connections //: BaseEntity<uint>
+    public class Connections : BaseEntity<uint>
     {
         //platform connections like facebook or x or steam
         public Guid AccountId { get; set; }
