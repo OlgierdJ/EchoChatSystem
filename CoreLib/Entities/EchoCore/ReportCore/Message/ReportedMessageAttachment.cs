@@ -1,8 +1,8 @@
 ﻿using CoreLib.Entities.Base;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Message
+namespace CoreLib.DTO.EchoCore.ReportCore.Message
 {
-    public class ReportedMessageAttachment : BaseMessageAttachment<ulong, ReportedMessage, ulong>
+    public class ReportedMessageAttachment //: BaseMessageAttachment<ulong, ReportedMessage, ulong>
     {
     }
 }

@@ -1,8 +1,8 @@
 ﻿using CoreLib.Entities.Base;
 
-namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
+namespace CoreLib.DTO.EchoCore.ServerCore.Integrations
 {
-    public class ServerBotIntegrationCommandRoleOverride : BaseEntity<ulong>
+    public class ServerBotIntegrationCommandRoleOverride //: BaseEntity<ulong>
     {
         public ulong ServerBotIntegrationId { get; set; }
         public ulong ServerBotCommandId { get; set; }
@@ -16,6 +16,6 @@ namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
         public bool Permitted { get; set; }
         public ServerBotIntegration ServerBotIntegration { get; set; }
         public ServerBotCommand ServerBotCommand { get; set; }
-        public ServerRole ServerRole { get; set; }
+        //public ServerRole ServerRole { get; set; }
     }
 }

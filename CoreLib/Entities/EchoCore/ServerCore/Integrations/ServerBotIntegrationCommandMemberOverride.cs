@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
+namespace CoreLib.DTO.EchoCore.ServerCore.Integrations
 {
-    public class ServerBotIntegrationCommandMemberOverride : BaseEntity<ulong>
+    public class ServerBotIntegrationCommandMemberOverride //: BaseEntity<ulong>
     {
         public ulong ServerBotIntegrationId { get; set; }
         public ulong ServerBotCommandId { get; set; }
@@ -20,6 +20,6 @@ namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
         public bool Permitted { get; set; }
         public ServerBotIntegration ServerBotIntegration { get; set; }
         public ServerBotCommand ServerBotCommand { get; set; }
-        public ServerProfile ServerRole { get; set; }
+        //public ServerProfile ServerRole { get; set; }
     }
 }

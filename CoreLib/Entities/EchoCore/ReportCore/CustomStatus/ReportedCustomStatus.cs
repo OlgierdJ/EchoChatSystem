@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.CustomStatus
+namespace CoreLib.DTO.EchoCore.ReportCore.CustomStatus
 {
-    public class ReportedCustomStatus : BaseEntity<ulong>
+    public class ReportedCustomStatus //: BaseEntity<ulong>
     {
         public ulong AccountId { get; set; }
         public string CustomMessage { get; set; } 

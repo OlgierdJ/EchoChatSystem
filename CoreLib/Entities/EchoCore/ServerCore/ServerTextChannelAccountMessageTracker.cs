@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ServerCore
+namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public class ServerTextChannelAccountMessageTracker : BaseEntityTracker<ulong, Account, ulong, ServerTextChannelMessage, ulong, ServerTextChannel, ulong>
+    public class ServerTextChannelAccountMessageTracker //: BaseEntityTracker<ulong, Account, ulong, ServerTextChannelMessage, ulong, ServerTextChannel, ulong>
     {
     }
 }

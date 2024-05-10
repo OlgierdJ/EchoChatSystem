@@ -1,8 +1,8 @@
 ﻿using CoreLib.Entities.Base;
 
-namespace CoreLib.Entities.EchoCore.ServerCore
+namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public class ServerMessagePin : BaseMessagePin<ulong, ServerTextChannelMessage, ulong, ServerTextChannelPinboard, ulong>
+    public class ServerMessagePin //: BaseMessagePin<ulong, ServerTextChannelMessage, ulong, ServerTextChannelPinboard, ulong>
     {
     }
 }

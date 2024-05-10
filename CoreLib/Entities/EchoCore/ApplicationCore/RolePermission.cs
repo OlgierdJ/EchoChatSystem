@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
     public class RolePermission //: BaseEntity<ulong>
     {

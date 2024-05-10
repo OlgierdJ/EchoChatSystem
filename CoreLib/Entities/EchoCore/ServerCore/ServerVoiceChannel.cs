@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ServerCore
+namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public class ServerVoiceChannel : BaseChannel<ulong>
+    public class ServerVoiceChannel //: BaseChannel<ulong>
     {
         public ulong ChannelCategoryId { get; set; }
         public ServerChannelCategory ChannelCategory { get; set; }

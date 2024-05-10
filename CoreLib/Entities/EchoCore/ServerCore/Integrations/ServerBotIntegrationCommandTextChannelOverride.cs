@@ -1,6 +1,6 @@
 ﻿using CoreLib.Entities.Base;
 
-namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
+namespace CoreLib.DTO.EchoCore.ServerCore.Integrations
 {
     public class ServerBotIntegrationCommandTextChannelOverride : BaseEntity<ulong>
     {

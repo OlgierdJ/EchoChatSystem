@@ -1,9 +1,9 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.Enums;
 
-namespace CoreLib.Entities.EchoCore.ServerCore
+namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public class ServerChannelCategoryPermission : ServerChannelPermission 
+    public class ServerChannelCategoryPermission //: ServerChannelPermission 
         //duplicate of channelpermissions such that changes are reflected in both tables though data has to be manually changed aswell
     {
         public int ChannelCategoryMemberSettingsId { get; set; }

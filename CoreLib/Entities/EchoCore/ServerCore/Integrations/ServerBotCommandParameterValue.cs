@@ -1,8 +1,8 @@
 ﻿using CoreLib.Entities.Base;
 
-namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
+namespace CoreLib.DTO.EchoCore.ServerCore.Integrations
 {
-    public class ServerBotCommandParameterValue : BaseEntity<ulong>
+    public class ServerBotCommandParameterValue //: BaseEntity<ulong>
     {
         public ulong ServerBotCommandParameterId { get; set; }
         public ServerBotCommandParameter ServerBotCommandParameter { get; set; }

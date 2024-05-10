@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Bug
+namespace CoreLib.DTO.EchoCore.ReportCore.Bug
 {
-    public class BugReport : BaseReport<ulong, Account, ulong, BugReportReason, byte>
+    public class BugReport //: BaseReport<ulong, Account, ulong, BugReportReason, byte>
     {
     }
 }

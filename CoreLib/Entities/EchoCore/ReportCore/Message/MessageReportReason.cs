@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Message
+namespace CoreLib.DTO.EchoCore.ReportCore.Message
 {
-    public class MessageReportReason : BaseReportReason<byte, MessageReport>
+    public class MessageReportReason //: BaseReportReason<byte, MessageReport>
     {
     }
 }

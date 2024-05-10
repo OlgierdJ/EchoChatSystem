@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.CustomStatus
+namespace CoreLib.DTO.EchoCore.ReportCore.CustomStatus
 {
-    public class CustomStatusReport : BasePunishableReport<ulong, Account, ulong, CustomStatusReportReason, byte, ReportedCustomStatus, ulong, AccountViolation, ulong>
+    public class CustomStatusReport //: BasePunishableReport<ulong, Account, ulong, CustomStatusReportReason, byte, ReportedCustomStatus, ulong, AccountViolation, ulong>
     {
     }
 }
