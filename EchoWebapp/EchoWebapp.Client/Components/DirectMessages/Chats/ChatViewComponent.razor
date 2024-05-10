@@ -1,4 +1,5 @@
-﻿@*
+﻿@using CoreLib.Entities.EchoCore.ChatCore
+@*
     Layout for the chatviewcomponent that exists within the directmessagesviewcomponent.
 
     This component shows the general chat layout, allowing the user to view existing messages and send new messages as well as pin them to a pinboard shared with the other members.
@@ -12,8 +13,16 @@
     if the chat is a private chat then a new chat will be created with the new members and the existing members
     otherwise the members will be added to the chat.
 *@
-<h3>Component</h3>
+@* <h3>ChatViewComponent</h3> *@
+@if (Content != null)
+{
+    @foreach (ChatMessage m in Content.Messages)
+    {
+        <MudText>@m.Content</MudText>
+    }
+}
 
 @code {
-
+    [Parameter]
+    public Chat? Content { get; set; }
 }
