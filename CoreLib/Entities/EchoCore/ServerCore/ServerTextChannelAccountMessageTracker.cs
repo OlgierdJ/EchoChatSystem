@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public class ServerTextChannelAccountMessageTracker //: BaseEntityTracker<ulong, Account, ulong, ServerTextChannelMessage, ulong, ServerTextChannel, ulong>
+    public class ServerTextChannelAccountMessageTracker : BaseEntityTracker<Account, ulong, ServerTextChannel, ulong, ServerTextChannelMessage, ulong>
     {
     }
 }

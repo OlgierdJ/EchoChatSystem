@@ -11,7 +11,7 @@ namespace CoreLib.DTO.EchoCore.ApplicationCore
     public class NotificationSettings //: BaseEntity<ulong>
     {
         //her lave det om til at NotificationSettings kigger på AccountSettings i stedefor a kigge Account
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public bool FocusModeEnabled { get; set; } //for not receiving in app sounds
         public bool DesktopNotification { get; set; }
         public bool UnreadMessageBadge { get; set; }

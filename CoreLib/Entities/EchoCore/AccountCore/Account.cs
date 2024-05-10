@@ -6,6 +6,7 @@ using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
 using CoreLib.Entities.EchoCore.ReportCore.Message;
 using CoreLib.Entities.EchoCore.ReportCore.Profile;
 using CoreLib.Entities.EchoCore.ServerCore;
+using CoreLib.Entities.EchoCore.UserCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +25,14 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public byte ActivityStatusId { get; set; }
         public ulong? CustomStatusId { get; set; }
 
+        public User? User { get; set; }
         public AccountActivityStatus ActivityStatus { get; set; }
         public AccountCustomStatus? CustomStatus { get; set; }
-        public AccountProfile Profile { get; set; } //mapped through connections?
+        public AccountProfile Profile { get; set; } //should be created on account creation
 
         //private settings and information about this account only used by the user and the application / api
         public ICollection<AccountConnection>?  Connections { get; set; }
-        public AccountSettings Settings { get; set; }
+        public AccountSettings Settings { get; set; } //should be created on account creation
 
         //Interactivity stuff - also private settings and information about this account only used by the user and the application / api
         public ICollection<Role>? Roles { get; set; } //System / Application roles (perhaps not needed)

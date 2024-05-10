@@ -20,8 +20,7 @@ namespace CoreLib.Entities.EchoCore.ChatCore
                 .Property(b => b.Content)
                 .IsRequired();
             builder
-                .Property(b => b.TimeSent).ValueGeneratedOnAdd()
-                .IsRequired();
+                .Property(b => b.TimeSent).HasDefaultValueSql("getdate()").IsRequired();
 
             builder.HasOne(b => b.Author).WithMany(e => e.ChatMessages).HasForeignKey(b => b.AuthorId).OnDelete(DeleteBehavior.Cascade).IsRequired();
            

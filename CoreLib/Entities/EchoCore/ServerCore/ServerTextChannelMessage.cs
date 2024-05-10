@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.ServerCore
+namespace CoreLib.Entities.EchoCore.ServerCore
 {
-    public class ServerTextChannelMessage //: BaseMessage<ulong, Account, ulong, ServerTextChannel, ulong, ServerTextChannelMessage>
+    public class ServerTextChannelMessage : BaseMessage<ulong, Account, ulong, ServerTextChannel, ulong, ServerTextChannelMessage>
     {
-       // public ICollection<ServerTextChannelAccountMessageTracker> MessageTrackers { get; set; }
+        public ICollection<ServerTextChannelAccountMessageTracker>? MessageTrackers { get; set; }
     }
 }

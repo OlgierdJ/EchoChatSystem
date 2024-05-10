@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DomainCoreApi.EFCORE.ValueGenerators;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
@@ -15,10 +16,8 @@ namespace CoreLib.Entities.EchoCore.ChatCore
         public void Configure(EntityTypeBuilder<ChatInvite> builder)
         {
             builder
-                .HasKey(b => b.Id);
-            builder
-                .Property(b => b.InviteCode)
-                .IsRequired();
+              .HasKey(b => b.InviteCode);
+            builder.Property(e=>e.InviteCode).HasMaxLength(10).HasValueGeneratorFactory<RandomStringIdGeneratorFactory>();
             builder
                 .Property(b => b.ExpirationTime)
                 .IsRequired(false);
@@ -29,7 +28,7 @@ namespace CoreLib.Entities.EchoCore.ChatCore
                .Property(b => b.TotalUses)
                .IsRequired();
             builder.HasOne(b => b.Inviter).WithMany(e=>e.ChatInvites).HasForeignKey(b => b.InviterId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //maybe check if invites are automatically deleted when the one who creates it leaves a chat or server.
-            builder.HasOne(b => b.Subject).WithMany(b => b.Invites).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+            builder.HasOne(b => b.Subject).WithMany(b => b.Invites).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired();
         }
     }
 }

@@ -12,12 +12,13 @@ namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
     public class VoiceSettings //: BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public string InputDevice { get; set; }
         public string OutputDevice { get; set; }
-        public byte InputVolume { get; set; } //max 200
+        public byte InputVolume { get; set; } //max 100
         public byte OutputVolume { get; set; } //max 200
         public InputMode InputMode { get; set; }
+        public bool AutomaticallyDetermineInputSensitivity { get; set; }
         public byte InputSensitivity { get; set; }
         public bool EchoCancellation { get; set; }
         public NoiseSuppression NoiseSuppression { get; set; }

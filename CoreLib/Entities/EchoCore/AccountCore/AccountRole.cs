@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountRole : BaseEntity<ulong>
+    public class AccountRole
         //thought is that an Account can be both guest, registereduser, applicationsupport, applicationmoderater, applicationadmin, applicationsuperadmin, etc
     {
         public ulong AccountId { get; set; }

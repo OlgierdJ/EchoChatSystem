@@ -10,7 +10,7 @@ namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
     public class ChatSettings //: BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
-        //public AccountSettings AccountSettings { get; set; }
+        //public ulong AccountSettingsId { get; set; }
+        public AccountSettings AccountSettings { get; set; }
     }
 }

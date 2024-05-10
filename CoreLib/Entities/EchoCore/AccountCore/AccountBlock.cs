@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountBlock : BaseBlock<ulong, Account, ulong, Account, ulong>
+    public class AccountBlock : BaseBlock<Account, ulong, Account, ulong>
     {
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseMute<TId, TMuter, TMuterId, TSubject, TSubjectId> : BaseEntity<TId>
+    public abstract class BaseMute<TMuter, TMuterId, TSubject, TSubjectId>
     {
         public TSubjectId SubjectId { get; set; }
         public TMuterId MuterId { get; set; }

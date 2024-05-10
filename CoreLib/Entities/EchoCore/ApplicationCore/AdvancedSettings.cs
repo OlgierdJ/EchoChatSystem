@@ -10,8 +10,9 @@ namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
     public class AdvancedSettings //: BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public bool DeveloperMode { get; set; }
+        public bool HardwareAcceleration { get; set; }
         public bool AutoNavigateServerHome { get; set; }
         public AccountSettings AccountSettings { get; set; }
     }

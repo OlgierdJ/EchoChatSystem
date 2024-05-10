@@ -25,8 +25,8 @@ namespace CoreLib.DTO.EchoCore.ServerCore
         public VerificationLevel  VerificationLevelMode { get; set; }
         public bool Require2FAForModeratorActions { get; set; }
         public ExplicitImageFilter  ExplicitImageFilterMode { get; set; }
-        public ICollection<ServerAuditLog> AuditLogs { get; set; }
-        public ICollection<ServerBan> ServerBanList { get; set; }
+        public ICollection<ServerAuditLog>? AuditLogs { get; set; }
+        public ICollection<ServerBan>? ServerBanList { get; set; }
 
     }
     public enum DefaultNotificationSettingsEnum

@@ -18,15 +18,17 @@ namespace DomainCoreApi.EFCORE.Configurations.ChatCore
                .Property(b => b.IconUrl)
                .IsRequired();
             builder
-                .Property(b => b.TimeCreated).ValueGeneratedOnAdd()
-                .IsRequired();
+                .Property(b => b.TimeCreated).HasDefaultValueSql("getdate()").IsRequired();
 
-            builder.HasMany(b => b.MessageTrackers).WithOne(b => b.Holder).HasForeignKey(b => b.HolderId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //cascade delete messages if the chat is deleted
-            builder.HasMany(b => b.Messages).WithOne(b => b.MessageHolder).HasForeignKey(b => b.MessageHolderId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //cascade delete messages if the chat is deleted
+            builder.HasMany(b => b.MessageTrackers).WithOne(b => b.CoOwner).HasForeignKey(b => b.CoOwnerId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //cascade delete messages if the chat is deleted
+            builder.HasMany(b => b.Messages).WithOne(b => b.MessageHolder).HasForeignKey(b => b.MessageHolderId).OnDelete(DeleteBehavior.Cascade).IsRequired(false); //cascade delete messages if the chat is deleted
             builder.HasMany(b => b.Mutes).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasMany(b => b.Invites).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired();
+            builder.HasMany(b => b.Invites).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
             builder.HasOne(b => b.Pinboard).WithOne(b => b.Owner).HasForeignKey<ChatPinboard>(b => b.OwnerId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasMany(b => b.Participants).WithMany(b => b.Chats).UsingEntity<ChatParticipancy>(); //maybe take config from chatparticipant config file
+            builder.HasMany(b => b.Participants).WithMany(b => b.Chats).UsingEntity<ChatParticipancy>(
+                    l => l.HasOne(e => e.Participant).WithMany().HasForeignKey(e => e.ParticipantId),
+                    r => r.HasOne(e => e.Subject).WithMany().HasForeignKey(e => e.SubjectId)
+                ); //maybe take config from chatparticipant config file
         }
     }
 }

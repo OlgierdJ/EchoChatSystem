@@ -20,7 +20,7 @@ namespace CoreLib.Entities.Base
 
     public abstract class BaseReport<TId, TReporter, TReporterId, TReason, TReasonId> : BaseReport<TId, TReporter, TReporterId> where TReason : BaseReportReason<TReasonId>
     {
-        public ICollection<TReason> Reasons { get; set; }
+        public ICollection<TReason>? Reasons { get; set; }
     }
 
     public abstract class BaseReport<TId, TReporter, TReporterId, TReason, TReasonId, TSubject, TSubjectId> : BaseReport<TId, TReporter, TReporterId, TReason, TReasonId> where TReason : BaseReportReason<TReasonId>

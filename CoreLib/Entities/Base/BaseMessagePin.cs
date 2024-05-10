@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.Base
 {
-    public abstract class BaseMessagePin<TId, TMessage, TMessageId, TPinboard, TPinboardId> : BaseEntity<TId>
+    public abstract class BaseMessagePin<TMessage, TMessageId, TPinboard, TPinboardId>
     {
         public TPinboardId PinboardId { get; set; }
         public TMessageId MessageId { get; set; }

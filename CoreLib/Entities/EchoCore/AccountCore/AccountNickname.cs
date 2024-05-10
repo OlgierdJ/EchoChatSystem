@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountNickname : BaseNickname<ulong, Account, ulong, Account, ulong>
+    public class AccountNickname : BaseNickname<Account, ulong, Account, ulong>
     {
     }
 }

@@ -10,7 +10,7 @@ namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
     public class VideoSettings //: BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public bool AlwaysPreviewVideo { get; set; }
         public string CameraDevice { get; set; }
 

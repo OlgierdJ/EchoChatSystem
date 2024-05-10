@@ -11,7 +11,7 @@ namespace CoreLib.DTO.EchoCore.ApplicationCore
 {
     public class PrivacySettings //: BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public AccountSettings AccountSettings { get; set; }
         //public ulong AccountId { get; set; }
         public DMAllow DMFromFriends { get; set; }
