@@ -3,9 +3,11 @@ using CoreLib.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using CoreLib.Entities.Enums;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DomainCoreApi.Controllers.Bases
 {
+    [Authorize]
     public class BaseEntityController<T, IdType> : ControllerBase
         where T : class, IEntity<IdType>, new()
     {

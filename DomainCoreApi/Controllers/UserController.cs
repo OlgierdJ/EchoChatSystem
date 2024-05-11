@@ -14,7 +14,6 @@ using System.Text;
 
 namespace DomainCoreApi.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : BaseEntityController<User, ulong>

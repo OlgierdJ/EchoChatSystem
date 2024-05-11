@@ -12,10 +12,10 @@ namespace DomainCoreApi.Controllers
     [ApiController]
     public class AccountController : BaseEntityController<Account, ulong>
     {
-        //private readonly IAccountService _Service;
+        private readonly IAccountService _Service;
         public AccountController(IAccountService service, IPushNotificationService notificationService) : base(service, notificationService)
         {
-            //_Service = service;
+            _Service = service;
         }
     }
 }
