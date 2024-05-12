@@ -8,8 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLib.Entities.EchoCore.ReportCore.Message;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Message
+namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Message
 {
     public class MessageReportReasonConfiguration : IEntityTypeConfiguration<MessageReportReason>
     {

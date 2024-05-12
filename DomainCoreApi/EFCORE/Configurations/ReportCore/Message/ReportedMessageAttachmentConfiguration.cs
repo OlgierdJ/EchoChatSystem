@@ -2,8 +2,9 @@
 using CoreLib.Entities.EchoCore.ChatCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using CoreLib.Entities.EchoCore.ReportCore.Message;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Message
+namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Message
 {
     public class ReportedMessageAttachmentConfiguration : IEntityTypeConfiguration<ReportedMessageAttachment>
     {

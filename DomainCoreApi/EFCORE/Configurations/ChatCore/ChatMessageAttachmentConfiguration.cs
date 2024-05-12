@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLib.Entities.EchoCore.ChatCore;
 
-namespace CoreLib.Entities.EchoCore.ChatCore
+namespace DomainCoreApi.EFCORE.Configurations.ChatCore
 {
     public class ChatMessageAttachmentConfiguration : IEntityTypeConfiguration<ChatMessageAttachment>
     {

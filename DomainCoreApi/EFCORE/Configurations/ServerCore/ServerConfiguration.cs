@@ -1,45 +1,38 @@
-﻿//using CoreLib.Entities.EchoCore.ServerCore;
-//using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.Base;
+using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
+using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
+using CoreLib.Entities.EchoCore.ServerCore.Integrations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
+using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 
-//namespace DomainCoreApi.EFCORE.Configurations.ServerCore
-//{
-//    public class ServerConfiguration : IEntityTypeConfiguration<Server>
-//    {
-//        public void Configure(EntityTypeBuilder<Server> builder)
-//        {
-//            builder.HasKey(s => s.Id);
-//            builder.Property(s => s.Name).HasMaxLength(255).IsRequired();
-//            builder.Property(s => s.TimeCreated).HasDefaultValueSql("getdate()").IsRequired();
+namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore
+{
+    public class ServerConfiguration : BaseEntity<ulong>
+    {
+        public string Name { get; set; }
+        public DateTime TimeCreated { get; set; }
+        public ICollection<ServerEvent>? Events { get; set; }
+        public ICollection<ServerInvite>? Invites { get; set; } //maybe put this into settings
+        public ICollection<AccountServerMute>? Muters { get; set; } //maybe put this into settings
+        public ServerSettings? Settings { get; set; }
 
-//            // Configure relationships
-//            //builder.HasMany(s => s.Settings)
-//            //       .WithOne(ss => ss.Server)
-//            //       .HasForeignKey(ss => ss.ServerId);
+        public ICollection<ServerAuditLog>? AuditLogs { get; set; }
+        public ICollection<ServerBan>? BanList { get; set; }
+        public ICollection<ServerEmote>? Emotes { get; set; }
+        public ICollection<ServerSoundboardSound>? SoundboardSounds { get; set; }
 
-//            //builder.HasMany(s => s.Invites)
-//            //       .WithOne(si => si.Server)
-//            //       .HasForeignKey(si => si.ServerId);
+        public ICollection<ServerChannelCategory>? ChannelCategories { get; set; } //Essentially a grouping of voicechannels and or textchannels
+        public ICollection<ServerTextChannel>? TextChannels { get; set; } //direct channels
+        public ICollection<ServerVoiceChannel>? VoiceChannels { get; set; } //direct channels
 
-//            //builder.HasMany(s => s.Events)
-//            //       .WithOne(se => se.Server)
-//            //       .HasForeignKey(se => se.ServerId);
-
-//            //builder.HasMany(s => s.ChannelCategories)
-//            //       .WithOne(scc => scc.Server)
-//            //       .HasForeignKey(scc => scc.ServerId);
-
-//            //builder.HasMany(s => s.TextChannels)
-//            //       .WithOne(stc => stc.Server)
-//            //       .HasForeignKey(stc => stc.ServerId);
-
-//            //builder.HasMany(s => s.VoiceChannels)
-//            //       .WithOne(svc => svc.Server)
-//            //       .HasForeignKey(svc => svc.ServerId);
-
-//            //builder.HasMany(s => s.Members)
-//            //       .WithOne(sm => sm.Server)
-//            //       .HasForeignKey(sm => sm.ServerId);
-//        }
-//    }
-//}
+        public ICollection<ServerProfile>? Members { get; set; } //Joining a server creates a serverprofile for the member and allows them to change the displayed data which is reflected in the server environment
+    }
+}

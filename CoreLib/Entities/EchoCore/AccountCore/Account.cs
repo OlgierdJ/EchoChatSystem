@@ -5,7 +5,9 @@ using CoreLib.Entities.EchoCore.FriendCore;
 using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
 using CoreLib.Entities.EchoCore.ReportCore.Message;
 using CoreLib.Entities.EchoCore.ReportCore.Profile;
-using CoreLib.Entities.EchoCore.ServerCore;
+using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
+using CoreLib.Entities.EchoCore.ServerCore.Management;
 using CoreLib.Entities.EchoCore.UserCore;
 using System;
 using System.Collections.Generic;
@@ -45,6 +47,9 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<AccountNote>? NotedAccounts { get; set; } //This account adds notes about other accounts
         public ICollection<AccountMute>? MutedVoices { get; set; } //This account adds mutes for other accounts voice
         public ICollection<ChatMute>? MutedChats { get; set; } //This account adds mutes for other accounts voice
+        public ICollection<AccountServerMute>? MutedServers { get; set; } //This account adds mutes for other Servers
+        public ICollection<AccountServerTextChannelMute>? MutedTextChannels { get; set; } //This account adds mutes for other ServerChannel
+        public ICollection<AccountServerVoiceChannelMute>? MutedVoiceChannels { get; set; } //This account adds mutes for other ServerChannel
         public ICollection<AccountSoundboardMute>? MutedSoundboards { get; set; } //This account adds mutes for other accounts soundboard
         public ICollection<ChatAccountMessageTracker>? ChatMessageTrackers { get; set; }
         public ICollection<ServerTextChannelAccountMessageTracker>? TextChannelMessageTrackers { get; set; }
@@ -71,6 +76,8 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         //Server stuff - public to other members of the server
         public ICollection<ServerProfile>? Servers { get; set; } //mapped through serverprofile //NOTE COMMENTED OUT TEMPORARILY
         public ICollection<ServerInvite>? ServerInvites { get; set; }
+        public ICollection<ServerEvent>? ServerEvents { get; set; }
+        public ICollection<AccountServerFolder>? Folders { get; set; }
         public ICollection<ServerTextChannelMessage>? ChannelMessages { get; set; }
 
 

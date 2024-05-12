@@ -7,8 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLib.Entities.EchoCore.ReportCore.Profile;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Profile
+namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Profile
 {
     public class ReportedProfileConfiguration : IEntityTypeConfiguration<ReportedProfile>
     {

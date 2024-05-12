@@ -1,6 +1,7 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.FriendCore;
+using CoreLib.Entities.EchoCore.ReportCore.Bug;
 using CoreLib.Entities.EchoCore.ReportCore.Profile;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Bug
+namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Bug
 {
     public class BugReportConfiguration : IEntityTypeConfiguration<BugReport>
     {

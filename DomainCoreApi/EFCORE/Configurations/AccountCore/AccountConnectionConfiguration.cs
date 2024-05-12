@@ -9,10 +9,14 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
         public void Configure(EntityTypeBuilder<AccountConnection> builder)
         {
             builder.HasKey(b => b.Id);
-            builder.Property(b=>b.ExternalProvider).HasMaxLength(256).IsRequired();
-            builder.Property(b=>b.ExternalToken).HasMaxLength(256).IsRequired();
-            builder.Property(b=>b.InternalProvider).HasMaxLength(256).IsRequired();
-            builder.Property(b=>b.InternalToken).HasMaxLength(256).IsRequired();
+            //not implemented
+            //builder.Property(b=>b.AuthorizeResponseType).HasMaxLength(256).IsRequired();
+            //builder.Property(b=>b.AuthorizeClientId).HasMaxLength(256).IsRequired();
+            //builder.Property(b=>b.AuthorizeState).HasMaxLength(256).IsRequired();
+            //builder.Property(b=>b.AuthorizeCodeChallenge).HasMaxLength(256).IsRequired();
+            //builder.Property(b=>b.AuthorizeCodeChallenge).HasMaxLength(256).IsRequired();
+            //builder.Property(b=>b.AuthorizeCodeChallenge).HasMaxLength(256).IsRequired();
+            builder.HasOne(b=>b.Connection).WithMany(b=>b.AccountConnections).HasForeignKey(b=>b.ConnectionId).OnDelete(DeleteBehavior.Cascade).IsRequired();
             builder.HasOne(b=>b.Account).WithMany(b=>b.Connections).HasForeignKey(b=>b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired();
         }
     }

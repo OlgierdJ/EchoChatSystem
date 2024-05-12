@@ -2,8 +2,9 @@
 using CoreLib.Entities.EchoCore.AccountCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using CoreLib.Entities.EchoCore.ChatCore;
 
-namespace CoreLib.Entities.EchoCore.ChatCore
+namespace DomainCoreApi.EFCORE.Configurations.ChatCore
 {
     public class ChatMessagePinConfiguration : IEntityTypeConfiguration<ChatMessagePin>
     {
