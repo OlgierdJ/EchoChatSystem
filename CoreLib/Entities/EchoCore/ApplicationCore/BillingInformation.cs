@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,5 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
 {

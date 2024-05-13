@@ -2,8 +2,9 @@
 using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using CoreLib.Entities.EchoCore.ReportCore.Feedback;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Feedback
+namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Feedback
 {
     public class FeedbackReportReasonConfiguration : IEntityTypeConfiguration<FeedbackReportReason>
     {

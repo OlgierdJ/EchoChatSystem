@@ -8,8 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DomainCoreApi.EFCORE.ValueGenerators;
+using CoreLib.Entities.EchoCore.ChatCore;
 
-namespace CoreLib.Entities.EchoCore.ChatCore
+namespace DomainCoreApi.EFCORE.Configurations.ChatCore
 {
     public class ChatInviteConfiguration : IEntityTypeConfiguration<ChatInvite>
     {

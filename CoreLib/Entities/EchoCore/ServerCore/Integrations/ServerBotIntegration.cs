@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
 {

@@ -13,7 +13,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.Property(b=>b.AvatarFileURL).HasMaxLength(256).IsRequired();
             builder.Property(b=>b.BannerColor).HasMaxLength(18).IsRequired();
             builder.Property(b=>b.About).HasMaxLength(256).IsRequired(false);
-            builder.HasOne(b => b.Account).WithOne(b => b.Profile).HasForeignKey<AccountProfile>(b=>b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Account).WithOne(b => b.Profile).HasForeignKey<AccountProfile>(b=>b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
         }
     }
 }
