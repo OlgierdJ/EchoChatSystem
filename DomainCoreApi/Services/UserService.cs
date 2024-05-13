@@ -6,7 +6,6 @@ using CoreLib.Interfaces.Services;
 using CoreLib.Models;
 using DomainCoreApi.Handlers;
 using DomainCoreApi.Services.Bases;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DomainCoreApi.Services
 {

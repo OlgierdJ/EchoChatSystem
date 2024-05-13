@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Interfaces.Services
 {
-    public interface IReportService : IEntityService<ReportedProfile,ulong>
+    public interface IReportService : IEntityService<ProfileReport, ulong>
     {
     }
 }
