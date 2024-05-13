@@ -9,12 +9,13 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
     {
         public void Configure(EntityTypeBuilder<AccountServerFolder> builder)
         {
-            builder.HasKey(b => new { b.Id, b.Name });
-            builder.Property(b=>b.DisplayName).HasMaxLength(256).IsRequired();
-            builder.Property(b=>b.AvatarFileURL).HasMaxLength(256).IsRequired();
-            builder.Property(b=>b.BannerColor).HasMaxLength(18).IsRequired();
-            builder.Property(b=>b.About).HasMaxLength(256).IsRequired(false);
-            builder.HasOne(b => b.Account).WithOne(b => b.Profile).HasForeignKey<AccountServerFolder>(b=>b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasKey(b => new { b.Id, b.Name }); //figure out this shitty id combine ownerid, some other autoincrement id.
+            builder.Property(b=>b.Name).HasMaxLength(256).IsRequired(); //does not have to be unique.
+            builder.Property(b=>b.Importance).IsRequired(); //ordering
+            builder.Property(b=>b.Colour).HasMaxLength(32).IsRequired(false);
+
+            builder.HasOne(b => b.Account).WithMany(b => b.Folders).HasForeignKey(b=>b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired(); //owner
+            builder.HasMany(b => b.Servers).WithOne(b => b.Folder).HasForeignKey(b=>b.FolderId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //content
         }
     }
 }
