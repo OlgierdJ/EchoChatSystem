@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountConnectionDTO : BaseEntity<ulong> //mayb review
+    public class AccountConnection : BaseEntity<ulong> //mayb review
     {
         public ulong AccountId { get; set; }
         public string ExternalProvider { get; set; }
         public string InternalProvider { get; set; }
         public string ExternalToken { get; set; }
         public string InternalToken { get; set; }
+
+        public Account Account { get; set; }
     }
 }

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.DTO.EchoCore.AccountCore
+namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountMuteDTO //: BaseMute<ulong, Account, ulong, Account, ulong>
+    public class AccountMute : BaseMute<Account, ulong, Account, ulong>
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    //public class AccountViolationAppeal : BaseViolationAppeal<ulong, AccountViolation, ulong, AccountViolationAppealReview>
-    //{
-    //}
+    public class AccountViolationAppeal : BaseViolationAppeal<ulong, AccountViolation, ulong, AccountViolationAppealReview>
+    {
+    }
 }
