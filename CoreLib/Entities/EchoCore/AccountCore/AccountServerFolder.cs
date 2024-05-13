@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.Management
 {
-    public class AccountServerFolder : BaseEntity<ulong>
+    public class AccountServerFolder : BaseEntity<ulong> //figure out id for this shitty entity.
     {
         //public ulong AccountId { get; set; }
         public int Importance { get; set; } //used for ordering folders
