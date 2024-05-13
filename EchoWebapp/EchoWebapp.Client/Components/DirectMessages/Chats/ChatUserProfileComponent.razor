@@ -6,8 +6,15 @@
 
     Expanding the mutual server list or mutual friend lists within this component allows the user to click a specific server or friend allowing direct navigation.
 *@
-<h3>Component</h3>
+
+@if (Visible)
+{
+    <MudPaper Width="20vw" Height="100vh" Square Style="background: var(--mud-palette-dark);">
+         <h2>TEEEST</h2>
+     </MudPaper>
+}
 
 @code {
-
+    [Parameter]
+    public bool Visible { get; set; }
 }
