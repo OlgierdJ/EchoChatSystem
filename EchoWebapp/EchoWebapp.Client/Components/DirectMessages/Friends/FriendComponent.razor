@@ -16,6 +16,9 @@
          <MudImage Src="@Account.Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
      </MudBadge>
      <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)(Account.Name + "\r\n" + Account.ActivityStatus.Name).Replace(Environment.NewLine, "<br />"))</MudText>
+     <MudSpacer />
+     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.ChatBubble" />
+     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.MoreVert" />
  </div>
 @code {
     [Parameter]
