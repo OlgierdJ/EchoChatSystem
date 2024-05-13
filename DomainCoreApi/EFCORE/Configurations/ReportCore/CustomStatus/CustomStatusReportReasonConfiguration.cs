@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.CustomStatus
+namespace DomainCoreApi.EFCORE.Configurations.ReportCore.CustomStatus
 {
     public class CustomStatusReportReasonConfiguration : IEntityTypeConfiguration<CustomStatusReportReason>
     {

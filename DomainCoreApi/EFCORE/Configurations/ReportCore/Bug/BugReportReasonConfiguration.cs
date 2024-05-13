@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLib.Entities.EchoCore.ReportCore.Bug;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Bug
+namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Bug
 {
     public class BugReportReasonConfiguration : IEntityTypeConfiguration<BugReportReason>
     {

@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.Base;
-using CoreLib.DTO.EchoCore.ApplicationCore;
+using CoreLib.Entities.EchoCore.ApplicationCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

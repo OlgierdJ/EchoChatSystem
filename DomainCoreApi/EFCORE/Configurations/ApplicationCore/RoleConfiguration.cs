@@ -7,8 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLib.Entities.EchoCore.ApplicationCore;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
 
     public class RoleConfiguration : IEntityTypeConfiguration<Role>

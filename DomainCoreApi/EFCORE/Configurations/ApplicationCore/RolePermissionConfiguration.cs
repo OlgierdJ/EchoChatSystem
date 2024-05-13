@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
     //public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermission>
     //{

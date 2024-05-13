@@ -3,8 +3,9 @@ using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ReportCore.Message;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using CoreLib.Entities.EchoCore.ReportCore.Profile;
 
-namespace CoreLib.Entities.EchoCore.ReportCore.Profile
+namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Profile
 {
     public class ProfileReportConfiguration : IEntityTypeConfiguration<ProfileReport>
     {

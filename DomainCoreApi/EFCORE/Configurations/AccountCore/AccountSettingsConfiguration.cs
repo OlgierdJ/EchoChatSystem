@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,6 +14,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.HasOne(b=>b.AccessibilitySettings).WithOne(b => b.AccountSettings).HasForeignKey<AccessibilitySettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(b=>b.AppearanceSettings).WithOne(b=>b.AccountSettings).HasForeignKey<AppearanceSettings>(b=>b.Id).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(b => b.AdvancedSettings).WithOne(b => b.AccountSettings).HasForeignKey<AdvancedSettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade);
+
             builder.HasOne(b=>b.BillingInformation).WithOne(b => b.AccountSettings).HasForeignKey<BillingInformation>(b => b.Id).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(b=>b.ChatSettings).WithOne(b => b.AccountSettings).HasForeignKey<ChatSettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade);
 

@@ -10,8 +10,8 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
         {
             builder.HasKey(b => new { b.AuthorId, b.SubjectId });
             builder.Property(e=>e.Nickname).HasMaxLength(120).IsRequired();
-            builder.HasOne(b => b.Author).WithMany(b => b.NicknamedAccounts).HasForeignKey(b => b.AuthorId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
-            builder.HasOne(b => b.Subject).WithMany().HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasOne(b => b.Author).WithMany(b => b.NicknamedAccounts).HasForeignKey(b => b.AuthorId).OnDelete(DeleteBehavior.Restrict).IsRequired();
+            builder.HasOne(b => b.Subject).WithMany().HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired();
         }
     }
 }
