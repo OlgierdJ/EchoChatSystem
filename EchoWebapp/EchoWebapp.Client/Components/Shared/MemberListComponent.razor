@@ -1,12 +1,28 @@
-﻿@*
+﻿@using CoreLib.Entities.EchoCore.AccountCore
+@*
     Layout for a memberlist that exists within a chatviewcomponent and a textchannelviewcomponent.
 
     This component holds all members related to the chat or textchannel.
 
     It should group members according to their role.
 *@
-<h3>Component</h3>
+<div style="display: @(Visible ? "block" : "none");">
+    @if (Members.Count != 0){
+        <MudPaper Class="overflow-auto" Elevation="0" Style=@($"background:{Colors.Shades.Transparent}") >
+            @foreach(Account a in Members)
+            {
+                <h2>MEMBER TEST</h2>
+                <MemberComponent Account="a"/>
+            }
+        </MudPaper>
+    }
+
+</div>
 
 @code {
+    [Parameter]
+    public bool Visible { get; set; } = true;
 
+    [Parameter]
+    public List<Account> Members { get; set; }
 }

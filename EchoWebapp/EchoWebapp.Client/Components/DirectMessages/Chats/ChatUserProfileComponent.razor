@@ -1,4 +1,6 @@
-﻿@*
+﻿@using CoreLib.Entities.EchoCore.AccountCore
+@using CoreLib.Entities.EchoCore.UserCore
+@*
     Layout for the user profile section that exists within the chatviewcomponent if it is a private chat between two users.
 
     This component shows the other member of the private chat displaying their name, 
@@ -7,14 +9,23 @@
     Expanding the mutual server list or mutual friend lists within this component allows the user to click a specific server or friend allowing direct navigation.
 *@
 
-@if (Visible)
-{
-    <MudPaper Width="20vw" Height="100vh" Square Style="background: var(--mud-palette-dark);">
-         <h2>TEEEST</h2>
-     </MudPaper>
-}
-
+<div style="display: @(Visible ? "block" : "none");">
+    <MudPaper Width="20vw" Height="95vh" Square Style="background: var(--mud-palette-dark);">
+        @if(Account != null)
+        {
+             <h2>@Account.Profile.DisplayName</h2>
+             <h4>@Account.Name.ToLower()</h4>
+             <MudDivider/>
+             <p>Echo Member since</p>
+             <h2>@Account.TimeCreated</h2>
+             <p>Note?</p>
+        }
+    </MudPaper>
+</div>
 @code {
     [Parameter]
-    public bool Visible { get; set; }
+    public bool Visible { get; set; } = true;
+
+    [Parameter]
+    public Account Account { get; set; }
 }
