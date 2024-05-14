@@ -18,7 +18,7 @@
 *@
 @* <h3>ChatViewComponent</h3> *@
 <div>
-    <div class="ma-0" style="width: 100vw; height: 5vh;">
+    <div class="ma-0" style="width: 90vw; height: 5vh;">
         <MudPaper Elevation="2">
     <MudToolBar Class="d-flex flex-grow-1 gap-0 my-0">
             @if (Content.Participants.Count() > 2)
@@ -36,9 +36,12 @@
                 <MudText>@Content.Participants.Where(e => e.Id!=112).First().Name</MudText>
                 <!-- this logic should probably be made when chat is created and set chat name to other participants name? -->
             }
-                <MudIconButton Icon="@Icons.Material.Filled.Call" />
-                <MudIconButton Icon="@Icons.Material.Filled.PushPin" />
-                <MudIconButton Icon="@Icons.Material.Filled.PersonAddAlt1" />
+                <MudSpacer />
+                <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                    <MudIconButton Icon="@Icons.Material.Filled.Call" />
+                    <MudIconButton Icon="@Icons.Material.Filled.PushPin" />
+                    <MudIconButton Icon="@Icons.Material.Filled.PersonAddAlt1" />
+                </MudPaper>
                 @if (Content.Participants.Count() > 2)
                 {
                     <MudIconButton Icon="@Icons.Material.Filled.Group" Color="@(ToggleSidePanel ? Color.Primary : Color.Default)" OnClick="(()=> ToggleSidePanel = !ToggleSidePanel)" />
@@ -53,7 +56,7 @@
 
     <div class="d-flex">
         <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-            <div class="ma-0 overflow-auto" style="min-width: 75vw; height: 85vh;">
+            <div class="ma-0 overflow-auto" style="min-width: 70vw; height: 85vh;">
                 @if (Content != null){
                 <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")" Class="overflow-auto">
                     @foreach (ChatMessage m in Content.Messages.OrderBy(e => e.TimeSent))
@@ -157,7 +160,7 @@
         @if (Content.Participants.Count() > 2)
         {
             <!-- remove logic of removing yourself to before sending content -->
-            <MemberListComponent Visible="ToggleSidePanel" Members="@Content.Participants.Where(e => e.Id != 112).ToList()" />
+            <MemberListComponent Visible="ToggleSidePanel" Members="@Content.Participants.Where(e => e.Id != 112).ToList()"/>
         }
         else
         {

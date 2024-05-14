@@ -3,7 +3,7 @@
 @*
     Layout for the user profile section that exists within the chatviewcomponent if it is a private chat between two users.
 
-    This component shows the other member of the private chat displaying their name, 
+    This component shows the other member of the private chat displaying their name,
     userhandle, image, mutual friends, echocreationdate, status, personal note, and collapsed lists of both mutual servers and mutual friends.
 
     Expanding the mutual server list or mutual friend lists within this component allows the user to click a specific server or friend allowing direct navigation.
@@ -11,20 +11,38 @@
 
 <div style="display: @(Visible ? "block" : "none");">
     <MudPaper Width="20vw" Height="95vh" Square Style="background: var(--mud-palette-dark);">
-        @if(Account != null)
+        @if (Account != null)
         {
-             <h2>@Account.Profile.DisplayName</h2>
-             <h4>@Account.Name.ToLower()</h4>
-             <MudDivider/>
-             <p>Echo Member since</p>
-             <h2>@Account.TimeCreated</h2>
-             <p>Note?</p>
+            <MudPaper Style="@($"background: {(Account.Profile.BannerColor != null ? Account.Profile.BannerColor : "#5C23D9")};")" Height="150px">
+                <div>
+                    <MudAvatar Style="height:80px; width:80px; position:relative; top:110px; left:15px; border:solid 2px var(--mud-palette-dark);">
+                    <MudImage Src="@Account.Profile.AvatarFileURL" />
+                </MudAvatar>
+                </div>
+            </MudPaper>
+            <MudPaper Style="background: var(--mud-palette-dark);" Height="50px" />
+            <div style="padding-left: 15px;">
+                <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
+                    <h4>@Account.Profile.DisplayName</h4>
+                    <p>@Account.Name.ToLower()</p>
+                </MudPaper>
+                <MudDivider />
+                <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
+                    <MudText Typo="Typo.button" style="margin-top: 10px;">Echo Member since</MudText>
+                    <MudText Typo="Typo.body1">@Account.TimeCreated.ToString("dd MMMM yyyy")</MudText>
+                </MudPaper>
+                <MudDivider />
+                <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
+                    <MudText Typo="Typo.button" style="margin-top: 10px;">Note</MudText>
+                    <MudText Typo="Typo.body1">Note goes here...</MudText>  <!-- Insert note, whereever its hiding -->
+                </MudPaper>
+            </div>
         }
     </MudPaper>
 </div>
 @code {
     [Parameter]
-    public bool Visible { get; set; } = true;
+    public bool Visible { get; set; }
 
     [Parameter]
     public Account Account { get; set; }
