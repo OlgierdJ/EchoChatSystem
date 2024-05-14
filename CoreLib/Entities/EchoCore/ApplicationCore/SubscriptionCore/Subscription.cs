@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore;
 using CoreLib.Entities.Enums;
 using System;
 using System.Collections.Generic;

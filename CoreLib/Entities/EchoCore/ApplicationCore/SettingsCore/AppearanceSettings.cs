@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.Base;
+﻿using CoreLib.DTO.EchoCore.AccountCore;
+using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.Enums;
 using System;
@@ -11,7 +12,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore.Settings
 {
     public class AppearanceSettings : BaseEntity<ulong>
     {
-        public ulong AccountSettingsId { get; set; }
+        //public ulong AccountSettingsId { get; set; }
         public uint ThemeId { get; set; }
         public string InAppIcon { get; set; }
         public bool DarkSideBar { get; set; }

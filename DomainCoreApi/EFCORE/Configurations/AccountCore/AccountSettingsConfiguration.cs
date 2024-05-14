@@ -1,6 +1,7 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ApplicationCore;
+﻿using CoreLib.DTO.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
+using CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,6 +1,8 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.DTO.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
+using CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore;
 using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.FriendCore;
 using CoreLib.Entities.EchoCore.ReportCore.Bug;

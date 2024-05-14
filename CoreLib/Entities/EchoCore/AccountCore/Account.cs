@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.Base;
+﻿using CoreLib.DTO.EchoCore.AccountCore;
+using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.FriendCore;
