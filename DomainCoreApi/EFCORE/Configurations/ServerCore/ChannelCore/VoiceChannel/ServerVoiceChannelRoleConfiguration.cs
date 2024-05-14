@@ -1,5 +1,7 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,17 +9,16 @@ using System.Threading.Tasks;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
 {
-    public class ServerVoiceChannelRoleConfiguration
+    public class ServerVoiceChannelRoleConfiguration : IEntityTypeConfiguration<ServerVoiceChannelRole>
     {
-        //channelcategory owner
-        public ulong ChannelCategoryId { get; set; }
-        //base role
-        public ulong RoleId { get; set; }
+        public void Configure(EntityTypeBuilder<ServerVoiceChannelRole> builder)
+        {
+            builder.HasKey(b => new { b.ChannelCategoryId, b.RoleId });
 
-        public ServerVoiceChannelConfiguration  Channel { get; set; }
-        public ServerRole Role { get; set; }
-        //independent permissions from the global permissions in server.
-        //(these permissions are weighed more than the global server permissions except for serveradmin)
-        public ICollection<ServerVoiceChannelRolePermissionConfiguration>? Permissions { get; set; }
+            builder.HasMany(b => b.Permissions).WithOne(b => b.ChannelRole).HasForeignKey(b => new { b.ChannelId, b.RoleId }).OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(b => b.Channel).WithMany(b => b.AllowedRoles).HasForeignKey(b => b.ChannelCategoryId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(b => b.Role).WithMany(b => b.VoiceChannelRoles).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.NoAction);
+        }
     }
 }

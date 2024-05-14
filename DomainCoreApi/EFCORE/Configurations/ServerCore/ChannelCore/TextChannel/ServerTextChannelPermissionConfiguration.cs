@@ -1,15 +1,20 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
+﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
+using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
 {
-    public class ServerTextChannelPermissionConfiguration
-    //used for mapping displayed permissions within a channelcategory
+    public class ServerTextChannelPermissionConfiguration : IEntityTypeConfiguration<ServerTextChannelPermission>
     {
-        //pk is combination of channel, and permission
-        public ulong ChannelId { get; set; }
-        public ulong PermissionId { get; set; }
-        public ServerTextChannelConfiguration Channel { get; set; } //cascade
-        public ServerPermission Permission { get; set; } //cascade
+        public void Configure(EntityTypeBuilder<ServerTextChannelPermission> builder)
+        {
+            builder.HasKey(b => new { b.ChannelId, b.PermissionId });
+
+            builder.HasOne(b=>b.Channel).WithMany(b=>b.AllowedPermissions).HasForeignKey(b=>b.PermissionId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(b => b.Permission).WithMany().HasForeignKey(b => b.PermissionId).OnDelete(DeleteBehavior.Cascade);
+
+        }
     }
 }
