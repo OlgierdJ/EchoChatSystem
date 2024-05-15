@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.Base;
+﻿using CoreLib.DTO.EchoCore.AccountCore;
+using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.Enums;
 using CoreLib.Interfaces;
@@ -32,6 +33,9 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore.Settings
         public bool ShowWarningWhenNoMicInputDetected { get; set; }
         public bool EnableDiagnosticAudioRecording { get; set; }
         public bool EnableVoiceDebugLogging { get; set; }
+
+        public bool MuteSelf { get; set; }//dont know if they belong here
+        public bool DeafenSelf { get; set; }//dont know if they belong here
 
         public AccountSettings AccountSettings { get; set; }
     }

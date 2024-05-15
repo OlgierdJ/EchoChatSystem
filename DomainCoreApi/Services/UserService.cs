@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.DTO.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
@@ -6,6 +7,7 @@ using CoreLib.Interfaces.Services;
 using CoreLib.Models;
 using DomainCoreApi.Handlers;
 using DomainCoreApi.Services.Bases;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DomainCoreApi.Services
 {

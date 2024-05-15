@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLib.DTO.EchoCore.AccountCore;
 using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
@@ -15,6 +16,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
 {
     public class ServerTextChannel : BaseChannel<ulong, ServerChannelCategory, ulong, Server, ulong>
     {
+        public int OrderWeight { get; set; }
         public ServerSettings? ServerSettings { get; set; } //mapped through systemmessageschannel
         public ServerTextChannelPinboard? Pinboard { get; set; }
         public ICollection<ServerWebhook>? Webhooks { get; set; } //webhooks monitoring or posting to this channel

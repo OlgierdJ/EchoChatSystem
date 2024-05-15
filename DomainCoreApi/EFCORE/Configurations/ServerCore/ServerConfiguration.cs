@@ -12,6 +12,7 @@ using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
+using CoreLib.DTO.EchoCore.AccountCore;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore
 {

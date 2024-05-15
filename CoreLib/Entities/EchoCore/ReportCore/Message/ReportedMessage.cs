@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.Base;
+﻿using CoreLib.DTO.EchoCore.AccountCore;
+using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ChatCore;
 using System;
@@ -15,7 +16,7 @@ namespace CoreLib.Entities.EchoCore.ReportCore.Message
     {
         //public DateTime TimeReported { get; set; }
         public string MessageType { get; set; } //idk something like Chat/DM, TextChannel, Other
-        public ICollection<ReportedMessageAttachment>? Attachments { get; set; }
+        public ICollection<ReportedMessageAttachment> Attachments { get; set; }
 
         public MessageReport Report { get; set; }
     }

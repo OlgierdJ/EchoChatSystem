@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.DTO.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Bases;
 using CoreLib.Interfaces.Services;
@@ -12,10 +13,10 @@ namespace DomainCoreApi.Controllers
     [ApiController]
     public class AccountController : BaseEntityController<Account, ulong>
     {
-        private readonly IAccountService _Service;
+        //private readonly IAccountService _Service;
         public AccountController(IAccountService service, IPushNotificationService notificationService) : base(service, notificationService)
         {
-            _Service = service;
+            //_Service = service;
         }
     }
 }

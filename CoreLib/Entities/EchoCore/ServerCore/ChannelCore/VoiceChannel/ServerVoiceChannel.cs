@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreLib.DTO.EchoCore.AccountCore;
 using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
@@ -14,6 +15,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
 {
     public class ServerVoiceChannel : BaseChannel<ulong, ServerChannelCategory, ulong, Server, ulong>
     {
+        public int OrderWeight { get; set; }
         public uint RegionId { get; set; }
         public uint BitRate { get; set; }
         public VideoQualityMode VideoQuality { get; set; }

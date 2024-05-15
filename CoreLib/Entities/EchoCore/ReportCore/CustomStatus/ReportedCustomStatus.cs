@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.Base;
+﻿using CoreLib.DTO.EchoCore.AccountCore;
+using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
 using CoreLib.Entities.EchoCore.ReportCore.Message;

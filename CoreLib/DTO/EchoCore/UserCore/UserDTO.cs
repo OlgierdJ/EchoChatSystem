@@ -1,6 +1,4 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,16 +6,13 @@ using System.Threading.Tasks;
 
 namespace CoreLib.DTO.EchoCore.UserCore
 {
-    public class UserDTO //: BaseEntity<ulong>
+    public class UserDTO //this is when a friend is displayed in the friendlist or when you are displayed beside mute and deafen
     {
-        public ulong UserId { get; set; }
-        public string Email { get; set; }
-        public string? PhoneNumber { get; set; }
-        public bool EmailConfirmed { get; set; }
-        public bool PhoneNumberConfirmed { get; set; }
-        public DateTime PasswordSetDate { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        //public Account? Account { get; set; }
-        //public SecurityCredentials? SecurityCredentials { get; set; }
+        public ulong Id { get; set; } //their unique id for mapping interactions to api.
+        public string DisplayName { get; set; } //overwritten by accountprofile displayname or nickname if present
+        public string Name { get; set; } //unique handle
+        public string ImageIconURL { get; set; }
+        //public string? Note { get; set; } //this is displayed in their profile.
+        public ActiveActivityStatusDTO ActiveStatus { get; set; }
     }
 }
