@@ -1,4 +1,5 @@
-﻿@using MudBlazor
+﻿@using CoreLib.Entities.EchoCore.ChatCore
+@using MudBlazor
 @using EchoWebapp.Client.Components.DirectMessages.Friends
 @using EchoWebapp.Client.Components.DirectMessages.Chats
 @rendermode InteractiveAuto
@@ -10,8 +11,36 @@
 *@
 
 @* <h3>DirectMessageViewComponent</h3> *@
-<ChatListComponent/>
-<FriendsViewComponent/>
+<ChatListComponent OnItemSelected=@HandelOnChatChanged />
+
+@if (DisplayFriends)
+{
+    <FriendsViewComponent />
+}
+else
+{
+    <ChatViewComponent Content="chat" />
+}
+
 
 @code {
+    [Parameter]
+    public bool DisplayFriends { get; set; }
+
+    [Parameter]
+    public Chat chat { get; set; }
+    //set as latest chat pr default
+
+    public void HandelOnChatChanged(Chat c)
+    {
+        DisplayFriends = false;
+        chat = c;
+        if(c == null)
+        {
+            DisplayFriends = true;
+        }
+        Console.Clear();
+        Console.WriteLine(DisplayFriends+" "+c.Messages.First().Content);
+        StateHasChanged();
+    }
 }
