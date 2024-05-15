@@ -1,5 +1,4 @@
 ﻿using CoreLib.Entities.Base;
-using CoreLib.DTO.EchoCore.AccountCore;
 using CoreLib.DTO.EchoCore.ChatCore;
 using System;
 using System.Collections.Generic;
