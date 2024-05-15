@@ -1,27 +1,31 @@
 ﻿using CoreLib.DTO.EchoCore.AccountCore;
 using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.Enums;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.ManagementCore
 {
-    public class ServerEventConfiguration : BaseEntity<ulong>
+    public class ServerEventConfiguration : IEntityTypeConfiguration<ServerEvent>
     {
-        public ulong ServerId { get; set; } //server of which the event belongs to
-        public ulong CreatorId { get; set; } //person who first made the event (serveradmins might be able to ignore permissions to change event.)
-        //public ulong? ServerVoiceChannelId { get; set; } //person who first made the event (serveradmins might be able to ignore permissions to change event.)
+        public void Configure(EntityTypeBuilder<ServerEvent> builder)
+        {
+            builder.HasKey(b => b.Id);
 
-        public string Topic { get; set; } //essentially the name of the event
-        public string? Description { get; set; } //optional
-        public string? ImageFileUrl { get; set; } //optional image
-        public EventFrequency EventFrequency { get; set; } //If the event should repeat and if then how often.
-        public DateTime StartTime { get; set; } //when does the event start
-        public DateTime EndTime { get; set; } //when does the event end.
-        public string? Location { get; set; } //text or link to event site.
+            builder.Property(b => b.Topic).IsRequired();
+            builder.Property(b => b.Description).IsRequired(false);
+            builder.Property(b => b.ImageFileUrl).IsRequired(false);
+            builder.Property(b=>b.EventFrequency).HasConversion<int>().IsRequired();
+            builder.Property(b => b.StartTime).HasDefaultValueSql("getdate()").IsRequired();
+            builder.Property(b => b.EndTime).IsRequired();
+            builder.Property(b=>b.Location).IsRequired(false);
 
-        //public ServerVoiceChannel? VoiceChannelLocation { get; set; } //if it has location then it shouldnt have voicechannellocation
-        public ServerConfiguration Server { get; set; }
-        public Account Creator { get; set; } //maybe change owner type and id, cause dont know where to point ownership, directly to account or to the accounts serverprofile.
+            builder.HasOne(b=>b.Server).WithMany(b=>b.Events).HasForeignKey(b=>b.ServerId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Creator).WithMany(b => b.ServerEvents).HasForeignKey(b => b.CreatorId).OnDelete(DeleteBehavior.NoAction);//tænker NoAction da vi ikke sletter account
+        }
     }
 
 }

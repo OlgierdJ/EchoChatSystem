@@ -1,4 +1,5 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.ModerationCore
 {
     //not yet implemented
-    //internal class ServerAutoModRule
+    //internal class ServerAutoModRuleConfiguration : IEntityTypeConfiguration<ServerAutoModRule>
     //{
     //    public string Name { get; set; }
     //    public string? CustomBlockMessage { get; set; }
