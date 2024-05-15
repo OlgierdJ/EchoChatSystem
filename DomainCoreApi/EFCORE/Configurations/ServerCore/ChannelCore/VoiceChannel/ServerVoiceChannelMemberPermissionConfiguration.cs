@@ -1,27 +1,23 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
-using CoreLib.Entities.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
 {
-    public class ServerVoiceChannelMemberPermissionConfiguration
-    //Used for displaying state of serverpermission for a specific channel for a specific member
+    public class ServerVoiceChannelMemberPermissionConfiguration : IEntityTypeConfiguration<ServerVoiceChannelMemberPermission>
     {
-        //combine foreign key profile and role.
-        //pk is combination of channel, role and permission
-        public ulong ChannelId { get; set; }
-        public ulong ProfileId { get; set; }
-        public ulong PermissionId { get; set; }
-        public bool? State { get; set; } //true = enabled, null = default, false = disabled
-        public ServerVoiceChannelMemberSettingsConfiguration MemberSettings { get; set; } //cascade
-        public ServerVoiceChannelConfiguration Channel { get; set; } //ignore
-        public ServerProfile Profile { get; set; } //ignore
-        public ServerPermission Permission { get; set; } //cascade
+        public void Configure(EntityTypeBuilder<ServerVoiceChannelMemberPermission> builder)
+        {
+            builder.HasKey(b => new { b.ChannelId, b.ProfileId, b.PermissionId });
+
+            builder.Property(b => b.State);
+
+            builder.HasOne(b => b.Permission).WithMany(b => b.VoiceChannelMemberPermissions).HasForeignKey(b => b.PermissionId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(b => b.Profile).WithMany(b => b.VoiceChannelMemberPermissions).HasForeignKey(b => b.ProfileId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(b => b.Channel).WithMany(b => b.MemberPermissions).HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(b => b.MemberSettings).WithMany(b => b.Permissions).HasForeignKey(b => new { b.ChannelId, b.ProfileId }).OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

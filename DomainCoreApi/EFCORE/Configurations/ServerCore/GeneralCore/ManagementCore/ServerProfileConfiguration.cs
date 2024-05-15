@@ -3,8 +3,12 @@ using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using CoreLib.Entities.EchoCore.ServerCore.Management;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,31 +17,27 @@ using System.Threading.Tasks;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.ManagementCore
 {
-    public class ServerProfileConfiguration //: BaseEntity<ulong>
-                               //Server variables for changing display.
+    public class ServerProfileConfiguration : IEntityTypeConfiguration<ServerProfile>
     {
-        public ulong AccountId { get; set; }
-        public ulong ServerId { get; set; }
-        public ulong? FolderId { get; set; }
-        public bool KickFromServerOnVoiceLeave { get; set; } //set if invited through voiceinvite with guestlink enabled
-        public string Nickname { get; set; } //overrides account name when entity is displayed to the client
-        public DateTime TimeJoined { get; set; }
-        public string JoinMethod { get; set; } //How the user joined the server <-- invitelink, guestlink, eventlink, etc
-        public Account Account { get; set; }
-        public ServerConfiguration Server { get; set; }
-        public AccountServerFolder? Folder { get; set; }
-        public ICollection<ServerProfileServerRole>? Roles { get; set; } //all serverroles granted to this serverprofile through ServerProfileServerRole
-        public ICollection<ServerChannelCategoryMemberSettings>? CategoryMemberSettings { get; set; } //grouped permissions for this account in a specific channelcategory (used for managing the collection)
-        public ICollection<ServerChannelCategoryMemberPermission>? CategoryMemberPermissions { get; set; } //specific permissions for this account in a specific channelcategory
-        public ICollection<ServerTextChannelMemberSettings>? TextChannelMemberSettings { get; set; } //grouped permissions for this account in a specific textchannel (used for managing the collection)
-        public ICollection<ServerTextChannelMemberPermission>? TextChannelMemberPermissions { get; set; } //specific permissions for this account in a specific textchannel
-        public ICollection<ServerVoiceChannelMemberSettings>? VoiceChannelMemberSettings { get; set; } //grouped permissions for this account in a specific voicechannel (used for managing the collection)
-        public ICollection<ServerVoiceChannelMemberPermission>? VoiceChannelMemberPermissions { get; set; } //specific permissions for this account in a specific voicechannel
-    }
-    public class ServerMembership
-    //split profile and membership into two tables for clarification of responsability
-    //this is essentially a participancy table which is linked to all tables of which should be cascaded if member leaves server
-    {
-
+        public void Configure(EntityTypeBuilder<ServerProfile> builder)
+        {
+            builder.HasKey(b=> new {b.AccountId,b.ServerId});
+            builder.Property(b=>b.KickFromServerOnVoiceLeave).IsRequired(false);
+            builder.Property(b => b.Nickname).IsRequired();
+            builder.Property(b => b.TimeJoined).HasDefaultValueSql("getdate()").IsRequired();//tænker obejct bliver lave nå en user joiner en server 
+            builder.Property(b=>b.JoinMethod).HasDefaultValue("Unknown").IsRequired();//tænker hvis vi ikke sender hvordan bliver det bare en unknown
+           
+            builder.HasOne(b => b.Account).WithMany(b => b.Servers).HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Server).WithMany(b => b.Members).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Folder).WithMany(b => b.Servers).HasForeignKey(b => b.FolderId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+            
+            builder.HasMany(b=>b.Roles).WithOne(b=>b.Profile).HasForeignKey(b=>b.ProfileId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+            builder.HasMany(b => b.CategoryMemberSettings).WithOne(b => b.Profile).HasForeignKey(b => b.ProfileId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+            builder.HasMany(b => b.CategoryMemberPermissions).WithOne(b => b.Profile).HasForeignKey(b => b.ProfileId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+            builder.HasMany(b => b.TextChannelMemberSettings).WithOne(b => b.Profile).HasForeignKey(b => b.ProfileId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+            builder.HasMany(b => b.TextChannelMemberPermissions).WithOne(b => b.Profile).HasForeignKey(b => b.ProfileId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+            builder.HasMany(b => b.VoiceChannelMemberSettings).WithOne(b => b.Profile).HasForeignKey(b => b.ProfileId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+            builder.HasMany(b => b.VoiceChannelMemberPermissions).WithOne(b => b.Profile).HasForeignKey(b => b.ProfileId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+        }
     }
 }

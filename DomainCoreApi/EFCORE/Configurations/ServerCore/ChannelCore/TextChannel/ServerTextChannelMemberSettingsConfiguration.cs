@@ -2,17 +2,20 @@
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
 {
-    public class ServerTextChannelMemberSettingsConfiguration
+    public class ServerTextChannelMemberSettingsConfiguration : IEntityTypeConfiguration<ServerTextChannelMemberSettings>
     {
-        public ulong ChannelId { get; set; } //where these settings belong
-        public ulong ProfileId { get; set; } //profile of which these settings affect.
+        public void Configure(EntityTypeBuilder<ServerTextChannelMemberSettings> builder)
+        {
+            builder.HasKey(b => new { b.ChannelId, b.ProfileId });
 
-
-        public ServerTextChannelConfiguration Channel { get; set; }
-        public ServerProfile Profile { get; set; }
-        public ICollection<ServerTextChannelMemberPermissionConfiguration>? Permissions { get; set; }
+            builder.HasOne(b => b.Channel).WithMany(b=>b.MemberSettings).HasForeignKey(b=>b.ChannelId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Profile).WithMany(b => b.TextChannelMemberSettings).HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasMany(b => b.Permissions).WithOne(b => b.MemberSettings).HasForeignKey(b => new { b.ChannelId, b.ProfileId }).OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

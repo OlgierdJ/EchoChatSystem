@@ -14,7 +14,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel
     public class ServerTextChannelMessage : BaseMessage<ulong, Account, ulong, ServerTextChannel, ulong, ServerTextChannelMessage>
     {
         public ICollection<ServerTextChannelMessageAttachment>? Attachments { get; set; }
-        public ChatMessagePin? MessagePin { get; set; }
+        public ServerTextChannelMessagePin? MessagePin { get; set; }
         public ICollection<ServerTextChannelAccountMessageTracker>? MessageTrackers { get; set; }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
+using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using CoreLib.Entities.Enums;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +14,18 @@ using System.Threading.Tasks;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.Category
 {
-    public class ServerChannelCategoryMemberPermissionConfiguration
-    //Used for displaying state of serverpermission for a specific channel for a specific role
+    public class ServerChannelCategoryMemberPermissionConfiguration : IEntityTypeConfiguration<ServerChannelCategoryMemberPermission>
     {
-        //combine foreign key category and role.
-        //pk is combination of category, role and permission
-        public ulong ChannelCategoryId { get; set; } //where it affects
-        public ulong ProfileId { get; set; } //affected
-        public ulong PermissionId { get; set; } //given permission
-        public bool? State { get; set; } //state. (true = enabled, null = default, false = disabled)
-        public ServerChannelCategoryMemberSettingsConfiguration MemberSettings { get; set; } //cascade
-        public ServerChannelCategoryConfiguration ChannelCategory { get; set; } //ignore
-        public ServerProfile Profile { get; set; } //ignore
-        public ServerPermission Permission { get; set; } //cascade
+        public void Configure(EntityTypeBuilder<ServerChannelCategoryMemberPermission> builder)
+        {
+            builder.HasKey(b => new { b.ChannelCategoryId, b.ProfileId, b.PermissionId });
 
+            builder.Property(b => b.State);
+
+            builder.HasOne(b => b.Permission).WithMany(b => b.CategoryMemberPermissions).HasForeignKey(b => b.PermissionId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(b => b.Profile).WithMany(b => b.CategoryMemberPermissions).HasForeignKey(b => b.ProfileId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(b => b.ChannelCategory).WithMany(b => b.MemberPermissions).HasForeignKey(b => b.ChannelCategoryId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(b => b.MemberSettings).WithMany(b => b.Permissions).HasForeignKey(b => new { b.ChannelCategoryId, b.ProfileId }).OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
+using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,4 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
         public ICollection<ServerTextChannel>? TextChannels { get; set; } //textchannels grouped into this category
         public ICollection<ServerVoiceChannel>? VoiceChannels { get; set; } //voicechannels grouped into this category
     }
-
-
 }
