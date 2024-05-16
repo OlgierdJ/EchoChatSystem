@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.Base;
+﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore;
 using CoreLib.Entities.EchoCore.ServerCore.Integrations;
+using CoreLib.Entities.Enums;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore
 {
@@ -33,28 +28,9 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore
         public ServerVoiceChannel? InactiveChannel { get; set; }
         public ServerTextChannel? SystemMessagesChannel { get; set; }
         public ServerRegion Region { get; set; }
-        
-       
+
+
         public ICollection<ServerBotIntegration>? Integrations { get; set; } //maybe put this into settings
 
-    }
-    public enum DefaultNotificationSettingsEnum
-    {
-        AllMessages,
-        OnlyAtMentions
-    }
-    public enum VerificationLevel
-    {
-        None,
-        Low,
-        Medium,
-        High,
-        Highest
-    }
-    public enum ExplicitImageFilter
-    {
-        DoNotFilter,
-        FilterFromAll,
-        FilterFromMembersWithoutRoles,
     }
 }

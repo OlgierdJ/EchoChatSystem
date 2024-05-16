@@ -1,6 +1,6 @@
 ﻿@page "/register"
+@using CoreLib.DTO.EchoCore.RequestCore
 @using CoreLib.Entities.EchoCore.UserCore
-@using CoreLib.Models
 @using CoreLib.WebAPI
 @using MudBlazor
 @using System.Text.RegularExpressions
@@ -38,7 +38,7 @@
     public bool allowmail { get; set; } = true;
     public DateTime? date { get; set; } = DateTime.UtcNow.AddYears(-18);
 
-    public RegisterUserModel User = new();
+    public RegisterRequestDTO User = new();
     // public readonly EchoAPI _echoAPI = new();
 
     bool success;

@@ -1,6 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
-
-namespace CoreLib.Entities.Base
+﻿namespace CoreLib.Entities.Base
 {
     public abstract class BaseParticipancy<TParticipant, TParticipantId, TSubject, TSubjectId>
     {

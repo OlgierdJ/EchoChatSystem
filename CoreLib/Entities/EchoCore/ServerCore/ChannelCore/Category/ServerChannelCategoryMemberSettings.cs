@@ -1,6 +1,4 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
 {

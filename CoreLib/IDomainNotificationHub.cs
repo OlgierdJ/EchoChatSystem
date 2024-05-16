@@ -1,5 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
 using CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore;
@@ -11,12 +10,6 @@ using CoreLib.Entities.EchoCore.ReportCore.Feedback;
 using CoreLib.Entities.EchoCore.ReportCore.Message;
 using CoreLib.Entities.EchoCore.ReportCore.Profile;
 using CoreLib.Entities.EchoCore.UserCore;
-using CoreLib.Entities.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLib
 {

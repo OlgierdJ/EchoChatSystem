@@ -1,15 +1,10 @@
 ﻿using CoreLib.Entities.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore
 {
-    public class SubscriptionTransaction : BaseEntity<ulong> 
-        //the original transactions used to calculate paid amount vs needed amount for each activeperiod needs unique id per transaction
-        //cause transactions can be paid partially
+    public class SubscriptionTransaction : BaseEntity<ulong>
+    //the original transactions used to calculate paid amount vs needed amount for each activeperiod needs unique id per transaction
+    //cause transactions can be paid partially
     {
         /*
          * maybe find out if each transaction should save platform or the payment method or a duplicate of it?

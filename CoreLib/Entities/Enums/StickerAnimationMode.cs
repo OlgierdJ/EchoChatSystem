@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums
 {
     public enum StickerAnimationMode
     {
-        AlwaysAnimate=0,
-        AnimateOnInteraction=1,
-        NeverAnimate=2,
+        AlwaysAnimate = 0,
+        AnimateOnInteraction = 1,
+        NeverAnimate = 2,
     }
 }

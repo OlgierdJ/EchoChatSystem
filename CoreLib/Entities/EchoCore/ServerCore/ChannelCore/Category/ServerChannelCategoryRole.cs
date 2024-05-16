@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
 {

@@ -1,9 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
 {
@@ -14,7 +9,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
         //base role
         public ulong RoleId { get; set; }
 
-        public ServerVoiceChannel  Channel { get; set; }
+        public ServerVoiceChannel Channel { get; set; }
         public ServerRole Role { get; set; }
         //independent permissions from the global permissions in server.
         //(these permissions are weighed more than the global server permissions except for serveradmin)

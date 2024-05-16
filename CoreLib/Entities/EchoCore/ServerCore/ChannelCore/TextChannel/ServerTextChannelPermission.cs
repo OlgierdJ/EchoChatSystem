@@ -1,5 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
 {

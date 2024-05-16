@@ -1,11 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
+﻿namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
 {
     public class ServerRolePermission
     //used for mapping global permissions to a role.

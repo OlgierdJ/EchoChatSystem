@@ -1,10 +1,10 @@
-﻿using CoreLib.DTO.EchoCore.AccountCore;
+﻿
+using CoreLib.DTO.EchoCore.RequestCore;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
-using CoreLib.Models;
 using DomainCoreApi.Handlers;
 using DomainCoreApi.Services.Bases;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -23,7 +23,7 @@ namespace DomainCoreApi.Services
             _accountService = accountService;
         }
 
-        public async Task<User> CreateUserAsync(RegisterUserModel input)
+        public async Task<User> CreateUserAsync(RegisterRequestDTO input)
         {
             try
             {
@@ -42,10 +42,10 @@ namespace DomainCoreApi.Services
             }   
         }
 
-        public async Task<string> LoginUserAsync(UserLoginModel attempt)
+        public async Task<string> LoginUserAsync(string email, string password)
         {
-            var user = await _repository.GetSingleWithIncludeAsync(e => e.Email == attempt.Email);
-            if (user is not null && await _pwdHandler.CheckPassword(attempt.Password, user.Id))
+            var user = await _repository.GetSingleWithIncludeAsync(e => e.Email == email);
+            if (user is not null && await _pwdHandler.CheckPassword(password, user.Id))
             {
                 //send a jwt back to the website
                 TokenHandler tokenHandler = new();
@@ -54,11 +54,11 @@ namespace DomainCoreApi.Services
 
             throw new Exception("You suck at hacking bruv");
         }
-        public async Task<bool> UpdatePassword(UpdatePasswordModel update)
+        public async Task<bool> UpdatePassword(ulong id, string password)
         {
             try
             {
-                var result = await _pwdHandler.UpdatePassword(update.Password, update.Id);
+                var result = await _pwdHandler.UpdatePassword(password, id); //get from jwt somewhere either in controller or in this service.
                 return result is not null;
             }
             catch (Exception e)

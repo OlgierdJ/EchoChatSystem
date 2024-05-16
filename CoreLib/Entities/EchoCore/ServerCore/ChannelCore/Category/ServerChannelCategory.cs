@@ -1,12 +1,5 @@
 ﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
 {
@@ -21,7 +14,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
         //allowed groups or specific permission????
         public Server Server { get; set; }
         public ICollection<ServerChannelCategoryPermission>? AllowedPermissions { get; set; } //related permissions used for creating subset of all permissions showed to the user
-        
+
         public ICollection<ServerChannelCategoryRole>? AllowedRoles { get; set; } //all roles with specific defined permissions for this category
         public ICollection<ServerChannelCategoryRolePermission>? RolePermissions { get; set; } //all rolepermissions linked to this category
         public ICollection<ServerChannelCategoryMemberSettings>? MemberSettings { get; set; } //member specific definitions for this category

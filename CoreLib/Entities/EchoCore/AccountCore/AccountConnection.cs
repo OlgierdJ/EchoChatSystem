@@ -1,9 +1,4 @@
 ﻿using CoreLib.Entities.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
@@ -17,7 +12,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public string AuthorizeState { get; set; }
         public string AuthorizeCodeChallenge { get; set; }
 
-        public string ExternalRefreshToken { get; set; } 
+        public string ExternalRefreshToken { get; set; }
         public string InternalRefreshToken { get; set; }
 
         public Account Account { get; set; }

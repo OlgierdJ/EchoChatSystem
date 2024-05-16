@@ -1,11 +1,6 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
@@ -14,7 +9,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
     {
         //public ulong AccountId { get; set; }
         public uint LanguageId { get; set; }
-        public Account  Account { get; set; }
+        public Account Account { get; set; }
 
 
         //Application Settings

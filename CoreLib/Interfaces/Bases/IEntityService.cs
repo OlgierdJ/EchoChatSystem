@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoreLib.Interfaces.Bases
+﻿namespace CoreLib.Interfaces.Bases
 {
     public interface IEntityService<T, IdType> where T : class
     {

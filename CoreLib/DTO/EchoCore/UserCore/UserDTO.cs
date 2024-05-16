@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoreLib.DTO.EchoCore.UserCore
+﻿namespace CoreLib.DTO.EchoCore.UserCore
 {
     public class UserDTO //this is when a friend is displayed in the friendlist or when you are displayed beside mute and deafen
     {

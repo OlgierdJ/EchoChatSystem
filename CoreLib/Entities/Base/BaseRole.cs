@@ -1,11 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoreLib.Entities.Base
+﻿namespace CoreLib.Entities.Base
 {
     public abstract class BaseRole<TId, TRecipient, TPermission> : BaseEntity<TId>
     {
