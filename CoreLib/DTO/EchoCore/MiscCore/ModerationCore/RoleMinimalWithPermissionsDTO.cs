@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    public class RoleDTO : RoleMinimalDTO
+    public class RoleMinimalWithPermissionsDTO : RoleMinimalDTO
     {
         public ICollection<PermissionExtendedDTO> Permissions { get; set; }
     }

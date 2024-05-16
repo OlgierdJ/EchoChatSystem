@@ -1,27 +1,22 @@
-﻿using CoreLib.DTO.EchoCore.MiscCore;
-using CoreLib.DTO.EchoCore.SettingsCore;
-using CoreLib.DTO.EchoCore.SubscriptionCore;
+﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
+using CoreLib.DTO.EchoCore.MiscCore.AppearanceCore;
+using CoreLib.DTO.EchoCore.MiscCore.ModerationCore;
 using CoreLib.DTO.EchoCore.ServerCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.DTO.EchoCore.MiscCore;
+using CoreLib.DTO.EchoCore.UserCore.SettingsCore;
 
 namespace CoreLib.DTO.EchoCore.UserCore
 {
-    public class UserExtendedDTO //loaded at app startup and lazy loaded properties into it upon navigation.
+    public class UserFullDTO //loaded at app startup and lazy loaded properties into it upon navigation.
     {
 
         public ulong Id { get; set; }
-        public string DisplayName { get; set; } //overwritten by accountprofile displayname or nickname if present
-        public string Name { get; set; } //unique handle
-        public string ImageIconURL { get; set; }
+        //public string DisplayName { get; set; } //overwritten by accountprofile displayname or nickname if present //present in userprofile
+        //public string Name { get; set; } //unique handle //present in userprofile
+        //public string ImageIconURL { get; set; } //present in userprofile
         public string Email { get; set; }
         public string? PhoneNumber { get; set; }
-        public string BannerColour { get; set; }
-        public DateTime MemberSince { get; set; }
+        //public string BannerColour { get; set; } //present in userprofile
+        //public DateTime MemberSince { get; set; } //present in userprofile
 
         public LanguageDTO? Language { get; set; } //display always
         public AccessibilitySettingsDTO? AccessibilitySettings { get; set; } //display always
@@ -42,19 +37,19 @@ namespace CoreLib.DTO.EchoCore.UserCore
         public WindowSettingsDTO? WindowSettings { get; set; } //display always 
 
         public UserProfileDTO? UserProfile { get; set; } //display always
-        public ICollection<ServerProfileDTO>? ServerProfiles { get; set; } //display always
+        public ICollection<UserProfileDTO>? ServerProfiles { get; set; } //display always
         public ICollection<DeviceSessionDTO>? Devices { get; set; } //display always //not implemented at first
         public ICollection<UserConnectionDTO>? Connections { get; set; } //display always //not implemented at first.
 
         public ICollection<ServerFolderDTO>? ServerFolders { get; set; } //display always
         public ICollection<ServerDTO>? Servers { get; set; } //display always
+        public ICollection<ChatDTO>? DirectMessages { get; set; } //display always
 
         public ICollection<UserDTO>? Friends { get; set; } //display always
         public ICollection<FriendRequestDTO>? Requests { get; set; } //display always
-        public ICollection<BlockedUserDTO>? BlockedUsers { get; set; } //display always
+        public ICollection<UserMinimalDTO>? BlockedUsers { get; set; } //display always
         public ICollection<UserDTO>? Suggestions { get; set; } //display always
-        public ICollection<ServerRoleDTO>? Roles { get; set; } //only display if on server.
-        public ICollection<PermissionDTO>? AppPermissions { get; set; } //only display if on server.
+        public ICollection<PermissionDTO>? AppPermissions { get; set; } //??? this defines allowed navigation such as adminpanel.
 
         //public ICollection<ApplicationRoleDTO>? AppRoles { get; set; } //maybe not needed
         //public bool EmailConfirmed { get; set; } dont know if client needs this
