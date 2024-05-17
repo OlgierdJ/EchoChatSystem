@@ -1,5 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.AccountCore;
-using CoreLib.Entities.Base;
+﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.FriendCore;
@@ -10,11 +9,6 @@ using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.Management;
 using CoreLib.Entities.EchoCore.UserCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {

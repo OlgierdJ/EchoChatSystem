@@ -1,25 +1,22 @@
-﻿using CoreLib.DTO.EchoCore.AccountCore;
-using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.SettingsCore
 {
-    public class ServerSoundboardSoundConfiguration : BaseEntity<ulong>
+    public class ServerSoundboardSoundConfiguration : IEntityTypeConfiguration<ServerSoundboardSound>
     {
-        public ulong ServerId { get; set; }
-        public ulong UploaderId { get; set; }
-        public ulong? AssociatedEmoteId { get; set; }
-        public string Name { get; set; }
-        public string SoundFileUrl { get; set; }
+        public void Configure(EntityTypeBuilder<ServerSoundboardSound> builder)
+        {
+            builder.HasKey(b => b.Id);
 
-        public ServerEmoteConfiguration? AssociatedEmote { get; set; }
-        public ServerConfiguration  Server { get; set; }
-        public Account Uploader { get; set; }
+            builder.Property(b=>b.Name).IsRequired();
+            builder.Property(b=>b.SoundFileUrl).IsRequired();
+
+            builder.HasOne(b => b.AssociatedEmote).WithMany(b => b.SoundboardSounds).HasForeignKey(b => b.AssociatedEmoteId).OnDelete(DeleteBehavior.NoAction).IsRequired(false);
+            builder.HasOne(b => b.Server).WithMany(b => b.SoundboardSounds).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(b => b.Uploader).WithMany().HasForeignKey(b => b.UploaderId).OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
