@@ -1,7 +1,6 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using CoreLib.DTO.EchoCore.AccountCore;
 
 namespace DomainCoreApi.EFCORE.Configurations.AccountCore
 {

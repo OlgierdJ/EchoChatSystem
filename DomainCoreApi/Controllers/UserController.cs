@@ -4,6 +4,7 @@ using CoreLib.Handlers;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.Controllers.Bases;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +53,7 @@ namespace DomainCoreApi.Controllers
             try
             {
 
-                var result = await _userService.LoginUserAsync(login);
+                var result = await _userService.LoginUserAsync(login.Email,login.Password);
                 if (result == null)
                 {
                     return Problem("Something went wrong. Contact an Admin / Server representative");
@@ -69,11 +70,11 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPut("UpdatePassword")]
-        public async Task<IActionResult> UpdatePasswordAsync(UpdatePasswordRequestDTO u)
+        public async Task<IActionResult> UpdatePasswordAsync(string u)
         {
             try
             {
-                var result = await _userService.UpdatePassword(u);
+                var result = await _userService.UpdatePassword(1,u);
                 if (!result)
                 {
                     return Problem("Something went wrong. Contact an Admin / Server representative");

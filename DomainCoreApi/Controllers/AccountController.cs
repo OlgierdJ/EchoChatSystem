@@ -1,10 +1,7 @@
-﻿using CoreLib.DTO.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Interfaces;
-using CoreLib.Interfaces.Bases;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.Controllers.Bases;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DomainCoreApi.Controllers

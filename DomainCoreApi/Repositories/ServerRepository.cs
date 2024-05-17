@@ -1,4 +1,5 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Repositories.Bases;
 using DomainCoreApi.EFCORE;

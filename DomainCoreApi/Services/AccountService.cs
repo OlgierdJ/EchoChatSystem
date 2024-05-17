@@ -1,6 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Interfaces.Bases;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.Services.Bases;

@@ -1,14 +1,7 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoreLib.Entities.EchoCore.ApplicationCore;
-using CoreLib.DTO.EchoCore.AccountCore;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {

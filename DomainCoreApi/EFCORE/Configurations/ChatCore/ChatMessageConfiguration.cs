@@ -30,7 +30,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ChatCore
             //builder.HasMany(b => b.Reports).WithOne(e => e.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
 
             builder.HasMany(b => b.Attachments).WithOne(e => e.Message).HasForeignKey(b => b.MessageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasMany(b => b.MessageTrackers).WithOne(e => e.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+            builder.HasMany(b => b.MessageTrackers).WithOne(e => e.CoOwner).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
             builder.HasOne(b => b.MessagePin).WithOne(e => e.Message).HasForeignKey<ChatMessagePin>(b => b.MessageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
         }
     }

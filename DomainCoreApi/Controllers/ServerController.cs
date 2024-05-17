@@ -1,8 +1,7 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Bases;
 using DomainCoreApi.Controllers.Bases;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DomainCoreApi.Controllers

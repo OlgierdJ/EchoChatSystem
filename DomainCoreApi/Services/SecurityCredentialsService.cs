@@ -1,8 +1,6 @@
 ﻿using CoreLib.Entities.EchoCore.UserCore;
-using CoreLib.Interfaces.Bases;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
-using CoreLib.Models;
 using DomainCoreApi.Services.Bases;
 
 namespace DomainCoreApi.Services

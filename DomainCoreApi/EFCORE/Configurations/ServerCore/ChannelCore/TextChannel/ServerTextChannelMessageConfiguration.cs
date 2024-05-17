@@ -1,16 +1,6 @@
-﻿using CoreLib.DTO.EchoCore.AccountCore;
-using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ChatCore;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
+﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.TextChannel
 {
