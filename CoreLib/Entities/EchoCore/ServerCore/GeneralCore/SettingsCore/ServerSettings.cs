@@ -1,6 +1,7 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.Integrations;
+using CoreLib.Entities.Enums;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore
 {
@@ -31,24 +32,5 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore
 
         public ICollection<ServerBotIntegration>? Integrations { get; set; } //maybe put this into settings
 
-    }
-    public enum DefaultNotificationSettingsEnum
-    {
-        AllMessages,
-        OnlyAtMentions
-    }
-    public enum VerificationLevel
-    {
-        None,
-        Low,
-        Medium,
-        High,
-        Highest
-    }
-    public enum ExplicitImageFilter
-    {
-        DoNotFilter,
-        FilterFromAll,
-        FilterFromMembersWithoutRoles,
     }
 }

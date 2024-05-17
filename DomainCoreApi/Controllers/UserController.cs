@@ -1,9 +1,15 @@
-﻿using CoreLib.Entities.EchoCore.UserCore;
+﻿using CoreLib.DTO.EchoCore.RequestCore;
+using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.Controllers.Bases;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using DomainCoreApi.Handlers;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace DomainCoreApi.Controllers
 {
@@ -20,7 +26,7 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUserAsync(RegisterUserModel input)
+        public async Task<IActionResult> CreateUserAsync(RegisterRequestDTO input)
         {
             try
             {
@@ -40,7 +46,7 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(UserLoginModel login)
+        public async Task<IActionResult> Login(LoginRequestDTO login)
         {
             try
             {
@@ -62,11 +68,19 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPut("UpdatePassword")]
-        public async Task<IActionResult> UpdatePasswordAsync(UpdatePasswordModel u)
+        public async Task<IActionResult> UpdatePasswordAsync(UpdatePasswordRequestDTO u)
         {
             try
             {
-                var result = await _userService.UpdatePassword(u);
+                var token = await HttpContext.GetTokenAsync(JwtBearerDefaults.AuthenticationScheme, "access_token");
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(token);
+                var id = Convert.ToUInt64(jwtSecurityToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sub).Value);
+               
+                
+                
+
+                var result = await _userService.UpdatePassword(id, u.NewPassword);
                 if (!result)
                 {
                     return Problem("Something went wrong. Contact an Admin / Server representative");

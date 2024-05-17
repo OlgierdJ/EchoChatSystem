@@ -1,4 +1,6 @@
-﻿namespace CoreLib.DTO.EchoCore.UserCore
+﻿using CoreLib.DTO.EchoCore.ServerCore;
+
+namespace CoreLib.DTO.EchoCore.UserCore
 {
     public class UserProfileDTO
     {

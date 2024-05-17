@@ -1,5 +1,8 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.DTO.EchoCore.RequestCore;
+using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
+using CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Entities.Enums;
 
@@ -8,7 +11,7 @@ namespace DomainCoreApi.Handlers
     public class CreateUserHandler
     {
 
-        public async Task<(User, Account)> CreateHandler(RegisterUserModel input)
+        public async Task<(User, Account)> CreateHandler(RegisterRequestDTO input)
         {
 
             var user = await CreateUser(input.Email, input.DateOfBirth);
@@ -40,7 +43,7 @@ namespace DomainCoreApi.Handlers
                         SaturationPercent = 255,
                         ApplySaturationToCustomColors = false,
                         AlwaysUnderlineLinks = true,
-                        SyncProfileTheme = true,
+                        SyncProfileThemes = true,
                         SyncContrastSettings = true,
                         RoleColorMode = RoleColorMode.ShowRoleColorsInNames,
                         SyncReducedMotionWithPC = true,
@@ -58,7 +61,7 @@ namespace DomainCoreApi.Handlers
                         InAppIcon = "",
                         DarkSideBar = true,
                         PixelChatFontScale = 255,
-                        PixelGroupSpaceScale = 255,
+                        PixelSpaceBetweenMessageGroupsScale = 255,
                     },
                     AdvancedSettings = new AdvancedSettings()
                     {
@@ -82,9 +85,9 @@ namespace DomainCoreApi.Handlers
                     NotificationSettings = new NotificationSettings()
                     {
                         FocusModeEnabled = false,
-                        DesktopNotification = true,
-                        UnreadMessageBadge = true,
-                        TaskbarFlashing = true,
+                        EnableDesktopNotifications = true,
+                        EnableUnreadMessageBadge = true,
+                        EnableTaskbarFlashing = true,
                     },
                     PrivacySettings = new PrivacySettings()
                     {
@@ -95,11 +98,11 @@ namespace DomainCoreApi.Handlers
                     SoundboardSettings = new SoundboardSettings()
                     {
                         SoundboardVolume = 100,
-                        Soundboard = 100,
+                        //Soundboard = 100,
                     },
                     StreamerModeSettings = new StreamerModeSettings()
                     {
-                        StreamerMode = false,
+                        EnableStreamerMode = false,
                         HidePersonalInformation = true,
                         HideInviteLinks = false,
                         DisableNotifications = false,

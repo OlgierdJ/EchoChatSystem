@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.DTO.EchoCore.RequestCore;
+using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
@@ -20,7 +21,7 @@ namespace DomainCoreApi.Services
             _accountService = accountService;
         }
 
-        public async Task<User> CreateUserAsync(RegisterUserModel input)
+        public async Task<User> CreateUserAsync(RegisterRequestDTO input)
         {
             try
             {
@@ -39,7 +40,7 @@ namespace DomainCoreApi.Services
             }
         }
 
-        public async Task<string> LoginUserAsync(UserLoginModel attempt)
+        public async Task<string> LoginUserAsync(LoginRequestDTO attempt)
         {
             var user = await _repository.GetSingleWithIncludeAsync(e => e.Email == attempt.Email);
             if (user is not null && await _pwdHandler.CheckPassword(attempt.Password, user.Id))
@@ -51,11 +52,11 @@ namespace DomainCoreApi.Services
 
             throw new Exception("You suck at hacking bruv");
         }
-        public async Task<bool> UpdatePassword(UpdatePasswordModel update)
+        public async Task<bool> UpdatePassword(ulong id, string password)
         {
             try
             {
-                var result = await _pwdHandler.UpdatePassword(update.Password, update.Id);
+                var result = await _pwdHandler.UpdatePassword(password, id);
                 return result is not null;
             }
             catch (Exception e)
