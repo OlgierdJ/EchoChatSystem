@@ -1,13 +1,10 @@
-﻿
-using CoreLib.DTO.EchoCore.RequestCore;
-using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.Handlers;
 using DomainCoreApi.Services.Bases;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DomainCoreApi.Services
 {
@@ -23,7 +20,7 @@ namespace DomainCoreApi.Services
             _accountService = accountService;
         }
 
-        public async Task<User> CreateUserAsync(RegisterRequestDTO input)
+        public async Task<User> CreateUserAsync(RegisterUserModel input)
         {
             try
             {
@@ -39,13 +36,13 @@ namespace DomainCoreApi.Services
             {
 
                 throw e;
-            }   
+            }
         }
 
-        public async Task<string> LoginUserAsync(string email, string password)
+        public async Task<string> LoginUserAsync(UserLoginModel attempt)
         {
-            var user = await _repository.GetSingleWithIncludeAsync(e => e.Email == email);
-            if (user is not null && await _pwdHandler.CheckPassword(password, user.Id))
+            var user = await _repository.GetSingleWithIncludeAsync(e => e.Email == attempt.Email);
+            if (user is not null && await _pwdHandler.CheckPassword(attempt.Password, user.Id))
             {
                 //send a jwt back to the website
                 TokenHandler tokenHandler = new();
@@ -54,11 +51,11 @@ namespace DomainCoreApi.Services
 
             throw new Exception("You suck at hacking bruv");
         }
-        public async Task<bool> UpdatePassword(ulong id, string password)
+        public async Task<bool> UpdatePassword(UpdatePasswordModel update)
         {
             try
             {
-                var result = await _pwdHandler.UpdatePassword(password, id); //get from jwt somewhere either in controller or in this service.
+                var result = await _pwdHandler.UpdatePassword(update.Password, update.Id);
                 return result is not null;
             }
             catch (Exception e)

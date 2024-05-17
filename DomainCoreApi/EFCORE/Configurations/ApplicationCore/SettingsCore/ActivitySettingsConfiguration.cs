@@ -1,11 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
 {
@@ -21,7 +16,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
             builder.Property(b => b.AllowFriendsToJoinGame).IsRequired();
             builder.Property(b => b.AllowVoiceChannelParticipantsToJoinGame).IsRequired();
 
-            builder.HasOne(b=>b.AccountSettings).WithOne(e => e.ActivitySettings).HasForeignKey<ActivitySettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.AccountSettings).WithOne(e => e.ActivitySettings).HasForeignKey<ActivitySettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
         }
     }
 }

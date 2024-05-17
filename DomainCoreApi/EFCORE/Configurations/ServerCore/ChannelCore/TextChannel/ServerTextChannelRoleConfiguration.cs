@@ -1,12 +1,6 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
 {
@@ -15,8 +9,8 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
         public void Configure(EntityTypeBuilder<ServerTextChannelRole> builder)
         {
             builder.HasKey(b => new { b.ChannelCategoryId, b.RoleId });
-            
-            builder.HasOne(b=>b.Channel).WithMany(b=>b.AllowedRoles).HasForeignKey(b=>b.ChannelCategoryId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(b => b.Channel).WithMany(b => b.AllowedRoles).HasForeignKey(b => b.ChannelCategoryId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(b => b.Role).WithMany(b => b.TextChannelRoles).HasForeignKey(b => b.ChannelCategoryId).OnDelete(DeleteBehavior.Restrict);
             builder.HasMany(b => b.Permissions).WithOne(b => b.ChannelRole).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Restrict);
         }

@@ -1,12 +1,6 @@
-﻿using CoreLib.Entities.Base;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.EchoCore.ReportCore.Bug;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.EchoCore.ReportCore.Bug;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Bug
 {

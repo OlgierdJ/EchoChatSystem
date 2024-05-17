@@ -1,7 +1,5 @@
-﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
-using CoreLib.DTO.EchoCore.MiscCore;
+﻿using CoreLib.DTO.EchoCore.MiscCore;
 using CoreLib.DTO.EchoCore.MiscCore.ModerationCore;
-using CoreLib.DTO.EchoCore.ServerCore;
 using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.Entities.Enums;
 

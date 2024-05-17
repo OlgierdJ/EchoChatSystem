@@ -1,9 +1,5 @@
-﻿
-using CoreLib.DTO.EchoCore.RequestCore;
-using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
-using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
-using CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Entities.Enums;
 
@@ -12,7 +8,7 @@ namespace DomainCoreApi.Handlers
     public class CreateUserHandler
     {
 
-        public async Task<(User,Account)> CreateHandler(RegisterRequestDTO input)
+        public async Task<(User, Account)> CreateHandler(RegisterUserModel input)
         {
 
             var user = await CreateUser(input.Email, input.DateOfBirth);
@@ -20,7 +16,7 @@ namespace DomainCoreApi.Handlers
             return (user, acc);
         }
 
-        public async Task<Account> CreateAccount(string Username,string? DisplayName)
+        public async Task<Account> CreateAccount(string Username, string? DisplayName)
         {
             Account account = new Account()
             {
@@ -44,7 +40,7 @@ namespace DomainCoreApi.Handlers
                         SaturationPercent = 255,
                         ApplySaturationToCustomColors = false,
                         AlwaysUnderlineLinks = true,
-                        SyncProfileThemes = true,
+                        SyncProfileTheme = true,
                         SyncContrastSettings = true,
                         RoleColorMode = RoleColorMode.ShowRoleColorsInNames,
                         SyncReducedMotionWithPC = true,
@@ -62,7 +58,7 @@ namespace DomainCoreApi.Handlers
                         InAppIcon = "",
                         DarkSideBar = true,
                         PixelChatFontScale = 255,
-                        PixelSpaceBetweenMessageGroupsScale = 255,
+                        PixelGroupSpaceScale = 255,
                     },
                     AdvancedSettings = new AdvancedSettings()
                     {
@@ -86,9 +82,9 @@ namespace DomainCoreApi.Handlers
                     NotificationSettings = new NotificationSettings()
                     {
                         FocusModeEnabled = false,
-                        EnableDesktopNotifications = true,
-                        EnableUnreadMessageBadge = true,
-                        EnableTaskbarFlashing = true,
+                        DesktopNotification = true,
+                        UnreadMessageBadge = true,
+                        TaskbarFlashing = true,
                     },
                     PrivacySettings = new PrivacySettings()
                     {
@@ -99,10 +95,11 @@ namespace DomainCoreApi.Handlers
                     SoundboardSettings = new SoundboardSettings()
                     {
                         SoundboardVolume = 100,
+                        Soundboard = 100,
                     },
                     StreamerModeSettings = new StreamerModeSettings()
                     {
-                        EnableStreamerMode = false,
+                        StreamerMode = false,
                         HidePersonalInformation = true,
                         HideInviteLinks = false,
                         DisableNotifications = false,
@@ -137,11 +134,11 @@ namespace DomainCoreApi.Handlers
             return account;
         }
 
-        public async Task<User> CreateUser(string Email,DateTime DateOfBirth)
+        public async Task<User> CreateUser(string Email, DateTime DateOfBirth)
         {
-           User user = new User()
-           {
-               
+            User user = new User()
+            {
+
                 Email = Email,
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = false,

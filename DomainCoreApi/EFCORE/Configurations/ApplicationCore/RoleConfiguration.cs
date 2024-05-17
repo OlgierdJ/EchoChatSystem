@@ -1,7 +1,7 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {

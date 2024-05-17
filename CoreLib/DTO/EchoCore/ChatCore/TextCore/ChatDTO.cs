@@ -1,5 +1,4 @@
 ﻿using CoreLib.DTO.EchoCore.MiscCore.ModerationCore;
-using CoreLib.DTO.EchoCore.ServerCore;
 using CoreLib.DTO.EchoCore.UserCore;
 
 namespace CoreLib.DTO.EchoCore.ChatCore.TextCore

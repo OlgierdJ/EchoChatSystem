@@ -10,7 +10,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.TextChannel
         {
             builder.HasKey(b => b.Id);
 
-            builder.Property(b=>b.Content).IsRequired();
+            builder.Property(b => b.Content).IsRequired();
 
             builder.Property(b => b.TimeSent).HasDefaultValueSql("getdate()").IsRequired();
 

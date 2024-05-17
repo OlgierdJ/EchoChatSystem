@@ -1,14 +1,6 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
-using CoreLib.Entities.EchoCore.ReportCore.Message;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ReportCore.CustomStatus
 {
@@ -20,8 +12,8 @@ namespace DomainCoreApi.EFCORE.Configurations.ReportCore.CustomStatus
                 .HasKey(b => b.Id);
             builder
                 .Property(b => b.CustomMessage);
-            builder.HasOne(e => e.Account).WithMany(e => e.ReportedCustomStatuses).HasForeignKey(e=>e.AccountId);
-            builder.HasOne(e => e.Report).WithOne(e => e.Subject).HasForeignKey<CustomStatusReport>(e=>e.SubjectId);
+            builder.HasOne(e => e.Account).WithMany(e => e.ReportedCustomStatuses).HasForeignKey(e => e.AccountId);
+            builder.HasOne(e => e.Report).WithOne(e => e.Subject).HasForeignKey<CustomStatusReport>(e => e.SubjectId);
             //builder.HasMany(b => b.Participants).WithMany(e => e.Friendships).UsingEntity<FriendshipParticipancy>(j =>
             //{
             //    j.HasOne(e => e.Friendship).WithMany().HasForeignKey(e => e.FriendshipId);

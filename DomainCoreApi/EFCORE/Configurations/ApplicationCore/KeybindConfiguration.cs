@@ -1,13 +1,6 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.EchoCore.ApplicationCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.EchoCore.ApplicationCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
@@ -15,7 +8,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
     {
         public void Configure(EntityTypeBuilder<Keybind> builder)
         {
-            builder.HasKey(b => new {b.KeybindSettingsId, b.ApplicationKeybindId});
+            builder.HasKey(b => new { b.KeybindSettingsId, b.ApplicationKeybindId });
 
             builder.Property(b => b.Action).IsRequired(false); // not mapped most of stuff
             builder.HasIndex(b => b.Action).IsUnique(); // not mapped most of stuff

@@ -1,6 +1,6 @@
 ﻿using CoreLib.Entities.EchoCore.FriendCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.FriendCore
 {
@@ -20,7 +20,7 @@ namespace DomainCoreApi.EFCORE.Configurations.FriendCore
                 .WithOne(b => b.SenderRequest)
                 .HasForeignKey<IncomingFriendRequest>(e => e.SenderRequestId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired(); 
+                .IsRequired();
         }
     }
 }

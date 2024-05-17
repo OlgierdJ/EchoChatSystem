@@ -1,5 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Interfaces.Bases;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.Services.Bases;

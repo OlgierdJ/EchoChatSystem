@@ -1,5 +1,4 @@
 ﻿using CoreLib;
-using CoreLib.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DomainCoreApi.Hubs

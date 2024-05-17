@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

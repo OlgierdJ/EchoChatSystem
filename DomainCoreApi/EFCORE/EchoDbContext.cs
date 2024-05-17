@@ -1,15 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
-using CoreLib.Entities.EchoCore.ServerCore.Integrations;
+﻿using CoreLib.Entities.EchoCore.ServerCore.Integrations;
 using DomainCoreApi.EFCORE.Configurations.AccountCore;
-using DomainCoreApi.EFCORE.Configurations.UserCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DomainCoreApi.EFCORE

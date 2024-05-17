@@ -12,14 +12,14 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
             builder.HasKey(b => b.Id);
 
             builder.Property(b => b.Name).HasMaxLength(100).IsRequired();
-            builder.Property(b=>b.Topic).IsRequired(false);
+            builder.Property(b => b.Topic).IsRequired(false);
             builder.Property(b => b.SlowMode).HasDefaultValue(0).IsRequired(false);
             builder.Property(b => b.IsAgeRestricted).IsRequired();
             builder.Property(b => b.IsPrivate).IsRequired();
 
             builder.HasOne(b => b.ServerSettings).WithMany().HasForeignKey(b => b.Id).OnDelete(DeleteBehavior.NoAction).IsRequired(false);
             builder.HasOne(b => b.Pinboard).WithOne(b => b.Owner).HasForeignKey<ServerTextChannelPinboard>(b => b.OwnerId).OnDelete(DeleteBehavior.NoAction).IsRequired(false);
-            builder.HasMany(b=>b.Webhooks).WithOne(b=>b.TextChannel).HasForeignKey(b=>b.TextChannelId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
+            builder.HasMany(b => b.Webhooks).WithOne(b => b.TextChannel).HasForeignKey(b => b.TextChannelId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
             builder.HasMany(b => b.Messages).WithOne(b => b.MessageHolder).HasForeignKey(b => b.MessageHolderId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
             builder.HasMany(b => b.MessageTrackers).WithOne(b => b.CoOwner).HasForeignKey(b => b.CoOwnerId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
             builder.HasMany(b => b.Invites).WithOne(b => b.Channel).HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);

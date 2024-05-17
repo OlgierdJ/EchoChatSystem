@@ -1,17 +1,9 @@
-﻿using CoreLib.DTO.EchoCore.RequestCore;
-using CoreLib.Entities.EchoCore.UserCore;
-using CoreLib.Handlers;
+﻿using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.Controllers.Bases;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace DomainCoreApi.Controllers
 {
@@ -28,7 +20,7 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUserAsync(RegisterRequestDTO input)
+        public async Task<IActionResult> CreateUserAsync(RegisterUserModel input)
         {
             try
             {
@@ -48,12 +40,12 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginRequestDTO login)
+        public async Task<IActionResult> Login(UserLoginModel login)
         {
             try
             {
 
-                var result = await _userService.LoginUserAsync(login.Email,login.Password);
+                var result = await _userService.LoginUserAsync(login);
                 if (result == null)
                 {
                     return Problem("Something went wrong. Contact an Admin / Server representative");
@@ -70,11 +62,11 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPut("UpdatePassword")]
-        public async Task<IActionResult> UpdatePasswordAsync(string u)
+        public async Task<IActionResult> UpdatePasswordAsync(UpdatePasswordModel u)
         {
             try
             {
-                var result = await _userService.UpdatePassword(1,u);
+                var result = await _userService.UpdatePassword(u);
                 if (!result)
                 {
                     return Problem("Something went wrong. Contact an Admin / Server representative");

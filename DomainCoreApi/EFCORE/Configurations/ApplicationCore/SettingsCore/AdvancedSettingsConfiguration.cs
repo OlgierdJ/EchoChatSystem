@@ -1,13 +1,6 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
 {
@@ -18,8 +11,8 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
             builder.HasKey(b => b.Id);
 
             //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
-            
-            builder.Property(b=>b.DeveloperMode).IsRequired();
+
+            builder.Property(b => b.DeveloperMode).IsRequired();
             builder.Property(b => b.UseHardwareAccelerationToMakeEchoSmoother).IsRequired();
             builder.Property(b => b.AutoNavigateServerHome).IsRequired();
 

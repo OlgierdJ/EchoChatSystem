@@ -1,14 +1,6 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.Enums;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
 {
@@ -19,7 +11,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
             builder.HasKey(b => b.Id);
 
             builder.Property(b => b.SaturationPercent).IsRequired().HasMaxLength(100); // not mapped most of stuff
-            builder.Property(b=> b.ApplySaturationToCustomColors).IsRequired();
+            builder.Property(b => b.ApplySaturationToCustomColors).IsRequired();
             builder.Property(b => b.AlwaysUnderlineLinks).IsRequired();
             builder.Property(b => b.RoleColorMode).HasConversion<int>().HasDefaultValue(0);
 

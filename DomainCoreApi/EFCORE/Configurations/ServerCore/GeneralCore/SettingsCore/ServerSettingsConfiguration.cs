@@ -1,39 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.Base;
+﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
 using CoreLib.Entities.EchoCore.ServerCore.Integrations;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.SettingsCore
 {
-    public class ServerSettingsConfiguration : IEntityTypeConfiguration<ServerSettings>
+    public class ServerSettingsConfiguration : BaseEntity<ulong>
     {
-        public void Configure(EntityTypeBuilder<ServerSettings> builder)
-        {
-            builder.Property(b=>b.SendRandomWelcomeMessageWhenSomeoneJoins).IsRequired();
-            builder.Property(b => b.PromptMembersToReplyWithASticker).IsRequired();
-            builder.Property(b => b.SendHelpfulTipsForServerSetup).IsRequired();
-            builder.Property(b => b.DefaultNotificationSettingsMode).HasConversion<int>().IsRequired();
-            builder.Property(b => b.ServerImageUrl).IsRequired();
-            builder.Property(b => b.ServerInviteBackgroundUrl).IsRequired();
+        //pause invites serverwide, pause dms serverwide
+        //General settings
+        public uint RegionId { get; set; }
+        public ulong? InactiveChannelId { get; set; } //only voice channel
+        public ulong? SystemMessagesChannelId { get; set; } //only text channel
+        public bool SendRandomWelcomeMessageWhenSomeoneJoins { get; set; }
+        public bool PromptMembersToReplyWithASticker { get; set; }
+        public bool SendHelpfulTipsForServerSetup { get; set; }
+        public DefaultNotificationSettingsEnum DefaultNotificationSettingsMode { get; set; }
+        public string ServerImageUrl { get; set; }
+        public string ServerInviteBackgroundUrl { get; set; }
+        //Safety Settings
+        public bool ShowMembersInChannelList { get; set; }
+        public VerificationLevel VerificationLevelMode { get; set; }
+        public bool Require2FAForModeratorActions { get; set; }
+        public ExplicitImageFilter ExplicitImageFilterMode { get; set; }
 
-            builder.Property(b => b.ShowMembersInChannelList).IsRequired();
-            builder.Property(b => b.VerificationLevelMode).HasConversion<int>().IsRequired();
-            builder.Property(b => b.Require2FAForModeratorActions).IsRequired();
-            builder.Property(b => b.ExplicitImageFilterMode).HasConversion<int>().IsRequired();
+        public ServerConfiguration Server { get; set; } //mapped through id.
+        public ServerVoiceChannel? InactiveChannel { get; set; }
+        public ServerTextChannel? SystemMessagesChannel { get; set; }
+        public ServerRegionConfiguration Region { get; set; }
 
-            builder.HasOne(b => b.Server).WithOne(b => b.Settings).HasForeignKey<ServerSettings>(b=>b.Id).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(b => b.InactiveChannel).WithOne(b => b.ServerSettings).HasForeignKey<ServerSettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
-            builder.HasOne(b => b.SystemMessagesChannel).WithOne(b => b.ServerSettings).HasForeignKey<ServerSettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
-            builder.HasOne(b => b.Region).WithMany(b => b.ServerSettings).HasForeignKey(b => b.Id).OnDelete(DeleteBehavior.Cascade);
-        }
+
+        public ICollection<ServerBotIntegration>? Integrations { get; set; } //maybe put this into settings
+
+    }
+    public enum DefaultNotificationSettingsEnum
+    {
+        AllMessages,
+        OnlyAtMentions
+    }
+    public enum VerificationLevel
+    {
+        None,
+        Low,
+        Medium,
+        High,
+        Highest
+    }
+    public enum ExplicitImageFilter
+    {
+        DoNotFilter,
+        FilterFromAll,
+        FilterFromMembersWithoutRoles,
     }
 }

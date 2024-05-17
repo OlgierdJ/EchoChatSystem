@@ -1,9 +1,6 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore;
-using DomainRTCApi.Interfaces;
+﻿using DomainRTCApi.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using System.Net.Http;
-using System.Threading.Channels;
 
 namespace DomainRTCApi.Hubs
 {
@@ -89,8 +86,8 @@ namespace DomainRTCApi.Hubs
         private async Task JoinGroup(string connectionId, string clientHandle, string joinedGroupName) //joinedGroupName should be chatId or serverId, channelId //done?
         {
             //join group function
-              //var client = await _httpClient.GetFromJsonAsync<ServerProfile>("ServerProfile");
-           
+            //var client = await _httpClient.GetFromJsonAsync<ServerProfile>("ServerProfile");
+
             //check if sender is already part of group and if so then remove them from the group before continuing
             //add the sender to the group
             //proc joingroup event on all participants in group //(maybe exclude specific participants based on settings to avoid wasting bandwidth)
@@ -115,11 +112,11 @@ namespace DomainRTCApi.Hubs
             await Clients.Group(groupName).ParticipantLeftGroup(groupName, clientHandle);
             await Groups.RemoveFromGroupAsync(connectionId, groupName);
         }
-   
 
 
-       
-        public async Task InvokeJoinGroup(string groupName) 
+
+
+        public async Task InvokeJoinGroup(string groupName)
         {
 
             //groupnames should be defining as in "{serverId}/{channelId}" this makes it easy for the server to
@@ -141,7 +138,7 @@ namespace DomainRTCApi.Hubs
         {
             await LeaveGroup(Context.ConnectionId, Context.UserIdentifier, groupName);
         }
-        
+
         public async Task InvokeMoveParticipant(string userIdentifier, string groupName)
         {
             //move participant function
@@ -178,7 +175,7 @@ namespace DomainRTCApi.Hubs
             //Clients.
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
-        
+
         public async Task InvokeStreamToAll(IAsyncEnumerable<byte[]> stream)
         {
             await foreach (var item in stream)
@@ -195,6 +192,6 @@ namespace DomainRTCApi.Hubs
                 await Clients.Group(groupName).ReceiveSoundStream(item);
             }
         }
-        
+
     }
 }

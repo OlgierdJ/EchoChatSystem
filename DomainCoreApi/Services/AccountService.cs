@@ -5,7 +5,7 @@ using DomainCoreApi.Services.Bases;
 
 namespace DomainCoreApi.Services
 {
-    public class AccountService : BaseEntityService<Account, ulong> , IAccountService
+    public class AccountService : BaseEntityService<Account, ulong>, IAccountService
     {
         public AccountService(IAccountRepository repository) : base(repository)
         {

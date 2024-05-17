@@ -13,12 +13,12 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.ManagementC
             builder.Property(b => b.Topic).IsRequired();
             builder.Property(b => b.Description).IsRequired(false);
             builder.Property(b => b.ImageFileUrl).IsRequired(false);
-            builder.Property(b=>b.EventFrequency).HasConversion<int>().IsRequired();
+            builder.Property(b => b.EventFrequency).HasConversion<int>().IsRequired();
             builder.Property(b => b.StartTime).HasDefaultValueSql("getdate()").IsRequired();
             builder.Property(b => b.EndTime).IsRequired();
-            builder.Property(b=>b.Location).IsRequired(false);
+            builder.Property(b => b.Location).IsRequired(false);
 
-            builder.HasOne(b=>b.Server).WithMany(b=>b.Events).HasForeignKey(b=>b.ServerId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Server).WithMany(b => b.Events).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(b => b.Creator).WithMany(b => b.ServerEvents).HasForeignKey(b => b.CreatorId).OnDelete(DeleteBehavior.NoAction);//tænker NoAction da vi ikke sletter account
         }
     }

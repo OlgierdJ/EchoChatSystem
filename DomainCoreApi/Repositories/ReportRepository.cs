@@ -1,8 +1,8 @@
-﻿using CoreLib.Interfaces.Repositorys;
-using CoreLib.Entities.EchoCore.ReportCore.Profile;
+﻿using CoreLib.Entities.EchoCore.ReportCore.Profile;
+using CoreLib.Interfaces.Repositorys;
 using CoreLib.Repositories.Bases;
-using System.Linq.Expressions;
 using DomainCoreApi.EFCORE;
+using System.Linq.Expressions;
 
 namespace DomainCoreApi.Repositories
 {

@@ -1,5 +1,4 @@
 ﻿using CoreLib.DTO.EchoCore.MiscCore;
-using CoreLib.Entities.Base;
 
 namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
 {

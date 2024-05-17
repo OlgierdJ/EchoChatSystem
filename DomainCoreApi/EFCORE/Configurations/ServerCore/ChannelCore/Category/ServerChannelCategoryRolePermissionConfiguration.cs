@@ -1,7 +1,4 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
-using CoreLib.Entities.Enums;
+﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -27,7 +24,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.Category
 
             builder.Property(b => b.State);
 
-            builder.HasOne(b => b.ChannelCategoryRole).WithMany(b => b.Permissions).HasForeignKey(b => new {b.ChannelCategoryId,b.RoleId}).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(b => b.ChannelCategoryRole).WithMany(b => b.Permissions).HasForeignKey(b => new { b.ChannelCategoryId, b.RoleId }).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(b => b.Role).WithMany(b => b.ChannelCategoryRolePermissions).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.NoAction);
             // maybe a one to one
             builder.HasOne(b => b.ChannelCategory).WithMany().HasForeignKey(b => b.ChannelCategoryId).OnDelete(DeleteBehavior.NoAction);

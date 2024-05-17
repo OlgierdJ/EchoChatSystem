@@ -1,8 +1,6 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.EchoCore.ReportCore.Feedback;
 using Microsoft.EntityFrameworkCore;
-using CoreLib.Entities.EchoCore.ReportCore.Feedback;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Feedback
 {

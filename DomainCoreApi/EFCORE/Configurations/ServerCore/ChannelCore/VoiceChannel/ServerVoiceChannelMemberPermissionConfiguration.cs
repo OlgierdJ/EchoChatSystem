@@ -1,6 +1,4 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

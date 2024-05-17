@@ -7,13 +7,11 @@ using DomainCoreApi.Repositories;
 using DomainCoreApi.Services;
 using DomainCoreApi.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -51,7 +49,7 @@ builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwa
 //Add Repository to the container.
 builder.Services.AddTransient(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));
-builder.Services.AddTransient(typeof(ISecurityCredentialsRepository),typeof(SecurityCredentialsRepository));
+builder.Services.AddTransient(typeof(ISecurityCredentialsRepository), typeof(SecurityCredentialsRepository));
 //Add services to the container.
 builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
 builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
@@ -65,7 +63,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", builder => {
+    options.AddPolicy("CorsPolicy", builder =>
+    {
         builder.AllowAnyOrigin()
         .AllowAnyHeader()
         .AllowAnyMethod()

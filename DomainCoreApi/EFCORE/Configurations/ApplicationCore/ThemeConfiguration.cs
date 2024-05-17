@@ -1,13 +1,6 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.EchoCore.ApplicationCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.EchoCore.ApplicationCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
@@ -20,8 +13,8 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
             //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
 
             builder.HasMany(b => b.AppearanceSettings).WithOne(e => e.Theme).HasForeignKey(b => b.ThemeId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasData(new Theme {Id=1, Name="Dark" });
-            builder.HasData(new Theme {Id=2, Name = "Light" });
+            builder.HasData(new Theme { Id = 1, Name = "Dark" });
+            builder.HasData(new Theme { Id = 2, Name = "Light" });
         }
     }
 }

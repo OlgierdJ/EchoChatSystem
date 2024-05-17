@@ -16,8 +16,8 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             //builder.Property(b=>b.AuthorizeCodeChallenge).HasMaxLength(256).IsRequired();
             //builder.Property(b=>b.AuthorizeCodeChallenge).HasMaxLength(256).IsRequired();
             //builder.Property(b=>b.AuthorizeCodeChallenge).HasMaxLength(256).IsRequired();
-            builder.HasOne(b=>b.Connection).WithMany(b=>b.AccountConnections).HasForeignKey(b=>b.ConnectionId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasOne(b=>b.Account).WithMany(b=>b.Connections).HasForeignKey(b=>b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Connection).WithMany(b => b.AccountConnections).HasForeignKey(b => b.ConnectionId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Account).WithMany(b => b.Connections).HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired();
         }
     }
 }

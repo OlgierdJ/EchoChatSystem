@@ -1,7 +1,4 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,9 +17,9 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.Category
 
         public void Configure(EntityTypeBuilder<ServerChannelCategoryMemberSettings> builder)
         {
-            builder.HasKey(b => new {b.ProfileId,b.ChannelCategoryId});
+            builder.HasKey(b => new { b.ProfileId, b.ChannelCategoryId });
 
-            builder.HasMany(b=>b.Permissions).WithOne(b=>b.MemberSettings).HasForeignKey(b => new { b.ChannelCategoryId, b.ProfileId }).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(b => b.Permissions).WithOne(b => b.MemberSettings).HasForeignKey(b => new { b.ChannelCategoryId, b.ProfileId }).OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(b => b.ChannelCategory).WithMany(b => b.MemberSettings).HasForeignKey(b => b.ChannelCategoryId).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(b => b.Profile).WithMany(b => b.CategoryMemberSettings).HasForeignKey(b => b.ProfileId).OnDelete(DeleteBehavior.NoAction);

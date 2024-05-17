@@ -1,25 +1,13 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.RoleCore
+﻿namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.RoleCore
 {
-    public class ServerRolePermissionConfiguration : IEntityTypeConfiguration<ServerRolePermission>
+    public class ServerRolePermissionConfiguration
+    //used for mapping global permissions to a role.
     {
-        public void Configure(EntityTypeBuilder<ServerRolePermission> builder)
-        {
-            builder.HasKey(b => new { b.RoleId, b.PermissionId });
-
-            builder.Property(b => b.State).HasDefaultValue(null).IsRequired(false);
-
-            builder.HasOne(b=>b.Role).WithMany(b=>b.Permissions).HasForeignKey(b=>b.RoleId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(b => b.Permission).WithMany(b => b.RolePermissions).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Cascade);
-        }
+        //pk is combination of role and permission
+        public ulong RoleId { get; set; }
+        public ulong PermissionId { get; set; }
+        public bool? State { get; set; } //true = enabled, null = default, false = disabled
+        public ServerRoleConfiguration Role { get; set; } //Cascade
+        public ServerPermissionConfiguration Permission { get; set; } //cascade
     }
 }

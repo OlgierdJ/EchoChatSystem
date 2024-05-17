@@ -1,23 +1,20 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.Base;
+using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.SettingsCore
 {
-    public class ServerWebhookConfiguration : IEntityTypeConfiguration<ServerWebhook>
+    public class ServerWebhookConfiguration : BaseEntity<ulong>
     {
-        public void Configure(EntityTypeBuilder<ServerWebhook> builder)
-        {
-            builder.HasKey(b => b.Id);
-
-            builder.Property(b => b.ImageUrl).IsRequired();
-            builder.Property(b => b.Name).IsRequired();
-            builder.Property(b => b.WebhookEndpointURL).IsRequired();
-
-            builder.HasOne(b => b.Server).WithMany().HasForeignKey(b=>b.ServerId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(b => b.TextChannel).WithMany(b => b.Webhooks).HasForeignKey(b=>b.TextChannelId).OnDelete(DeleteBehavior.Restrict);
-        }
+        //where to find inspiration of implementation
+        //https://discord.com/developers/docs/resources/webhook
+        public ulong ServerId { get; set; }
+        public ulong TextChannelId { get; set; }
+        public string ImageUrl { get; set; }
+        public string Name { get; set; }
+        public string WebhookEndpointURL { get; set; }
+        //https://discord.com/api/webhooks/1214486375198363708/bO7ioVXfzPFnxfI2Gitcy9wLwLU7oD_5p5BjljQeVX_aTALnhtHQItHAtXCQtNqH4wDg
+        //https://discord.com/api/webhooks/1214487431173382194/thdqRsUDC9Z_dgIGG76JvLaCgY6ne0RAQkig6vxBnwViBdjZgN5s4CSiHDtdxWiStBfQ
+        public ServerConfiguration Server { get; set; }
+        public ServerTextChannel TextChannel { get; set; }
     }
 }

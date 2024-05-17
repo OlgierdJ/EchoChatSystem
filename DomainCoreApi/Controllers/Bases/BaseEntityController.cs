@@ -1,9 +1,8 @@
-﻿using CoreLib.Interfaces.Bases;
+﻿using CoreLib.Entities.Enums;
 using CoreLib.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using CoreLib.Entities.Enums;
-using Microsoft.AspNetCore.SignalR;
+using CoreLib.Interfaces.Bases;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DomainCoreApi.Controllers.Bases
 {

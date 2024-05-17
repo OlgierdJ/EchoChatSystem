@@ -1,12 +1,6 @@
-﻿using CoreLib.Entities.Base;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.EchoCore.ChatCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.Entities.EchoCore.ChatCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ChatCore
 {
@@ -19,8 +13,8 @@ namespace DomainCoreApi.EFCORE.Configurations.ChatCore
             builder
                 .Property(b => b.FileURL)
                 .IsRequired();
-            builder.HasOne(b => b.Message).WithMany(e=>e.Attachments).HasForeignKey(b => b.MessageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            
+            builder.HasOne(b => b.Message).WithMany(e => e.Attachments).HasForeignKey(b => b.MessageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+
         }
     }
 }

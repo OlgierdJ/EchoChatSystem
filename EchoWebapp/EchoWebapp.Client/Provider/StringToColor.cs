@@ -23,7 +23,7 @@ namespace EchoWebapp.Client.Provider
                 default:
                     return Color.Default;
             }
-            
+
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using CoreLib.Interfaces;
-using System.Linq.Expressions;
 using CoreLib.Interfaces.Bases;
 using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CoreLib.Repositories.Bases
 {

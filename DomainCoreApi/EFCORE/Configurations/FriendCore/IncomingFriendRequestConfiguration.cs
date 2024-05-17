@@ -1,7 +1,6 @@
-﻿using CoreLib.Entities.EchoCore.ChatCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using CoreLib.Entities.EchoCore.FriendCore;
 using Microsoft.EntityFrameworkCore;
-using CoreLib.Entities.EchoCore.FriendCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.FriendCore
 {
@@ -19,7 +18,7 @@ namespace DomainCoreApi.EFCORE.Configurations.FriendCore
                 .IsRequired();
             builder.HasOne(b => b.SenderRequest)
                 .WithOne(b => b.ReceiverRequest)
-                .HasForeignKey<IncomingFriendRequest>(e=>e.SenderRequestId)
+                .HasForeignKey<IncomingFriendRequest>(e => e.SenderRequestId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
         }

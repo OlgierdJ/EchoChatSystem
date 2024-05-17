@@ -1,8 +1,6 @@
 ﻿using CoreLib.Helpers;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using System.Security.Cryptography;
-using System.Text.Json;
 
 namespace DomainCoreApi.EFCORE.ValueGenerators
 {

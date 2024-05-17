@@ -1,5 +1,4 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
+﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

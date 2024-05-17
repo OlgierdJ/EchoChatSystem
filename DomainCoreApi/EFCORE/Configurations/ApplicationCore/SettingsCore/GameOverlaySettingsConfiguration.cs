@@ -10,7 +10,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.Settings
         {
             builder.HasKey(b => b.Id);
 
-            builder.Property(b=>b.EnableGameOverlay).IsRequired();
+            builder.Property(b => b.EnableGameOverlay).IsRequired();
             builder.Property(b => b.EnableGameOverlay).HasDefaultValue("Shift + L").IsRequired();
             builder.Property(b => b.AvatarSizeMode).HasConversion<int>().IsRequired();
             builder.Property(b => b.DisplayNamesMode).HasConversion<int>().IsRequired();
@@ -18,7 +18,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.Settings
             builder.Property(b => b.OverlayNotificationsPlacement).HasConversion<int>().IsRequired();
             builder.Property(b => b.ShowTextChatNotifications).IsRequired();
 
-            builder.HasOne(b => b.AccountSettings).WithOne().HasForeignKey<GameOverlaySettings>(b=>b.Id);
+            builder.HasOne(b => b.AccountSettings).WithOne().HasForeignKey<GameOverlaySettings>(b => b.Id);
         }
     }
 }

@@ -1,8 +1,6 @@
 using DomainRTCApi;
 using DomainRTCApi.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 

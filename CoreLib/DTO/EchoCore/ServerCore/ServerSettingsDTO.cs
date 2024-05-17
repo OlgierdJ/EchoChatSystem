@@ -1,11 +1,7 @@
 ﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
 using CoreLib.DTO.EchoCore.ChatCore.VoiceCore;
 using CoreLib.DTO.EchoCore.MiscCore;
-using CoreLib.Entities.EchoCore.ChatCore;
-using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
-using CoreLib.Entities.EchoCore.ServerCore.Integrations;
 using CoreLib.Entities.Enums;
 
 namespace CoreLib.DTO.EchoCore.ServerCore

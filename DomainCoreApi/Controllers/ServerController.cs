@@ -1,5 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
-using CoreLib.Interfaces;
+﻿using CoreLib.Interfaces;
 using CoreLib.Interfaces.Bases;
 using DomainCoreApi.Controllers.Bases;
 using Microsoft.AspNetCore.Mvc;

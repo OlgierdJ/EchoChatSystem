@@ -3,7 +3,6 @@ using CoreLib.DTO.EchoCore.ChatCore.TextCore;
 using CoreLib.DTO.EchoCore.ChatCore.VoiceCore;
 using CoreLib.DTO.EchoCore.MiscCore.ModerationCore;
 using CoreLib.DTO.EchoCore.UserCore;
-using CoreLib.Entities.EchoCore.AccountCore;
 
 namespace CoreLib.DTO.EchoCore.ServerCore
 {
