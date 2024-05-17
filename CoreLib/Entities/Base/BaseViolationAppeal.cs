@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoreLib.Entities.Base
+﻿namespace CoreLib.Entities.Base
 {
     public abstract class BaseViolationAppeal<TId, TViolation, TViolationId, TViolationAppealReview> : BaseEntity<TId>
-        //no need to add appealer cause appealer will always be the one who appeals
+    //no need to add appealer cause appealer will always be the one who appeals
     {
         public TViolationId ViolationId { get; set; }
         public TViolation Violation { get; set; } //original violation which has been appealed by the subject

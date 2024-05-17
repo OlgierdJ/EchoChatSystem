@@ -1,5 +1,4 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
+﻿using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
@@ -9,7 +8,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
         public byte ApplicationKeybindId { get; set; }
         public string? Action { get; set; } //example: ALT + i
 
-        public KeybindSettings  KeybindSettings { get; set; }
+        public KeybindSettings KeybindSettings { get; set; }
         public ApplicationKeybind ApplicationKeybind { get; set; }
     }
 }

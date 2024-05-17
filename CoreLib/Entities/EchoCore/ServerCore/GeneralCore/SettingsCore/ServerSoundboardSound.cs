@@ -12,7 +12,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore
         public string SoundFileUrl { get; set; }
 
         public ServerEmote? AssociatedEmote { get; set; }
-        public Server  Server { get; set; }
+        public Server Server { get; set; }
         public Account Uploader { get; set; }
     }
 }

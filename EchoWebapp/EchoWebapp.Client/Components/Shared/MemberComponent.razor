@@ -1,4 +1,5 @@
-﻿@*
+﻿@using CoreLib.Entities.EchoCore.AccountCore
+@*
     membercomponent layout for when it exists within the scrollable list in the memberlistcomponent.
 
     This component should display members displayname, image, and role color.
@@ -7,8 +8,20 @@
 
     Hovering and right-clicking the member allows the user to display the user tooltip of the member.
 *@
-<h3>MemberComponent</h3>
+@if(Account != null)
+{
+    <MudPaper Width="20vw" Square Style="background: var(--mud-palette-dark);">
+        <h2>@Account.Profile.DisplayName</h2>
+        <h4>@Account.Name.ToLower()</h4>
+        <MudDivider />
+        Echo Member since
+        <h2>@Account.TimeCreated</h2>
+        Note?
+    </MudPaper>
+}
 
 @code {
 
+    [Parameter]
+    public Account Account { get; set; }
 }

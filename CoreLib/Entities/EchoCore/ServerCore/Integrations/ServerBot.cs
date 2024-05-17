@@ -1,20 +1,14 @@
-﻿using CoreLib.DTO.EchoCore.AccountCore;
-using CoreLib.Entities.Base;
+﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
 {
     public class ServerBot : BaseEntity<ulong>
     {
         public ulong BotActorAccountId { get; set; } //account that is used by the bot for standard echo interactions
-        public ulong? SupportServerId { get; set; } 
+        public ulong? SupportServerId { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public DateTime? TimeAdded { get; set; }

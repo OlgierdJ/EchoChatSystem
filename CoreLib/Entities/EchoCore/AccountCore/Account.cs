@@ -28,7 +28,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public AccountProfile Profile { get; set; } //should be created on account creation
 
         //private settings and information about this account only used by the user and the application / api
-        public ICollection<AccountConnection>?  Connections { get; set; }
+        public ICollection<AccountConnection>? Connections { get; set; }
         public AccountSettings Settings { get; set; } //should be created on account creation
 
         //Interactivity stuff - also private settings and information about this account only used by the user and the application / api
@@ -50,8 +50,8 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<ServerTextChannelAccountMessageTracker>? TextChannelMessageTrackers { get; set; }
 
         //report stuff - also private settings and information about this account only used by the user and the application / api
-        public ICollection<ReportedCustomStatus>?  ReportedCustomStatuses { get; set; } //reported customstatuses that are owned by this account
-        public ICollection<CustomStatusReport>?  CustomStatusReports { get; set; } //reports sent by this account about other customstatuses
+        public ICollection<ReportedCustomStatus>? ReportedCustomStatuses { get; set; } //reported customstatuses that are owned by this account
+        public ICollection<CustomStatusReport>? CustomStatusReports { get; set; } //reports sent by this account about other customstatuses
         public ICollection<ReportedProfile>? ReportedProfiles { get; set; } //reported accountprofiles that are owned by this account
         public ICollection<ProfileReport>? ProfileReports { get; set; } //reports sent by this account about other accountprofiles
         public ICollection<ReportedMessage>? ReportedMessages { get; set; } //reported messages that are owned by this account
@@ -66,7 +66,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         //chat stuff - public to other members of the chat
         public ICollection<Chat>? Chats { get; set; } //mapped through chatparticipancy
         public ICollection<ChatInvite>? ChatInvites { get; set; } //done
-        public ICollection<ChatMessage>?  ChatMessages { get; set; }
+        public ICollection<ChatMessage>? ChatMessages { get; set; }
 
         //Server stuff - public to other members of the server
         public ICollection<ServerProfile>? Servers { get; set; } //mapped through serverprofile //NOTE COMMENTED OUT TEMPORARILY

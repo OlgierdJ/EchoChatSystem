@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoreLib.Entities.Base
+﻿namespace CoreLib.Entities.Base
 {
     public class BasePermission<TId, TRole> : BaseEntity<TId>
     {

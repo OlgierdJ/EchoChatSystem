@@ -1,0 +1,27 @@
+﻿@using CoreLib.Entities.EchoCore.AccountCore
+@*
+    Friend Request layout for when it exists within the scrollable list in the FriendRequestListComponent.
+
+    This component should hold reflect either an outgoing or incoming request.
+
+    If the request is outgoing the request should allow the user to revoke it.
+
+    If the request is incoming the request should allow the user to accept or decline it.
+*@
+<div class="d-flex flex-grow-1">
+    @if(Account != null)
+    {
+        @* <MudBadge Color="@stringToColor.ConvertStringToColor(Account.ActivityStatus.IconColor)"
+            Bordered Overlap="true" Origin="Origin.BottomRight">*@
+             <MudImage Src="@Account.Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+        @* </MudBadge> *@
+        <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)(Account.Name + "\r\n" + "Blocked").Replace(Environment.NewLine, "<br />"))</MudText>
+        <MudSpacer />
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.PersonRemove" />
+    }
+ </div>
+
+ @code {
+    [Parameter]
+    public Account? Account { get; set; }
+}

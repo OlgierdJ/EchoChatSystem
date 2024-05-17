@@ -3,7 +3,7 @@ using CoreLib.Interfaces.Bases;
 
 namespace CoreLib.Interfaces.Services
 {
-    public interface IServerService : IEntityService<Server,ulong>
+    public interface IServerService : IEntityService<Server, ulong>
     {
     }
 }

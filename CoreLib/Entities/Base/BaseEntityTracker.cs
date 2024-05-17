@@ -1,12 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ChatCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoreLib.Entities.Base
+﻿namespace CoreLib.Entities.Base
 {
     public abstract class BaseEntityTracker<TOwner, TOwnerId, TCoOwner, TCoOwnerId, TSubject, TSubjectId>  //: BaseEntity<TId>
     {

@@ -1,14 +1,9 @@
 ﻿using CoreLib.Entities.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
     public class AccountActivityStatus : BaseEntity<byte> //maybe review 
-        //accounts share the same few activity status (offline, idle, online, do not disturb, and invisible)
+                                                          //accounts share the same few activity status (offline, idle, online, do not disturb, and invisible)
     {
         public string Name { get; set; }
         public string? Description { get; set; }

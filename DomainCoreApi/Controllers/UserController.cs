@@ -1,8 +1,8 @@
-﻿using CoreLib.Entities.EchoCore.UserCore;
+﻿using CoreLib.DTO.EchoCore.RequestCore;
+using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Handlers;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
-using CoreLib.Models;
 using DomainCoreApi.Controllers.Bases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +27,7 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUserAsync(RegisterUserModel input)
+        public async Task<IActionResult> CreateUserAsync(RegisterRequestDTO input)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(UserLoginModel login)
+        public async Task<IActionResult> Login(LoginRequestDTO login)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace DomainCoreApi.Controllers
 
         [AllowAnonymous]
         [HttpPut("UpdatePassword")]
-        public async Task<IActionResult> UpdatePasswordAsync(UpdatePasswordModel u)
+        public async Task<IActionResult> UpdatePasswordAsync(UpdatePasswordRequestDTO u)
         {
             try
             {

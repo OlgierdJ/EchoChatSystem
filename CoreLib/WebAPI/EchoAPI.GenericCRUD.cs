@@ -1,5 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;

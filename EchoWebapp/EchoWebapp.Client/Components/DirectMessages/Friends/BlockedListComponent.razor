@@ -1,4 +1,5 @@
-﻿@*
+﻿@using CoreLib.Entities.EchoCore.AccountCore
+@*
     Layout for the blocked list that exists within the friendsviewcomponent.
 
     This component holds all blocked users and allows the user to search within the blocked users to filter them.
@@ -7,8 +8,48 @@
 
     The user can also unblock the blocked user by clicking the unblock button relative to the user.
 *@
-<h3>Component</h3>
-
+<MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
+     <MudTextField Placeholder=" Search" @bind-Value="searchTerm"
+                   @onkeyup="(()=>SearchChanged())" Immediate />
+ </MudPaper>
+ <MudText Class="px-5 py-2" Typo="Typo.button">Blocked - @accounts.Count()</MudText>
+    <MudList Clickable="true">
+        @foreach (var c in filtered.OrderBy(x => x.Name))
+    {
+        <MudDivider />
+        <MudListItem Dense="true" Class="mb-3 mt-2">
+            <BlockedUserComponent Account="c" />
+            <!-- Needs a blocked account component? or should should we reuse a component with added logic to check if they're blocked? -->
+        </MudListItem>
+    }
+</MudList>
 @code {
+    public string searchTerm = "";
+    public List<Account> filtered;
 
+    public BlockedListComponent()
+    {
+        filtered = accounts;
+    }
+    void SearchChanged()
+    {
+        Console.WriteLine(searchTerm);
+        filtered = accounts.Where(e => e.Name.ToLower().Contains(searchTerm.ToLower())).ToList();
+        StateHasChanged();
+    }
+
+    // DUMMY DATA
+    public List<Account> accounts = new(){
+        new Account() { Id = 112, Name = "TheDoe",
+        Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", },
+            ActivityStatus = new AccountActivityStatus(){ Name = "Online", Icon = Icons.Material.Filled.Circle, IconColor = Color.Success.ToString()
+        }, TimeCreated = DateTime.Now.AddDays(-17) },
+        new Account() { Id = 113, Name = "BobTheBuilder",
+            Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", },
+            ActivityStatus = new AccountActivityStatus(){ Name = "Online", Icon = Icons.Material.Filled.Circle, IconColor = Color.Success.ToString()
+        }, TimeCreated = DateTime.Now.AddDays(-16) },
+        new Account() { Id = 115, Name = "Billie Jean",  Profile = new AccountProfile(){ AvatarFileURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg", },
+            ActivityStatus = new AccountActivityStatus(){ Name = "Offline", Icon = Icons.Material.Filled.StopCircle, IconColor = "Dark"
+        } }
+    };
 }

@@ -39,6 +39,9 @@
 </MudPaper>
 @code {
 
+    [Parameter]
+    public EventCallback<bool> OnItemSelected { get; set; }
+
     // public List<Server> servers = new();
 
     // protected override async Task OnInitializedAsync()
@@ -59,13 +62,17 @@
 
     void OpenFriends()
     {
-        // nav.NavigateTo("/friends");
+        OnItemSelected.InvokeAsync(true);
+        StateHasChanged();
+
         // openFriends = true;
         // openMessages = false;
         // openChannels = false;
     }
     void OpenMessages()
     {
+        OnItemSelected.InvokeAsync(false);
+        StateHasChanged();
         // nav.NavigateTo("/messages");
         // openMessages = true;
         // openFriends = false;

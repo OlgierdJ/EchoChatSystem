@@ -1,6 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore;
-
-namespace CoreLib.Entities.Base
+﻿namespace CoreLib.Entities.Base
 {
     public abstract class BaseChannel<TId> : BaseEntity<TId>
     {

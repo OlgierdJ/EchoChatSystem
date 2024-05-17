@@ -13,6 +13,6 @@ namespace CoreLib.Entities.EchoCore.ServerCore.Integrations
         /// </summary>
         public bool Permitted { get; set; }
         public ServerBotIntegration ServerBotIntegration { get; set; }
-        public ServerTextChannel  TextChannel { get; set; }
+        public ServerTextChannel TextChannel { get; set; }
     }
 }

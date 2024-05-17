@@ -1,10 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.AccountCore;
-using CoreLib.Entities.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CoreLib.Entities.Enums;
 
 namespace CoreLib.DTO.EchoCore.UserCore
 {

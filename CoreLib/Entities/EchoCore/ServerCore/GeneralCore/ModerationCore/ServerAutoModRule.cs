@@ -1,11 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore
+﻿namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore
 {
     //not yet implemented
     //internal class ServerAutoModRule

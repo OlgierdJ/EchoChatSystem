@@ -1,11 +1,7 @@
-﻿using CoreLib.Entities.EchoCore.UserCore;
-using CoreLib.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using CoreLib.DTO.EchoCore.RequestCore;
+using CoreLib.Entities.EchoCore.UserCore;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace CoreLib.WebAPI
 {
@@ -33,7 +29,7 @@ namespace CoreLib.WebAPI
             return 0;
         }
 
-        public async Task<string> LoginAsync(UserLoginModel log)
+        public async Task<string> LoginAsync(LoginRequestDTO log)
         {
             //User user = new()
             //{
@@ -59,7 +55,7 @@ namespace CoreLib.WebAPI
             return null;
         }
 
-        public async Task<User> CreateUserAsync(RegisterUserModel user)
+        public async Task<User> CreateUserAsync(RegisterRequestDTO user)
         {
             //User user = new()
             //{
@@ -96,7 +92,7 @@ namespace CoreLib.WebAPI
             return new User();
         }
 
-        public async Task<bool> UpdatePasswordAsync(UpdatePasswordModel u)
+        public async Task<bool> UpdatePasswordAsync(UpdatePasswordRequestDTO u)
         {
 
             var load = JsonSerializer.Serialize(u, SerializerOptions);

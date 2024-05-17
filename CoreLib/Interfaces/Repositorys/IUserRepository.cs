@@ -4,7 +4,7 @@ using CoreLib.Interfaces.Bases;
 namespace CoreLib.Interfaces.Repositorys
 {
     public interface IUserRepository : IRepository<User>
-    { 
+    {
 
     }
 }
