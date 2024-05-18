@@ -16,7 +16,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
 
             builder.HasOne(b => b.Subject).WithMany(e => e.Violations).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasOne(b => b.Issuer).WithMany(e => e.IssuedViolations).HasForeignKey(b => b.IssuerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
-            builder.HasOne(b => b.Appeal).WithOne(e => e.Violation).HasForeignKey<AccountViolationAppeal>(e => e.ViolationId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Appeal).WithOne(e => e.Violation).HasForeignKey<AccountViolationAppeal>(e => e.ViolationId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
 
             builder.HasMany(b => b.ConsumedCustomStatusReports).WithOne(b => b.Violation).HasForeignKey(b => b.ViolationId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
             builder.HasMany(b => b.ConsumedMessageReports).WithOne(b => b.Violation).HasForeignKey(b => b.ViolationId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);

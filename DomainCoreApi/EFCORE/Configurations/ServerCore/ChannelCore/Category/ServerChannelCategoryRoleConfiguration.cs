@@ -24,8 +24,8 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.Category
         {
             builder.HasKey(b => new { b.ChannelCategoryId, b.RoleId });
 
-            builder.HasOne(b => b.Role).WithMany().HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(b => b.ChannelCategory).WithMany().HasForeignKey(b => b.ChannelCategoryId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(b => b.Role).WithMany().HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne(b => b.ChannelCategory).WithMany().HasForeignKey(b => b.ChannelCategoryId).OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

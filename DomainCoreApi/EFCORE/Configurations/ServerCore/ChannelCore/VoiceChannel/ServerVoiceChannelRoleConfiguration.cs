@@ -10,7 +10,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
         {
             builder.HasKey(b => new { b.ChannelCategoryId, b.RoleId });
 
-            builder.HasMany(b => b.Permissions).WithOne(b => b.ChannelRole).HasForeignKey(b => new { b.ChannelId, b.RoleId }).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(b => b.Permissions).WithOne(b => b.ChannelRole).HasForeignKey(b => new { b.ChannelId, b.RoleId }).OnDelete(DeleteBehavior.ClientCascade);
 
             builder.HasOne(b => b.Channel).WithMany(b => b.AllowedRoles).HasForeignKey(b => b.ChannelCategoryId).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(b => b.Role).WithMany(b => b.VoiceChannelRoles).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.NoAction);

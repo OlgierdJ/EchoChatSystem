@@ -15,7 +15,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.Property(b => b.TimeStarted).ValueGeneratedOnAdd().IsRequired();
             builder.Property(b => b.ExpirationTime).IsRequired(false);
             builder.Property(b => b.TimeStopped).IsRequired(false);
-            builder.HasOne(b => b.Account).WithMany(b => b.Sessions).HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(b => b.Account).WithMany(b => b.Sessions).HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

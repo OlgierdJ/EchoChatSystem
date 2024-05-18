@@ -1,20 +1,20 @@
 ﻿using CoreLib.Entities.EchoCore.ApplicationCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
-    public class SubscriptionTransactionGroupConfiguration : IEntityTypeConfiguration<ApplicationKeybind>
+    public class SubscriptionTransactionGroupConfiguration : IEntityTypeConfiguration<SubscriptionTransactionGroup>
     {
-        public void Configure(EntityTypeBuilder<ApplicationKeybind> builder)
+        public void Configure(EntityTypeBuilder<SubscriptionTransactionGroup> builder)
         {
             builder.HasKey(b => b.Id);
 
-            builder.Property(b => b.Name).IsRequired(); // not mapped most of stuff
-            builder.HasIndex(b => b.Name).IsUnique(); // not mapped most of stuff
-            builder.Property(b => b.Description).IsRequired(false); // not mapped most of stuff
+            builder.HasOne(b=>b.Currency).WithMany(b=>b.TransactionGroups).HasForeignKey(b=>b.CurrencyId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(b => b.Keybinds).WithOne(e => e.ApplicationKeybind).HasForeignKey(b => b.ApplicationKeybindId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasMany(b=>b.Transactions).WithOne(b=>b.TransactionGroup).HasForeignKey(b=>b.TransactionGroupId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(b => b.ActivePeriods).WithOne(b => b.TransactionGroup).HasForeignKey(b => b.TransactionGroupId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

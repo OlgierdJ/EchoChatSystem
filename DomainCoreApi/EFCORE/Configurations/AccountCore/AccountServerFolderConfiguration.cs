@@ -13,8 +13,8 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.Property(b => b.Importance).IsRequired(); //ordering
             builder.Property(b => b.Colour).HasMaxLength(32).IsRequired(false);
 
-            builder.HasOne(b => b.Account).WithMany(b => b.Folders).HasForeignKey(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired(); //owner
-            builder.HasMany(b => b.Servers).WithOne(b => b.Folder).HasForeignKey(b => b.FolderId).OnDelete(DeleteBehavior.Cascade).IsRequired(); //content
+            builder.HasOne(b => b.Account).WithMany(b => b.Folders).HasForeignKey(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired(); //owner
+            builder.HasMany(b => b.Servers).WithOne(b => b.Folder).HasForeignKey(b => new { b.FolderId,b.FolderName}).OnDelete(DeleteBehavior.Restrict).IsRequired(false); //content
         }
     }
 }

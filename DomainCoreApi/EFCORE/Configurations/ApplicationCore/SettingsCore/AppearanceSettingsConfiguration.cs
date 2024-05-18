@@ -20,7 +20,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
             builder.Property(b => b.ZoomLevel).IsRequired();
 
             builder.HasOne(b => b.Theme).WithMany(b => b.AppearanceSettings).HasForeignKey(b => b.ThemeId).IsRequired();
-            builder.HasOne(b => b.AccountSettings).WithOne(e => e.AppearanceSettings).HasForeignKey<AppearanceSettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.AccountSettings).WithOne(e => e.AppearanceSettings).HasForeignKey<AppearanceSettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 

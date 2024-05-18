@@ -14,12 +14,12 @@ namespace DomainCoreApi.EFCORE.Configurations.FriendCore
             builder.HasOne(b => b.Sender)
                 .WithMany(b => b.OutgoingFriendRequests)
                 .HasForeignKey(b => b.SenderId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
             builder.HasOne(b => b.ReceiverRequest)
                 .WithOne(b => b.SenderRequest)
                 .HasForeignKey<IncomingFriendRequest>(e => e.SenderRequestId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.ClientCascade)
                 .IsRequired();
         }
     }

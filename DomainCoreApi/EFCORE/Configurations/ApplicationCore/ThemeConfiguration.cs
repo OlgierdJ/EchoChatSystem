@@ -12,7 +12,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 
             //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
 
-            builder.HasMany(b => b.AppearanceSettings).WithOne(e => e.Theme).HasForeignKey(b => b.ThemeId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasMany(b => b.AppearanceSettings).WithOne(e => e.Theme).HasForeignKey(b => b.ThemeId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasData(new Theme { Id = 1, Name = "Dark" });
             builder.HasData(new Theme { Id = 2, Name = "Light" });
         }

@@ -48,7 +48,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
             builder.Property(b => b.ReceiveTipEmails).IsRequired();
             builder.Property(b => b.ReceiveRecommendationEmails).IsRequired();
 
-            builder.HasOne(b => b.AccountSettings).WithOne(e => e.NotificationSettings).HasForeignKey<NotificationSettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.AccountSettings).WithOne(e => e.NotificationSettings).HasForeignKey<NotificationSettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }

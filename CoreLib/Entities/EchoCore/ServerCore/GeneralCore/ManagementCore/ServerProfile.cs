@@ -11,7 +11,10 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore
     {
         public ulong AccountId { get; set; }
         public ulong ServerId { get; set; }
+
         public ulong? FolderId { get; set; }
+        public string? FolderName { get; set; } 
+
         public bool KickFromServerOnVoiceLeave { get; set; } //set if invited through voiceinvite with guestlink enabled
         public string Nickname { get; set; } //overrides account name when entity is displayed to the client
         public DateTime TimeJoined { get; set; }

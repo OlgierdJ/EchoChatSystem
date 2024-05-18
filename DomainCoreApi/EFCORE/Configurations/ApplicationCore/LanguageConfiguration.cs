@@ -12,7 +12,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 
             //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
 
-            builder.HasMany(b => b.AccountSettings).WithOne(e => e.Language).HasForeignKey(b => b.LanguageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasMany(b => b.AccountSettings).WithOne(e => e.Language).HasForeignKey(b => b.LanguageId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }

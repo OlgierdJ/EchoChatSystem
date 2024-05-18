@@ -15,6 +15,8 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore
 
         public ulong TransactionGroupId { get; set; } //allows for multiple seperate transactions to the same productinstance payment
         public uint CurrencyId { get; set; }
+        public uint TransactionTypeId { get; set; }
+        public ulong SubscriptionId { get; set; }
         /// <summary>
         /// Used for tracking the charged amount in case of audits
         /// </summary>
@@ -28,5 +30,6 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore
         public AcceptedCurrency Currency { get; set; } //currency of the charged amount
         public SubscriptionTransactionGroup TransactionGroup { get; set; } //instance which has been fully or partially paid for.
         public SubscriptionTransactionRefund? Refund { get; set; }
+        public Subscription Subscription { get; set; }
     }
 }

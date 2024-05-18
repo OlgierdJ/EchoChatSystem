@@ -8,7 +8,7 @@ namespace DomainCoreApi.EFCORE.Configurations.UserCore
     {
         public void Configure(EntityTypeBuilder<SecurityCredentials> builder)
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.Id); 
             builder.Property(x => x.PasswordHash).IsRequired();
             builder.Property(x => x.Salt).IsRequired();
             builder.HasOne(x => x.User).WithOne(x => x.SecurityCredentials).HasForeignKey<SecurityCredentials>(x => x.UserId);

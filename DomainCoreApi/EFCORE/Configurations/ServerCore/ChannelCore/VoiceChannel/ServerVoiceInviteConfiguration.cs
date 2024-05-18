@@ -18,7 +18,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.VoiceChanne
             builder.Property(b => b.InviteCode).IsRequired();
             builder.Property(b => b.ExpirationTime).IsRequired(false);
             builder.Property(b => b.TimesUsed).IsRequired();
-            builder.Property(b => b.TotalUses).IsRequired(false);
+            builder.Property(b => b.TotalUses).IsRequired();
             builder.Property(b => b.GuestInvite).IsRequired();
 
             builder.HasOne(b => b.Subject).WithMany().HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict);

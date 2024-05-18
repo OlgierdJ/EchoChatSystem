@@ -13,9 +13,9 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
             builder.Property(b => b.Action).IsRequired(false); // not mapped most of stuff
             builder.HasIndex(b => b.Action).IsUnique(); // not mapped most of stuff
 
-            builder.HasOne(b => b.ApplicationKeybind).WithMany(e => e.Keybinds).HasForeignKey(b => b.ApplicationKeybindId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.ApplicationKeybind).WithMany(e => e.Keybinds).HasForeignKey(b => b.ApplicationKeybindId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
 
-            builder.HasOne(e => e.KeybindSettings).WithMany(e => e.Keybinds).HasForeignKey(e => e.KeybindSettingsId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(e => e.KeybindSettings).WithMany(e => e.Keybinds).HasForeignKey(e => e.KeybindSettingsId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }

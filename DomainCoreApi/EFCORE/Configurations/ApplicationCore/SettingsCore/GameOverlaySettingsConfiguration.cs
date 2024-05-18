@@ -11,7 +11,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.Settings
             builder.HasKey(b => b.Id);
 
             builder.Property(b => b.EnableGameOverlay).IsRequired();
-            builder.Property(b => b.EnableGameOverlay).HasDefaultValue("Shift + L").IsRequired();
+            builder.Property(b => b.ToggleOverlayLockKeybind).HasDefaultValue("Shift + L").IsRequired();
             builder.Property(b => b.AvatarSizeMode).HasConversion<int>().IsRequired();
             builder.Property(b => b.DisplayNamesMode).HasConversion<int>().IsRequired();
             builder.Property(b => b.DisplayUsersMode).HasConversion<int>().IsRequired();

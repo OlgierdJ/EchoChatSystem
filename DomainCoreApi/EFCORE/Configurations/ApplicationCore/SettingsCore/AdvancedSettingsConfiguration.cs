@@ -16,7 +16,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
             builder.Property(b => b.UseHardwareAccelerationToMakeEchoSmoother).IsRequired();
             builder.Property(b => b.AutoNavigateServerHome).IsRequired();
 
-            builder.HasOne(b => b.AccountSettings).WithOne(e => e.AdvancedSettings).HasForeignKey<AdvancedSettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.AccountSettings).WithOne(e => e.AdvancedSettings).HasForeignKey<AdvancedSettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }

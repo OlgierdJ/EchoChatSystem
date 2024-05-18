@@ -1,20 +1,16 @@
 ﻿using CoreLib.Entities.EchoCore.ApplicationCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
-    public class SubscriptionPlanActivePeriodConfiguration : IEntityTypeConfiguration<ApplicationKeybind>
+    public class SubscriptionPlanActivePeriodConfiguration : IEntityTypeConfiguration<SubscriptionPlanActivePeriod>
     {
-        public void Configure(EntityTypeBuilder<ApplicationKeybind> builder)
+        public void Configure(EntityTypeBuilder<SubscriptionPlanActivePeriod> builder)
         {
             builder.HasKey(b => b.Id);
-
-            builder.Property(b => b.Name).IsRequired(); // not mapped most of stuff
-            builder.HasIndex(b => b.Name).IsUnique(); // not mapped most of stuff
-            builder.Property(b => b.Description).IsRequired(false); // not mapped most of stuff
-
-            builder.HasMany(b => b.Keybinds).WithOne(e => e.ApplicationKeybind).HasForeignKey(b => b.ApplicationKeybindId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b=>b.SubscriptionPlan).WithMany(b=>b.ActivePeriods).HasForeignKey(b=>b.SubscriptionPlanId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

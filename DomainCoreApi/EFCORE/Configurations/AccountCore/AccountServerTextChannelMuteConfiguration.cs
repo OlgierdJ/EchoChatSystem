@@ -4,16 +4,17 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.AccountCore
 {
-    public class AccountServerTextChannelMuteConfiguration : IEntityTypeConfiguration<AccountProfile>
+    public class AccountServerTextChannelMuteConfiguration : IEntityTypeConfiguration<AccountServerTextChannelMute>
     {
-        public void Configure(EntityTypeBuilder<AccountProfile> builder)
+        public void Configure(EntityTypeBuilder<AccountServerTextChannelMute> builder)
         {
-            builder.HasKey(b => b.Id);
-            builder.Property(b => b.DisplayName).HasMaxLength(256).IsRequired();
-            builder.Property(b => b.AvatarFileURL).HasMaxLength(256).IsRequired();
-            builder.Property(b => b.BannerColor).HasMaxLength(18).IsRequired();
-            builder.Property(b => b.About).HasMaxLength(256).IsRequired(false);
-            builder.HasOne(b => b.Account).WithOne(b => b.Profile).HasForeignKey<AccountProfile>(b => b.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasKey(b => new { b.SubjectId, b.MuterId });
+
+            builder.Property(b => b.TimeMuted).HasDefaultValueSql("getdate()");
+            builder.Property(b => b.ExpirationTime).IsRequired(false);
+
+            builder.HasOne(b => b.Subject).WithMany(b => b.Muters).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Muter).WithMany().HasForeignKey(b => b.MuterId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

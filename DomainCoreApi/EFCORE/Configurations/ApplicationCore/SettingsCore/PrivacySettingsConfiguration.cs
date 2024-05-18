@@ -17,7 +17,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
             builder.Property(b => b.DMFromServerChatroom).HasConversion<int>().IsRequired();
             builder.Property(b => b.DMSpamFilter).HasConversion<int>().IsRequired();
             builder.HasOne(b => b.Account).WithOne().HasForeignKey<PrivacySettings>(b => b.Id).IsRequired(false);
-            builder.HasOne(b => b.AccountSettings).WithOne(e => e.PrivacySettings).HasForeignKey<PrivacySettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.AccountSettings).WithOne(e => e.PrivacySettings).HasForeignKey<PrivacySettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }
