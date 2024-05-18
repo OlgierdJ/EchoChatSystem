@@ -15,34 +15,34 @@ namespace DomainCoreApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : BaseEntityController<User, ulong>
+    public class UserController : ControllerBase//: BaseEntityController<User, ulong>
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService service, IPushNotificationService notificationService) : base(service, notificationService)
+        public UserController(IUserService service, IPushNotificationService notificationService)// : base(service, notificationService)
         {
             _userService = service;
         }
 
-        [AllowAnonymous]
-        [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUserAsync(RegisterRequestDTO input)
-        {
-            try
-            {
-                var result = await _userService.CreateUserAsync(input);
-                if (result is null)
-                {
-                    return Problem("Something went wrong. Contact an Admin / Server representative");
-                }
-                return Ok("all looks good");
-            }
-            catch (Exception ex)
-            {
+        //[AllowAnonymous]
+        //[HttpPost("CreateUser")]
+        //public async Task<IActionResult> CreateUserAsync(RegisterRequestDTO input)
+        //{
+        //    try
+        //    {
+        //        var result = await _userService.CreateUserAsync(input);
+        //        if (result is null)
+        //        {
+        //            return Problem("Something went wrong. Contact an Admin / Server representative");
+        //        }
+        //        return Ok("all looks good");
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                return Problem(ex.Message); ;
-            }
-        }
+        //        return Problem(ex.Message); ;
+        //    }
+        //}
 
         [AllowAnonymous]
         [HttpPost("Login")]

@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="AutoMapper.Collection" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.Json" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Interfaces\Services\BasicCrud\" />
     <Folder Include="Temp\" />
   </ItemGroup>
 

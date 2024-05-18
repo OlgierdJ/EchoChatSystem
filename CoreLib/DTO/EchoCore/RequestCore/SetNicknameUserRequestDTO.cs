@@ -1,6 +1,6 @@
 ﻿namespace CoreLib.DTO.EchoCore.RequestCore
 {
-    public class NicknameUserRequestDTO //adds personal nickname on user
+    public class SetNicknameUserRequestDTO //adds personal nickname on user
     {
         //public ulong SenderId { get; set; } from jwt
         public ulong UserId { get; set; }

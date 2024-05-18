@@ -9,7 +9,7 @@ using DomainCoreApi.Services.Bases;
 
 namespace DomainCoreApi.Services
 {
-    public class UserService : BaseEntityService<User, ulong>, IUserService
+    public class UserService : BaseEntityService<User, ulong> //,IUserService
     {
 
         private readonly IPasswordHandler _pwdHandler;
