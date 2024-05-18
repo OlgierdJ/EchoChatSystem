@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
-    public class LanguageConfiguration : IEntityTypeConfiguration<Language>
+    public class LanguageConfiguration : IEntityTypeConfiguration<Language> //needs supported languages just start with ("dansk"), ("english"), ("deutsch")
     {
         public void Configure(EntityTypeBuilder<Language> builder)
         {

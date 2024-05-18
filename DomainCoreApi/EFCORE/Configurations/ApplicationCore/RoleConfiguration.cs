@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
 
-    public class RoleConfiguration : IEntityTypeConfiguration<Role>
+    public class RoleConfiguration : IEntityTypeConfiguration<Role> //needs different kinds of base app roles f.eks
+                                                                    //("User"), ("Admin"), ("Moderator"), (System_Owner), ("Tribunal et eller andet"), ("Premium_Sonar"), ("Premium_Sonar_Plus")
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {

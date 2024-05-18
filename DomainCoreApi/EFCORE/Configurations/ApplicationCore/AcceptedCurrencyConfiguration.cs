@@ -3,7 +3,7 @@ using CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore;
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class AcceptedCurrencyConfiguration : BaseEntity<uint>
+    public class AcceptedCurrencyConfiguration : BaseEntity<uint> //needs default currencies ("dkk"), ("eur"), ("usd")
     {
         public string Name { get; set; }
 

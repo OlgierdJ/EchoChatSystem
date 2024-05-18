@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
-    public class ApplicationKeybindConfiguration : IEntityTypeConfiguration<ApplicationKeybind>
+    public class ApplicationKeybindConfiguration : IEntityTypeConfiguration<ApplicationKeybind> //this need default values f.eks ("mute / unmute self", "mutes self if unmuted and unmutes self if muted")
     {
         public void Configure(EntityTypeBuilder<ApplicationKeybind> builder)
         {

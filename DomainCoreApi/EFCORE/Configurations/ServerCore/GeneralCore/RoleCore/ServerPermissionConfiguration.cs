@@ -7,7 +7,20 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.RoleCore
 {
-    public class ServerPermissionConfiguration : IEntityTypeConfiguration<ServerPermission>  //reused serverpermission lists all permissions that can be used on the server
+    public class ServerPermissionConfiguration : IEntityTypeConfiguration<ServerPermission>
+    //needs different types of permissions stolen straight from discord channel or server permissions such as:
+    /*
+     * ("Administrator", "Members with this permission will have every permission and will also bypass channel specific permissions or restrictions (for example, these members would get access to all private channels) **This is a dangerous permission to grant.")
+     * ("Manage Events", "Allows members to edit and cancel events.")
+     * ("Create Events", "Allows members to create events.")
+     * ("Set Voice Channel Status", "Allows members to create and edit voice channel status.")
+     * ("Move Members", "Allows members to disconnect or move other members between voice channels that the member with this permission has access to.")
+     * ("Deafen Members", "Allows members to deafen other members, which means they wont be able to speak or hear others.") //server deafen
+     * ("Mute Members", "Allows members to mute other members, which means they wont be able to speak.") //server mute
+     * ("Priority Speaker", "") //lowers others volume
+     * ("")
+     * etc
+     */
     {
         public void Configure(EntityTypeBuilder<ServerPermission> builder)
         {

@@ -3,7 +3,7 @@ using CoreLib.Entities.EchoCore.AccountCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore
 {
-    public class ServerEmote : BaseEntity<ulong>
+    public class ServerEmote : BaseEntity<ulong> //maybe make defaultappemote table aswell
     {
         public ulong UploaderId { get; set; }
         public ulong ServerId { get; set; }

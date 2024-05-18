@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
-    public class KeybindConfiguration : IEntityTypeConfiguration<Keybind>
+    public class KeybindConfiguration : IEntityTypeConfiguration<Keybind> //this doesnt need different defaultvalues but should have a bulk of values created upon accountcreation.
     {
         public void Configure(EntityTypeBuilder<Keybind> builder)
         {

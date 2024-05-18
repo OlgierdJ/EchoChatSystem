@@ -6,7 +6,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.SettingsCore
 {
-    public class ServerRegionConfiguration : IEntityTypeConfiguration<ServerRegion>
+    public class ServerRegionConfiguration : IEntityTypeConfiguration<ServerRegion> //needs different regions depending on the scope of the desired region aswell as corresponding regionserverurl.
+                                                                                    //(this is the url to the rtc server) f.eks
+                                                                                    //("Mr Worldwide", "Brazil-Flag", "https://echo.chat/rtc/brazil/rtchub")
+                                                                                    
     {
         public void Configure(EntityTypeBuilder<ServerRegion> builder)
         {
