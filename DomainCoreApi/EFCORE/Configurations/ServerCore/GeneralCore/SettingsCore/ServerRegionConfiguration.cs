@@ -1,18 +1,25 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.SettingsCore
 {
-    public class ServerRegionConfiguration : BaseEntity<uint>
+    public class ServerRegionConfiguration : IEntityTypeConfiguration<ServerRegion> //needs different regions depending on the scope of the desired region aswell as corresponding regionserverurl.
+                                                                                    //(this is the url to the rtc server) f.eks
+                                                                                    //("Mr Worldwide", "Brazil-Flag", "https://echo.chat/rtc/brazil/rtchub")
+                                                                                    
     {
-        //displayed name of the region
-        public string Name { get; set; }
-        //brazil flag.icon
-        public string Icon { get; set; }
+        public void Configure(EntityTypeBuilder<ServerRegion> builder)
+        {
+            builder.HasKey(b => b.Id);
+            builder.Property(b => b.Name).IsRequired();
+            builder.Property(b => b.Icon).IsRequired();
+            builder.Property(b => b.RegionServerURL).IsRequired();
 
-        //url of the hub server responsible for the region - maybe in the future specify reverse proxy api manager which could serve different apis based on health
-        public string RegionServerURL { get; set; }
-        public ICollection<ServerVoiceChannel>? VoiceChannels { get; set; } //voicechannels which has specified specific region of which to traffic voice through
-        public ICollection<ServerSettingsConfiguration>? ServerSettings { get; set; }  //server global setting of where to traffic notifications through
+            builder.HasMany(b => b.VoiceChannels).WithOne(b => b.Region).HasForeignKey(b => b.RegionId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(b => b.ServerSettings).WithOne(b => b.Region).HasForeignKey(b => b.RegionId).OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

@@ -9,7 +9,8 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
         //combine foreign key category and role.
         //pk is combination of category, role and permission
         public ulong ChannelCategoryId { get; set; } //where it affects
-        public ulong ProfileId { get; set; } //affected
+        public ulong AccountId { get; set; }
+        public ulong ServerId { get; set; }
         public ulong PermissionId { get; set; } //given permission
         public bool? State { get; set; } //state. (true = enabled, null = default, false = disabled)
         public ServerChannelCategoryMemberSettings MemberSettings { get; set; } //cascade

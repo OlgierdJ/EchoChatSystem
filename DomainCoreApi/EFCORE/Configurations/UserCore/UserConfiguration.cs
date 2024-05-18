@@ -15,7 +15,7 @@ namespace DomainCoreApi.EFCORE.Configurations.UserCore
             builder.Property(x => x.PhoneNumberConfirmed).IsRequired();
             builder.Property(x => x.PasswordSetDate).IsRequired();
             builder.Property(x => x.DateOfBirth).IsRequired();
-            builder.HasOne(x => x.Account).WithOne().HasForeignKey<Account>(x => x.UserId);
+            builder.HasOne(x => x.Account).WithOne(b=>b.User).HasForeignKey<Account>(x => x.UserId).OnDelete(DeleteBehavior.Restrict).IsRequired();
             builder.HasOne(x => x.SecurityCredentials).WithOne(x => x.User).HasForeignKey<SecurityCredentials>(x => x.UserId);
         }
     }

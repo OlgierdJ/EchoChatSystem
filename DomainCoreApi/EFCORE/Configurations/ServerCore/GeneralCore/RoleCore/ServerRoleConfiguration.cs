@@ -1,27 +1,34 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.RoleCore
 {
-    public class ServerRoleConfiguration : BaseRole<ulong, ServerProfileServerRoleConfiguration, ServerRolePermissionConfiguration>
+    public class ServerRoleConfiguration : IEntityTypeConfiguration<ServerRole>
     {
-        public int Importance { get; set; } //perhaps not needed?
-        public string Colour { get; set; } //perhaps not needed?
-        public string IconURL { get; set; } //perhaps not needed?
-        public bool DisplaySeperatelyFromOnlineMembers { get; set; } //perhaps not needed?
-        public bool AllowAnyoneToMention { get; set; } //perhaps not needed?
-        public bool IsAdmin { get; set; } //perhaps not needed?
+        public void Configure(EntityTypeBuilder<ServerRole> builder)
+        {
+            builder.HasKey(b => b.Id);
 
+            builder.Property(b => b.Importance).IsRequired();
+            builder.Property(b => b.Colour).IsRequired();
+            builder.Property(b => b.IconURL).IsRequired();
+            builder.Property(b => b.DisplaySeperatelyFromOnlineMembers).IsRequired();
+            builder.Property(b => b.AllowAnyoneToMention).IsRequired();
+            builder.Property(b => b.IsAdmin).IsRequired();
 
+            builder.HasMany(b => b.ChannelCategoryRoles).WithOne(b => b.Role).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(b => b.TextChannelRoles).WithOne(b => b.Role).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(b => b.VoiceChannelRoles).WithOne(b => b.Role).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(b => b.ChannelCategoryRolePermissions).WithOne(b => b.Role).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(b => b.TextChannelRolePermissions).WithOne(b => b.Role).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(b => b.VoiceChannelRolePermissions).WithOne(b => b.Role).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Restrict);
 
-        //these permissions override the global permisssions for this section.
-        public ICollection<ServerChannelCategoryRole>? ChannelCategoryRoles { get; set; } //role overrides within channelcategories
-        public ICollection<ServerTextChannelRole>? TextChannelRoles { get; set; } //role overrides within textchannels
-        public ICollection<ServerVoiceChannelRole>? VoiceChannelRoles { get; set; } //role overrides within voicechannels
-        public ICollection<ServerChannelCategoryRolePermission>? ChannelCategoryRolePermissions { get; set; } //permissions allowed within channelcategories, for the role.
-        public ICollection<ServerTextChannelRolePermission>? TextChannelRolePermissions { get; set; } //permissions allowed within textchannel, for the role.
-        public ICollection<ServerVoiceChannelRolePermission>? VoiceChannelRolePermissions { get; set; } //permissions allowed within voicechannel, for the role.
-
+            builder.HasMany(b => b.Permissions).WithOne(b => b.Role).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(b => b.Recipients).WithOne(b => b.Role).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

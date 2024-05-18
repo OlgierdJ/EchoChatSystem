@@ -12,8 +12,8 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
 
             builder.Property(b => b.Message).HasMaxLength(512).IsRequired();
 
-            builder.HasOne(b => b.Violation).WithOne(e => e.Appeal).HasForeignKey<AccountViolationAppeal>(e => e.ViolationId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasOne(b => b.Review).WithOne(e => e.Appeal).HasForeignKey<AccountViolationAppealReview>(e => e.AppealId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Violation).WithOne(e => e.Appeal).HasForeignKey<AccountViolationAppeal>(e => e.ViolationId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasOne(b => b.Review).WithOne(e => e.Appeal).HasForeignKey<AccountViolationAppealReview>(e => e.AppealId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }

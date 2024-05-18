@@ -11,7 +11,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.HasKey(b => b.Id);
             builder.Property(b => b.CustomMessage).HasMaxLength(255).IsRequired();
             builder.Property(b => b.ExpirationTime).IsRequired(false);
-            builder.HasOne(b => b.Account).WithOne(b => b.CustomStatus).HasForeignKey<Account>(b => b.CustomStatusId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
+            builder.HasOne(b => b.Account).WithOne(b => b.CustomStatus).HasForeignKey<Account>(b => b.CustomStatusId).OnDelete(DeleteBehavior.ClientCascade).IsRequired(false);
         }
     }
 }

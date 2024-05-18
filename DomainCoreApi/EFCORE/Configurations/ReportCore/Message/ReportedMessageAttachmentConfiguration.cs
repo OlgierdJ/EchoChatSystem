@@ -13,7 +13,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Message
             builder
                 .Property(b => b.FileURL)
                 .IsRequired();
-            builder.HasOne(b => b.Message).WithMany(e => e.Attachments).HasForeignKey(b => b.MessageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Message).WithMany(e => e.Attachments).HasForeignKey(b => b.MessageId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
 
         }
     }

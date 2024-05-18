@@ -16,7 +16,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
             builder.Property(b => b.AllowFriendsToJoinGame).IsRequired();
             builder.Property(b => b.AllowVoiceChannelParticipantsToJoinGame).IsRequired();
 
-            builder.HasOne(b => b.AccountSettings).WithOne(e => e.ActivitySettings).HasForeignKey<ActivitySettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.AccountSettings).WithOne(e => e.ActivitySettings).HasForeignKey<ActivitySettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }

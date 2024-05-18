@@ -1,20 +1,21 @@
 ﻿using CoreLib.Entities.EchoCore.ApplicationCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
-    public class SubscriptionTransactionConfiguration : IEntityTypeConfiguration<ApplicationKeybind>
+    public class SubscriptionTransactionConfiguration : IEntityTypeConfiguration<SubscriptionTransaction>
     {
-        public void Configure(EntityTypeBuilder<ApplicationKeybind> builder)
+        public void Configure(EntityTypeBuilder<SubscriptionTransaction> builder)
         {
             builder.HasKey(b => b.Id);
 
-            builder.Property(b => b.Name).IsRequired(); // not mapped most of stuff
-            builder.HasIndex(b => b.Name).IsUnique(); // not mapped most of stuff
-            builder.Property(b => b.Description).IsRequired(false); // not mapped most of stuff
-
-            builder.HasMany(b => b.Keybinds).WithOne(e => e.ApplicationKeybind).HasForeignKey(b => b.ApplicationKeybindId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b=>b.TransactionType).WithMany().HasForeignKey(b=>b.TransactionTypeId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Currency).WithMany(b=>b.Transactions).HasForeignKey(b => b.CurrencyId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.TransactionGroup).WithMany(b=>b.Transactions).HasForeignKey(b => b.TransactionGroupId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Refund).WithOne(b=>b.Transaction).HasForeignKey<SubscriptionTransactionRefund>(b => b.Id).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Subscription).WithMany(b=>b.SubcriptionTransactions).HasForeignKey(b => b.SubscriptionId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.ManagementC
             builder.Property(b => b.InviteCode).IsRequired();
             builder.Property(b => b.ExpirationTime).IsRequired(false);
             builder.Property(b => b.TimesUsed).IsRequired();
-            builder.Property(b => b.TotalUses).IsRequired(false);
+            builder.Property(b => b.TotalUses).IsRequired();
 
             builder.HasOne(b => b.Subject).WithMany().HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(b => b.Inviter).WithMany().HasForeignKey(b => b.InviterId).OnDelete(DeleteBehavior.Restrict);

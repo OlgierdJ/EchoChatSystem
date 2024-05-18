@@ -12,7 +12,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 
             //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
 
-            builder.HasOne(b => b.AccountSettings).WithOne(e => e.BillingInformation).HasForeignKey<BillingInformation>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.AccountSettings).WithOne(e => e.BillingInformation).HasForeignKey<BillingInformation>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
-    public class LanguageConfiguration : IEntityTypeConfiguration<Language>
+    public class LanguageConfiguration : IEntityTypeConfiguration<Language> //needs supported languages just start with ("dansk"), ("english"), ("deutsch")
     {
         public void Configure(EntityTypeBuilder<Language> builder)
         {
@@ -12,7 +12,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 
             //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
 
-            builder.HasMany(b => b.AccountSettings).WithOne(e => e.Language).HasForeignKey(b => b.LanguageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasMany(b => b.AccountSettings).WithOne(e => e.Language).HasForeignKey(b => b.LanguageId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }

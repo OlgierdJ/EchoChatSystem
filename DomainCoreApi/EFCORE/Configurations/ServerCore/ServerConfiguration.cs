@@ -2,30 +2,38 @@
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore
 {
-    public class ServerConfiguration : BaseEntity<ulong>
+    public class ServerConfiguration : IEntityTypeConfiguration<Server>
     {
-        public string Name { get; set; }
-        public DateTime TimeCreated { get; set; }
-        public ICollection<ServerEvent>? Events { get; set; }
-        public ICollection<ServerInvite>? Invites { get; set; } //maybe put this into settings
-        public ICollection<AccountServerMute>? Muters { get; set; } //maybe put this into settings
-        public ServerSettings? Settings { get; set; }
+        public void Configure(EntityTypeBuilder<Server> builder)
+        {
+            builder.HasKey(b => b.Id);
 
-        public ICollection<ServerAuditLog>? AuditLogs { get; set; }
-        public ICollection<ServerBan>? BanList { get; set; }
-        public ICollection<ServerEmote>? Emotes { get; set; }
-        public ICollection<ServerSoundboardSound>? SoundboardSounds { get; set; }
+            builder.Property(b => b.Name).IsRequired();
+            builder.Property(b => b.TimeCreated).HasDefaultValueSql("getdate()").IsRequired();
 
-        public ICollection<ServerChannelCategory>? ChannelCategories { get; set; } //Essentially a grouping of voicechannels and or textchannels
-        public ICollection<ServerTextChannel>? TextChannels { get; set; } //direct channels
-        public ICollection<ServerVoiceChannel>? VoiceChannels { get; set; } //direct channels
+            builder.HasOne(b=>b.Settings).WithOne(b=>b.Server).HasForeignKey<ServerSettings>(b=>b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
 
-        public ICollection<ServerProfile>? Members { get; set; } //Joining a server creates a serverprofile for the member and allows them to change the displayed data which is reflected in the server environment
+            builder.HasMany(b => b.Events).WithOne(b => b.Server).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasMany(b => b.Invites).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasMany(b => b.Muters).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+
+            builder.HasMany(b => b.AuditLogs).WithOne(b => b.Server).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasMany(b => b.BanList).WithOne(b => b.Server).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasMany(b => b.Emotes).WithOne(b => b.Server).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasMany(b => b.SoundboardSounds).WithOne(b => b.Server).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+
+            builder.HasMany(b => b.ChannelCategories).WithOne(b => b.Server).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasMany(b => b.TextChannels).WithOne(b => b.Owner).HasForeignKey(b => b.OwnerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasMany(b => b.VoiceChannels).WithOne(b => b.Owner).HasForeignKey(b => b.OwnerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+        }
     }
 }

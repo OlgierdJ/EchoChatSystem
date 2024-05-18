@@ -1,20 +1,21 @@
 ﻿using CoreLib.Entities.EchoCore.ApplicationCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
-    public class SubscriptionConfiguration : IEntityTypeConfiguration<ApplicationKeybind>
+    public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
     {
-        public void Configure(EntityTypeBuilder<ApplicationKeybind> builder)
+        public void Configure(EntityTypeBuilder<Subscription> builder)
         {
             builder.HasKey(b => b.Id);
 
-            builder.Property(b => b.Name).IsRequired(); // not mapped most of stuff
-            builder.HasIndex(b => b.Name).IsUnique(); // not mapped most of stuff
-            builder.Property(b => b.Description).IsRequired(false); // not mapped most of stuff
+            builder.HasOne(b=>b.BillingInformation).WithMany(b => b.Subscriptions).HasForeignKey(b=>b.BillingInformationId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.SubscriptionPlan).WithMany(b => b.Subscriptions).HasForeignKey(b => b.SubscriptionPlanId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Currency).WithMany(b => b.Subscriptions).HasForeignKey(b => b.CurrencyId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(b => b.Keybinds).WithOne(e => e.ApplicationKeybind).HasForeignKey(b => b.ApplicationKeybindId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasMany(b => b.SubcriptionTransactions).WithOne(b => b.Subscription).HasForeignKey(b => b.SubscriptionId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
         }
     }
 }

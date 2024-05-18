@@ -5,7 +5,9 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
     public class ServerChannelCategoryMemberSettings
     {
         public ulong ChannelCategoryId { get; set; } //where these settings belong
-        public ulong ProfileId { get; set; } //profile of which these settings affect.
+        
+        public ulong AccountId { get; set; }
+        public ulong ServerId { get; set; }
 
 
         public ServerChannelCategory ChannelCategory { get; set; }

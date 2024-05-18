@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
-    public class ApplicationKeybindConfiguration : IEntityTypeConfiguration<ApplicationKeybind>
+    public class ApplicationKeybindConfiguration : IEntityTypeConfiguration<ApplicationKeybind> //this need default values f.eks ("mute / unmute self", "mutes self if unmuted and unmutes self if muted")
     {
         public void Configure(EntityTypeBuilder<ApplicationKeybind> builder)
         {
@@ -14,7 +14,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
             builder.HasIndex(b => b.Name).IsUnique(); // not mapped most of stuff
             builder.Property(b => b.Description).IsRequired(false); // not mapped most of stuff
 
-            builder.HasMany(b => b.Keybinds).WithOne(e => e.ApplicationKeybind).HasForeignKey(b => b.ApplicationKeybindId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasMany(b => b.Keybinds).WithOne(e => e.ApplicationKeybind).HasForeignKey(b => b.ApplicationKeybindId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }

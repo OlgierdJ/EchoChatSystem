@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 {
-    public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
+    public class PermissionConfiguration : IEntityTypeConfiguration<Permission> //needs different kinds of application permissions f.eks
+                                                                                //("View_Server"), ("Send_Message"), ("Add_Friend"), ("Join_Voice"), ("Delete_Account"), ("Create_Server"), ("Create Chats"),
+                                                                                //other generic appwide permissions, etc
     {
         public void Configure(EntityTypeBuilder<Permission> builder)
         {

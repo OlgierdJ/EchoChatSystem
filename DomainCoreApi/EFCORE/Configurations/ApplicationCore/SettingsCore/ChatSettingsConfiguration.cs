@@ -24,7 +24,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
             builder.Property(b => b.OpenThreadsInSplitView).IsRequired();
             builder.Property(b => b.ContentSpoilerMode).HasConversion<int>().IsRequired();
 
-            builder.HasOne(b => b.AccountSettings).WithOne(e => e.ChatSettings).HasForeignKey<ChatSettings>(b => b.Id).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.AccountSettings).WithOne(e => e.ChatSettings).HasForeignKey<ChatSettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }
