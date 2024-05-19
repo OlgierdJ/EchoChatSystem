@@ -165,7 +165,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeBlocked")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("BlockerId", "BlockedId");
 
@@ -637,6 +638,23 @@ namespace DomainCoreApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AcceptedCurrency");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "dkk"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "eur"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Name = "usd"
+                        });
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.ApplicationKeybind", b =>
@@ -657,6 +675,101 @@ namespace DomainCoreApi.Migrations
                         .IsUnique();
 
                     b.ToTable("ApplicationKeybind");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = (byte)1,
+                            Description = "mutes self if unmuted and unmutes self if muted",
+                            Name = "mute / unmute self"
+                        },
+                        new
+                        {
+                            Id = (byte)2,
+                            Description = "Edit a message if you have the permission",
+                            Name = "Edit message"
+                        },
+                        new
+                        {
+                            Id = (byte)3,
+                            Description = "Pin a message in a chat",
+                            Name = "Pin message"
+                        },
+                        new
+                        {
+                            Id = (byte)4,
+                            Description = "make a reply to a message in a chat",
+                            Name = "Reply"
+                        });
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Country", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Country");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "Danmark"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "Sverige"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Name = "Noreg"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Name = "Deutschland"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Name = "United Kingdom"
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Name = "La France"
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Name = "华人(Chinese)"
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Name = "日本(Japan)"
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            Name = "남한(south korea)"
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            Name = "United States of America"
+                        });
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Keybind", b =>
@@ -700,6 +813,68 @@ namespace DomainCoreApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Language");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            LanguageCode = "DK",
+                            Name = "Danmark"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            LanguageCode = "Sv",
+                            Name = "Sverige"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            LanguageCode = "No",
+                            Name = "Noreg"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            LanguageCode = "De",
+                            Name = "Deutschland"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            LanguageCode = "en-gb",
+                            Name = "United Kingdom"
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            LanguageCode = "Fr",
+                            Name = "La France"
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            LanguageCode = "zh-CN",
+                            Name = "中国(China)"
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            LanguageCode = "Jp",
+                            Name = "日本(Japan)"
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            LanguageCode = "ko",
+                            Name = "남한(south korea)"
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            LanguageCode = "en-us",
+                            Name = "United States of America"
+                        });
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.PaymentType", b =>
@@ -717,6 +892,48 @@ namespace DomainCoreApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PaymentType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "PayPal"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "MobilePay"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Name = "PaysafeCard"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Name = "Visa"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Name = "MasterCard"
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Name = "Google Pay"
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Name = "Apple Pay"
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Name = "Stripe"
+                        });
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Permission", b =>
@@ -734,6 +951,43 @@ namespace DomainCoreApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Permission");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1m,
+                            Name = "View_Server"
+                        },
+                        new
+                        {
+                            Id = 2m,
+                            Name = "Send_Message"
+                        },
+                        new
+                        {
+                            Id = 3m,
+                            Name = "Add_Friend"
+                        },
+                        new
+                        {
+                            Id = 4m,
+                            Name = "Join_Voice"
+                        },
+                        new
+                        {
+                            Id = 5m,
+                            Name = "Delete_Account"
+                        },
+                        new
+                        {
+                            Id = 6m,
+                            Name = "Create_Server"
+                        },
+                        new
+                        {
+                            Id = 7m,
+                            Name = "Create_Chats"
+                        });
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Role", b =>
@@ -751,6 +1005,38 @@ namespace DomainCoreApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Role");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1m,
+                            Name = "User"
+                        },
+                        new
+                        {
+                            Id = 2m,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 3m,
+                            Name = "Moderator"
+                        },
+                        new
+                        {
+                            Id = 4m,
+                            Name = "System_Owner"
+                        },
+                        new
+                        {
+                            Id = 5m,
+                            Name = "Premium_Sonar"
+                        },
+                        new
+                        {
+                            Id = 6m,
+                            Name = "Premium_Sonar_Plus"
+                        });
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.RolePermission", b =>
@@ -1324,6 +1610,25 @@ namespace DomainCoreApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VoiceSettings");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Settings.WindowSettings", b =>
+                {
+                    b.Property<decimal>("Id")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<bool>("MinimizeOnClose")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("OpenEchoOnPCStartup")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("StartMinimized")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WindowSettings");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore.BillingInformation", b =>
@@ -1967,13 +2272,10 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.PaymentMethod", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
-
-                    b.Property<decimal>("BillingInformationId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<long>("CountryId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsDefaultPaymentMethod")
                         .HasColumnType("bit");
@@ -1982,11 +2284,13 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("TimeAdded")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BillingInformationId");
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("PaymentTypeId");
 
@@ -3178,6 +3482,290 @@ namespace DomainCoreApi.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("ServerPermission");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1m,
+                            Description = "Allows the role to see the public channels that are not private. It’s normal to grant this permission to almost all roles, but the channel/category permission settings usually void it.",
+                            Name = "View Channels"
+                        },
+                        new
+                        {
+                            Id = 2m,
+                            Description = "Allows the role to access the channel settings of all channels it can see. Granting this permission can be extremely dangerous since deleted channels are not recoverable.",
+                            Name = "Manage Channels"
+                        },
+                        new
+                        {
+                            Id = 3m,
+                            Description = "Allows the role to create, edit, and remove all the roles that are below itself in the hierarchy. Users with this role can also add and remove roles to/from members. Granting this permission can be extremely dangerous since deleted roles are not recoverable, and ill-intended users can grant dangerous permissions to others.",
+                            Name = "Manage Roles"
+                        },
+                        new
+                        {
+                            Id = 4m,
+                            Description = "Allows the role to access the Emoji, Stickers, and Soundboard sections of the Server Settings. Users with this role can add expressions. Granting this permission can be dangerous since there isn’t an approval system for added expressions.",
+                            Name = "Create Expressions"
+                        },
+                        new
+                        {
+                            Id = 5m,
+                            Description = "Allows the role to access the Emoji, Stickers, and Soundboard sections of the Server Settings. Users with this role can edit and remove all expressions. Granting this permission can be dangerous since deleted expressions are not recoverable.",
+                            Name = "Manage Expressions"
+                        },
+                        new
+                        {
+                            Id = 6m,
+                            Description = "Allows the role to view the Audit Log section of the Server Settings. While the section doesn’t allow users to take any action, it can be dangerous to grant since there could be sensitive information in Audit Logs.",
+                            Name = "View Audit Log"
+                        },
+                        new
+                        {
+                            Id = 7m,
+                            Description = "Allows the role to view the Server Insights section of Server Settings. While Server Insights contains a lot of important information, there’s no harm in sharing them unless you don’t want to.",
+                            Name = "View Server Insights"
+                        },
+                        new
+                        {
+                            Id = 8m,
+                            Description = "Allows the role to add, edit, and remove webhooks. Granting this permission can be extremely dangerous since webhooks can bypass AutoMod, bots, and other moderation systems in place, allowing users to tag @everyone, post unwanted content, and similar ill-intended actions limitlessly and fast.",
+                            Name = "Manage Webhooks"
+                        },
+                        new
+                        {
+                            Id = 9m,
+                            Description = "Allows the role to adjust the server settings like name, icon, default settings, add bots, and change AutoMod rules. Granting this can be extremely dangerous since while server name, icon, and default settings can be easily fixed, removed AutoMod rules are not recoverable, and ill-intended bots can nuke (delete all the channels, ban all the members, etc.) your server.",
+                            Name = "Manage Server"
+                        },
+                        new
+                        {
+                            Id = 10m,
+                            Description = "Allows the role to create custom invites for the server. It’s normal to grant this to all roles unless you want to have only certain invites available. Be sure to provide your invite links in the server for people to copy and paste if you don’t want to grant this permission.",
+                            Name = "Create Invite"
+                        },
+                        new
+                        {
+                            Id = 11m,
+                            Description = "Allows the users with permission to change their own nicknames on your server. It’s a normal permission to grant.",
+                            Name = "Change Nickname"
+                        },
+                        new
+                        {
+                            Id = 12m,
+                            Description = "Allows the role to change the nicknames of other members. Granting this permission can be dangerous since ill-intended users might vandalize others’ profiles by changing their names.",
+                            Name = "Manage Nicknames"
+                        },
+                        new
+                        {
+                            Id = 13m,
+                            Description = "Allows the role to kick members that are below them in the user/role hierarchy by using the integrated /kick command or via the right-click menu. Granting this permission can be extremely dangerous since it allows the users to remove others from the server (kicked users can rejoin,) but it’s not the most dangerous part of it. Discord has a “pruning” feature - a feature that allows you to kick all the members that haven’t been in Discord in the last 7 or 30 days with no/selected roles. Pruning is a common vandalism method that can remove most users of a server. Preventing the prune vandalism is as simple as not granting the Kick Members permission.",
+                            Name = "Kick Members"
+                        },
+                        new
+                        {
+                            Id = 14m,
+                            Description = "Allows the role to ban members that are below them in the user/role hierarchy by using the integrated /ban command or via the right-click menu. Granting this permission can be extremely dangerous since it allows the users to ban every single user that is below them in the hierarchy, and banned users cannot rejoin the server, even with other accounts, since all bans are IP bans. Bans can be manually removed via the Bans section of the Server Settings.",
+                            Name = "Ban Members"
+                        },
+                        new
+                        {
+                            Id = 15m,
+                            Description = "Allows the role to timeout other users via the right-click menu. Users who are timed out cannot send messages in any channel or speak in voice channels. Granting this permission can be dangerous since it allows users to prevent others from interacting with the community.",
+                            Name = "Timeout Members"
+                        },
+                        new
+                        {
+                            Id = 16m,
+                            Description = "Allows the role to send messages in channels they can see. It’s normal to grant this permission to almost all roles, but it is usually voided by the channel/category permission settings.",
+                            Name = "Send Messages"
+                        },
+                        new
+                        {
+                            Id = 17m,
+                            Description = "Allows the role to send messages in threads they can see. It’s normal to grant this permission to almost all roles, but it is usually voided by the channel/category permission settings.",
+                            Name = "Send Messages in Threads"
+                        },
+                        new
+                        {
+                            Id = 18m,
+                            Description = "Allows the role to create public threads in channels they can see. Although Discord has a limit of 1000 for active threads (no limit on inactive), allowing users to create threads can make moderation a bit harder.",
+                            Name = "Create Public Threads"
+                        },
+                        new
+                        {
+                            Id = 19m,
+                            Description = "Allows the role to create private threads in channels they can see. The only way to see a private thread is to be mentioned in the thread or have the Manage Threads permission.",
+                            Name = "Create Private Threads"
+                        },
+                        new
+                        {
+                            Id = 20m,
+                            Description = "Allows the role to display embedded content for the links they send. A common misconception about this permission is that it allows or disallows users to send links. There are a few ways to disallow users from sending links, but this permission is not it. It only manages the embedded content (marked red in the image below) of a link.",
+                            Name = "Embed Links"
+                        },
+                        new
+                        {
+                            Id = 21m,
+                            Description = "Allows the role to attach files with any extension to the channels where they can send messages in. While this permission is normal to grant to every user in servers with a few thousand members, it can be mildly dangerous in situations where there are tens of thousands of members and a fast chat where moderation is also mildly difficult. Being able to attach files means they can literally attach any file, including malicious ones.",
+                            Name = "Attach Files"
+                        },
+                        new
+                        {
+                            Id = 22m,
+                            Description = "Allows the role to add reactions to messages they can see. When disallowed, users can still add reactions to the reactions that are already present.",
+                            Name = "Add Reactions"
+                        },
+                        new
+                        {
+                            Id = 23m,
+                            Description = "Allows the role to use emojis from other servers. It is usually granted to all users on most servers, just like the Use External Stickers permission. Don’t grant this permission if you want to ensure that no one uses ill-intended emojis on your server.",
+                            Name = "Use External Emoji"
+                        },
+                        new
+                        {
+                            Id = 24m,
+                            Description = "Allows the role to use stickers from other servers. It is usually granted to all users on most servers, just like the Use External Emoji permission. Don’t grant this permission if you want to ensure that no one uses ill-intended stickers on your server.",
+                            Name = "Use External Stickers"
+                        },
+                        new
+                        {
+                            Id = 25m,
+                            Description = "Allows the role to mention @everyone, @here, and all the roles even if their “Allow anyone to @mention this role” option is turned off. Granting this permission can be extremely dangerous since it allows users to spam mention everyone in the server and makes way for Mention Raids (multiple users joining the server and spam mentioning multiple users or even everyone).",
+                            Name = "Mention @everyone, @here, and All Roles"
+                        },
+                        new
+                        {
+                            Id = 26m,
+                            Description = "Allows the role to delete and pin messages they can see. Granting this permission can be very dangerous since it allows users to delete multiple messages of other users, potentially deleting every single message in the server.",
+                            Name = "Manage Messages"
+                        },
+                        new
+                        {
+                            Id = 27m,
+                            Description = "Allows the role to edit, close, and delete threads. Granting this permission can be very dangerous since it gives full control over threads, potentially deleting all of them.",
+                            Name = "Manage Threads"
+                        },
+                        new
+                        {
+                            Id = 28m,
+                            Description = "Allows the role to see every message sent in text channels. When disallowed, users only see messages when they’re online and in a text channel. It’s normal to grant this permission to everyone.",
+                            Name = "Read Message History"
+                        },
+                        new
+                        {
+                            Id = 29m,
+                            Description = "Allows the user to use the /tts command, which triggers a text-to-speech player to read out the provided message to everyone who’s viewing the channel. Granting this permission can be mildly dangerous since a device reading an unwanted message out loud can be risky.",
+                            Name = "Send Text-to-Speech Messages"
+                        },
+                        new
+                        {
+                            Id = 30m,
+                            Description = "Allows the permission to use application commands such as slash commands and right-click menu buttons. It’s normal to grant this permission to everyone since most commands and application functions are public-intended; users won’t be able to use a command that isn’t public (only available to staff).",
+                            Name = "Use Application Commands"
+                        },
+                        new
+                        {
+                            Id = 31m,
+                            Description = "Allows the permission to send voice messages to the channels they can see using mobile devices. Discord introduced the voice message feature in April 2024. Granting this permission can be mildly dangerous since there’s currently no automatic moderation on voice messages, and ill-intended users can send unwanted voice messages.",
+                            Name = "Send Voice Messages"
+                        },
+                        new
+                        {
+                            Id = 32m,
+                            Description = "Allows the permission to join voice channels they can see. It’s normal to grant this permission to everyone. One common reason not to grant this permission is to block newcomers from joining voice channels, preventing a potential voice raid. The system most servers use in this case is once the user spends a certain amount of time, they’ll get a new role (via a bot or manually) that has Connect permission.",
+                            Name = "Connect"
+                        },
+                        new
+                        {
+                            Id = 33m,
+                            Description = "Allows the permission to speak in voice channels. If a user doesn’t have this permission, they will be muted upon joining a voice channel. There are two ways they can talk: they get the Speak permission, or a user with Mute Members permission unmutes them. It’s normal to grant this permission to everyone.",
+                            Name = "Speak"
+                        },
+                        new
+                        {
+                            Id = 34m,
+                            Description = "Allows the role to turn on their camera and screen share in voice channels. While it’s normal to grant this permission to everyone, it can be mildly dangerous since there’s no automatic moderation system for video calls and screen sharing, allowing ill-intended users to display unwanted content.",
+                            Name = "Video"
+                        },
+                        new
+                        {
+                            Id = 35m,
+                            Description = "Allows the role to use the Activities feature. Activities are games and apps (like YouTube Watch Together, Blazing 8s, Gartic Phone, etc.) that are integrated into voice channels. It’s normal to grant this permission to everyone.",
+                            Name = "Use Activities"
+                        },
+                        new
+                        {
+                            Id = 36m,
+                            Description = "Allows the role to use sounds from the Soundboard in voice channels. Granting this permission can be mildly dangerous since users can disturb other members by playing or spamming loud or unwanted sounds in voice channels.",
+                            Name = "Use Soundboard"
+                        },
+                        new
+                        {
+                            Id = 37m,
+                            Description = "Allows the role to use soundboards of other servers in voice channels. Granting this permission can be mildly dangerous since other servers might have ill-intended sounds.",
+                            Name = "Use External Sounds"
+                        },
+                        new
+                        {
+                            Id = 38m,
+                            Description = "Allows the role to speak without Push-to-talk. Users who don’t have this permission will have to use push-to-talk to speak in voice channels.",
+                            Name = "Use Voice Activity"
+                        },
+                        new
+                        {
+                            Id = 39m,
+                            Description = "Allows the role to use the “Push to Talk (Priority)” keybind, which lowers the other users’ voice channel volume when pressed, thus allowing the user to be easily heard. While this permission isn’t risky to grant, usually only staff roles are granted.",
+                            Name = "Priority Speaker"
+                        },
+                        new
+                        {
+                            Id = 40m,
+                            Description = "Allows the role to mute other users in voice channels so they won’t be able to speak. It’s a common misconception that this permission allows users to mute others in the sense that they won’t be able to send messages; this is not the case. Users need the Timeout Members permission to mute others (prevent them from sending messages.) Granting this permission can be dangerous since it allows users to prevent others from speaking in voice channels.",
+                            Name = "Mute Members"
+                        },
+                        new
+                        {
+                            Id = 41m,
+                            Description = "Allows the role to deafen other users in voice channels so they won’t be able to hear other users. Deafened users can still speak. Granting this permission can be dangerous since it allows users to prevent others from hearing others in voice channels.",
+                            Name = "Deafen Members"
+                        },
+                        new
+                        {
+                            Id = 42m,
+                            Description = "Allows the role to move members between voice channels. The user with the permission can also join voice channels even if they’re at full capacity. They can also move members into voice channels that are at full capacity. Granting this permission can be dangerous since it allows users to move each other between voice channels, potentially disturbing conversations.",
+                            Name = "Move Members"
+                        },
+                        new
+                        {
+                            Id = 43m,
+                            Description = "Allows the role to adjust voice channel status. Granting this permission is mildly dangerous since users can put unwanted content in the status.",
+                            Name = "Set Voice Channel Status"
+                        },
+                        new
+                        {
+                            Id = 44m,
+                            Description = "Allows the role to request to speak in stage channels. Members who request to speak can be approved or denied by moderators. It’s normal to grant this permission to everyone.",
+                            Name = "Request to Speak"
+                        },
+                        new
+                        {
+                            Id = 45m,
+                            Description = "Allows the role to create events. Granting this permission is dangerous since users can flood the server with all kinds of events.",
+                            Name = "Create Events"
+                        },
+                        new
+                        {
+                            Id = 46m,
+                            Description = "Allows the role to edit and delete all events. Granting this permission is dangerous since users with the role can disturb the server's events.",
+                            Name = "Manage Events"
+                        },
+                        new
+                        {
+                            Id = 47m,
+                            Description = "Members with this permission will have every permission and will also bypass channel specific permissions or restrictions (for example, these members would get access to all private channels) **This is a dangerous permission to grant.",
+                            Name = "Administrator"
+                        });
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerPermissionCategory", b =>
@@ -3349,6 +3937,22 @@ namespace DomainCoreApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ServerRegion");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Icon = "https://upload.wikimedia.org/wikipedia/commons/4/4a/Brazilian_flag_icon_round.svg",
+                            Name = "Mr Worldwide",
+                            RegionServerURL = "https://echo.chat/rtc/brazil/rtchub"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Icon = "https://en.wikipedia.org/wiki/St._Peter%27s_Basilica#/media/File:Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg",
+                            Name = "holy pop",
+                            RegionServerURL = "https://echo.chat/rtc/vatikanet/rtchub"
+                        });
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore.ServerSettings", b =>
@@ -4180,6 +4784,17 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("AccountSettings");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Settings.WindowSettings", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
+                        .WithOne()
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.Settings.WindowSettings", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AccountSettings");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore.BillingInformation", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
@@ -4202,8 +4817,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.AcceptedCurrency", "Currency")
                         .WithMany("Subscriptions")
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore.SubscriptionPlan", "SubscriptionPlan")
                         .WithMany("Subscriptions")
@@ -4264,8 +4878,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.AcceptedCurrency", "Currency")
                         .WithMany("Transactions")
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore.SubscriptionTransactionRefund", "Refund")
                         .WithOne("Transaction")
@@ -4306,8 +4919,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.AcceptedCurrency", "Currency")
                         .WithMany("TransactionGroups")
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Currency");
                 });
@@ -4536,19 +5148,27 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.PaymentMethod", b =>
                 {
+                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Country", "Country")
+                        .WithMany("PaymentMethods")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore.BillingInformation", "BillingInformation")
                         .WithMany("PaymentMethods")
-                        .HasForeignKey("BillingInformationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.PaymentType", "Type")
                         .WithMany("PaymentMethods")
                         .HasForeignKey("PaymentTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("BillingInformation");
+
+                    b.Navigation("Country");
 
                     b.Navigation("Type");
                 });
@@ -5780,6 +6400,11 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.ApplicationKeybind", b =>
                 {
                     b.Navigation("Keybinds");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Country", b =>
+                {
+                    b.Navigation("PaymentMethods");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Language", b =>

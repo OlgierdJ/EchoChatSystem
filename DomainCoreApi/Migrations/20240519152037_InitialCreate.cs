@@ -117,6 +117,19 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Country",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Country", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CustomStatusReportReason",
                 columns: table => new
                 {
@@ -700,7 +713,7 @@ namespace DomainCoreApi.Migrations
                 {
                     BlockerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     BlockedId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    TimeBlocked = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TimeBlocked = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -2249,6 +2262,26 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WindowSettings",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    OpenEchoOnPCStartup = table.Column<bool>(type: "bit", nullable: false),
+                    StartMinimized = table.Column<bool>(type: "bit", nullable: false),
+                    MinimizeOnClose = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WindowSettings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WindowSettings_AccountSettings_Id",
+                        column: x => x.Id,
+                        principalTable: "AccountSettings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AccountViolationAppeal",
                 columns: table => new
                 {
@@ -2835,28 +2868,31 @@ namespace DomainCoreApi.Migrations
                 name: "PaymentMethod",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     PaymentTypeId = table.Column<long>(type: "bigint", nullable: false),
-                    TimeAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeAdded = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     IsDefaultPaymentMethod = table.Column<bool>(type: "bit", nullable: false),
-                    BillingInformationId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                    CountryId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PaymentMethod", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaymentMethod_BillingInformation_BillingInformationId",
-                        column: x => x.BillingInformationId,
+                        name: "FK_PaymentMethod_BillingInformation_Id",
+                        column: x => x.Id,
                         principalTable: "BillingInformation",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_PaymentMethod_Country_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Country",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PaymentMethod_PaymentType_PaymentTypeId",
                         column: x => x.PaymentTypeId,
                         principalTable: "PaymentType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -3205,6 +3241,16 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "AcceptedCurrency",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1L, "dkk" },
+                    { 2L, "eur" },
+                    { 3L, "usd" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "AccountActivityStatus",
                 columns: new[] { "Id", "Description", "Icon", "IconColor", "Name" },
                 values: new object[,]
@@ -3214,6 +3260,156 @@ namespace DomainCoreApi.Migrations
                     { (byte)3, "You will not receive any desktop notifications.", "Icons.Material.Filled.RemoveCircle", "Error", "Busy" },
                     { (byte)4, "", "Icons.Material.Filled.StopCircle", "Dark", "Offline" },
                     { (byte)5, "You will not appear online, but have full access to all of Echo.", "Icons.Material.Filled.StopCircle", "Dark", "Invisible" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ApplicationKeybind",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { (byte)1, "mutes self if unmuted and unmutes self if muted", "mute / unmute self" },
+                    { (byte)2, "Edit a message if you have the permission", "Edit message" },
+                    { (byte)3, "Pin a message in a chat", "Pin message" },
+                    { (byte)4, "make a reply to a message in a chat", "Reply" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Country",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1L, "Danmark" },
+                    { 2L, "Sverige" },
+                    { 3L, "Noreg" },
+                    { 4L, "Deutschland" },
+                    { 5L, "United Kingdom" },
+                    { 6L, "La France" },
+                    { 7L, "华人(Chinese)" },
+                    { 8L, "日本(Japan)" },
+                    { 9L, "남한(south korea)" },
+                    { 10L, "United States of America" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Language",
+                columns: new[] { "Id", "LanguageCode", "Name" },
+                values: new object[,]
+                {
+                    { 1L, "DK", "Danmark" },
+                    { 2L, "Sv", "Sverige" },
+                    { 3L, "No", "Noreg" },
+                    { 4L, "De", "Deutschland" },
+                    { 5L, "en-gb", "United Kingdom" },
+                    { 6L, "Fr", "La France" },
+                    { 7L, "zh-CN", "中国(China)" },
+                    { 8L, "Jp", "日本(Japan)" },
+                    { 9L, "ko", "남한(south korea)" },
+                    { 10L, "en-us", "United States of America" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PaymentType",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1L, "PayPal" },
+                    { 2L, "MobilePay" },
+                    { 3L, "PaysafeCard" },
+                    { 4L, "Visa" },
+                    { 5L, "MasterCard" },
+                    { 6L, "Google Pay" },
+                    { 7L, "Apple Pay" },
+                    { 8L, "Stripe" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Permission",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1m, "View_Server" },
+                    { 2m, "Send_Message" },
+                    { 3m, "Add_Friend" },
+                    { 4m, "Join_Voice" },
+                    { 5m, "Delete_Account" },
+                    { 6m, "Create_Server" },
+                    { 7m, "Create_Chats" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Role",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1m, "User" },
+                    { 2m, "Admin" },
+                    { 3m, "Moderator" },
+                    { 4m, "System_Owner" },
+                    { 5m, "Premium_Sonar" },
+                    { 6m, "Premium_Sonar_Plus" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ServerPermission",
+                columns: new[] { "Id", "CategoryId", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1m, null, "Allows the role to see the public channels that are not private. It’s normal to grant this permission to almost all roles, but the channel/category permission settings usually void it.", "View Channels" },
+                    { 2m, null, "Allows the role to access the channel settings of all channels it can see. Granting this permission can be extremely dangerous since deleted channels are not recoverable.", "Manage Channels" },
+                    { 3m, null, "Allows the role to create, edit, and remove all the roles that are below itself in the hierarchy. Users with this role can also add and remove roles to/from members. Granting this permission can be extremely dangerous since deleted roles are not recoverable, and ill-intended users can grant dangerous permissions to others.", "Manage Roles" },
+                    { 4m, null, "Allows the role to access the Emoji, Stickers, and Soundboard sections of the Server Settings. Users with this role can add expressions. Granting this permission can be dangerous since there isn’t an approval system for added expressions.", "Create Expressions" },
+                    { 5m, null, "Allows the role to access the Emoji, Stickers, and Soundboard sections of the Server Settings. Users with this role can edit and remove all expressions. Granting this permission can be dangerous since deleted expressions are not recoverable.", "Manage Expressions" },
+                    { 6m, null, "Allows the role to view the Audit Log section of the Server Settings. While the section doesn’t allow users to take any action, it can be dangerous to grant since there could be sensitive information in Audit Logs.", "View Audit Log" },
+                    { 7m, null, "Allows the role to view the Server Insights section of Server Settings. While Server Insights contains a lot of important information, there’s no harm in sharing them unless you don’t want to.", "View Server Insights" },
+                    { 8m, null, "Allows the role to add, edit, and remove webhooks. Granting this permission can be extremely dangerous since webhooks can bypass AutoMod, bots, and other moderation systems in place, allowing users to tag @everyone, post unwanted content, and similar ill-intended actions limitlessly and fast.", "Manage Webhooks" },
+                    { 9m, null, "Allows the role to adjust the server settings like name, icon, default settings, add bots, and change AutoMod rules. Granting this can be extremely dangerous since while server name, icon, and default settings can be easily fixed, removed AutoMod rules are not recoverable, and ill-intended bots can nuke (delete all the channels, ban all the members, etc.) your server.", "Manage Server" },
+                    { 10m, null, "Allows the role to create custom invites for the server. It’s normal to grant this to all roles unless you want to have only certain invites available. Be sure to provide your invite links in the server for people to copy and paste if you don’t want to grant this permission.", "Create Invite" },
+                    { 11m, null, "Allows the users with permission to change their own nicknames on your server. It’s a normal permission to grant.", "Change Nickname" },
+                    { 12m, null, "Allows the role to change the nicknames of other members. Granting this permission can be dangerous since ill-intended users might vandalize others’ profiles by changing their names.", "Manage Nicknames" },
+                    { 13m, null, "Allows the role to kick members that are below them in the user/role hierarchy by using the integrated /kick command or via the right-click menu. Granting this permission can be extremely dangerous since it allows the users to remove others from the server (kicked users can rejoin,) but it’s not the most dangerous part of it. Discord has a “pruning” feature - a feature that allows you to kick all the members that haven’t been in Discord in the last 7 or 30 days with no/selected roles. Pruning is a common vandalism method that can remove most users of a server. Preventing the prune vandalism is as simple as not granting the Kick Members permission.", "Kick Members" },
+                    { 14m, null, "Allows the role to ban members that are below them in the user/role hierarchy by using the integrated /ban command or via the right-click menu. Granting this permission can be extremely dangerous since it allows the users to ban every single user that is below them in the hierarchy, and banned users cannot rejoin the server, even with other accounts, since all bans are IP bans. Bans can be manually removed via the Bans section of the Server Settings.", "Ban Members" },
+                    { 15m, null, "Allows the role to timeout other users via the right-click menu. Users who are timed out cannot send messages in any channel or speak in voice channels. Granting this permission can be dangerous since it allows users to prevent others from interacting with the community.", "Timeout Members" },
+                    { 16m, null, "Allows the role to send messages in channels they can see. It’s normal to grant this permission to almost all roles, but it is usually voided by the channel/category permission settings.", "Send Messages" },
+                    { 17m, null, "Allows the role to send messages in threads they can see. It’s normal to grant this permission to almost all roles, but it is usually voided by the channel/category permission settings.", "Send Messages in Threads" },
+                    { 18m, null, "Allows the role to create public threads in channels they can see. Although Discord has a limit of 1000 for active threads (no limit on inactive), allowing users to create threads can make moderation a bit harder.", "Create Public Threads" },
+                    { 19m, null, "Allows the role to create private threads in channels they can see. The only way to see a private thread is to be mentioned in the thread or have the Manage Threads permission.", "Create Private Threads" },
+                    { 20m, null, "Allows the role to display embedded content for the links they send. A common misconception about this permission is that it allows or disallows users to send links. There are a few ways to disallow users from sending links, but this permission is not it. It only manages the embedded content (marked red in the image below) of a link.", "Embed Links" },
+                    { 21m, null, "Allows the role to attach files with any extension to the channels where they can send messages in. While this permission is normal to grant to every user in servers with a few thousand members, it can be mildly dangerous in situations where there are tens of thousands of members and a fast chat where moderation is also mildly difficult. Being able to attach files means they can literally attach any file, including malicious ones.", "Attach Files" },
+                    { 22m, null, "Allows the role to add reactions to messages they can see. When disallowed, users can still add reactions to the reactions that are already present.", "Add Reactions" },
+                    { 23m, null, "Allows the role to use emojis from other servers. It is usually granted to all users on most servers, just like the Use External Stickers permission. Don’t grant this permission if you want to ensure that no one uses ill-intended emojis on your server.", "Use External Emoji" },
+                    { 24m, null, "Allows the role to use stickers from other servers. It is usually granted to all users on most servers, just like the Use External Emoji permission. Don’t grant this permission if you want to ensure that no one uses ill-intended stickers on your server.", "Use External Stickers" },
+                    { 25m, null, "Allows the role to mention @everyone, @here, and all the roles even if their “Allow anyone to @mention this role” option is turned off. Granting this permission can be extremely dangerous since it allows users to spam mention everyone in the server and makes way for Mention Raids (multiple users joining the server and spam mentioning multiple users or even everyone).", "Mention @everyone, @here, and All Roles" },
+                    { 26m, null, "Allows the role to delete and pin messages they can see. Granting this permission can be very dangerous since it allows users to delete multiple messages of other users, potentially deleting every single message in the server.", "Manage Messages" },
+                    { 27m, null, "Allows the role to edit, close, and delete threads. Granting this permission can be very dangerous since it gives full control over threads, potentially deleting all of them.", "Manage Threads" },
+                    { 28m, null, "Allows the role to see every message sent in text channels. When disallowed, users only see messages when they’re online and in a text channel. It’s normal to grant this permission to everyone.", "Read Message History" },
+                    { 29m, null, "Allows the user to use the /tts command, which triggers a text-to-speech player to read out the provided message to everyone who’s viewing the channel. Granting this permission can be mildly dangerous since a device reading an unwanted message out loud can be risky.", "Send Text-to-Speech Messages" },
+                    { 30m, null, "Allows the permission to use application commands such as slash commands and right-click menu buttons. It’s normal to grant this permission to everyone since most commands and application functions are public-intended; users won’t be able to use a command that isn’t public (only available to staff).", "Use Application Commands" },
+                    { 31m, null, "Allows the permission to send voice messages to the channels they can see using mobile devices. Discord introduced the voice message feature in April 2024. Granting this permission can be mildly dangerous since there’s currently no automatic moderation on voice messages, and ill-intended users can send unwanted voice messages.", "Send Voice Messages" },
+                    { 32m, null, "Allows the permission to join voice channels they can see. It’s normal to grant this permission to everyone. One common reason not to grant this permission is to block newcomers from joining voice channels, preventing a potential voice raid. The system most servers use in this case is once the user spends a certain amount of time, they’ll get a new role (via a bot or manually) that has Connect permission.", "Connect" },
+                    { 33m, null, "Allows the permission to speak in voice channels. If a user doesn’t have this permission, they will be muted upon joining a voice channel. There are two ways they can talk: they get the Speak permission, or a user with Mute Members permission unmutes them. It’s normal to grant this permission to everyone.", "Speak" },
+                    { 34m, null, "Allows the role to turn on their camera and screen share in voice channels. While it’s normal to grant this permission to everyone, it can be mildly dangerous since there’s no automatic moderation system for video calls and screen sharing, allowing ill-intended users to display unwanted content.", "Video" },
+                    { 35m, null, "Allows the role to use the Activities feature. Activities are games and apps (like YouTube Watch Together, Blazing 8s, Gartic Phone, etc.) that are integrated into voice channels. It’s normal to grant this permission to everyone.", "Use Activities" },
+                    { 36m, null, "Allows the role to use sounds from the Soundboard in voice channels. Granting this permission can be mildly dangerous since users can disturb other members by playing or spamming loud or unwanted sounds in voice channels.", "Use Soundboard" },
+                    { 37m, null, "Allows the role to use soundboards of other servers in voice channels. Granting this permission can be mildly dangerous since other servers might have ill-intended sounds.", "Use External Sounds" },
+                    { 38m, null, "Allows the role to speak without Push-to-talk. Users who don’t have this permission will have to use push-to-talk to speak in voice channels.", "Use Voice Activity" },
+                    { 39m, null, "Allows the role to use the “Push to Talk (Priority)” keybind, which lowers the other users’ voice channel volume when pressed, thus allowing the user to be easily heard. While this permission isn’t risky to grant, usually only staff roles are granted.", "Priority Speaker" },
+                    { 40m, null, "Allows the role to mute other users in voice channels so they won’t be able to speak. It’s a common misconception that this permission allows users to mute others in the sense that they won’t be able to send messages; this is not the case. Users need the Timeout Members permission to mute others (prevent them from sending messages.) Granting this permission can be dangerous since it allows users to prevent others from speaking in voice channels.", "Mute Members" },
+                    { 41m, null, "Allows the role to deafen other users in voice channels so they won’t be able to hear other users. Deafened users can still speak. Granting this permission can be dangerous since it allows users to prevent others from hearing others in voice channels.", "Deafen Members" },
+                    { 42m, null, "Allows the role to move members between voice channels. The user with the permission can also join voice channels even if they’re at full capacity. They can also move members into voice channels that are at full capacity. Granting this permission can be dangerous since it allows users to move each other between voice channels, potentially disturbing conversations.", "Move Members" },
+                    { 43m, null, "Allows the role to adjust voice channel status. Granting this permission is mildly dangerous since users can put unwanted content in the status.", "Set Voice Channel Status" },
+                    { 44m, null, "Allows the role to request to speak in stage channels. Members who request to speak can be approved or denied by moderators. It’s normal to grant this permission to everyone.", "Request to Speak" },
+                    { 45m, null, "Allows the role to create events. Granting this permission is dangerous since users can flood the server with all kinds of events.", "Create Events" },
+                    { 46m, null, "Allows the role to edit and delete all events. Granting this permission is dangerous since users with the role can disturb the server's events.", "Manage Events" },
+                    { 47m, null, "Members with this permission will have every permission and will also bypass channel specific permissions or restrictions (for example, these members would get access to all private channels) **This is a dangerous permission to grant.", "Administrator" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ServerRegion",
+                columns: new[] { "Id", "Icon", "Name", "RegionServerURL" },
+                values: new object[,]
+                {
+                    { 1L, "https://upload.wikimedia.org/wikipedia/commons/4/4a/Brazilian_flag_icon_round.svg", "Mr Worldwide", "https://echo.chat/rtc/brazil/rtchub" },
+                    { 2L, "https://en.wikipedia.org/wiki/St._Peter%27s_Basilica#/media/File:Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg", "holy pop", "https://echo.chat/rtc/vatikanet/rtchub" }
                 });
 
             migrationBuilder.InsertData(
@@ -3562,9 +3758,9 @@ namespace DomainCoreApi.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentMethod_BillingInformationId",
+                name: "IX_PaymentMethod_CountryId",
                 table: "PaymentMethod",
-                column: "BillingInformationId");
+                column: "CountryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentMethod_PaymentTypeId",
@@ -4228,6 +4424,9 @@ namespace DomainCoreApi.Migrations
                 name: "VoiceSettings");
 
             migrationBuilder.DropTable(
+                name: "WindowSettings");
+
+            migrationBuilder.DropTable(
                 name: "Connection");
 
             migrationBuilder.DropTable(
@@ -4277,6 +4476,9 @@ namespace DomainCoreApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "MessageReport");
+
+            migrationBuilder.DropTable(
+                name: "Country");
 
             migrationBuilder.DropTable(
                 name: "ProfileReportReason");

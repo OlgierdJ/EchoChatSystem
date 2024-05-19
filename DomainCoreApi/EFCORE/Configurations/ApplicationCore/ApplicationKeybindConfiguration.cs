@@ -15,6 +15,11 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
             builder.Property(b => b.Description).IsRequired(false); // not mapped most of stuff
 
             builder.HasMany(b => b.Keybinds).WithOne(e => e.ApplicationKeybind).HasForeignKey(b => b.ApplicationKeybindId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+
+            builder.HasData(new ApplicationKeybind { Id = 1, Name = "mute / unmute self", Description= "mutes self if unmuted and unmutes self if muted"});
+            builder.HasData(new ApplicationKeybind { Id = 2, Name = "Edit message", Description = "Edit a message if you have the permission" });
+            builder.HasData(new ApplicationKeybind { Id = 3, Name = "Pin message", Description = "Pin a message in a chat" });
+            builder.HasData(new ApplicationKeybind { Id = 4, Name = "Reply", Description = "make a reply to a message in a chat" });
         }
     }
 }

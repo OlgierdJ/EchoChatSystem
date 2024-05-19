@@ -19,6 +19,14 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
                 l => l.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId),
                   r => r.HasOne(e => e.Permission).WithMany().HasForeignKey(e => e.PermissionId)
             );
+
+            builder.HasData(new Permission { Id = 1, Name = "View_Server" });
+            builder.HasData(new Permission { Id = 2, Name = "Send_Message" });
+            builder.HasData(new Permission { Id = 3, Name = "Add_Friend" });
+            builder.HasData(new Permission { Id = 4, Name = "Join_Voice" });
+            builder.HasData(new Permission { Id = 5, Name = "Delete_Account" });
+            builder.HasData(new Permission { Id = 6, Name = "Create_Server" });
+            builder.HasData(new Permission { Id = 7, Name = "Create_Chats" });
         }
     }
 }
