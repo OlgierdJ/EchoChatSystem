@@ -2,12 +2,24 @@ let audioCtx;
 let buffer;
 // Stereo
 let channels = 2;
-
+var myStream;
 
 function SetDotNetHelper(dotNetHelper) {
     window.dotNetHelper = dotNetHelper;
+    DotNet.invokeMethodAsync('{ASSEMBLY NAME}', '{.NET METHOD ID}', { ARGUMENTS });
 }
-
+window.RelayVoiceData = () => {
+    navigator.mediaDevices.getUserMedia({
+        audio: true
+    }).then((stream) => {
+        myStream = stream
+    }).catch((err) => {
+        console.log("unable to connect because " + err)
+    })
+    DotNet.invokeMethodAsync('EchoWebapp', 'RelayVoiceData',myStream).then(
+        myStream.getAudioTracks()[0].enabled = true
+    )
+}
 
 function init() {
     audioCtx = new AudioContext();

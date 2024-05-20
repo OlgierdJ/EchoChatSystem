@@ -67,39 +67,39 @@
     }
     protected override async Task OnInitializedAsync()
     {
-       //  hubConnection = new HubConnectionBuilder()
-       //      .WithUrl("https://localhost:7265/chat", opts =>
-       //      {
-       //          opts.AccessTokenProvider = () => Task.FromResult("aaaaBBBBccccDDDDDD");
-       //      })
-       //      .Build();
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:7265/chat", opts =>
+            {
+                opts.AccessTokenProvider = () => Task.FromResult("aaaaBBBBccccDDDDDD");
+            })
+            .Build();
 
-       //  hubConnection.On<string>("ReceiveMessage", (message) =>
-       //  {
-       //      var encodedMsg = $"{message}";
-       //      messages.Add(encodedMsg);
-       //      InvokeAsync(StateHasChanged);
-       //  });
-       //  hubConnection.On<byte[]>("ReceiveSoundStream", async(frames) =>
-       // {
-       //     if (frames != null)
-       //     {
-       //         try
-       //         {
-       //             // Put the bytes in a memory stream
-       //             // var stream = new MemoryStream(frames);
-       //             // // // Play the audio file
-       //             // using var streamRef = new DotNetStreamReference(stream: stream);
-       //             await JS.InvokeVoidAsync("playAudio", frames);
-       //         }
-       //          catch (Exception e)
-       //         {
-       //          Console.WriteLine(e.Message); ;
-       //          }
-       //     }
-       // });
+        hubConnection.On<string>("ReceiveMessage", (message) =>
+        {
+            var encodedMsg = $"{message}";
+            messages.Add(encodedMsg);
+            InvokeAsync(StateHasChanged);
+        });
+        hubConnection.On<byte[]>("ReceiveSoundStream", async(frames) =>
+       {
+           if (frames != null)
+           {
+               try
+               {
+                   // Put the bytes in a memory stream
+                   // var stream = new MemoryStream(frames);
+                   // // // Play the audio file
+                   // using var streamRef = new DotNetStreamReference(stream: stream);
+                   await JS.InvokeVoidAsync("playAudio", frames);
+               }
+                catch (Exception e)
+               {
+                Console.WriteLine(e.Message); ;
+                }
+           }
+       });
 
-       //  await hubConnection.StartAsync();
+        await hubConnection.StartAsync();
     }
 
     async IAsyncEnumerable<byte[]> clientStreamData()
