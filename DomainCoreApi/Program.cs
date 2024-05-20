@@ -50,6 +50,7 @@ builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwa
 builder.Services.AddTransient(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));
 builder.Services.AddTransient(typeof(ISecurityCredentialsRepository), typeof(SecurityCredentialsRepository));
+builder.Services.AddTransient(typeof(ILanguageRepository), typeof(LanguageRepository));
 //Add services to the container.
 builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
 builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));

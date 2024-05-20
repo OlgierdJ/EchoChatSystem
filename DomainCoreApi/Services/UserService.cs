@@ -14,11 +14,13 @@ namespace DomainCoreApi.Services
 
         private readonly IPasswordHandler _pwdHandler;
         private readonly IAccountService _accountService;
+        private readonly ILanguageRepository _languageRepository;
         private readonly CreateUserHandler _createUserHandler = new();
-        public UserService(IUserRepository repository, IPasswordHandler pwdHandler, IAccountService accountService) : base(repository)
+        public UserService(IUserRepository repository, IPasswordHandler pwdHandler, IAccountService accountService, ILanguageRepository languageRepository) : base(repository)
         {
             _pwdHandler = pwdHandler;
             _accountService = accountService;
+            _languageRepository = languageRepository;
         }
 
         public async Task<User> CreateUserAsync(RegisterRequestDTO input)
@@ -30,6 +32,7 @@ namespace DomainCoreApi.Services
                 var result = await _repository.AddAsync(data.Item1);
                 data.Item2.UserId = result.Id;
                 await _pwdHandler.CreatePassword(input.Password, data.Item1.Id);
+                data.Item2.Settings.Language = await _languageRepository.GetSingleAsync(b => b.Id == 10);
                 await _accountService.AddAsync(data.Item2);
                 return result;
             }

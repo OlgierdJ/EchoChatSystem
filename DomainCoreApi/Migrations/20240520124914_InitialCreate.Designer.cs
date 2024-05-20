@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    [Migration("20240519152037_InitialCreate")]
+    [Migration("20240520124914_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -1254,10 +1254,10 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Settings.FriendRequestSettings", b =>
                 {
                     b.Property<decimal>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("AccountId")
-                        .HasColumnType("decimal(20,0)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
@@ -1279,7 +1279,7 @@ namespace DomainCoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId")
+                    b.HasIndex("AccountSettingsId")
                         .IsUnique();
 
                     b.ToTable("FriendRequestSettings");
@@ -4677,20 +4677,13 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Settings.FriendRequestSettings", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "RequestedAccount")
-                        .WithOne()
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.Settings.FriendRequestSettings", "AccountId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("FriendRequestSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.Settings.FriendRequestSettings", "Id")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.Settings.FriendRequestSettings", "AccountSettingsId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("AccountSettings");
-
-                    b.Navigation("RequestedAccount");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Settings.GameOverlaySettings", b =>

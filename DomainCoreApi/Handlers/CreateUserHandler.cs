@@ -79,8 +79,6 @@ namespace DomainCoreApi.Handlers
                     KeybindSettings = new KeybindSettings(),
                     Language = new Language()
                     {
-                        Name = "English (United States)",
-                        LanguageCode = "en-US",
                     },
                     NotificationSettings = new NotificationSettings()
                     {
@@ -123,7 +121,12 @@ namespace DomainCoreApi.Handlers
                     VideoSettings = new VideoSettings()
                     {
                         AlwaysPreviewVideo = false,
-                        CameraDevice = ""
+                        CameraDevice = "",
+                        VideoBackground ="",
+                        UseOpenH264VideoCodec =false,
+                        EnableHardwareAccelerationForVideo =false,
+                        EnableForceQualityOfServicePacketPrio = false,
+                        UseDDLInjectionToCaptureScreen = false
                     },
                     ActivitySettings = new ActivitySettings()
                     {

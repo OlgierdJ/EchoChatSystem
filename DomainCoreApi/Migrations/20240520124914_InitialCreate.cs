@@ -2024,9 +2024,9 @@ namespace DomainCoreApi.Migrations
                 name: "FriendRequestSettings",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     AccountSettingsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Everyone = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     FriendsOfFriends = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     ServerMembers = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
@@ -2035,14 +2035,9 @@ namespace DomainCoreApi.Migrations
                 {
                     table.PrimaryKey("PK_FriendRequestSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FriendRequestSettings_AccountSettings_Id",
-                        column: x => x.Id,
+                        name: "FK_FriendRequestSettings_AccountSettings_AccountSettingsId",
+                        column: x => x.AccountSettingsId,
                         principalTable: "AccountSettings",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_FriendRequestSettings_Account_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Account",
                         principalColumn: "Id");
                 });
 
@@ -3682,9 +3677,9 @@ namespace DomainCoreApi.Migrations
                 column: "ReportsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendRequestSettings_AccountId",
+                name: "IX_FriendRequestSettings_AccountSettingsId",
                 table: "FriendRequestSettings",
-                column: "AccountId",
+                column: "AccountSettingsId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

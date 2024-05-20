@@ -14,8 +14,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
             builder.Property(b => b.Everyone).HasDefaultValue(true).IsRequired();
             builder.Property(b => b.FriendsOfFriends).HasDefaultValue(false).IsRequired();
             builder.Property(b => b.ServerMembers).HasDefaultValue(false).IsRequired();
-            builder.HasOne(b => b.RequestedAccount).WithOne().HasForeignKey<FriendRequestSettings>(b => b.AccountId).OnDelete(DeleteBehavior.ClientCascade).IsRequired(false);
-            builder.HasOne(b => b.AccountSettings).WithOne(e => e.FriendRequestSettings).HasForeignKey<FriendRequestSettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasOne(b => b.AccountSettings).WithOne(e => e.FriendRequestSettings).HasForeignKey<FriendRequestSettings>(b => b.AccountSettingsId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }
     }
 }
