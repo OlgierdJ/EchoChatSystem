@@ -1,5 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.RequestCore;
-using CoreLib.Entities.EchoCore.UserCore;
+﻿using CoreLib.Entities.EchoCore.UserCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;

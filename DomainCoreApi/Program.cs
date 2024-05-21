@@ -51,7 +51,7 @@ builder.Services.AddTransient(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));
 builder.Services.AddTransient(typeof(ISecurityCredentialsRepository), typeof(SecurityCredentialsRepository));
 //Add services to the container.
-builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
+//builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
 builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
 
 
