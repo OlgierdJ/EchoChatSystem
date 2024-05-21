@@ -1,4 +1,6 @@
-﻿using CoreLib.DTO.EchoCore.RequestCore;
+﻿using CoreLib.DTO.RequestCore.FriendCore;
+using CoreLib.DTO.RequestCore.RelationCore;
+using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces.Bases;
 
@@ -11,7 +13,7 @@ namespace CoreLib.Interfaces.Services
         Task<bool> UpdatePassword(ulong id, string password);
 
         Task<bool> AcceptFriendRequest(ulong id, AcceptFriendRequestRequestDTO requestDTO);
-        Task<bool> AddFriend(ulong id, AddFriendRequestDTO requestDTO);
+        Task<bool> AddFriend(ulong id, SendFriendRequestDTO requestDTO);
         Task<bool> AddUserConnection(ulong id, AddUserConnectionRequestDTO requestDTO);
 
         Task<bool> BlockUser(ulong id, BlockUserRequestDTO requestDTO);

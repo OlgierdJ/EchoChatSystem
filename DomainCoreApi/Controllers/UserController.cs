@@ -1,5 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.RequestCore;
-using CoreLib.Entities.EchoCore.UserCore;
+﻿using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.Controllers.Bases;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using DomainCoreApi.Handlers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using CoreLib.DTO.RequestCore.UserCore;
 
 namespace DomainCoreApi.Controllers
 {
