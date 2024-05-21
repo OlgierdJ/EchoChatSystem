@@ -3,7 +3,8 @@ using CoreLib.Interfaces.Bases;
 
 namespace CoreLib.Interfaces.Services
 {
-    public interface IReportService : IEntityService<ProfileReport, ulong>
+    public interface IReportService
     {
+
     }
 }

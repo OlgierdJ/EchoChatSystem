@@ -10,7 +10,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.TextChannel
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(b => b.FileURL).HasMaxLength(256).IsRequired();
+            builder.Property(b => b.FileLocationURL).HasMaxLength(256).IsRequired();
 
             builder.HasOne(b => b.Message).WithMany(b => b.Attachments).HasForeignKey(b => b.MessageId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
         }

@@ -6,8 +6,9 @@ namespace CoreLib.DTO.EchoCore.ServerCore
     {
         public string InviteCode { get; set; }
         public string? Location { get; set; } //where it navigates the user upon joining.
-        public int Uses { get; set; } //where it navigates the user upon joining.
+        public int TimesUsed { get; set; } //where it navigates the user upon joining.
+        public int TotalUses { get; set; } //where it navigates the user upon joining.
         public UserMinimalDTO User { get; set; }
-        public DateTime? Expires { get; set; }
+        public DateTime? ExpirationTime { get; set; }
     }
 }

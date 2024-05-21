@@ -1,5 +1,5 @@
 ﻿@page "/register"
-@using CoreLib.DTO.EchoCore.RequestCore
+@using CoreLib.DTO.RequestCore.UserCore
 @using CoreLib.Entities.EchoCore.UserCore
 @using CoreLib.WebAPI
 @using MudBlazor
@@ -91,7 +91,7 @@
         User.DateOfBirth = date.Value;
         User.DisplayName = displayName != "" ? displayName : null;
         //send user to api
-        var data = await _echoAPI.CreateUserAsync(User);
+        // var data = await _echoAPI.CreateUserAsync(User);
     }
 
     void GoToLogin()

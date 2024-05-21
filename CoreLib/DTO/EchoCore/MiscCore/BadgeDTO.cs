@@ -1,6 +1,14 @@
 ﻿namespace CoreLib.DTO.EchoCore.MiscCore
 {
-    public class BadgeDTO
+    public interface IBadge
+    {
+        string Description { get; set; }
+        string IconURL { get; set; }
+        ulong Id { get; set; }
+        int OrderingWeight { get; set; }
+    }
+
+    public class BadgeDTO : IBadge
     {
         public ulong Id { get; set; }
         public int OrderingWeight { get; set; }

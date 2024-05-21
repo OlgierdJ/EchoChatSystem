@@ -13,7 +13,7 @@ using CoreLib.Entities.EchoCore.UserCore;
 
 namespace CoreLib
 {
-    public interface IDomainNotificationHub
+    public interface IDomainNotificationHub //used for pushing events to domain related servers
     {
         //Task Login(string user);
         Task JoinGroup(string groupName);

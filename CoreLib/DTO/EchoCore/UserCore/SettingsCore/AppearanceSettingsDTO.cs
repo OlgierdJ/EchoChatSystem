@@ -3,7 +3,21 @@ using CoreLib.Entities.Enums;
 
 namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class AppearanceSettingsDTO
+    public interface IAppearanceSettings
+    {
+        bool DarkSideBar { get; set; }
+        ulong Id { get; set; }
+        string InAppIcon { get; set; }
+        MessageDisplayMode MessageDisplayMode { get; set; }
+        byte PixelChatFontScale { get; set; }
+        byte PixelSpaceBetweenMessageGroupsScale { get; set; }
+        bool ShowAvatarsInCompactMode { get; set; }
+        ThemeDTO Theme { get; set; }
+        uint ThemeId { get; set; }
+        byte ZoomLevel { get; set; }
+    }
+
+    public class AppearanceSettingsDTO : IAppearanceSettings
     {
         public ulong Id { get; set; }
         public uint ThemeId { get; set; }

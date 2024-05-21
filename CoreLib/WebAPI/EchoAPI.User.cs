@@ -1,4 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.RequestCore;
+﻿using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using System.Text;
 using System.Text.Json;

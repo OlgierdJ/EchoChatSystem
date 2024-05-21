@@ -1,6 +1,14 @@
 ﻿namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class FriendRequestSettingsDTO
+    public interface IFriendRequestSettings
+    {
+        bool Everyone { get; set; }
+        bool FriendsOfFriends { get; set; }
+        ulong Id { get; set; }
+        bool ServerMembers { get; set; }
+    }
+
+    public class FriendRequestSettingsDTO : IFriendRequestSettings
     {
         public ulong Id { get; set; }
         public bool Everyone { get; set; }

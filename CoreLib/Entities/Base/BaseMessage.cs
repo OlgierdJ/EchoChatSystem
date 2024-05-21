@@ -6,6 +6,7 @@ namespace CoreLib.Entities.Base
     {
         public string Content { get; set; }
         public DateTime TimeSent { get; set; }
+        public DateTime? TimeEdited { get; set; }
     }
     public abstract class BaseMessage<TId, TAuthor, TAuthorId> : BaseMessage<TId>
         where TAuthor : IEntity<TAuthorId>

@@ -1,6 +1,13 @@
 ﻿namespace CoreLib.DTO.EchoCore.MiscCore.AppearanceCore
 {
-    public class LanguageDTO
+    public interface ILanguage
+    {
+        uint Id { get; set; }
+        string LanguageCode { get; set; }
+        string Name { get; set; }
+    }
+
+    public class LanguageDTO : ILanguage
     {
         public uint Id { get; set; }
         public string Name { get; set; } //English (United States), 普通话, Dansk

@@ -2,7 +2,27 @@
 
 namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class AccessibilitySettingsDTO
+    public interface IAccessibilitySettings
+    {
+        bool AllowTextToSpeech { get; set; }
+        bool AlwaysUnderlineLinks { get; set; }
+        bool ApplySaturationToCustomColors { get; set; }
+        bool AutoPlayGIFsOnAppFocus { get; set; }
+        ulong Id { get; set; }
+        bool PlayAnimatedEmojis { get; set; }
+        bool ReducedMotion { get; set; }
+        RoleColorMode RoleColorMode { get; set; }
+        byte SaturationPercent { get; set; }
+        bool ShowSendMessageButton { get; set; }
+        StickerAnimationMode StickerAnimationMode { get; set; }
+        bool SyncContrastSettings { get; set; }
+        bool SyncProfileThemes { get; set; }
+        bool SyncReducedMotionWithPC { get; set; }
+        byte TextToSpeechRate { get; set; }
+        bool UseLegacyChatInput { get; set; }
+    }
+
+    public class AccessibilitySettingsDTO : IAccessibilitySettings
     {
         public ulong Id { get; set; }
         //Color stuff

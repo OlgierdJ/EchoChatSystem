@@ -1,6 +1,15 @@
 ﻿namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class ActivitySettingsDTO
+    public interface IActivitySettings
+    {
+        bool AllowFriendsToJoinGame { get; set; }
+        bool AllowVoiceChannelParticipantsToJoinGame { get; set; }
+        bool DisplayCurrentActivityAsAStatusMessage { get; set; }
+        ulong Id { get; set; }
+        bool ShareActivityStatusOnLargeServerJoin { get; set; }
+    }
+
+    public class ActivitySettingsDTO : IActivitySettings
     {
         public ulong Id { get; set; }
         public bool DisplayCurrentActivityAsAStatusMessage { get; set; }

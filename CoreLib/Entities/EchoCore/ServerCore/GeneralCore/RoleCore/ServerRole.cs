@@ -6,6 +6,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
 {
     public class ServerRole : BaseRole<ulong, ServerProfileServerRole, ServerRolePermission>
     {
+        public ulong OwnerId { get; set; } //perhaps not needed?
         public int Importance { get; set; } //perhaps not needed?
         public string Colour { get; set; } //perhaps not needed?
         public string IconURL { get; set; } //perhaps not needed?
@@ -14,6 +15,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
         public bool IsAdmin { get; set; } //perhaps not needed?
 
 
+        public Server Owner { get; set; } //perhaps not needed?
 
         //these permissions override the global permisssions for this section.
         public ICollection<ServerChannelCategoryRole>? ChannelCategoryRoles { get; set; } //role overrides within channelcategories

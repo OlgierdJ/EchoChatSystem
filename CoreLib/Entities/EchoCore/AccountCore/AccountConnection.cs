@@ -7,6 +7,8 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ulong AccountId { get; set; }
         public uint ConnectionId { get; set; }
 
+        public bool DisplayOnProfile { get; set; }
+        public string Name { get; set; } //platform user name
         public string AuthorizeResponseType { get; set; }
         public string AuthorizeClientId { get; set; }
         public string AuthorizeState { get; set; }

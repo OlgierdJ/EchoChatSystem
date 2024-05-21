@@ -17,8 +17,10 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore
 
         public bool KickFromServerOnVoiceLeave { get; set; } //set if invited through voiceinvite with guestlink enabled
         public string Nickname { get; set; } //overrides account name when entity is displayed to the client
+        public string ImageIconURL { get; set; } //duplicated from accountprofile upon joining server.
         public DateTime TimeJoined { get; set; }
         public string JoinMethod { get; set; } //How the user joined the server <-- invitelink, guestlink, eventlink, etc
+        public bool IsOwner { get; set; } //whether or not this profile is owner, only one profile can be owner and the owner cant leave unless they delete server.
         public Account Account { get; set; }
         public Server Server { get; set; }
         public AccountServerFolder? Folder { get; set; }
