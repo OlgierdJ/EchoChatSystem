@@ -1,4 +1,6 @@
-﻿@using CoreLib.Entities.EchoCore.AccountCore
+﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
+@using CoreLib.DTO.EchoCore.UserCore
+@using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.ChatCore
 @using EchoWebapp.Client.Components.Shared
 @inject IJSRuntime _js
@@ -24,17 +26,16 @@
             @if (Content.Participants.Count() > 2)
             {
                 <MudAvatar>
-                    <MudImage Src="@Content.IconUrl" />
+                    @* <MudImage Src="@Content.IconUrl" /> *@
                 </MudAvatar>
                 <MudText>@Content.Name</MudText>
             }
             else
             {
                 <MudAvatar>
-                    <MudImage Src="@Content.Participants.Where(e => e.Id != 112).First().Profile.AvatarFileURL" />
+                    <MudImage Src="@Content.Participants.Where(e => e.Id != 112).First().ImageIconURL" />
                 </MudAvatar>
-                <MudText>@Content.Participants.Where(e => e.Id!=112).First().Name</MudText>
-                <!-- this logic should probably be made when chat is created and set chat name to other participants name? -->
+                <MudText>@Content.Name</MudText>
             }
                 <MudSpacer />
                 <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
@@ -45,10 +46,12 @@
                 @if (Content.Participants.Count() > 2)
                 {
                     <MudIconButton Icon="@Icons.Material.Filled.Group" Color="@(ToggleSidePanel ? Color.Primary : Color.Default)" OnClick="(()=> ToggleSidePanel = !ToggleSidePanel)" />
+                    TextPlaceholder = "Message "+Content.Name;
                 }
                 else
                 {
                     <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Color="@(ToggleSidePanel ? Color.Primary : Color.Default)" OnClick="(()=> ToggleSidePanel = !ToggleSidePanel)" />
+                    TextPlaceholder = "Message @" + Content.Participants.Where(e => e.Id != 112).First().DisplayName;
                 }
             </MudToolBar>
         </MudPaper>
@@ -59,7 +62,7 @@
             <div class="ma-0 overflow-auto" style="min-width: 70vw; height: 85vh;">
                 @if (Content != null){
                 <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")" Class="overflow-auto">
-                    @foreach (ChatMessage m in Content.Messages.OrderBy(e => e.TimeSent))
+                    @foreach (MessageDTO m in Content.Messages.OrderBy(e => e.TimeSent))
                     {
                         if (m.TimeSent.Date != prevDate.Date)
                         {
@@ -107,7 +110,7 @@
                             }
 
                         }
-                        @if (prevSender == m.Author && checkTime(m.TimeSent))
+                        @if (prevSender == m.Sender && checkTime(m.TimeSent))
                         {
 
                             <MudPaper Elevation="0" class="d-flex flex-grow-1 px-4 align-center" Style="@($"background:{Colors.Shades.Transparent}")">
@@ -124,19 +127,19 @@
                             <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 px-4 pt-4 mt-2" Style="@($"background:{Colors.Shades.Transparent}")">
                                 <div class="d-flex flex-grow-1 gap-4">
                                     <MudAvatar Color="Color.Secondary" Size="Size.Medium">
-                                        @if (m.Author?.Profile != null)
+                                        @if (m.Sender != null)
                                         {
-                                            <MudImage Src="@m.Author.Profile.AvatarFileURL"></MudImage>
+                                                <MudImage Src="@m.Sender.ImageIconURL"></MudImage>
                                         }
                                         else
                                         {
-                                            @m.Author?.Name.First()
+                                                @m.Sender?.DisplayName.First()
                                         }
                                     </MudAvatar>
 
                                     <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
                                         <div class="d-flex flex-grow-1 gap-3">
-                                            <MudText Color="Color.Primary">@m.Author?.Name </MudText>
+                                                <MudText Color="Color.Primary">@m.Sender?.DisplayName </MudText>
                                                 <MudText Style="@($"color:{Colors.Grey.Default};")">@m.TimeSent.ToString("HH:mm")</MudText>
                                             </div>
                                             <MudText Typo="Typo.body1">@((MarkupString)m.Content.Replace(Environment.NewLine, "<br />"))</MudText>
@@ -146,13 +149,13 @@
                         }
 
                         prevDate = m.TimeSent;
-                        prevSender = m.Author;
+                        prevSender = m.Sender;
                     }
                 </MudPaper>
             }
             </div>
             <MudToolBar Class="d-flex flex-column-reverse flex-grow-1 gap-0 my-5" Style="@($"background:{Colors.Shades.Transparent}")">
-                <MudTextField FullWidth @bind-Value="TextValue" Margin="Margin.Dense" Variant="Variant.Filled" OnKeyDown="SendMessage" AutoGrow MaxLines="11" Placeholder="Message #general" Class="px-5 py-2" Immediate="true" MaxLength="1000" TextUpdateSuppression="false" Style="background: var(--mud-palette-dark);opacity:1;">
+                <MudTextField FullWidth @bind-Value="TextValue" Margin="Margin.Dense" Variant="Variant.Filled" OnKeyDown="SendMessage" AutoGrow MaxLines="11" Placeholder="@TextPlaceholder" Class="px-5 py-2" Immediate="true" MaxLength="1000" TextUpdateSuppression="false" Style="background: var(--mud-palette-dark);opacity:1;">
                  </MudTextField>
                  @* <MudIconButton Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" ButtonType="ButtonType.Button" /> *@
              </MudToolBar>
@@ -160,30 +163,33 @@
         @if (Content.Participants.Count() > 2)
         {
             <!-- remove logic of removing yourself to before sending content -->
-            <MemberListComponent Visible="ToggleSidePanel" Members="@Content.Participants.Where(e => e.Id != 112).ToList()"/>
+            <MemberListComponent Visible="ToggleSidePanel" Members="@Content.Participants.ToList()"/>
         }
         else
         {
-            <ChatUserProfileComponent Visible="ToggleSidePanel" Account="@Content.Participants.Where(e => e.Id != 112).First()" />
+            <ChatUserProfileComponent Visible="ToggleSidePanel" Member="@Content.Participants.Where(e => e.Id != 112).First()" />
         }
     </div>
 
  </div>
 
 
- @code {
+@code {
     [Parameter]
-    public Chat? Content { get; set; }
+    // public Chat? Content { get; set; }
+
+    public ChatDTO? Content { get; set; }
 
     public bool ToggleSidePanel = false;
 
     public string TextValue { get; set; }
+    public string TextPlaceholder { get; set; }
 
     bool checkTime(DateTime dt)
     {
         return (dt.Date == prevDate.Date) && (dt.Hour == prevDate.Hour) && (dt.Minute < prevDate.AddMinutes(7).Minute);
     }
-     private async Task SendMessage(KeyboardEventArgs e)
+    private async Task SendMessage(KeyboardEventArgs e)
     {
         if (e.Key is "Enter" && prevKey is not "Shift")
         {
@@ -201,11 +207,15 @@
             // {
             if (!string.IsNullOrWhiteSpace(TextValue))
             {
-                ChatMessage newmsg = new ChatMessage();
+                MessageDTO newmsg = new();
                 newmsg.Content = TextValue.Trim();
-                newmsg.MessageHolder = Content;
                 newmsg.TimeSent = DateTime.Now;
-                newmsg.Author = Content.Participants.Where(e => e.Id == 112).First();
+                newmsg.Sender = new UserMinimalDTO()
+                    {
+                        Id = 112,
+                        ImageIconURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg",
+                        DisplayName = "John Doe",
+                    }; 
                 //code to reflect your id
 
                 Content.Messages.Add(newmsg);
@@ -223,5 +233,5 @@
     private string prevKey = "";
 
     private DateTime prevDate = DateTime.MinValue;
-    private Account prevSender = new();
+    private UserMinimalDTO prevSender = new();
 }

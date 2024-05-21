@@ -1,4 +1,5 @@
-﻿@using CoreLib.Entities.EchoCore.ChatCore
+﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
+@using CoreLib.Entities.EchoCore.ChatCore
 @*
     Chat layout for when it exists within the scrollable list in the direct message section.
 
@@ -6,9 +7,9 @@
     Otherwise reflect the chat name and image.
 *@
 <MudAvatar>
-    @if (Chat.IconUrl != "")
+    @if (false) //Chat.IconUrl != ""
     {
-        <MudImage Src="@Chat.IconUrl" />
+        @* <MudImage Src="@Chat.IconUrl" /> *@ //Chats Image/Icon is missing?
     }
     else
     {
@@ -19,5 +20,5 @@
 @code {
 
     [Parameter]
-    public Chat? Chat { get; set; }
+    public ChatDTO? Chat { get; set; }
 }

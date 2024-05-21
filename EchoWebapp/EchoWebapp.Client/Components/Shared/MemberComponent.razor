@@ -1,4 +1,5 @@
-﻿@using CoreLib.Entities.EchoCore.AccountCore
+﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
+@using CoreLib.Entities.EchoCore.AccountCore
 @*
     membercomponent layout for when it exists within the scrollable list in the memberlistcomponent.
 
@@ -8,14 +9,14 @@
 
     Hovering and right-clicking the member allows the user to display the user tooltip of the member.
 *@
-@if(Account != null)
+@if (Member != null)
 {
     <MudPaper Width="20vw" Square Style="background: var(--mud-palette-dark);">
-        <h2>@Account.Profile.DisplayName</h2>
-        <h4>@Account.Name.ToLower()</h4>
+         <h2>@Member.DisplayName</h2>
+        <h4>@Member.Profile.User.Name.ToLower()</h4>
         <MudDivider />
         Echo Member since
-        <h2>@Account.TimeCreated</h2>
+        @* <h2>@Member.TimeCreated</h2> *@ <!-- Removed? -->
         Note?
     </MudPaper>
 }
@@ -23,5 +24,5 @@
 @code {
 
     [Parameter]
-    public Account Account { get; set; }
+    public MemberDTO Member { get; set; }
 }

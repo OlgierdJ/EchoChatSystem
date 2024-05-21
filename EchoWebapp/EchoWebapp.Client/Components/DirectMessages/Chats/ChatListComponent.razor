@@ -1,4 +1,6 @@
-﻿@using CoreLib.Entities.EchoCore.AccountCore
+﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
+@using CoreLib.DTO.EchoCore.UserCore
+@using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.ChatCore
 @using MudBlazor
 @rendermode InteractiveAuto
@@ -14,7 +16,7 @@
 <MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
      <MudText Class="px-5 py-2">Direct Messages</MudText>
      <MudList Clickable="true">
-         @foreach (var c in chatList.OrderByDescending(e => e.Messages.Last().TimeSent))
+         @foreach (var c in chat.OrderByDescending(e => e.Messages.Last().TimeSent))
         {
             <MudListItem Dense="true" OnClick="@(() => OnItemSelected.InvokeAsync(c))">
                 <ChatComponent Chat="SortChat(c)" />
@@ -40,15 +42,15 @@
                         Description = "Online", Icon = "", IconColor = Color.Success.ToString(),
                     },
                     TimeCreated = DateTime.Now.AddDays(-17),},
-                
-                new Account() { 
-                    Id = 113, Name = "BobTheBuilder", 
-                    Profile = new AccountProfile(){ 
+
+                new Account() {
+                    Id = 113, Name = "BobTheBuilder",
+                    Profile = new AccountProfile(){
                         AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", DisplayName = "Bob The Builder", BannerColor = "#5C23D9"
-                    }, 
+                    },
                     TimeCreated = DateTime.Now.AddDays(-17)
                 },
-                
+
             },
             Messages = new List<ChatMessage>()
                 {
@@ -77,7 +79,7 @@
                         Content = "Dafuq?"
                 },
             }
-                
+
         },
         new Chat()
                 {
@@ -319,17 +321,270 @@ Content = "Just saw the most breathtaking sunset! Sometimes it's the simple thin
 
 
                                             }
-        }
-    }; 
-                            
+        },
+        new Chat()
+                {
+                    Id = 0,
+                    IconUrl = "",
+                    Name = "Bob The Builder",
+                    Participants = new List<Account>()
+                            {
+                    new Account() { Id = 112, Name = "TheDoe", Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", },
+                        ActivityStatus = new AccountActivityStatus(){ Description = "Online", Icon = "", IconColor = Color.Success.ToString()
+                    }, TimeCreated = DateTime.Now.AddDays(-17) },
+                    new Account() { Id = 113, Name = "BobTheBuilder", Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", DisplayName = "Bob The Builder" } },
+                            },
+                    Messages = new List<ChatMessage>()
+                            {
+                        new ChatMessage() {
+                            Author = new Account() { Id = 116, Name = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", }},
+                             AuthorId = 116,
+                              TimeSent = DateTime.Now.AddDays(-2),
+                               Content = "YEEEEEEET! :'D"
+                        },
+                        new ChatMessage() {
+                            Author = new Account() { Id = 116, Name = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", }},
+                             AuthorId = 116,
+                              TimeSent = DateTime.Now.AddDays(-2).AddMinutes(1),
+                               Content = "Skrrt"
+                        },
+                         new ChatMessage() {
+                            Author = new Account() { Id = 116, Name = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", }},
+                             AuthorId = 116,
+                              TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
+                               Content = "BRRRRRRRRRRRRR"
+                        },
+                        new ChatMessage() {
+                            Author = new Account() { Id = 113, Name = "BobTheBuilder", Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } },
+                             AuthorId = 113,
+                              TimeSent = DateTime.Now.AddDays(-4).AddHours(3),
+                               Content = "Dafuq?"
+                        },
+                            }
+                },
+    };
 
-    public Chat SortChat(Chat c)
+    public List<ChatDTO> chat = new()
+    {
+        new ChatDTO(){
+            Id = 0,
+            //IconUrl = "", Does the chat no longer have image?
+            Name = "Bob The Builder",
+            Participants = new List<MemberDTO>()
+            {
+                new MemberDTO()
+                {
+                    Id = 112,
+                    Profile = new ExternalUserProfileDTO()
+                    {
+                        AboutMe = "Test Message",
+                        BannerColour = "#5C23D9",
+                        MutualFriends = null, //Insert Entire UserDTO to test
+                        MutualServers = null, //Servers Not Implemented, might make dummydata servers to test
+                        Note = "",
+                        User = new()
+                        {
+                            Name = "UserNameIsImportant" //Is this the only value in Member.Profile.User we need, maybe move out to profile or just member idk?
+                        }
+                    },
+                    ImageIconURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg",
+                    ActiveStatus = new ActiveActivityStatusDTO()
+                    {
+                        DisplayedContent = "Online", Icon = "", IconColor = Color.Success.ToString(), Name = "Online"
+                    },
+                    DisplayName = "John Doe",
+                    NameColour = "#FF0",
+                    IsOwner = false,
+                    GroupingName = "" 
+                }, //self
+                new MemberDTO()
+                {
+                    Id = 113,
+                    Profile = new ExternalUserProfileDTO()
+                    {
+                        AboutMe = "Test Message",
+                        BannerColour = "#5C23D9",
+                        MutualFriends = null, //Insert Entire UserDTO to test
+                        MutualServers = null, //Servers Not Implemented, might make dummydata servers to test
+                        Note = "",                        
+                        User = new()
+                        {
+                            Name = "BobTheBuilder" //Is this the only value in Member.Profile.User we need, maybe move out to profile or just member idk?
+                        }
+                    },
+                    ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp",
+                    ActiveStatus = new ActiveActivityStatusDTO()
+                    {
+                        DisplayedContent = "Away", Icon = "", IconColor = Color.Warning.ToString(), Name = "Away"
+                    },
+                    DisplayName = "Bob The Builder",
+                    NameColour = "#F0F",
+                    IsOwner = false,
+                    GroupingName = "" // Members / role name
+                }, //bob
+            },
+            LastReadMessageId = 1,
+            Messages = new List<MessageDTO>()
+            {
+                new MessageDTO()
+                {
+                    Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
+                    MessageId = 0,
+                    TimeSent = DateTime.Now.AddDays(-3).AddMinutes(3),
+                    Content = "First Message",
+                    TimeEdited = DateTime.Now.AddDays(-3).AddMinutes(4),
+
+                },
+                new MessageDTO()
+                {
+                    Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
+                    MessageId = 1,
+                    TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
+                    Content = "Old Message"
+                },
+                new MessageDTO()
+                {
+                    Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
+                    MessageId = 2,
+                    TimeSent = DateTime.Now.AddMinutes(-3),
+                    Content = "New Message",
+                    Replied =  new MessageDTO()
+                    {
+                        Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
+                        MessageId = 1,
+                        TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
+                        Content = "Old Message"
+                    },
+                },
+            }
+        },
+        new ChatDTO(){
+            Id = 0,
+            //IconUrl = "", Does the chat no longer have image?
+            Name = "Bob The Builder, Jeppe",
+            Participants = new List<MemberDTO>()
+            {
+                new MemberDTO()
+                {
+                    Id = 112,
+                    Profile = new ExternalUserProfileDTO()
+                    {
+                        AboutMe = "Test Message",
+                        BannerColour = "#5C23D9",
+                        MutualFriends = null, //Insert Entire UserDTO to test
+                        MutualServers = null, //Servers Not Implemented, might make dummydata servers to test
+                        Note = "",
+                        User = new()
+                        {
+                            Name = "UserNameIsImportant" //Is this the only value in Member.Profile.User we need, maybe move out to profile or just member idk?
+                        }
+                    },
+                    ImageIconURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg",
+                    ActiveStatus = new ActiveActivityStatusDTO()
+                    {
+                        DisplayedContent = "Online", Icon = "", IconColor = Color.Success.ToString(), Name = "Online"
+                    },
+                    DisplayName = "John Doe",
+                    NameColour = "#FF0",
+                    IsOwner = false,
+                    GroupingName = "Members" // Nickname in the chat?
+                }, //self
+                new MemberDTO()
+                {
+                    Id = 113,
+                    Profile = new ExternalUserProfileDTO()
+                    {
+                        AboutMe = "Test Message",
+                        BannerColour = "#5C23D9",
+                        MutualFriends = null, //Insert Entire UserDTO to test
+                        MutualServers = null, //Servers Not Implemented, might make dummydata servers to test
+                        Note = "",
+                        User = new()
+                        {
+                            Name = "BobTheBuilder" //Is this the only value in Member.Profile.User we need, maybe move out to profile or just member idk?
+                        }
+                    },
+                    ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp",
+                    ActiveStatus = new ActiveActivityStatusDTO()
+                    {
+                        DisplayedContent = "Away", Icon = "", IconColor = Color.Warning.ToString(), Name = "Away"
+                    },
+                    DisplayName = "Bob The Builder",
+                    NameColour = "#F0F",
+                    IsOwner = false,
+                    GroupingName = "Members" // Nickname in the chat?
+                }, //bob
+                new MemberDTO()
+                {
+                    Id = 116,
+                    Profile = new ExternalUserProfileDTO()
+                    {
+                        AboutMe = "Test Message",
+                        BannerColour = "#ff0",
+                        MutualFriends = null, //Insert Entire UserDTO to test
+                        MutualServers = null, //Servers Not Implemented, might make dummydata servers to test
+                        Note = "",
+                        User = new()
+                        {
+                            Name = "Jeppe1602" //Is this the only value in Member.Profile.User we need, maybe move out to profile or just member idk?
+                        }
+                    },
+                    ImageIconURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg",
+                    ActiveStatus = new ActiveActivityStatusDTO()
+                    {
+                        DisplayedContent = "Away", Icon = "", IconColor = Color.Warning.ToString(), Name = "Away"
+                    },
+                    DisplayName = "Jeppe",
+                    NameColour = "#F0F",
+                    IsOwner = false,
+                    GroupingName = "Members" // Nickname in the chat?
+                }, //jeppe
+            },
+            LastReadMessageId = 1,
+            Messages = new List<MessageDTO>()
+            {
+                new MessageDTO()
+                {
+                    Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
+                    MessageId = 0,
+                    TimeSent = DateTime.Now.AddDays(-3).AddMinutes(3),
+                    Content = "First Message",
+                    TimeEdited = DateTime.Now.AddDays(-3).AddMinutes(4),
+
+                },
+                new MessageDTO()
+                {
+                    Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
+                    MessageId = 1,
+                    TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
+                    Content = "Old Message"
+                },
+                new MessageDTO()
+                {
+                    Sender = new UserMinimalDTO() { Id = 116, DisplayName = "Jeppe", ImageIconURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg" },
+                    MessageId = 2,
+                    TimeSent = DateTime.Now.AddMinutes(-3),
+                    Content = "New Message",
+                    Replied =  new MessageDTO()
+                    {
+                        Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg" },
+                        MessageId = 1,
+                        TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
+                        Content = "Old Message"
+                    },
+                },
+            }
+        }
+    };
+
+
+    public ChatDTO SortChat(ChatDTO c)
     {
         c.Messages = c.Messages.OrderBy(e => e.TimeSent).ToList();
         return c;
     }
 
     [Parameter]
-    public EventCallback<Chat> OnItemSelected { get; set; }
+    public EventCallback<ChatDTO> OnItemSelected { get; set; }
 
 }
