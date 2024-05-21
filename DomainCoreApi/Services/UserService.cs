@@ -32,7 +32,6 @@ namespace DomainCoreApi.Services
                 var result = await _repository.AddAsync(data.Item1);
                 data.Item2.UserId = result.Id;
                 await _pwdHandler.CreatePassword(input.Password, data.Item1.Id);
-                data.Item2.Settings.Language = await _languageRepository.GetSingleAsync(b => b.Id == 10);
                 await _accountService.AddAsync(data.Item2);
                 return result;
             }
