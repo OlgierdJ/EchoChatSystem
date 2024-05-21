@@ -20,7 +20,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.ModerationC
             builder.HasKey(b => b.Id);
 
             builder.Property(b => b.Reason).IsRequired(false);
-            builder.Property(b => b.TimeExpired).HasDefaultValue(null).IsRequired(false);//tænker at hvis der ikke bliver en sendt en værdi så er den et perma
+            builder.Property(b => b.ExpirationTime).HasDefaultValue(null).IsRequired(false);//tænker at hvis der ikke bliver en sendt en værdi så er den et perma
             builder.Property(b => b.TimeKeepMessagesBefore).IsRequired();
 
             builder.HasOne(b => b.Account).WithMany().HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.Restrict).IsRequired();

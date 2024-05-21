@@ -2,7 +2,47 @@
 
 namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class NotificationSettingsDTO
+    public interface INotificationSettings
+    {
+        bool AllowActivityEndNotificationSound { get; set; }
+        bool AllowActivityStartNotificationSound { get; set; }
+        bool AllowActivityUserJoinNotificationSound { get; set; }
+        bool AllowActivityUserLeaveNotificationSound { get; set; }
+        bool AllowDeafenNotificationSound { get; set; }
+        bool AllowIncomingRingNotificationSound { get; set; }
+        bool AllowInvitedToSpeakNotificationSound { get; set; }
+        bool AllowMessageNotificationSound { get; set; }
+        bool AllowMuteNotificationSound { get; set; }
+        bool AllowOutgoingRingNotificationSound { get; set; }
+        bool AllowPTTActivateNotificationSound { get; set; }
+        bool AllowPTTDeactivateNotificationSound { get; set; }
+        bool AllowStreamStartedNotificationSound { get; set; }
+        bool AllowStreamStoppedNotificationSound { get; set; }
+        bool AllowUndeafenNotificationSound { get; set; }
+        bool AllowUnmuteNotificationSound { get; set; }
+        bool AllowUserJoinNotificationSound { get; set; }
+        bool AllowUserLeaveNotificationSound { get; set; }
+        bool AllowUserMovedNotificationSound { get; set; }
+        bool AllowViewerJoinNotificationSound { get; set; }
+        bool AllowViewerLeaveNotificationSound { get; set; }
+        bool AllowVoiceDisconnectedNotificationSound { get; set; }
+        bool DisableAllNotificationSounds { get; set; }
+        bool EnableDesktopNotifications { get; set; }
+        bool EnableSameChannelNotifications { get; set; }
+        bool EnableTaskbarFlashing { get; set; }
+        bool EnableUnreadMessageBadge { get; set; }
+        bool FocusModeEnabled { get; set; }
+        ulong Id { get; set; }
+        byte PushNotificationInactiveTimeoutInMinutes { get; set; }
+        bool ReceiveAnnouncementAndUpdateEmails { get; set; }
+        bool ReceiveCommunicationEmails { get; set; }
+        bool ReceiveRecommendationEmails { get; set; }
+        bool ReceiveSocialEmails { get; set; }
+        bool ReceiveTipEmails { get; set; }
+        TextToSpeechNotificationMode TextToSpeechNotificationMode { get; set; }
+    }
+
+    public class NotificationSettingsDTO : INotificationSettings
     {
         //her lave det om til at NotificationSettings kigger på AccountSettings i stedefor a kigge Account
         public ulong Id { get; set; }

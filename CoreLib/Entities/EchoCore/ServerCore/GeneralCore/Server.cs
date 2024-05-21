@@ -4,6 +4,7 @@ using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore
@@ -11,11 +12,14 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore
     public class Server : BaseEntity<ulong>
     {
         public string Name { get; set; }
+        //public ulong OwnerId { get; set; } //map to serverowner???? or put in role //restrict owner from leaving server
         public DateTime TimeCreated { get; set; }
+        public ICollection<ServerRole>? Roles { get; set; }
         public ICollection<ServerEvent>? Events { get; set; }
         public ICollection<ServerInvite>? Invites { get; set; } //maybe put this into settings
         public ICollection<AccountServerMute>? Muters { get; set; } //maybe put this into settings
         public ServerSettings? Settings { get; set; }
+        //public ServerProfile Owner { get; set; } //restrict user from leaving server
 
         public ICollection<ServerAuditLog>? AuditLogs { get; set; }
         public ICollection<ServerBan>? BanList { get; set; }

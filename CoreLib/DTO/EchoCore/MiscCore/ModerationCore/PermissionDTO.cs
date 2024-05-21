@@ -1,9 +1,16 @@
 ﻿namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    public class PermissionDTO
+    public interface IPermission : IPermissionMinimal
+    {
+        string? Description { get; set; }
+        string? GroupingName { get; set; }
+    }
+
+    public class PermissionDTO : IPermission
     {
         public ulong Id { get; set; }
         public string Name { get; set; } //Example app_view_admin_userinterface
-        public bool? State { get; set; } //state. (true = enabled, null = default, false = disabled)
+        public string? Description { get; set; }
+        public string? GroupingName { get; set; } //taken from category
     }
 }

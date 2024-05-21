@@ -2,7 +2,16 @@
 
 namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
 {
-    public class MemberDTO
+    public interface IMember
+    {
+        ActiveActivityStatusDTO? ActiveStatus { get; set; }
+        string GroupingName { get; set; }
+        bool IsOwner { get; set; }
+        string NameColour { get; set; }
+        ExternalUserProfileDTO? Profile { get; set; }
+    }
+
+    public class MemberDTO : IUserMinimal, IMember
     {
         public ulong Id { get; set; } //their unique id for mapping interactions to api.
         public string DisplayName { get; set; } //overwritten by nickname if present

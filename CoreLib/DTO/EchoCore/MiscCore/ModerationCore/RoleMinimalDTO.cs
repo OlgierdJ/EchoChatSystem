@@ -1,9 +1,20 @@
-﻿namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    public class RoleMinimalDTO
+    public interface IRoleMinimal
+    {
+        ulong Id { get; set; }
+
+        string Name { get; set; }
+    }
+    public class RoleMinimalDTO : IRoleMinimal
     {
         public ulong Id { get; set; }
-        public int Importance { get; set; } //helps display role by power.
         public string Name { get; set; }
     }
 }

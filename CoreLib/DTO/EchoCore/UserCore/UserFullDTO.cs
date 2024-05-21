@@ -49,7 +49,7 @@ namespace CoreLib.DTO.EchoCore.UserCore
         public ICollection<FriendRequestDTO>? Requests { get; set; } //display always
         public ICollection<UserMinimalDTO>? BlockedUsers { get; set; } //display always
         public ICollection<UserDTO>? Suggestions { get; set; } //display always
-        public ICollection<PermissionDTO>? AppPermissions { get; set; } //??? this defines allowed navigation such as adminpanel.
+        public ICollection<PermissionMinimalDTO>? AppPermissions { get; set; } //??? this defines allowed navigation such as adminpanel.
 
         //public ICollection<ApplicationRoleDTO>? AppRoles { get; set; } //maybe not needed
         //public bool EmailConfirmed { get; set; } dont know if client needs this

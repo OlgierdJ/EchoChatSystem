@@ -2,7 +2,32 @@
 
 namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class VoiceSettingsDTO
+    public interface IVoiceSettings
+    {
+        bool AdvancedVoiceActivity { get; set; }
+        byte Attenuation { get; set; }
+        AudioSubSystemMode AudioSubSystemMode { get; set; }
+        bool AutomaticallyDetermineInputSensitivity { get; set; }
+        bool AutomaticGainControl { get; set; }
+        bool DeafenSelf { get; set; }
+        bool EchoCancellation { get; set; }
+        bool EnableDiagnosticAudioRecording { get; set; }
+        bool EnableVoiceDebugLogging { get; set; }
+        ulong Id { get; set; }
+        string InputDevice { get; set; }
+        InputMode InputMode { get; set; }
+        byte InputSensitivity { get; set; }
+        byte InputVolume { get; set; }
+        bool LowerVolumeOfOtherApplicationsWhenISpeak { get; set; }
+        bool LowerVolumeOfOtherApplicationsWhenOthersSpeak { get; set; }
+        bool MuteSelf { get; set; }
+        NoiseSuppression NoiseSuppression { get; set; }
+        string OutputDevice { get; set; }
+        byte OutputVolume { get; set; }
+        bool ShowWarningWhenNoMicInputDetected { get; set; }
+    }
+
+    public class VoiceSettingsDTO : IVoiceSettings
     {
         public ulong Id { get; set; }
         public string InputDevice { get; set; }

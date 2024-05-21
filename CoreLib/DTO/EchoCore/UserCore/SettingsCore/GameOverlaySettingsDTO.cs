@@ -2,7 +2,19 @@
 
 namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class GameOverlaySettingsDTO
+    public interface IGameOverlaySettings
+    {
+        AvatarSizeMode AvatarSizeMode { get; set; }
+        DisplayNamesMode DisplayNamesMode { get; set; }
+        DisplayUsersMode DisplayUsersMode { get; set; }
+        bool EnableGameOverlay { get; set; }
+        ulong Id { get; set; }
+        OverlayNotificationsPlacement OverlayNotificationsPlacement { get; set; }
+        bool ShowTextChatNotifications { get; set; }
+        string ToggleOverlayLockKeybind { get; set; }
+    }
+
+    public class GameOverlaySettingsDTO : IGameOverlaySettings
     {
         public ulong Id { get; set; }
         public bool EnableGameOverlay { get; set; }

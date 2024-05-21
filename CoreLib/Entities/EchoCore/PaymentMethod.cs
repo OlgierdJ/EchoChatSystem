@@ -8,7 +8,8 @@ namespace CoreLib.Entities.EchoCore
     {
         public uint PaymentTypeId { get; set; } //paypal, creditcard, etc
         public DateTime TimeAdded { get; set; }
-        public bool IsDefaultPaymentMethod { get; set; } //can only be one per table
+        public bool IsDefaultMethod { get; set; } //can only be one per table
+        public bool Description { get; set; } //paypal email, name on card, etc
 
         //not fully implemented cause havent implemented payment system integration
         //Everything should be stored safely
