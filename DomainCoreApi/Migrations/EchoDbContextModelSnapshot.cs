@@ -205,11 +205,18 @@ namespace DomainCoreApi.Migrations
                     b.Property<long>("ConnectionId")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("DisplayOnProfile")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ExternalRefreshToken")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("InternalRefreshToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -818,62 +825,62 @@ namespace DomainCoreApi.Migrations
                         new
                         {
                             Id = 1L,
-                            LanguageCode = "DK",
-                            Name = "Danmark"
+                            LanguageCode = "da-DK",
+                            Name = "Dansk"
                         },
                         new
                         {
                             Id = 2L,
-                            LanguageCode = "Sv",
-                            Name = "Sverige"
+                            LanguageCode = "se-SV",
+                            Name = "Svenska"
                         },
                         new
                         {
                             Id = 3L,
-                            LanguageCode = "No",
-                            Name = "Noreg"
+                            LanguageCode = "no-NO",
+                            Name = "Norsk"
                         },
                         new
                         {
                             Id = 4L,
-                            LanguageCode = "De",
-                            Name = "Deutschland"
+                            LanguageCode = "de-DE",
+                            Name = "Deutsch"
                         },
                         new
                         {
                             Id = 5L,
-                            LanguageCode = "en-gb",
-                            Name = "United Kingdom"
+                            LanguageCode = "en-GB",
+                            Name = "English (UK)"
                         },
                         new
                         {
                             Id = 6L,
-                            LanguageCode = "Fr",
-                            Name = "La France"
+                            LanguageCode = "fr-FR",
+                            Name = "Français"
                         },
                         new
                         {
                             Id = 7L,
                             LanguageCode = "zh-CN",
-                            Name = "中国(China)"
+                            Name = "中文 (traditional Chinese)"
                         },
                         new
                         {
                             Id = 8L,
-                            LanguageCode = "Jp",
-                            Name = "日本(Japan)"
+                            LanguageCode = "ja-JP",
+                            Name = "日本語 (Japanese)"
                         },
                         new
                         {
                             Id = 9L,
-                            LanguageCode = "ko",
-                            Name = "남한(south korea)"
+                            LanguageCode = "ko-KR",
+                            Name = "한국어 (korean)"
                         },
                         new
                         {
                             Id = 10L,
-                            LanguageCode = "en-us",
-                            Name = "United States of America"
+                            LanguageCode = "en-Us",
+                            Name = "English (USA)"
                         });
                 });
 
@@ -884,6 +891,10 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -897,41 +908,49 @@ namespace DomainCoreApi.Migrations
                         new
                         {
                             Id = 1L,
+                            Icon = "https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg",
                             Name = "PayPal"
                         },
                         new
                         {
                             Id = 2L,
+                            Icon = "https://upload.wikimedia.org/wikipedia/fi/f/fd/MobilePay_logo.svg",
                             Name = "MobilePay"
                         },
                         new
                         {
                             Id = 3L,
+                            Icon = "https://upload.wikimedia.org/wikipedia/commons/e/e8/Paysafe.svg",
                             Name = "PaysafeCard"
                         },
                         new
                         {
                             Id = 4L,
+                            Icon = "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg",
                             Name = "Visa"
                         },
                         new
                         {
                             Id = 5L,
+                            Icon = "https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg",
                             Name = "MasterCard"
                         },
                         new
                         {
                             Id = 6L,
+                            Icon = "https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg",
                             Name = "Google Pay"
                         },
                         new
                         {
                             Id = 7L,
+                            Icon = "https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg",
                             Name = "Apple Pay"
                         },
                         new
                         {
                             Id = 8L,
+                            Icon = "https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg",
                             Name = "Stripe"
                         });
                 });
@@ -1997,6 +2016,9 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("ParentId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<DateTime?>("TimeEdited")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -2021,7 +2043,14 @@ namespace DomainCoreApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
-                    b.Property<string>("FileURL")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileLocationURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -2277,7 +2306,10 @@ namespace DomainCoreApi.Migrations
                     b.Property<long>("CountryId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool>("IsDefaultPaymentMethod")
+                    b.Property<bool>("Description")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefaultMethod")
                         .HasColumnType("bit");
 
                     b.Property<long>("PaymentTypeId")
@@ -2550,6 +2582,9 @@ namespace DomainCoreApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("TimeEdited")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -2570,7 +2605,14 @@ namespace DomainCoreApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
-                    b.Property<string>("FileURL")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileLocationURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -3159,6 +3201,9 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("ParentId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<DateTime?>("TimeEdited")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -3183,10 +3228,17 @@ namespace DomainCoreApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
-                    b.Property<string>("FileURL")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileLocationURL")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MessageId")
                         .HasColumnType("decimal(20,0)");
@@ -3368,6 +3420,13 @@ namespace DomainCoreApi.Migrations
                     b.Property<string>("FolderName")
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("ImageIconURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsOwner")
+                        .HasColumnType("bit");
+
                     b.Property<string>("JoinMethod")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -3438,14 +3497,14 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("AccountId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<DateTime?>("ExpirationTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ServerId")
                         .HasColumnType("decimal(20,0)");
-
-                    b.Property<DateTime?>("TimeExpired")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("TimeKeepMessagesBefore")
                         .HasColumnType("datetime2");
@@ -3840,7 +3899,12 @@ namespace DomainCoreApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("OwnerId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("ServerRole");
                 });
@@ -6038,6 +6102,17 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerRole", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Owner")
+                        .WithMany("Roles")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerRolePermission", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerPermission", "Permission")
@@ -6696,6 +6771,8 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Members");
 
                     b.Navigation("Muters");
+
+                    b.Navigation("Roles");
 
                     b.Navigation("Settings");
 

@@ -15,7 +15,7 @@ namespace EchoWebapp.Client.Provider
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
 
-            var token = await _localStorage.GetItemAsStringAsync("token");
+            var token = await _localStorage.GetItemAsStringAsync("AccountId");
 
             var identity = new ClaimsIdentity();
 

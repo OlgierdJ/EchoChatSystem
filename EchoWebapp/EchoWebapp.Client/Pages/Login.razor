@@ -81,7 +81,7 @@
         //send user to api
         var result = await _echoAPI.LoginAsync(User);
         AccountContainer.SetValue(result);
-        await LocalStorage.SetItemAsync("UserId", AccountContainer.Value);
+        await LocalStorage.SetItemAsync("AccountId", AccountContainer.Value);
         nav.NavigateTo("/");
     }
 

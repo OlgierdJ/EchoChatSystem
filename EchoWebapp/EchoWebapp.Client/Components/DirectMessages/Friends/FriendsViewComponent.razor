@@ -44,7 +44,7 @@
 
     private async void logout()
     {
-        await LocalStorage.RemoveItemAsync("UserId");
+        await LocalStorage.RemoveItemAsync("AccountId");
         AccountContainer.SetValue(0);
         nav.NavigateTo("/login");
     }

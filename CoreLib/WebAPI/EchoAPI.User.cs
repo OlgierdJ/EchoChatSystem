@@ -55,7 +55,7 @@ namespace CoreLib.WebAPI
             return null;
         }
 
-        public async Task<User> CreateUserAsync(RegisterRequestDTO user)
+        public async Task<string> CreateUserAsync(RegisterRequestDTO user)
         {
             //User user = new()
             //{
@@ -68,7 +68,7 @@ namespace CoreLib.WebAPI
                 var response = await client.PostAsync("user/createuser", content).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonSerializer.Deserialize<User>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+                    return JsonSerializer.Deserialize<string>(await response.Content.ReadAsStringAsync(), SerializerOptions);
                 }
             }
             catch (Exception e)
