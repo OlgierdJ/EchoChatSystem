@@ -429,7 +429,7 @@ Content = "Just saw the most breathtaking sunset! Sometimes it's the simple thin
                 new MessageDTO()
                 {
                     Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
-                    MessageId = 0,
+                    Id = 0,
                     TimeSent = DateTime.Now.AddDays(-3).AddMinutes(3),
                     Content = "First Message",
                     TimeEdited = DateTime.Now.AddDays(-3).AddMinutes(4),
@@ -438,20 +438,20 @@ Content = "Just saw the most breathtaking sunset! Sometimes it's the simple thin
                 new MessageDTO()
                 {
                     Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
-                    MessageId = 1,
+                    Id = 1,
                     TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
                     Content = "Old Message"
                 },
                 new MessageDTO()
                 {
                     Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
-                    MessageId = 2,
+                    Id = 2,
                     TimeSent = DateTime.Now.AddMinutes(-3),
                     Content = "New Message",
                     Replied =  new MessageDTO()
                     {
                         Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
-                        MessageId = 1,
+                        Id = 1,
                         TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
                         Content = "Old Message"
                     },
@@ -523,7 +523,7 @@ Content = "Just saw the most breathtaking sunset! Sometimes it's the simple thin
                         BannerColour = "#ff0",
                         MutualFriends = null, //Insert Entire UserDTO to test
                         MutualServers = null, //Servers Not Implemented, might make dummydata servers to test
-                        Note = "",
+                        Note = "",                        
                         User = new()
                         {
                             Name = "Jeppe1602" //Is this the only value in Member.Profile.User we need, maybe move out to profile or just member idk?
@@ -546,7 +546,7 @@ Content = "Just saw the most breathtaking sunset! Sometimes it's the simple thin
                 new MessageDTO()
                 {
                     Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
-                    MessageId = 0,
+                    Id = 0,
                     TimeSent = DateTime.Now.AddDays(-3).AddMinutes(3),
                     Content = "First Message",
                     TimeEdited = DateTime.Now.AddDays(-3).AddMinutes(4),
@@ -555,20 +555,20 @@ Content = "Just saw the most breathtaking sunset! Sometimes it's the simple thin
                 new MessageDTO()
                 {
                     Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
-                    MessageId = 1,
+                    Id = 1,
                     TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
                     Content = "Old Message"
                 },
                 new MessageDTO()
                 {
                     Sender = new UserMinimalDTO() { Id = 116, DisplayName = "Jeppe", ImageIconURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg" },
-                    MessageId = 2,
+                    Id = 2,
                     TimeSent = DateTime.Now.AddMinutes(-3),
-                    Content = "New Message",
+                    Content = "New Message",                   
                     Replied =  new MessageDTO()
                     {
                         Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg" },
-                        MessageId = 1,
+                        Id = 1,
                         TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
                         Content = "Old Message"
                     },
