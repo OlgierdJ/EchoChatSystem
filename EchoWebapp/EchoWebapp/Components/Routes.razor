@@ -1,6 +1,21 @@
-﻿<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
+﻿
+<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+            <NotAuthorized>
+                <EchoWebapp.Components.Pages.RedirectToLogin></EchoWebapp.Components.Pages.RedirectToLogin>
+            </NotAuthorized>
+            <Authorizing>
+                Wait...
+            </Authorizing>
+        </AuthorizeRouteView>
+        @*  <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="routeData" Selector="h1" /> *@
     </Found>
+    <NotFound>
+        <PageTitle>not found</PageTitle>
+        <LayoutView Layout="@typeof(Layout.MainLayout)">
+            <p role="alert">Sorry, there's noting at this address.</p>
+        </LayoutView>
+    </NotFound>
 </Router>

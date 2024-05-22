@@ -10,7 +10,12 @@ namespace EchoWebapp.Client.Provider
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var parsedJwt = tokenHandler.ReadJwtToken(Token);
-            this.Value = (ulong)Convert.ToDecimal(parsedJwt.Subject);
+            this.Value = Convert.ToUInt64(parsedJwt.Subject);
+            NotifyStateChanged();
+        }
+        public void SetValue(ulong id)
+        {
+            this.Value = id;
             NotifyStateChanged();
         }
         private void NotifyStateChanged() => OnStateChange?.Invoke();

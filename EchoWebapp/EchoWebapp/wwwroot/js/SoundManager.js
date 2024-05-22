@@ -3,7 +3,6 @@ let buffer;
 // Stereo
 let channels = 2;
 var myStream;
-var peerList = []
 let mediaRecorder;
 
 //https://www.youtube.com/watch?v=K6L38xk2rkk

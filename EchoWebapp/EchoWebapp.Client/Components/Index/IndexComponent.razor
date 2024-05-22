@@ -2,6 +2,10 @@
 @using CoreLib.Entities.EchoCore.ChatCore
 @using EchoWebapp.Client.Components.DirectMessages
 @using EchoWebapp.Client.Components.Servers
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager nav
+@inject Provider.AccountIdContainer AccountContainer
+
 @rendermode InteractiveAuto
 @*
     Index layout that holds the general application layout navigation and content.
@@ -11,13 +15,38 @@
 
 @* <h3>IndexComponent</h3> *@
 
-<div class="d-flex">
-    <ServerListComponent OnItemSelected=@HandelOnChanged />
-    <DirectMessagesViewComponent DisplayFriends=display/>
-</div>
- @code {
+@* so you dont see the UI befor you are logget in*@
+@if(AccountContainer.Value != 0)
+{
+    <div class="d-flex">
+        <ServerListComponent OnItemSelected=@HandelOnChanged />
+        <DirectMessagesViewComponent DisplayFriends=display />
+    </div>
+}
+else 
+{
+    <MudOverlay Visible="true" DarkBackground="true" ZIndex="9999">
+        <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+    </MudOverlay>
+}
+
+@code {
 
     bool display = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var id = await LocalStorage.GetItemAsStringAsync("UserId");
+
+        if (string.IsNullOrEmpty(id))
+        {
+            nav.NavigateTo("/login");
+        }
+        else
+        {
+            AccountContainer.SetValue(Convert.ToUInt64(id));
+        }
+    }
 
     public void HandelOnChanged(bool selected)
     {

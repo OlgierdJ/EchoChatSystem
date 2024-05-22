@@ -1,3 +1,5 @@
+global using Microsoft.AspNetCore.Components.Authorization;
+global using Blazored.LocalStorage;
 using CoreLib.WebAPI;
 using EchoWebapp.Client.Provider;
 using EchoWebapp.Components;
@@ -9,7 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
 builder.Services.AddMudServices();
+
+builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddAuthorizationCore();
+builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddSingleton<AccountIdContainer>();
 builder.Services.AddSingleton<EchoAPI>();
@@ -36,6 +44,7 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(EchoWebapp.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(EchoWebapp.Client._Imports).Assembly)
+    .AllowAnonymous();
 
 app.Run();
