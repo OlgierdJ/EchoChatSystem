@@ -406,11 +406,22 @@ Content = "Just saw the most breathtaking sunset! Sometimes it's the simple thin
                         BannerColour = "#5C23D9",
                         MutualFriends = null, //Insert Entire UserDTO to test
                         MutualServers = null, //Servers Not Implemented, might make dummydata servers to test
-                        Note = "",                        
+                        Note = "Test",                        
                         User = new()
                         {
                             Name = "BobTheBuilder" //Is this the only value in Member.Profile.User we need, maybe move out to profile or just member idk?
-                        }
+                        }, 
+                        /* Not yet implemented fully? */
+                        // MembershipBadges = 
+                        // {
+                        //     new MembershipBadgeDTO()
+                        //     {
+                        //         IconName = "Echo",
+                        //         IconURL = null,
+                        //         OrderingWeight = 0,
+                        //         TimeJoined = DateTime.Now.AddDays(-13).AddMinutes(23),
+                        //     },
+                        // }
                     },
                     ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp",
                     ActiveStatus = new ActiveActivityStatusDTO()

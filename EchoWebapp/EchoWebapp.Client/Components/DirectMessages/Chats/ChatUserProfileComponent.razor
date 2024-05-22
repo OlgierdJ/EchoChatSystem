@@ -30,12 +30,19 @@
                 <MudDivider />
                 <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
                     <MudText Typo="Typo.button" style="margin-top: 10px;">Echo Member since</MudText>
-                    @* <MudText Typo="Typo.body1">@Member.TimeCreated.ToString("dd MMMM yyyy")</MudText> *@ <!-- CreationDate is missing? -->
+                    <MudText Typo="Typo.body1">@DateTime.Now.AddDays(-13).AddMinutes(23).ToString("dd MMMM yyyy")</MudText>  <!-- CreationDate is missing? -->
                 </MudPaper>
                 <MudDivider />
                 <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
                     <MudText Typo="Typo.button" style="margin-top: 10px;">Note</MudText>
-                    <MudText Typo="Typo.body1">@Member.Profile.Note</MudText> 
+                    @if (Editable)
+                    {
+                        <MudTextField FullWidth @bind-Value="Member.Profile.Note" @onfocusout="(()=> Editable = false)" Margin="Margin.Dense" Variant="Variant.Filled" MaxLines="4" Placeholder="@(Member.Profile.Note != "" ? Member.Profile.Note : "Click to add a note")" Class="px-5 py-2" Immediate="true" MaxLength="255" TextUpdateSuppression="false" Style="background: var(--mud-palette-dark);opacity:1;" />
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body1" @onclick="(()=> Editable = true)">@Member.Profile.Note</MudText>
+                    }
                 </MudPaper>
             </div>
         }
@@ -44,6 +51,8 @@
 @code {
     [Parameter]
     public bool Visible { get; set; }
+
+    public bool Editable { get; set; } = true;
 
     [Parameter]
     public MemberDTO Member { get; set; }
