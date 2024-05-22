@@ -2,7 +2,21 @@
 
 namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    public class BanDTO //: BaseEntity<ulong>
+    public interface IBan
+    {
+        DateTime? ExpirationTime { get; set; }
+        ulong Id { get; set; }
+        string? Reason { get; set; }
+        
+    }
+
+    public interface IBan<TUser> : IBan
+    {
+        TUser User { get; set; }
+    }
+
+    public class BanDTO : IBan, IBan<UserMinimalDTO>
+    //: BaseEntity<ulong>
     {
         public ulong Id { get; set; } //their unique id for mapping interactions to api.
         //public ulong UserId { get; set; } //just get user from id on serverside when revoking ban

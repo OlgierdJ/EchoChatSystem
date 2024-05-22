@@ -1,7 +1,15 @@
 ﻿namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    public class RoleMinimalWithPermissionsDTO : RoleMinimalDTO
+    public interface IRoleMinimalWithPermissions<TPermission> : IRoleMinimal
     {
-        public ICollection<PermissionExtendedDTO> Permissions { get; set; }
+        ICollection<TPermission> Permissions { get; set; }
     }
+    
+    public class RoleMinimalWithPermissionsDTO : IRoleMinimal, IRoleMinimalWithPermissions<PermissionMinimalDTO>
+    {
+        public ICollection<PermissionMinimalDTO> Permissions { get; set; }
+        public ulong Id { get; set; }
+        public string Name { get; set; }
+    }
+    
 }

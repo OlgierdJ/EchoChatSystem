@@ -18,7 +18,7 @@ namespace CoreLib.Entities.EchoCore
         {
             builder.HasKey(b => b.Id);
             builder.Property(b => b.TimeAdded).HasDefaultValueSql("getdate()");
-            builder.Property(b => b.IsDefaultPaymentMethod);
+            builder.Property(b => b.IsDefaultMethod);
 
             builder.HasOne(b => b.Type).WithMany(b=>b.PaymentMethods).HasForeignKey(b=>b.PaymentTypeId).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasOne(b => b.BillingInformation).WithMany(b => b.PaymentMethods).HasForeignKey(b => b.Id).OnDelete(DeleteBehavior.ClientCascade);

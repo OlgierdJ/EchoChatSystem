@@ -1,4 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.RequestCore;
+﻿using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ApplicationCore.Settings;

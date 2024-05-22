@@ -6,21 +6,24 @@ using CoreLib.DTO.EchoCore.UserCore;
 
 namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public class ServerDTO : ServerMinimalDTO
+    public class ServerDTO : IServerMinimal
     {
         //filled with visible data displayed to the user
         //public ulong Id { get; set; }
         //public string Name { get; set; }
         //public string ImageIconURL { get; set; }
+        public ulong Id { get; set; }
+        public string ImageIconURL { get; set; }
+        public string Name { get; set; }
         public bool Muted { get; set; } //idk mayb not needed
         //the users permissions within the server, such as view, edit, move, etc 
         //calculated on server based on permission grants, rebukes and defaults relative to the user
-        public ICollection<PermissionDTO>? UserPermissions { get; set; } //does not need display cause only for granting access
+        public ICollection<PermissionDTO>? UserPermissions { get; set; } //does not need display cause only for granting access //permissions are filtered by x/or-ing them together with granted roles from rolesettings
         //this is only used for determining whether or not the user can act based on their permissions towards another member if they have lower, same or higher role importance
-        public ICollection<RoleMinimalDTO>? UserRoles { get; set; } //the users role within the server, such as everyone, admin, owner, etc //does not need display cause only for calculation
+        public ICollection<HierarchalRoleMinimalDTO>? UserRoles { get; set; } //the users role within the server, such as everyone, admin, owner, etc //does not need display cause only for calculation
 
         public ICollection<UserMinimalWithPermissionsDTO>? MemberSettings { get; set; } //specific members with their global permissions
-        public ICollection<RoleMinimalWithPermissionsDTO>? RoleSettings { get; set; } //all roles with their global permissions
+        public ICollection<HierarchalRoleMinimalWithPermissionsDTO>? RoleSettings { get; set; } //all roles with their global permissions
 
         public ICollection<ChatDTO>? TextChannels { get; set; }
         public ICollection<VoiceChatDTO>? VoiceChannels { get; set; }

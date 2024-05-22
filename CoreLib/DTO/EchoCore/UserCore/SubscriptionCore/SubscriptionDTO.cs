@@ -2,6 +2,15 @@
 
 namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
 {
+    public interface ISubscription
+    {
+        CurrencyDTO Currency { get; set; }
+        ulong Id { get; set; }
+        bool IsRecurring { get; set; }
+        double MyCostEUR { get; set; }
+        SubscriptionPlanDTO SubscriptionPlan { get; set; }
+        DateTime? TimeDeadline { get; set; }
+    }
 
     /*
      * ******************************************* 
@@ -30,7 +39,8 @@ namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
 
 
 
-    public class SubscriptionDTO //: BaseEntity<ulong>
+    public class SubscriptionDTO : ISubscription
+    //: BaseEntity<ulong>
     {
         public ulong Id { get; set; } //owner id
         //public ulong PlanId { get; set; } //specific plan

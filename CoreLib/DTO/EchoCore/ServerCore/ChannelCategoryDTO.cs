@@ -8,7 +8,9 @@ namespace CoreLib.DTO.EchoCore.ServerCore
     public class ChannelCategoryDTO
     {
         public ulong Id { get; set; }
+        public int Importance { get; set; }
         public string Name { get; set; }
+        public bool IsPrivate { get; set; }
         public ICollection<ChatDTO>? TextChannels { get; set; }
         public ICollection<VoiceChatDTO>? VoiceChannels { get; set; }
 
@@ -16,6 +18,6 @@ namespace CoreLib.DTO.EchoCore.ServerCore
         //public ICollection<RoleMinimalDTO>? Roles { get; set; } //the users role within the category, such as everyone, admin, owner, etc
 
         public ICollection<UserMinimalWithPermissionsDTO>? MemberSettings { get; set; } //displays specific permission settings for a specific user enforced within this chat.
-        public ICollection<RoleMinimalWithPermissionsDTO>? RoleSettings { get; set; } //displays specific permission settings for a specific role enforced within this chat.
+        public ICollection<HierarchalRoleMinimalWithPermissionsDTO>? RoleSettings { get; set; } //displays specific permission settings for a specific role enforced within this chat.
     }
 }

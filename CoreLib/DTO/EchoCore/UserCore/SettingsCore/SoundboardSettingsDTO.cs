@@ -1,6 +1,12 @@
 ﻿namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class SoundboardSettingsDTO
+    public interface ISoundboardSettings
+    {
+        ulong Id { get; set; }
+        byte SoundboardVolume { get; set; }
+    }
+
+    public class SoundboardSettingsDTO : ISoundboardSettings
     {
         public ulong Id { get; set; }
         public byte SoundboardVolume { get; set; } //max 200

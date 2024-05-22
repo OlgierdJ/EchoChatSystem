@@ -1,6 +1,13 @@
 ﻿namespace CoreLib.DTO.EchoCore.UserCore
 {
-    public class UserDTO //this is when a friend is displayed in the friendlist or when you are displayed beside mute and deafen
+    public interface IUser
+    {
+        ActiveActivityStatusDTO ActiveStatus { get; set; }
+        string Name { get; set; }
+    }
+
+    public class UserDTO : IUserMinimal, IUser
+        //this is when a friend is displayed in the friendlist or when you are displayed beside mute and deafen
     {
         public ulong Id { get; set; } //their unique id for mapping interactions to api.
         public string DisplayName { get; set; } //overwritten by accountprofile displayname or nickname if present

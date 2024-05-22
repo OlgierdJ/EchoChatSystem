@@ -1,6 +1,18 @@
 ﻿namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class StreamerModeSettingsDTO
+    public interface IStreamerModeSettings
+    {
+        bool AutomaticallyEnableAndDisableIfStreaming { get; set; }
+        bool DisableNotifications { get; set; }
+        bool DisableSounds { get; set; }
+        bool EnableStreamerMode { get; set; }
+        bool HideEchoWindowFromScreenCapture { get; set; }
+        bool HideInviteLinks { get; set; }
+        bool HidePersonalInformation { get; set; }
+        ulong Id { get; set; }
+    }
+
+    public class StreamerModeSettingsDTO : IStreamerModeSettings
     {
         public ulong Id { get; set; }
 

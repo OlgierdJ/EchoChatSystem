@@ -1,6 +1,18 @@
 ﻿namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class VideoSettingsDTO
+    public interface IVideoSettings
+    {
+        bool AlwaysPreviewVideo { get; set; }
+        string CameraDevice { get; set; }
+        bool EnableForceQualityOfServicePacketPrio { get; set; }
+        bool EnableHardwareAccelerationForVideo { get; set; }
+        ulong Id { get; set; }
+        bool UseDDLInjectionToCaptureScreen { get; set; }
+        bool UseOpenH264VideoCodec { get; set; }
+        string VideoBackground { get; set; }
+    }
+
+    public class VideoSettingsDTO : IVideoSettings
     {
         public ulong Id { get; set; }
         public bool AlwaysPreviewVideo { get; set; }

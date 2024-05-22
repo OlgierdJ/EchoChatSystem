@@ -2,8 +2,17 @@
 
 namespace CoreLib.DTO.EchoCore.UserCore
 {
-    public class UserConnectionDTO //this does not contain tokens or other functionality cause this only represents the relation that exists on the server.
-                                   //All functionality regarding the linked platform is performed by the server on the users behalf.
+    public interface IUserConnection
+    {
+        bool DisplayOnProfile { get; set; }
+        ulong Id { get; set; }
+        string Name { get; set; }
+        ConnectionDTO Type { get; set; }
+    }
+
+    public class UserConnectionDTO : IUserConnection
+    //this does not contain tokens or other functionality cause this only represents the relation that exists on the server.
+    //All functionality regarding the linked platform is performed by the server on the users behalf.
     {
 
         public ulong Id { get; set; } //id of the connection relative to the user.

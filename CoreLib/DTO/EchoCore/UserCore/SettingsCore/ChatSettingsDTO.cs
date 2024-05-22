@@ -2,7 +2,23 @@
 
 namespace CoreLib.DTO.EchoCore.UserCore.SettingsCore
 {
-    public class ChatSettingsDTO
+    public interface IChatSettings
+    {
+        bool AutoConvertEmoticonsToEmojis { get; set; }
+        ContentSpoilerMode ContentSpoilerMode { get; set; }
+        bool DisplayDirectVideosAndImagesUploads { get; set; }
+        bool DisplayVideosAndImagesFromLink { get; set; }
+        bool EnableStickerSuggestions { get; set; }
+        ulong Id { get; set; }
+        bool LoadImageDescriptionsWithImages { get; set; }
+        bool OpenThreadsInSplitView { get; set; }
+        bool PreviewEmbedsAndWebsiteLinks { get; set; }
+        bool PreviewEmojisAndMarkdownWhilstTyping { get; set; }
+        bool ShowEmoteReactionsOnMessages { get; set; }
+        bool StickersInAutocomplete { get; set; }
+    }
+
+    public class ChatSettingsDTO : IChatSettings
     {
         public ulong Id { get; set; }
         public bool DisplayVideosAndImagesFromLink { get; set; }
