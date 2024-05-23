@@ -92,7 +92,7 @@
        // var test = await _echoAPI.GetEntityAsync<Account>(AccountContainer.Value , new AuthenticationHeaderValue("Bearer", AccountContainer.Token));
        
         var test = await authstate.GetAuthenticationStateAsync();
-        nav.NavigateTo("/messages");
+        nav.NavigateTo("/");
     }
 
     async void ResetPassword()
