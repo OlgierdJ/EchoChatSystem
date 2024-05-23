@@ -2,6 +2,10 @@
 @using EchoWebapp.Client.Components.DirectMessages.Chats
 @using MudBlazor
 @rendermode InteractiveAuto
+@inject ILocalStorageService LocalStorage
+@inject Provider.AccountIdContainer AccountContainer
+@inject NavigationManager nav
+
 @*
     Layout for the friends section that exists within the DirectMessagesViewComponent in the Direct Messages section.
 
@@ -38,8 +42,21 @@
          <h1>Activity Test</h1>
      </MudPaper>
 
-@code {
+ @code {
     public bool ToggleSidePanel = true;
+
+    private async void logout()
+    {
+        await LocalStorage.RemoveItemAsync("AccountId");
+        await LocalStorage.RemoveItemAsync("Token");
+        AccountContainer.SetValue(0,string.Empty);
+        nav.NavigateTo("/login");
+    }
+
+    private async void updatepopup()
+    {
+        
+    }
 
     int _activePanel;
 

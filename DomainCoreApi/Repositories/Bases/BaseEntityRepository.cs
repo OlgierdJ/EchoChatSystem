@@ -112,7 +112,7 @@ namespace CoreLib.Repositories.Bases
             {
                 return await QueryAll().FirstOrDefaultAsync(expression);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw;
             }

@@ -201,7 +201,8 @@ namespace DomainCoreApi.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -287,25 +288,6 @@ namespace DomainCoreApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ServerRegion", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServerRole",
-                columns: table => new
-                {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Importance = table.Column<int>(type: "int", nullable: false),
-                    Colour = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IconURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DisplaySeperatelyFromOnlineMembers = table.Column<bool>(type: "bit", nullable: false),
-                    AllowAnyoneToMention = table.Column<bool>(type: "bit", nullable: false),
-                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServerRole", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -463,6 +445,32 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ServerRole",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Importance = table.Column<int>(type: "int", nullable: false),
+                    Colour = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IconURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DisplaySeperatelyFromOnlineMembers = table.Column<bool>(type: "bit", nullable: false),
+                    AllowAnyoneToMention = table.Column<bool>(type: "bit", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerRole", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ServerRole_Server_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Server",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ServerPermission",
                 columns: table => new
                 {
@@ -563,35 +571,6 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServerChannelCategoryRole",
-                columns: table => new
-                {
-                    ChannelCategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    ServerChannelCategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServerChannelCategoryRole", x => new { x.ChannelCategoryId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_ServerChannelCategoryRole_ServerChannelCategory_ChannelCategoryId",
-                        column: x => x.ChannelCategoryId,
-                        principalTable: "ServerChannelCategory",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ServerChannelCategoryRole_ServerChannelCategory_ServerChannelCategoryId",
-                        column: x => x.ServerChannelCategoryId,
-                        principalTable: "ServerChannelCategory",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ServerChannelCategoryRole_ServerRole_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "ServerRole",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ServerTextChannel",
                 columns: table => new
                 {
@@ -660,6 +639,35 @@ namespace DomainCoreApi.Migrations
                         column: x => x.OwnerId,
                         principalTable: "Server",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerChannelCategoryRole",
+                columns: table => new
+                {
+                    ChannelCategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ServerChannelCategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerChannelCategoryRole", x => new { x.ChannelCategoryId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryRole_ServerChannelCategory_ChannelCategoryId",
+                        column: x => x.ChannelCategoryId,
+                        principalTable: "ServerChannelCategory",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryRole_ServerChannelCategory_ServerChannelCategoryId",
+                        column: x => x.ServerChannelCategoryId,
+                        principalTable: "ServerChannelCategory",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryRole_ServerRole_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "ServerRole",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -738,6 +746,8 @@ namespace DomainCoreApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ConnectionId = table.Column<long>(type: "bigint", nullable: false),
+                    DisplayOnProfile = table.Column<bool>(type: "bit", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AuthorizeResponseType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AuthorizeClientId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AuthorizeState = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -1108,6 +1118,7 @@ namespace DomainCoreApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    TimeEdited = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AuthorId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     MessageHolderId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ParentId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
@@ -1300,6 +1311,7 @@ namespace DomainCoreApi.Migrations
                     MessageType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    TimeEdited = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AuthorId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
@@ -1370,7 +1382,7 @@ namespace DomainCoreApi.Migrations
                     AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TimeExpired = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TimeKeepMessagesBefore = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -1446,47 +1458,6 @@ namespace DomainCoreApi.Migrations
                         column: x => x.ServerId,
                         principalTable: "Server",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServerChannelCategoryRolePermission",
-                columns: table => new
-                {
-                    ChannelCategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    PermissionId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    State = table.Column<bool>(type: "bit", nullable: true),
-                    ServerChannelCategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServerChannelCategoryRolePermission", x => new { x.ChannelCategoryId, x.RoleId, x.PermissionId });
-                    table.ForeignKey(
-                        name: "FK_ServerChannelCategoryRolePermission_ServerChannelCategoryRole_ChannelCategoryId_RoleId",
-                        columns: x => new { x.ChannelCategoryId, x.RoleId },
-                        principalTable: "ServerChannelCategoryRole",
-                        principalColumns: new[] { "ChannelCategoryId", "RoleId" });
-                    table.ForeignKey(
-                        name: "FK_ServerChannelCategoryRolePermission_ServerChannelCategory_ChannelCategoryId",
-                        column: x => x.ChannelCategoryId,
-                        principalTable: "ServerChannelCategory",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ServerChannelCategoryRolePermission_ServerChannelCategory_ServerChannelCategoryId",
-                        column: x => x.ServerChannelCategoryId,
-                        principalTable: "ServerChannelCategory",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ServerChannelCategoryRolePermission_ServerPermission_PermissionId",
-                        column: x => x.PermissionId,
-                        principalTable: "ServerPermission",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ServerChannelCategoryRolePermission_ServerRole_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "ServerRole",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1568,6 +1539,7 @@ namespace DomainCoreApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    TimeEdited = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AuthorId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     MessageHolderId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     ParentId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
@@ -1844,6 +1816,47 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ServerChannelCategoryRolePermission",
+                columns: table => new
+                {
+                    ChannelCategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    PermissionId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    State = table.Column<bool>(type: "bit", nullable: true),
+                    ServerChannelCategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerChannelCategoryRolePermission", x => new { x.ChannelCategoryId, x.RoleId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryRolePermission_ServerChannelCategoryRole_ChannelCategoryId_RoleId",
+                        columns: x => new { x.ChannelCategoryId, x.RoleId },
+                        principalTable: "ServerChannelCategoryRole",
+                        principalColumns: new[] { "ChannelCategoryId", "RoleId" });
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryRolePermission_ServerChannelCategory_ChannelCategoryId",
+                        column: x => x.ChannelCategoryId,
+                        principalTable: "ServerChannelCategory",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryRolePermission_ServerChannelCategory_ServerChannelCategoryId",
+                        column: x => x.ServerChannelCategoryId,
+                        principalTable: "ServerChannelCategory",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryRolePermission_ServerPermission_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "ServerPermission",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryRolePermission_ServerRole_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "ServerRole",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ServerProfile",
                 columns: table => new
                 {
@@ -1853,8 +1866,10 @@ namespace DomainCoreApi.Migrations
                     FolderName = table.Column<string>(type: "nvarchar(256)", nullable: true),
                     KickFromServerOnVoiceLeave = table.Column<bool>(type: "bit", nullable: false),
                     Nickname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageIconURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TimeJoined = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    JoinMethod = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Unknown")
+                    JoinMethod = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Unknown"),
+                    IsOwner = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -2355,7 +2370,9 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MessageId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    FileURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FileLocationURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2522,7 +2539,9 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MessageId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    FileURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FileLocationURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2642,7 +2661,9 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MessageId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    FileURL = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
+                    FileLocationURL = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2866,7 +2887,8 @@ namespace DomainCoreApi.Migrations
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     PaymentTypeId = table.Column<long>(type: "bigint", nullable: false),
                     TimeAdded = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    IsDefaultPaymentMethod = table.Column<bool>(type: "bit", nullable: false),
+                    IsDefaultMethod = table.Column<bool>(type: "bit", nullable: false),
+                    Description = table.Column<bool>(type: "bit", nullable: false),
                     CountryId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -3290,31 +3312,31 @@ namespace DomainCoreApi.Migrations
                 columns: new[] { "Id", "LanguageCode", "Name" },
                 values: new object[,]
                 {
-                    { 1L, "DK", "Danmark" },
-                    { 2L, "Sv", "Sverige" },
-                    { 3L, "No", "Noreg" },
-                    { 4L, "De", "Deutschland" },
-                    { 5L, "en-gb", "United Kingdom" },
-                    { 6L, "Fr", "La France" },
-                    { 7L, "zh-CN", "中国(China)" },
-                    { 8L, "Jp", "日本(Japan)" },
-                    { 9L, "ko", "남한(south korea)" },
-                    { 10L, "en-us", "United States of America" }
+                    { 1L, "da-DK", "Dansk" },
+                    { 2L, "se-SV", "Svenska" },
+                    { 3L, "no-NO", "Norsk" },
+                    { 4L, "de-DE", "Deutsch" },
+                    { 5L, "en-GB", "English (UK)" },
+                    { 6L, "fr-FR", "Français" },
+                    { 7L, "zh-CN", "中文 (traditional Chinese)" },
+                    { 8L, "ja-JP", "日本語 (Japanese)" },
+                    { 9L, "ko-KR", "한국어 (korean)" },
+                    { 10L, "en-Us", "English (USA)" }
                 });
 
             migrationBuilder.InsertData(
                 table: "PaymentType",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "Icon", "Name" },
                 values: new object[,]
                 {
-                    { 1L, "PayPal" },
-                    { 2L, "MobilePay" },
-                    { 3L, "PaysafeCard" },
-                    { 4L, "Visa" },
-                    { 5L, "MasterCard" },
-                    { 6L, "Google Pay" },
-                    { 7L, "Apple Pay" },
-                    { 8L, "Stripe" }
+                    { 1L, "https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg", "PayPal" },
+                    { 2L, "https://upload.wikimedia.org/wikipedia/fi/f/fd/MobilePay_logo.svg", "MobilePay" },
+                    { 3L, "https://upload.wikimedia.org/wikipedia/commons/e/e8/Paysafe.svg", "PaysafeCard" },
+                    { 4L, "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg", "Visa" },
+                    { 5L, "https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg", "MasterCard" },
+                    { 6L, "https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg", "Google Pay" },
+                    { 7L, "https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg", "Apple Pay" },
+                    { 8L, "https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg", "Stripe" }
                 });
 
             migrationBuilder.InsertData(
@@ -3963,6 +3985,11 @@ namespace DomainCoreApi.Migrations
                 name: "IX_ServerProfileServerRole_RoleId",
                 table: "ServerProfileServerRole",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServerRole_OwnerId",
+                table: "ServerRole",
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ServerSettings_RegionId",

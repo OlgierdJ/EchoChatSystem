@@ -38,6 +38,7 @@ namespace DomainCoreApi.Handlers
                 },
                 Settings = new()
                 {
+                    LanguageId = 10,
                     AccessibilitySettings = new AccessibilitySettings()
                     {
                         SaturationPercent = 255,
@@ -77,9 +78,6 @@ namespace DomainCoreApi.Handlers
                         ServerMembers = false,
                     },
                     KeybindSettings = new KeybindSettings(),
-                    Language = new Language()
-                    {
-                    },
                     NotificationSettings = new NotificationSettings()
                     {
                         FocusModeEnabled = false,

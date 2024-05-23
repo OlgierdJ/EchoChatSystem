@@ -3,28 +3,120 @@ let buffer;
 // Stereo
 let channels = 2;
 var myStream;
+let mediaRecorder;
+
+//https://www.youtube.com/watch?v=K6L38xk2rkk
+//https://www.geeksforgeeks.org/how-to-record-and-play-audio-in-javascript/
 
 function SetDotNetHelper(dotNetHelper) {
     window.dotNetHelper = dotNetHelper;
-    DotNet.invokeMethodAsync('{ASSEMBLY NAME}', '{.NET METHOD ID}', { ARGUMENTS });
 }
-window.RelayVoiceData = () => {
+
+function test() {
     navigator.mediaDevices.getUserMedia({
-        audio: true
+        audio: true,
     }).then((stream) => {
         myStream = stream
+        console.log(myStream)
+        toggleAudio(true)
     }).catch((err) => {
         console.log("unable to connect because " + err)
     })
-    DotNet.invokeMethodAsync('EchoWebapp', 'RelayVoiceData',myStream).then(
+}
+
+function start() {
+    mediaRecorder.start();
+}
+
+function stop() {
+    mediaRecorder.stop();
+}
+
+function listenToSound() {
+    var audio = document.createElement("AUDIO");
+    console.log(audio) 
+    if ("srcObject" in audio) {
+        audio.srcObject = myStream;
+    }
+    else {   // Old version
+        audio.src = window.URL
+            .createObjectURL(myStream);
+    }
+
+    audio.onloadedmetadata = function (ev) {
+
+        // Play the audio in the 2nd audio
+        // element what is being recorded
+        audio.play();
+    };
+    //// Start record
+    //let start = document.getElementById('btnStart');
+
+    //// Stop record
+    //let stop = document.getElementById('btnStop');
+
+    //// 2nd audio tag for play the audio
+    let playAudio = document.createElement("AUDIO");
+    console.log(playAudio) 
+    // This is the main thing to recorded 
+    // the audio 'MediaRecorder' API
+    mediaRecorder = new MediaRecorder(myStream);
+    // Chunk array to store the audio data 
+    let dataArray = [];
+    // Pass the audio stream 
+
+    // Start event
+    //start.addEventListener('click', function (ev) {
+    //    mediaRecorder.start();
+    //    // console.log(mediaRecorder.state);
+    //})
+
+    //// Stop event
+    //stop.addEventListener('click', function (ev) {
+    //    mediaRecorder.stop();
+    //    // console.log(mediaRecorder.state);
+    //});
+
+    // If audio data available then push 
+    // it to the chunk array
+    mediaRecorder.ondataavailable = function (ev) {
+        dataArray.push(ev.data);
+    }
+
+    // Convert the audio data in to blob 
+    // after stopping the recording
+    mediaRecorder.onstop = function (ev) {
+
+        // blob of type mp3
+        let audioData = new Blob(dataArray,
+            { 'type': 'audio/mp3;' });
+
+        // After fill up the chunk 
+        // array make it empty
+        dataArray = [];
+
+        // Creating audio url with reference 
+        // of created blob named 'audioData'
+        let audioSrc = window.URL
+            .createObjectURL(audioData);
+
+        // Pass the audio url to the 2nd video tag
+        playAudio.src = audioSrc;
+    }
+}
+
+function toggleAudio(b) {
+    if (b == "true") {
         myStream.getAudioTracks()[0].enabled = true
-    )
+    }
+    else {
+        myStream.getAudioTracks()[0].enabled = false
+    }
 }
 
 function init() {
     audioCtx = new AudioContext();
 }
-
 function play() {
     // Create a source node from the buffer
     var source = audioCtx.createBufferSource();
@@ -34,7 +126,6 @@ function play() {
     // Play immediately
     source.start(0);
 }
-
 function playByteArray(byteArray) {
 
     //this is where the shit hits the fan
@@ -70,7 +161,6 @@ window.leaveCall = () => {
     record.style.background = "";
     record.style.color = "";
 }
-
 window.playAudio = (streamRef) => {
     console.log(streamRef)
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {

@@ -1,6 +1,8 @@
 ﻿@using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.WebAPI
 @using MudBlazor
+@using System.Net.Http.Headers
+@inject Provider.AccountIdContainer AccountContainer
 @rendermode InteractiveAuto
 
 
@@ -92,9 +94,9 @@
         currentStatus = s;
         // hardcoded id, fetch from storage of sorts?
         ulong testid = 4;
-        var acc = await _echoAPI.GetEntityAsync<Account>(testid);
+        var acc = await _echoAPI.GetEntityAsync<Account>(testid, new AuthenticationHeaderValue("Bearer", AccountContainer.Token));
         acc.ActivityStatusId = s.Id;
-        var data = await _echoAPI.UpdateAsync<Account>(acc);
+        var data = await _echoAPI.UpdateAsync<Account>(acc, new AuthenticationHeaderValue("Bearer", AccountContainer.Token));
 
         Hover = false;
         StateHasChanged();
