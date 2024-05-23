@@ -1,18 +1,29 @@
 ﻿@page "/messages"
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.ChatCore
+@using CoreLib.Handlers
 @using Microsoft.AspNetCore.SignalR.Client
 @using MudBlazor
 @using System.Net.Http.Headers
 @rendermode InteractiveWebAssembly
 @inject NavigationManager nav
 @inject EchoAPI _Echoapi
+@inject SignalRClientService _client
 @inject ILocalStorageService LocalStorage
-@implements IAsyncDisposable
+@* @implements IAsyncDisposable *@
 @* @attribute [Authorize] *@
 
+
+<AuthorizeView>
+    <Authorized>
+        <span>You're authorized as @context.User.Identity.Name</span>
+    </Authorized>
+    <NotAuthorized>
+        <span>You're not authorized, buddy.</span>
+    </NotAuthorized>
+</AuthorizeView>
+
 <input type="text" @bind="messageInput"/>
-<button @onclick="send">Send</button>
 
 <p>here should be some message</p>
 <ul>
@@ -130,10 +141,11 @@
 
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
     public Account acc1 = new();
     public Account acc2 = new();
-
-    private HubConnection? _connection;
     private readonly List<string> _message = new();
 
     private string messageInput;
@@ -141,35 +153,26 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         var token = await LocalStorage.GetItemAsStringAsync("Token");
-        // _connection = new HubConnectionBuilder()
-        // .WithUrl("https://localhost:7269/DomainPushNotificationHub",
-        // o => o.AccessTokenProvider = () => Task.FromResult<string?>(AccountContainer.Token))
-        // .WithAutomaticReconnect()
-        // .Build();
+        await _client.Connect(token);
 
-        _connection = new HubConnectionBuilder().WithUrl("https://localhost:7269/DomainPushNotificationHub", o =>
-        {
-            o.UseDefaultCredentials = true;
-            o.AccessTokenProvider = () => Task.FromResult<string?>(token);
-            o.Headers.Add("Bearer", token);
-        }).WithAutomaticReconnect().Build();
-
-        _connection.On<string>("ReceiveNotification", async message =>
-        {
-            _message.Add(message);
-
-            await InvokeAsync(StateHasChanged);
-        });
-
-        await _connection.StartAsync();
+        _client.ReceiveNotification += ReceiveNotification2;
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
+    public async void ReceiveNotification2(string Notifica)
+    {
+        _message.Add(Notifica);
+        await InvokeAsync(StateHasChanged);
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        
-
+        if (authenticationState is not null)
+        {
+            var state = await authenticationState;
+            var user = state.User;
+        }
         //acc1 = await _Echoapi.GetEntityAsync<Account>(AccountContainer.Value, new AuthenticationHeaderValue("Bearer", AccountContainer.Token));
 
         #region old code
@@ -211,16 +214,6 @@
         // msg2.Author = chat.Participants.Where(e => e.Id == 113).First();
         // chat.Messages.Add(msg2);
         #endregion
-    }
-
-    Task send() => _connection.SendAsync("ReceiveNotification", messageInput);
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_connection is not null)
-        {
-            await _connection.DisposeAsync();
-        }
     }
 
     bool checkTime(DateTime dt)

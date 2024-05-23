@@ -1,12 +1,36 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 
 namespace EchoWebapp.Client.Provider
 {
-    public class CustomAuthStateProvider : AuthenticationStateProvider
+    public class CustomAuthStateProvider/*(PersistentComponentState persistentState)*/ : AuthenticationStateProvider
     {
+        //private static readonly Task<AuthenticationState> _unauthenticatedTask =
+        //Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
+
+        //public override Task<AuthenticationState> GetAuthenticationStateAsync()
+        //{
+        //    if (!persistentState.TryTakeFromJson<UserInfo>(nameof(UserInfo), out var userInfo) || userInfo is null)
+        //    {
+        //        return _unauthenticatedTask;
+        //    }
+
+
+        //    //var claims = ParseClaimsFromJwt(await _localStorage.GetItemAsStringAsync("Token"));
+
+        //    Claim[] claims = [
+        //        new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserId)];
+
+        //    return Task.FromResult(
+        //        new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(claims,
+        //            authenticationType: nameof(CustomAuthStateProvider)))));
+        //}
+
+        #region old code
         private readonly ILocalStorageService _localStorage;
         private readonly HttpClient _http;
 
@@ -15,24 +39,6 @@ namespace EchoWebapp.Client.Provider
             _localStorage = localStorage;
             _http = http;
         }
-
-        // private AuthenticationState authenticationState;
-
-        // public CustomAuthStateProvider(AuthenticationService service)
-        // {
-        //     authenticationState = new AuthenticationState(service.CurrentUser);
-
-        //     service.UserChanged += (newUser) =>
-        //     {
-        //         authenticationState = new AuthenticationState(newUser);
-
-        //         NotifyAuthenticationStateChanged(
-        //             Task.FromResult(new AuthenticationState(newUser)));
-        //     };
-        // }
-
-        //public override Task<AuthenticationState> GetAuthenticationStateAsync() =>
-        //Task.FromResult(authenticationState);
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -68,7 +74,7 @@ namespace EchoWebapp.Client.Provider
             NotifyAuthenticationStateChanged(
                 Task.FromResult(new AuthenticationState(user)));
         }
-
+        #endregion
         public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
             var payload = jwt.Split('.')[1];
@@ -86,5 +92,9 @@ namespace EchoWebapp.Client.Provider
             }
             return Convert.FromBase64String(base64);
         }
+    }
+    public class UserInfo
+    {
+        public string UserId { get; set; }
     }
 }

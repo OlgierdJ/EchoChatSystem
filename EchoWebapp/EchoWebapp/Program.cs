@@ -7,6 +7,7 @@ using MudBlazor.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CoreLib.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -48,8 +49,10 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddSingleton<AccountIdContainer>();
 builder.Services.AddSingleton<EchoAPI>();
+builder.Services.AddSingleton<SignalRClientService>();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomRevalidatingAuthenticationStateProvider>();
 //builder.Services.AddSingleton<AuthenticationStateProvider, CustomRevalidatingAuthenticationStateProvider>();
-builder.Services.AddScoped<AuthenticationService>();
+//builder.Services.AddScoped<AuthenticationService>();
 //builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
 var app = builder.Build();

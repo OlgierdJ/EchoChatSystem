@@ -51,6 +51,7 @@ else
                 StateHasChanged();
             }
         }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     public void HandelOnChanged(bool selected)

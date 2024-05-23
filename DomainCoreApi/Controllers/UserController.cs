@@ -54,7 +54,7 @@ namespace DomainCoreApi.Controllers
                 var result = await _userService.LoginUserAsync(login);
                 if (result == null)
                 {
-                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                    return NotFound("Something went wrong. Contact an Admin / Server representative");
                 }
                 //await _notificationService.NotifyClients(result, EntityAction.Create);
 
