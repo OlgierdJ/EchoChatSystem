@@ -24,10 +24,11 @@ namespace DomainCoreApi.EFCORE.Configurations.ChatCore
             builder.HasMany(b => b.Mutes).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasMany(b => b.Invites).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
             builder.HasOne(b => b.Pinboard).WithOne(b => b.Owner).HasForeignKey<ChatPinboard>(b => b.OwnerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
-            builder.HasMany(b => b.Participants).WithMany(b => b.Chats).UsingEntity<ChatParticipancy>(
-                    l => l.HasOne(e => e.Participant).WithMany().HasForeignKey(e => e.ParticipantId),
-                    r => r.HasOne(e => e.Subject).WithMany().HasForeignKey(e => e.SubjectId)
-                ); //maybe take config from chatparticipant config file
+            builder.HasMany(b => b.Participants).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            //builder.HasMany(b => b.Participants).WithMany(b => b.Chats).UsingEntity<ChatParticipancy>(
+            //        l => l.HasOne(e => e.Participant).WithMany().HasForeignKey(e => e.ParticipantId),
+            //        r => r.HasOne(e => e.Subject).WithMany().HasForeignKey(e => e.SubjectId)
+            //    ); //maybe take config from chatparticipant config file
         }
     }
 }

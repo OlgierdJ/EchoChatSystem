@@ -17,7 +17,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore
         public bool SendHelpfulTipsForServerSetup { get; set; }
         public DefaultNotificationSettingsEnum DefaultNotificationSettingsMode { get; set; }
         public string ServerImageUrl { get; set; }
-        public string ServerInviteBackgroundUrl { get; set; }
+        //public string ServerInviteBackgroundUrl { get; set; }
         //Safety Settings
         public bool ShowMembersInChannelList { get; set; }
         public VerificationLevel VerificationLevelMode { get; set; }

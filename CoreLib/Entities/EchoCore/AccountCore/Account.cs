@@ -32,6 +32,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public AccountSettings Settings { get; set; } //should be created on account creation
 
         //Interactivity stuff - also private settings and information about this account only used by the user and the application / api
+        //public ICollection<AccountBadge>? Badges { get; set; } //some are only owned by account, removed by external factors such as no longer subscriber.
         public ICollection<Role>? Roles { get; set; } //System / Application roles (perhaps not needed)
         public ICollection<AccountViolation>? Violations { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
         public ICollection<AccountViolation>? IssuedViolations { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
@@ -64,7 +65,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<FriendSuggestion>? FriendSuggestions { get; set; } //mapped through connections?
 
         //chat stuff - public to other members of the chat
-        public ICollection<Chat>? Chats { get; set; } //mapped through chatparticipancy
+        public ICollection<ChatParticipancy>? Chats { get; set; } //mapped through chatparticipancy
         public ICollection<ChatInvite>? ChatInvites { get; set; } //done
         public ICollection<ChatMessage>? ChatMessages { get; set; }
 

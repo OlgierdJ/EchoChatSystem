@@ -2,6 +2,7 @@ using CoreLib.Handlers;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
+using CoreLib.MapperProfiles;
 using DomainCoreApi.EFCORE;
 using DomainCoreApi.Repositories;
 using DomainCoreApi.Services;
@@ -23,7 +24,10 @@ var connectionString = builder.Configuration.GetConnectionString("EchoDBConnecti
 builder.Services.AddDbContext<EchoDbContext>(options => options.UseSqlServer(connectionString));
 // Add services to the container.
 builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
-
+builder.Services.AddAutoMapper(opts =>
+{
+    opts.AddProfile<EchoCoreCommonMappings>();
+});
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

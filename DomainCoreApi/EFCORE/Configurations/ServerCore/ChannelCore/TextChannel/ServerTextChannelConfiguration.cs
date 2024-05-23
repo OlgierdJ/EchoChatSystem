@@ -31,7 +31,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
 
             builder.HasOne(b => b.Owner).WithMany(b => b.TextChannels).HasForeignKey(b => b.OwnerId).IsRequired().OnDelete(DeleteBehavior.ClientCascade);
 
-            builder.HasMany(b => b.AllowedRoles).WithOne(b => b.Channel).HasForeignKey(b => new { b.ChannelCategoryId, b.RoleId }).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasMany(b => b.RoleSettings).WithOne(b => b.Channel).HasForeignKey(b => new { b.ChannelCategoryId, b.RoleId }).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasMany(b => b.RolePermissions).WithOne(b => b.Channel).HasForeignKey(b => new { b.ChannelId, b.RoleId }).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(b => b.MemberSettings).WithOne(b => b.Channel).HasForeignKey(b => new { b.ChannelId, b.AccountId }).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasMany(b => b.MemberPermissions).WithOne(b => b.Channel).HasForeignKey(b => new { b.ChannelId, b.AccountId }).OnDelete(DeleteBehavior.ClientCascade);

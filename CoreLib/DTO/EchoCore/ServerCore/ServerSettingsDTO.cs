@@ -18,15 +18,15 @@ namespace CoreLib.DTO.EchoCore.ServerCore
         public bool PromptMembersToReplyWithASticker { get; set; }
         public bool SendHelpfulTipsForServerSetup { get; set; }
         public DefaultNotificationSettingsEnum DefaultNotificationSettingsMode { get; set; }
-        public string ServerImageUrl { get; set; }
-        public string ServerInviteBackgroundUrl { get; set; }
+        //public string ServerImageUrl { get; set; }
+        //public string ServerInviteBackgroundUrl { get; set; }
         //Safety Settings
         public bool ShowMembersInChannelList { get; set; }
         public VerificationLevel VerificationLevelMode { get; set; }
         public bool Require2FAForModeratorActions { get; set; }
         public ExplicitImageFilter ExplicitImageFilterMode { get; set; }
-        public VoiceChatDTO? InactiveChannel { get; set; }
-        public ChatDTO? SystemMessagesChannel { get; set; }
+        public ChatMinimalDTO? InactiveChannel { get; set; }
+        public ChatMinimalDTO? SystemMessagesChannel { get; set; }
         public RegionDTO Region { get; set; }
 
 

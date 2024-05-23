@@ -23,7 +23,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
         //allowed groups or specific permission????
         public ICollection<ServerTextChannelPermission>? AllowedPermissions { get; set; } //related permissions used for creating subset of all permissions showed to the user
 
-        public ICollection<ServerTextChannelRole>? AllowedRoles { get; set; } //all roles with specific defined permissions for this category
+        public ICollection<ServerTextChannelRole>? RoleSettings { get; set; } //all roles with specific defined permissions for this category
         public ICollection<ServerTextChannelRolePermission>? RolePermissions { get; set; } //all rolepermissions linked to this category
         public ICollection<ServerTextChannelMemberSettings>? MemberSettings { get; set; } //member specific definitions for this category
         public ICollection<ServerTextChannelMemberPermission>? MemberPermissions { get; set; } //all memberpermissions linked to this category

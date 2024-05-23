@@ -18,7 +18,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.SettingsCor
             builder.Property(b => b.SendHelpfulTipsForServerSetup).IsRequired();
             builder.Property(b => b.DefaultNotificationSettingsMode).HasConversion<int>().IsRequired();
             builder.Property(b => b.ServerImageUrl).IsRequired();
-            builder.Property(b => b.ServerInviteBackgroundUrl).IsRequired();
+            //builder.Property(b => b.ServerInviteBackgroundUrl).IsRequired();
             builder.Property(b => b.ShowMembersInChannelList).IsRequired();
             builder.Property(b => b.VerificationLevelMode).HasConversion<int>().IsRequired();
             builder.Property(b => b.Require2FAForModeratorActions).IsRequired();

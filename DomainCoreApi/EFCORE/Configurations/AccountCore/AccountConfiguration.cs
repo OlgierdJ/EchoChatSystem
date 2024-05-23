@@ -66,10 +66,11 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
                   r => r.HasOne(e => e.Participant).WithMany().HasForeignKey(e => e.ParticipantId)
              );
             builder.HasMany(e => e.FriendSuggestions).WithOne(e => e.Receiver).HasForeignKey(e => e.ReceiverId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
-            builder.HasMany(e => e.Chats).WithMany(e => e.Participants).UsingEntity<ChatParticipancy>(
-                l => l.HasOne(e => e.Subject).WithMany().HasForeignKey(e => e.SubjectId),
-                  r => r.HasOne(e => e.Participant).WithMany().HasForeignKey(e => e.ParticipantId)
-                );
+            builder.HasMany(e => e.Chats).WithOne(e => e.Participant).HasForeignKey(e => e.ParticipantId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            //builder.HasMany(e => e.Chats).WithMany(e => e.Participants).UsingEntity<ChatParticipancy>(
+            //    l => l.HasOne(e => e.Subject).WithMany().HasForeignKey(e => e.SubjectId),
+            //      r => r.HasOne(e => e.Participant).WithMany().HasForeignKey(e => e.ParticipantId)
+            //    );
 
             builder.HasMany(e => e.ChatInvites).WithOne(e => e.Inviter).HasForeignKey(e => e.InviterId).OnDelete(DeleteBehavior.Restrict).IsRequired();
             builder.HasMany(e => e.ChatMessages).WithOne(e => e.Author).HasForeignKey(e => e.AuthorId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
