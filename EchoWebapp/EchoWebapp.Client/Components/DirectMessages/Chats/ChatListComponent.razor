@@ -13,7 +13,7 @@
     Clicking chats within this component should call for parent navigation to the chatviewcomponent.
 *@
 @* <h3>ChatListComponent</h3> *@
-<MudPaper Width="280px" Square Style="background: var(--mud-palette-surface);">
+<MudPaper Width="12vw" Height="90vh" Square Style="background: var(--mud-palette-surface);">
      <MudText Class="px-5 py-2">Direct Messages</MudText>
      <MudList Clickable="true">
          @foreach (var c in chat.OrderByDescending(e => e.Messages.Last().TimeSent))

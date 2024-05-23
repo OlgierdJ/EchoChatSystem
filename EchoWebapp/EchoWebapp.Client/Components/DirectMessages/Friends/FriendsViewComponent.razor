@@ -2,8 +2,6 @@
 @using EchoWebapp.Client.Components.DirectMessages.Chats
 @using MudBlazor
 @rendermode InteractiveAuto
-@inject ILocalStorageService LocalStorage
-@inject Provider.AccountIdContainer AccountContainer
 @inject NavigationManager nav
 
 @*
@@ -14,12 +12,10 @@
 *@
 @* <h3>FriendsViewComponent</h3> *@
 
-<div class="ma-0 overflow-auto" style="min-width: 70vw; max-width:90vw; height: 100vh;">
+<div class="ma-0 overflow-auto" style="width: 65vw; height: 100vh;">
     <MudTabs Elevation="0" ApplyEffectsToContainer="true" PanelClass="pa-6" @bind-ActivePanelIndex="@_activePanel">
         <Header>
             <MudButton Class="align-self-center justify-start" Color="Color.Success" Variant="Variant.Filled" Style="width: 120px; margin-right: 25px;">Add Friend</MudButton>
-            <MudButton Class="align-self-center justify-start" Color="Color.Error" Variant="Variant.Filled" OnClick="logout" Style="margin-right: 25px;">Logout</MudButton>
-            <MudButton Class="align-self-center justify-start" Color="Color.Warning" Variant="Variant.Filled" OnClick="updatepopup" Style="margin-right: 25px;">Update</MudButton>
         </Header>
         <ChildContent>
             <MudTabPanel Text="Online" tabindex="0" >
@@ -40,25 +36,12 @@
 
 @* <ChatUserProfileComponent Visible="ToggleSidePanel" /> *@
 
-    <MudPaper Width="20vw" Height="100vh" Square Style="background: var(--mud-palette-dark);">
+    <MudPaper Width="18vw" Height="100vh" Square Style="background: var(--mud-palette-dark);">
          <h1>Activity Test</h1>
      </MudPaper>
 
  @code {
     public bool ToggleSidePanel = true;
-
-    private async void logout()
-    {
-        await LocalStorage.RemoveItemAsync("AccountId");
-        await LocalStorage.RemoveItemAsync("Token");
-        AccountContainer.SetValue(0,string.Empty);
-        nav.NavigateTo("/login");
-    }
-
-    private async void updatepopup()
-    {
-        
-    }
 
     int _activePanel;
 

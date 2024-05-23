@@ -1,5 +1,6 @@
 ﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
 @using CoreLib.Entities.EchoCore.ChatCore
+@using EchoWebapp.Client.Components.Shared.User
 @using MudBlazor
 @using EchoWebapp.Client.Components.DirectMessages.Friends
 @using EchoWebapp.Client.Components.DirectMessages.Chats
@@ -12,7 +13,12 @@
 *@
 
 @* <h3>DirectMessageViewComponent</h3> *@
-<ChatListComponent OnItemSelected=@HandelOnChatChanged />
+
+<div>
+
+    <ChatListComponent OnItemSelected=@HandelOnChatChanged />
+    <UserConnectionUIComponent/>
+</div>
 
 @if (DisplayFriends)
 {
@@ -22,7 +28,6 @@ else
 {
     <ChatViewComponent Content="chat" />
 }
-
 
 @code {
     [Parameter]
