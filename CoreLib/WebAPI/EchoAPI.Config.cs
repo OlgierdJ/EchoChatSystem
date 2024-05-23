@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static System.Net.WebRequestMethods;
 
 namespace CoreLib.WebAPI
 {
@@ -13,6 +14,7 @@ namespace CoreLib.WebAPI
         {
             PropertyNameCaseInsensitive = true,
             ReferenceHandler = ReferenceHandler.Preserve
+            
         };
 
         public EchoAPI(/*MessageStore NotificationPipeline = null*/)

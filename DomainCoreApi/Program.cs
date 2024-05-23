@@ -3,10 +3,12 @@ using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.EFCORE;
+using DomainCoreApi.Hubs;
 using DomainCoreApi.Repositories;
 using DomainCoreApi.Services;
 using DomainCoreApi.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -55,7 +57,7 @@ builder.Services.AddTransient(typeof(ILanguageRepository), typeof(LanguageReposi
 builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
 builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
 
-
+builder.Services.AddSignalR();
 
 builder.Services.AddTransient(typeof(IPasswordHandler), typeof(Passwordhandler));
 
@@ -85,6 +87,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapHub<DomainPushNotificationHub>("DomainPushNotificationHub");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("CorsPolicy");

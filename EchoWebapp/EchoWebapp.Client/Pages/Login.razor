@@ -1,12 +1,15 @@
 ﻿@page "/login"
 @using CoreLib.DTO.RequestCore.UserCore
+@using CoreLib.Entities.EchoCore.AccountCore
 @using MudBlazor
 @using CoreLib.WebAPI
 @using System.ComponentModel.DataAnnotations
+@using System.Net.Http.Headers
 @inject NavigationManager nav
 @inject EchoAPI _echoAPI
 @inject ILocalStorageService LocalStorage
 @inject Provider.AccountIdContainer AccountContainer
+@inject AuthenticationStateProvider authstate
 @rendermode InteractiveAuto
 
 <div id="unique_id_scroll_section" class="ma-0" style="height:100vh;overflow: auto;">
@@ -33,6 +36,7 @@
  </div>
 
  @code {
+
     public string password { get; set; } = "";
     public string email { get; set; } = "";
     public MudTextField<string> emailField;
@@ -82,7 +86,13 @@
         var result = await _echoAPI.LoginAsync(User);
         AccountContainer.SetValue(result);
         await LocalStorage.SetItemAsync("AccountId", AccountContainer.Value);
-        nav.NavigateTo("/");
+        await LocalStorage.SetItemAsync("Token", result);
+
+        /* this is how we can call the api */
+       // var test = await _echoAPI.GetEntityAsync<Account>(AccountContainer.Value , new AuthenticationHeaderValue("Bearer", AccountContainer.Token));
+       
+        var test = await authstate.GetAuthenticationStateAsync();
+        nav.NavigateTo("/messages");
     }
 
     async void ResetPassword()

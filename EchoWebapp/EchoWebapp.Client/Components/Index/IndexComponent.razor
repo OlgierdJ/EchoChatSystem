@@ -46,7 +46,8 @@ else
             }
             else
             {
-                AccountContainer.SetValue(Convert.ToUInt64(id));
+                var token = await LocalStorage.GetItemAsStringAsync("Token");
+                AccountContainer.SetValue(Convert.ToUInt64(id), token);
                 StateHasChanged();
             }
         }

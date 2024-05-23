@@ -4,8 +4,12 @@ using CoreLib.WebAPI;
 using EchoWebapp.Client.Provider;
 using EchoWebapp.Components;
 using MudBlazor.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -16,11 +20,37 @@ builder.Services.AddMudServices();
 
 builder.Services.AddCascadingAuthenticationState();
 
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.SaveToken = true;
+    x.TokenValidationParameters = new()
+    {
+        ValidIssuer = config["JwtSettings:Issuer"],
+        ValidAudience = config["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey
+        (Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        RequireExpirationTime = true,
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = true
+    };
+});
+
+
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddSingleton<AccountIdContainer>();
 builder.Services.AddSingleton<EchoAPI>();
+//builder.Services.AddSingleton<AuthenticationStateProvider, CustomRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationService>();
+//builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
 var app = builder.Build();
 
@@ -44,7 +74,6 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(EchoWebapp.Client._Imports).Assembly)
-    .AllowAnonymous();
+    .AddAdditionalAssemblies(typeof(EchoWebapp.Client._Imports).Assembly);
 
 app.Run();

@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace EchoWebapp.Client.Provider
@@ -6,18 +8,38 @@ namespace EchoWebapp.Client.Provider
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         private readonly ILocalStorageService _localStorage;
+        private readonly HttpClient _http;
 
-        public CustomAuthStateProvider(ILocalStorageService localStorage)
+        public CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient http)
         {
             _localStorage = localStorage;
+            _http = http;
         }
+
+        // private AuthenticationState authenticationState;
+
+        // public CustomAuthStateProvider(AuthenticationService service)
+        // {
+        //     authenticationState = new AuthenticationState(service.CurrentUser);
+
+        //     service.UserChanged += (newUser) =>
+        //     {
+        //         authenticationState = new AuthenticationState(newUser);
+
+        //         NotifyAuthenticationStateChanged(
+        //             Task.FromResult(new AuthenticationState(newUser)));
+        //     };
+        // }
+
+        //public override Task<AuthenticationState> GetAuthenticationStateAsync() =>
+        //Task.FromResult(authenticationState);
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
 
-            var token = await _localStorage.GetItemAsStringAsync("AccountId");
-
+            var token = await _localStorage.GetItemAsStringAsync("Token");
             var identity = new ClaimsIdentity();
+            _http.DefaultRequestHeaders.Authorization = null;
 
             if (!string.IsNullOrEmpty(token))
             {
@@ -25,14 +47,26 @@ namespace EchoWebapp.Client.Provider
                 //var parsedJwt = tokenHandler.ReadJwtToken(token);
                 //identity = new ClaimsIdentity(parsedJwt.Claims);
                 identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                _http.DefaultRequestHeaders.Authorization =
+                   new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
             }
 
             var user = new ClaimsPrincipal(identity);
-            var state = new AuthenticationState(user);
 
-            NotifyAuthenticationStateChanged(Task.FromResult(state));
+            return await Task.FromResult(new AuthenticationState(user));
+        }
 
-            return state;
+        public void AuthenticateUser(string userIdentifier)
+        {
+            var identity = new ClaimsIdentity(new[]
+            {
+            new Claim(ClaimTypes.Name, userIdentifier),
+        }, "Custom Authentication");
+
+            var user = new ClaimsPrincipal(identity);
+
+            NotifyAuthenticationStateChanged(
+                Task.FromResult(new AuthenticationState(user)));
         }
 
         public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)

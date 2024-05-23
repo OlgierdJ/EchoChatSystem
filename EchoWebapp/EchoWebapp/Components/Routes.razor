@@ -19,3 +19,25 @@
         </LayoutView>
     </NotFound>
 </Router>
+@code{
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthTask { get; set; }
+
+    [Inject] 
+    private AuthenticationStateProvider AuthState { get; set; }
+
+    private System.Security.Claims.ClaimsPrincipal user;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await AuthTask;
+        this.user = authState.User;
+    }
+
+    // private async Task ChangeUser(ChangeEventArgs e)
+    // {
+    //     var en = Enum.Parse<TestUserType>(e.Value.ToString());
+    //     var authState = await ((CustomRevalidatingAuthenticationStateProvider)AuthState).ChangeUser(en);
+    //     this.user = authState.User;
+    // }
+}
