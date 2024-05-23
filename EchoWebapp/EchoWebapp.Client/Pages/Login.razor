@@ -1,5 +1,5 @@
 ﻿@page "/login"
-@using CoreLib.DTO.EchoCore.RequestCore
+@using CoreLib.DTO.RequestCore.UserCore
 @using MudBlazor
 @using CoreLib.WebAPI
 @using System.ComponentModel.DataAnnotations
@@ -78,9 +78,9 @@
         User.Password = password;
 
         //send user to api
-        var data = await _echoAPI.LoginAsync(User);
-        AccountContainer.SetValue(data);
-        Console.WriteLine(data);
+        // var data = await _echoAPI.LoginAsync(User);
+        // AccountContainer.SetValue(data);
+        // Console.WriteLine(data);
         //await localStorage.SetAsync("AccountId", data);
     }
 
