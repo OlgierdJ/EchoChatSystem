@@ -1,4 +1,5 @@
 ﻿@page "/friends"
+@using CoreLib.DTO.EchoCore.UserCore
 @using EchoWebapp.Client.Components.DirectMessages.Chats
 @using MudBlazor
 @rendermode InteractiveAuto
@@ -41,6 +42,9 @@
      </MudPaper>
 
  @code {
+    [Parameter]
+    public UserFullDTO self { get; set; }
+
     public bool ToggleSidePanel = true;
 
     int _activePanel;

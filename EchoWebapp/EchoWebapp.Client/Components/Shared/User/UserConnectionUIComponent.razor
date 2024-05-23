@@ -12,40 +12,43 @@
     as well as mute self, deafen self, change activity status, custom status and navigate to user settings.
 *@
 <div class="d-flex">
-    <MudPaper Width="12vw" Height="10vh" Square Style="background: var(--mud-palette-dark);">
-         <MudListItem Dense="true">
-             <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
-                 <Popup @ref=popup />
-                 <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile">
+    @if(self != null)
+    {
+        <MudPaper Width="12vw" Height="10vh" Square Style="background: var(--mud-palette-dark);">
+             <MudListItem Dense="true">
+                 <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
+                     <Popup self=self @ref=popup />
+                     <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile">
 
-                     <MudBadge Color="Color.Success" Bordered Overlap="true" Origin="Origin.BottomRight">
-                         <MudImage Src="@account.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
-                     </MudBadge>
+                         <MudBadge Color="Color.Success" Bordered Overlap="true" Origin="Origin.BottomRight">
+                             <MudImage Src="@self.UserProfile.User.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+                         </MudBadge>
 
-                     <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
-                        <MudText Typo="Typo.caption">@account.DisplayName</MudText>
-                            <MudText Typo="Typo.caption">@account.ActiveStatus?.DisplayedContent</MudText>
+                         <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
+                            <MudText Typo="Typo.caption">@self.UserProfile.User.DisplayName</MudText>
+                            <MudText Typo="Typo.caption">@self.UserProfile.User.ActiveStatus.DisplayedContent</MudText>
                         </MudPaper>
-                    </div>
-                    <style>
-                        .hoverable:hover {
-                            background: rgba(255,255,255,0.1)
-                        }
-                    </style>
+                        </div>
+                        <style>
+                            .hoverable:hover {
+                                background: rgba(255,255,255,0.1)
+                            }
+                        </style>
 
-                    <MudPaper Class="d-flex flex-grow-1 gap-2 flex-1" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
-                     <MudIconButton Size="Size.Small" Icon=@($"{(!mute ? @Icons.Material.Filled.Mic : @Icons.Material.Filled.MicOff)}") Color=@(!mute ? Color.Default : Color.Error) OnClick="ToggleMute" />
-                     <MudIconButton Size="Size.Small" Icon=@($"{(!deaf ? @Icons.Material.Filled.Headset : @Icons.Material.Filled.HeadsetOff)}") Color=@(!deaf ? Color.Default : Color.Error) OnClick=" ToggleDeaf" />
-                     <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Settings" OnClick="ToggleSettings" />
+                        <MudPaper Class="d-flex flex-grow-1 gap-2 flex-1" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
+                         <MudIconButton Size="Size.Small" Icon=@($"{(!mute ? @Icons.Material.Filled.Mic : @Icons.Material.Filled.MicOff)}") Color=@(!mute ? Color.Default : Color.Error) OnClick="ToggleMute" />
+                         <MudIconButton Size="Size.Small" Icon=@($"{(!deaf ? @Icons.Material.Filled.Headset : @Icons.Material.Filled.HeadsetOff)}") Color=@(!deaf ? Color.Default : Color.Error) OnClick=" ToggleDeaf" />
+                         <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Settings" OnClick="ToggleSettings" />
+                     </MudPaper>
                  </MudPaper>
-             </MudPaper>
-         </MudListItem>
-     </MudPaper>
+             </MudListItem>
+         </MudPaper>
+    }
  </div>
 
  <!-- Move to Component at some point -->
  <MudOverlay Visible="openSettings" DarkBackground="true" ZIndex="9999">
-     <MudPaper Width="90vw" Height="90vh" Style="background: var(--mud-palette-dark);" Class="d-flex align-content-center justify-center flex-column  flex-grow-1 gap-12" Elevation="2">
+     <MudPaper Width="95vw" Height="95vh" Style="background: var(--mud-palette-dark);" Class="d-flex align-content-center justify-center flex-column  flex-grow-1 gap-12" Elevation="2">
          <MudButton Style="position: absolute; top: 25px; right: 25px;" Color="Color.Error" Variant="Variant.Filled" OnClick="ToggleSettings">x</MudButton>
          <MudText Typo="Typo.h3" Align="Align.Center" Style="padding-top: 25px;">SETTINGS</MudText>
          <MudButton Class="align-self-center justify-center" Color="Color.Error" Variant="Variant.Filled" OnClick="logout">Logout</MudButton>
@@ -60,51 +63,14 @@
     bool deaf = false;
     bool openSettings = false;
 
-
-    public MemberDTO account = new()
-    {
-        Id = 113,
-        Profile = new ExternalUserProfileDTO()
-        {
-            AboutMe = "Test Message",
-            BannerColour = "#5C23D9",
-            MutualFriends = null, //Insert Entire UserDTO to test
-            MutualServers = null, //Servers Not Implemented, might make dummydata servers to test
-            Note = "Test",
-            User = new()
-            {
-                Name = "BobTheBuilder" //Is this the only value in Member.Profile.User we need, maybe move out to profile or just member idk?
-            },
-            /* Not yet implemented fully? */
-            // MembershipBadges =
-            // {
-            //     new MembershipBadgeDTO()
-            //     {
-            //         IconName = "Echo",
-            //         IconURL = null,
-            //         OrderingWeight = 0,
-            //         TimeJoined = DateTime.Now.AddDays(-13).AddMinutes(23),
-            //     },
-            // }
-        },
-        ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp",
-        ActiveStatus = new ActiveActivityStatusDTO()
-        {
-            DisplayedContent = "Away",
-            Icon = "",
-            IconColor = Color.Warning.ToString(),
-            Name = "Away"
-        },
-        DisplayName = "Bob The Builder",
-        NameColour = "#F0F",
-        IsOwner = false,
-        GroupingName = "" // Members / role name
-    };
+    [Parameter]
+    public UserFullDTO self { get; set; }
 
     private void OpenProfile()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraExtraLarge };
-        popup.ShowPopup("Echo member since", DateTime.UtcNow.AddDays(-2).ToString("dd MMMM yyyy"), account.DisplayName);
+        Console.WriteLine(popup.Hover);
+        popup.ShowPopup("Echo member since", DateTime.UtcNow.AddDays(-2).ToString("dd MMMM yyyy"), self.UserProfile.User.DisplayName);
         //DialogService.Show<Profile>("Simple Dialog", options);
     }
 

@@ -1,4 +1,5 @@
 ﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
+@using CoreLib.DTO.EchoCore.UserCore
 @using CoreLib.Entities.EchoCore.ChatCore
 @using EchoWebapp.Client.Components.Shared.User
 @using MudBlazor
@@ -15,14 +16,13 @@
 @* <h3>DirectMessageViewComponent</h3> *@
 
 <div>
-
     <ChatListComponent OnItemSelected=@HandelOnChatChanged />
-    <UserConnectionUIComponent/>
+    <UserConnectionUIComponent self=self/>
 </div>
 
 @if (DisplayFriends)
 {
-    <FriendsViewComponent />
+    <FriendsViewComponent self=self />
 }
 else
 {
@@ -34,8 +34,12 @@ else
     public bool DisplayFriends { get; set; }
 
     [Parameter]
+    public UserFullDTO self { get; set; }
+
+    [Parameter]
     public ChatDTO chat { get; set; }
     //set as latest chat pr default
+
 
     public void HandelOnChatChanged(ChatDTO c)
     {
