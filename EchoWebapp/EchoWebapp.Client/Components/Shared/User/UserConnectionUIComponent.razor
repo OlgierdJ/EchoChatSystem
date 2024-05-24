@@ -17,10 +17,10 @@
         <MudPaper Width="12vw" Height="10vh" Square Style="background: var(--mud-palette-dark);">
              <MudListItem Dense="true">
                  <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
-                     <Popup self=self @ref=popup />
+                     <Popup self=self @ref=popup OnItemSelected=@HandelOnChatChanged />
                      <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile">
 
-                         <MudBadge Color="Color.Success" Bordered Overlap="true" Origin="Origin.BottomRight">
+                         <MudBadge Color="@stringToColor.ConvertStringToColor(self.UserProfile.User.ActiveStatus.IconColor)" Bordered Overlap="true" Origin="Origin.BottomRight">
                              <MudImage Src="@self.UserProfile.User.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
                          </MudBadge>
 
@@ -63,6 +63,8 @@
     bool deaf = false;
     bool openSettings = false;
 
+    public readonly StringToColor stringToColor = new();
+
     [Parameter]
     public UserFullDTO self { get; set; }
 
@@ -99,5 +101,11 @@
     private async void updatepopup()
     {
 
+    }
+
+    public void HandelOnChatChanged(ActiveActivityStatusDTO s)
+    {
+        self.UserProfile.User.ActiveStatus = s;
+        StateHasChanged();
     }
 }

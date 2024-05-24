@@ -28,14 +28,14 @@
                 <!-- Button and div menu does work tho LUL -->
             </div>
             <div class="modal-footer justify-start">
-                <MudButton Color="StringToColor(currentStatus?.IconColor)" @onclick="@(()=>Hover=!Hover)">Status: @currentStatus?.Name</MudButton>
+                <MudButton Color="stringToColor.ConvertStringToColor(currentStatus?.IconColor)" @onclick="@(()=>Hover=!Hover)">Status: @currentStatus?.Name</MudButton>
                 <div class="modal-content pa-3" style="display: @(Hover ? "block" : "none"); bottom: 126px;  left: 327px; width: 125px; position:fixed; background: var(--mud-palette-surface);">
                     <div class="d-flex flex-column my-2">
                         @foreach (var s in status)
                         {
                             <MudItem>
-                                <MudButton @onclick="@(()=>SwtichStatus(s))">
-                                    <MudIcon Icon="@s.Icon" Color="@StringToColor(s.IconColor)" />
+                                <MudButton @onclick="@(()=>{OnItemSelected.InvokeAsync(s);SwtichStatus(s);})">
+                                    <MudIcon Icon="@s.Icon" Color="@stringToColor.ConvertStringToColor(s.IconColor)" />
                                     <MudText Class="ml-2">@s.Name</MudText>
                                 </MudButton>
                             </MudItem>
@@ -64,13 +64,13 @@
     public UserFullDTO self { get; set; }
 
     ActiveActivityStatusDTO? currentStatus;
-    
+
     /** Get ActiveActivityStatusDTO from DB and populate status **/
     public static List<ActiveActivityStatusDTO> status = new() {
-        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.Circle, IconColor = "Success", Name = "Online", Id = 0 },
-        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.Brightness2, IconColor = "Warning", Name = "Away", Id = 1 },
-        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.RemoveCircle, IconColor = "Error", Name = "Busy", Id = 2 },
-        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.StopCircle, IconColor = "Dark", Name = "Offline", Id = 3 },
+        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.Circle, IconColor = "Success", Name = "Online", Id = 0, DisplayedContent = "Online" },
+        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.Brightness2, IconColor = "Warning", Name = "Away", Id = 1, DisplayedContent = "Away"},
+        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.RemoveCircle, IconColor = "Error", Name = "Busy", Id = 2, DisplayedContent = "Busy"},
+        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.StopCircle, IconColor = "Dark", Name = "Offline", Id = 3, DisplayedContent = "Offline"},
     };
 
 
@@ -89,37 +89,14 @@
 
 
     /** change to provider **/
-    public Color StringToColor(string s)
-    {
-        switch (s)
-        {
-            case "Success":
-                return Color.Success;
-
-            case "Warning":
-                return Color.Warning;
-
-            case "Error":
-                return Color.Error;
-
-            case "Dark":
-                return Color.Default;
-
-            default:
-                return Color.Default;
-        }
-    }
+    public readonly StringToColor stringToColor = new();
 
     public async void SwtichStatus(ActiveActivityStatusDTO s)
     {
         currentStatus = s;
-        var acc = await _echoAPI.GetEntityAsync<Account>(self.Id, new AuthenticationHeaderValue("Bearer", await LocalStorage.GetItemAsStringAsync("Token")));
-        if(acc != null)
-            Console.WriteLine(acc.Name);
 
         /** Update ActivityStatusId for self (own account/user?) or based on id **/
-        acc.ActivityStatusId = s.Id;
-        var data = await _echoAPI.UpdateAsync<Account>(acc, new AuthenticationHeaderValue("Bearer", await LocalStorage.GetItemAsStringAsync("Token")));
+        // var data = await _echoAPI.UpdateAsync<Account>(acc, new AuthenticationHeaderValue("Bearer", await LocalStorage.GetItemAsStringAsync("Token")));
 
         Hover = false;
         StateHasChanged();
@@ -144,4 +121,8 @@
         Name = "";
         StateHasChanged();
     }
+
+
+    [Parameter]
+    public EventCallback<ActiveActivityStatusDTO> OnItemSelected { get; set; }
 }
