@@ -30,15 +30,16 @@ namespace CoreLib.Handlers
         {
             //Initialize connection
             HubConnection connection = new HubConnectionBuilder()
-                      .AddJsonProtocol(a =>
-                      {
-                          a.PayloadSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-                          //    a.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
-                      })
+                      //.AddJsonProtocol(a =>
+                      //{
+                      //    a.PayloadSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                      //    //    a.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
+                      //})
                       .WithUrl(ServerIP, o =>
                       {
+                          //o.UseDefaultCredentials = true;
                           o.AccessTokenProvider = async () => await Task.FromResult<string?>(token);
-                          //o.Headers.Add("Bearer", token);
+                          o.Headers.Add("Bearer", token);
                       }).Build();
 
 
@@ -98,21 +99,22 @@ namespace CoreLib.Handlers
                     {
                         Connection = await CreateConnection(token);
                     }
-                    Connection.StartAsync().ContinueWith(task => {
-                        if (task.Exception != null)
-                        {
-                            ConnectionClosed?.DynamicInvoke(task.Exception);
-                        }
-                        else
-                        {
-                            ConnectionOpened?.DynamicInvoke();
-                        }
-                    });
+                    await Connection.StartAsync();
+                    //Connection.StartAsync().ContinueWith(task => {
+                    //    if (task.Exception != null)
+                    //    {
+                    //        ConnectionClosed?.DynamicInvoke(task.Exception);
+                    //    }
+                    //    else
+                    //    {
+                    //        ConnectionOpened?.DynamicInvoke();
+                    //    }
+                    //});
                     break; // yay! connected
                 }
                 catch (Exception e)
                 { /* bugger! */
-
+                    throw;
                 }
             }
             return;

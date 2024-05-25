@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +36,7 @@ builder.Services.AddAuthentication(x =>
 {
     x.TokenValidationParameters = new()
     {
+        NameClaimType = ClaimTypes.NameIdentifier,
         ValidIssuer = config["JwtSettings:Issuer"],
         ValidAudience = config["JwtSettings:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey
@@ -70,8 +72,8 @@ builder.Services.AddCors(options =>
     {
         builder.AllowAnyOrigin()
         .AllowAnyHeader()
-        .AllowAnyMethod()
-        .SetIsOriginAllowed((host) => true);
+        .AllowAnyMethod();
+        //.SetIsOriginAllowed((host) => true);
     });
 });
 
@@ -85,12 +87,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 
 app.MapHub<DomainPushNotificationHub>("DomainPushNotificationHub");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("CorsPolicy");
 app.MapControllers();
 
 app.Run();

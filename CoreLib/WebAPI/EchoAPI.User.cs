@@ -1,4 +1,5 @@
-﻿using CoreLib.DTO.RequestCore.UserCore;
+﻿using CoreLib.DTO.EchoCore.UserCore;
+using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using System.Text;
 using System.Text.Json;
@@ -42,8 +43,8 @@ namespace CoreLib.WebAPI
                 var response = await client.PostAsync("user/login", content).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
-                    var data = JsonSerializer.Deserialize<string>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-                    return data;
+                    var data = JsonSerializer.Deserialize<TokenDTO>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+                    return data.Token;
                 }
             }
             catch (Exception e)

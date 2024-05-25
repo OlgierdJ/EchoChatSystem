@@ -10,6 +10,7 @@ using DomainCoreApi.Handlers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using CoreLib.DTO.RequestCore.UserCore;
+using CoreLib.DTO.EchoCore.UserCore;
 
 namespace DomainCoreApi.Controllers
 {
@@ -58,7 +59,7 @@ namespace DomainCoreApi.Controllers
                 }
                 //await _notificationService.NotifyClients(result, EntityAction.Create);
 
-                return Ok(result);
+                return Ok(new TokenDTO {Token= result });
             }
             catch (Exception ex)
             {

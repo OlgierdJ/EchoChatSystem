@@ -16,7 +16,7 @@
 
 <AuthorizeView>
     <Authorized>
-        <span>You're authorized as @context.User.Identity.Name</span>
+        <span>You're authorized as @context?.User?.Identity?.Name</span>
     </Authorized>
     <NotAuthorized>
         <span>You're not authorized, buddy.</span>
@@ -148,15 +148,21 @@
     public Account acc2 = new();
     private readonly List<string> _message = new();
 
-    private string messageInput;
+    private string? messageInput;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var token = await LocalStorage.GetItemAsStringAsync("Token");
-        await _client.Connect(token);
+        // var token = await LocalStorage.GetItemAsStringAsync("Token");
+        // await _client.Connect(token);
+        if (firstRender)
+        {
+            var token = await LocalStorage.GetItemAsStringAsync("Token");
+            await _client.Connect("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5MzYyYjk1MS02ZWMzLTRmODktOTYwZi03NWFiOTBjY2Y1ZjIiLCJzdWIiOiIxIiwibmJmIjoxNzE2NTYyNjEwLCJleHAiOjE3MTY1OTE0MTAsImlhdCI6MTcxNjU2MjYxMCwiaXNzIjoiSHR0cHM6Ly9sb2NhbGhvc3Q6NzI2OS9hcGkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MjgzLyJ9.XNJXUyAgYdKjkF4wdveGmVDkvAOWtfkBSc1sS9Fa9Yg");
+            _client.ReceiveNotification += ReceiveNotification2;
+        }
 
-        _client.ReceiveNotification += ReceiveNotification2;
-
+        
+        
         await base.OnAfterRenderAsync(firstRender);
     }
 
@@ -168,13 +174,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (authenticationState is not null)
-        {
-            var state = await authenticationState;
-            var user = state.User;
-        }
-        //acc1 = await _Echoapi.GetEntityAsync<Account>(AccountContainer.Value, new AuthenticationHeaderValue("Bearer", AccountContainer.Token));
-
+        // if (authenticationState is not null)
+        // {
+        //     var state = await authenticationState;
+        //     var user = state.User;
+        // }
+         //acc1 = await _Echoapi.GetEntityAsync<Account>(AccountContainer.Value, new AuthenticationHeaderValue("Bearer", AccountContainer.Token));
+        // await _client.Connect("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmZDNhOWZlZS01YzE2LTRmOWYtODk5Mi1kZTdhOTAyODBkNGQiLCJzdWIiOiIxIiwibmJmIjoxNzE2NTU2NzgwLCJleHAiOjE3MTY1ODU1ODAsImlhdCI6MTcxNjU1Njc4MCwiaXNzIjoiSHR0cHM6Ly9sb2NhbGhvc3Q6NzI2OS9hcGkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MjgzLyJ9.U9I14e9WpsiIlqXKu7rFGMZNrfY4bqYSZY9vZBpWSfg");
+        // _client.ReceiveNotification += ReceiveNotification2;
         #region old code
         // acc1 = new Account { Id = 112, Name = "TheDoe", Profile = new AccountProfile() { AvatarFileURL = "https://cdn.discordapp.com/attachments/808696253659611226/1233306035528400939/image.png?ex=662c9d40&is=662b4bc0&hm=75ab9ae1d1e87dc59cdb63dec2f21276211359cace7e55a2e15adafb09e19327&", } };
         // acc2 = new Account { Id = 113, Name = "Yourname", Profile = new AccountProfile() { AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } };

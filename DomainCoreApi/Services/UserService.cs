@@ -1,4 +1,6 @@
-﻿using CoreLib.DTO.RequestCore.FriendCore;
+﻿using AutoMapper;
+using CoreLib.DTO.EchoCore.UserCore;
+using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.AccountCore;
@@ -18,6 +20,7 @@ namespace DomainCoreApi.Services
         private readonly IAccountService _accountService;
         private readonly ILanguageRepository _languageRepository;
         private readonly CreateUserHandler _createUserHandler = new();
+
         public UserService(IUserRepository repository, IPasswordHandler pwdHandler, IAccountService accountService, ILanguageRepository languageRepository) : base(repository)
         {
             _pwdHandler = pwdHandler;

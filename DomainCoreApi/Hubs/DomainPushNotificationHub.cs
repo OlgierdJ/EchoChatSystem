@@ -1,12 +1,14 @@
 ﻿using CoreLib;
 using CoreLib.DTO.EchoCore.ChatCore.TextCore;
 using CoreLib.Entities.EchoCore.ChatCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace DomainCoreApi.Hubs
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class DomainPushNotificationHub : Hub<IDomainNotificationHub>
     {
         public override async Task OnConnectedAsync()
