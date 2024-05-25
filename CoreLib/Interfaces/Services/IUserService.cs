@@ -1,4 +1,5 @@
-﻿using CoreLib.DTO.RequestCore.FriendCore;
+﻿using CoreLib.DTO.EchoCore.UserCore;
+using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.UserCore;
@@ -15,7 +16,7 @@ namespace CoreLib.Interfaces.Services
         Task<bool> AcceptFriendRequest(ulong id, AcceptFriendRequestRequestDTO requestDTO);
         Task<bool> AddFriend(ulong id, SendFriendRequestDTO requestDTO);
         Task<bool> AddUserConnection(ulong id, AddUserConnectionRequestDTO requestDTO);
-
+        Task<UserFullDTO> GetFullDTOAsync(ulong id);
         Task<bool> BlockUser(ulong id, BlockUserRequestDTO requestDTO);
         Task<bool> MuteUser(ulong id, MuteRequestDTO requestDTO);
         Task<bool> RemoveFriend(ulong id, RemoveFriendRequestDTO requestDTO);

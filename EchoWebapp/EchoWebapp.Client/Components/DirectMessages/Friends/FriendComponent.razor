@@ -10,19 +10,24 @@
 
     Hovering and right-clicking the member allows the user to display the user tooltip of the friend.
 *@
-<div class="d-flex flex-grow-1">
+<div class="d-flex flex-grow-1" @onmouseover="MouseOver" @onmouseout="MouseOut">
     <MudBadge Color="@stringToColor.ConvertStringToColor(Account.ActivityStatus.IconColor)" Icon="@Account.ActivityStatus.Icon"
                 Bordered Overlap="true" Origin="Origin.BottomRight">
          <MudImage Src="@Account.Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
      </MudBadge>
-     <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)(Account.Name + "\r\n" + Account.ActivityStatus.Name).Replace(Environment.NewLine, "<br />"))</MudText>
+     <!-- Currently bound on account, replace when updating to another DTO (if at all) -->
+     <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)("<b>" + Account.Profile.DisplayName + "</b> " + (handleVisible ? $"<i> {Account.Name} </i>" : "") + "\r\n" + Account.ActivityStatus.Name).Replace(Environment.NewLine, "<br />"))</MudText>
      <MudSpacer />
-     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.ChatBubble" />
-     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.MoreVert" />
+     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.ChatBubble" Title="Message" />
+     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.MoreVert" Title="More" />
  </div>
 @code {
     [Parameter]
     public Account? Account { get; set; }
 
     public readonly StringToColor stringToColor = new();
+
+    bool handleVisible = false;
+    void MouseOver(MouseEventArgs e) { handleVisible = true; }
+    void MouseOut(MouseEventArgs e) { handleVisible = false; }
 }

@@ -91,6 +91,51 @@ namespace DomainCoreApi.Services
                 throw e;
             }
         }
+        public async Task<UserFullDTO> GetFullDTOAsync(ulong id)
+        {
+            try
+            {
+                var result = await _repository.GetSingleWithIncludeAsync(e => e.Id == id);
+                if(result != null)
+                {
+                    UserFullDTO user = new UserFullDTO()
+                    {
+                        BlockedUsers = null,
+                        Friends = null,
+                        Requests = null,
+                        UserProfile = new UserProfileDTO()
+                        {
+                            AboutMe = null,
+                            BannerColour = "",
+                            Note = "",
+                            User = new UserDTO()
+                            {
+                                ActiveStatus = new()
+                                {
+                                    DisplayedContent = "Busy",
+                                    Icon = "",
+                                    IconColor = "Warning",
+                                    Name = "Busy"
+                                },
+                                //Profile not included
+                                //DisplayName = result.Account.Profile.DisplayName,
+                                //ImageIconURL = result.Account.Profile.AvatarFileURL,
+                                Name = result.Account.Name
+                            },
+                        },
+                    };
+                    return user;
+                }
+                return null;
+                
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
 
         public Task<bool> DeafenSelf(ulong id)
         {
@@ -137,7 +182,7 @@ namespace DomainCoreApi.Services
             throw new NotImplementedException();
         }
 
-      
+
 
         public Task<bool> RemoveFriend(ulong id, RemoveFriendRequestDTO requestDTO)
         {
@@ -169,6 +214,6 @@ namespace DomainCoreApi.Services
             throw new NotImplementedException();
         }
 
-        
+
     }
 }

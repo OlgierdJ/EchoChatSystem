@@ -1,11 +1,111 @@
-﻿@*
+﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
+@using CoreLib.DTO.EchoCore.UserCore
+@using EchoWebapp.Client.Pages
+@inject NavigationManager nav
+@inject ILocalStorageService LocalStorage
+@inject Provider.AccountIdContainer AccountContainer
+
+@*
     Layout for a UserConnectionUIcomponent that exists within the indexcomponent.
 
     This component allows for quick access to disconnect from call, stream, enable cam, soundboard functionality,
     as well as mute self, deafen self, change activity status, custom status and navigate to user settings.
 *@
-<h3>Component</h3>
+<div class="d-flex">
+    @if(self != null)
+    {
+        <MudPaper Width="12vw" Height="10vh" Square Style="background: var(--mud-palette-dark);">
+             <MudListItem Dense="true">
+                 <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
+                     <Popup self=self @ref=popup OnItemSelected=@HandelOnChatChanged />
+                     <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile">
 
-@code {
+                         <MudBadge Color="@stringToColor.ConvertStringToColor(self.UserProfile.User.ActiveStatus.IconColor)" Bordered Overlap="true" Origin="Origin.BottomRight">
+                             <MudImage Src="@self.UserProfile.User.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+                         </MudBadge>
 
+                         <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
+                            <MudText Typo="Typo.caption">@self.UserProfile.User.DisplayName</MudText>
+                            <MudText Typo="Typo.caption">@self.UserProfile.User.ActiveStatus.DisplayedContent</MudText>
+                        </MudPaper>
+                        </div>
+                        <style>
+                            .hoverable:hover {
+                                background: rgba(255,255,255,0.1)
+                            }
+                        </style>
+
+                        <MudPaper Class="d-flex flex-grow-1 gap-2 flex-1" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
+                         <MudIconButton Size="Size.Small" Icon=@($"{(!mute ? @Icons.Material.Filled.Mic : @Icons.Material.Filled.MicOff)}") Color=@(!mute ? Color.Default : Color.Error) OnClick="ToggleMute" />
+                         <MudIconButton Size="Size.Small" Icon=@($"{(!deaf ? @Icons.Material.Filled.Headset : @Icons.Material.Filled.HeadsetOff)}") Color=@(!deaf ? Color.Default : Color.Error) OnClick=" ToggleDeaf" />
+                         <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Settings" OnClick="ToggleSettings" />
+                     </MudPaper>
+                 </MudPaper>
+             </MudListItem>
+         </MudPaper>
+    }
+ </div>
+
+ <!-- Move to Component at some point -->
+ <MudOverlay Visible="openSettings" DarkBackground="true" ZIndex="9999">
+     <MudPaper Width="95vw" Height="95vh" Style="background: var(--mud-palette-dark);" Class="d-flex align-content-center justify-center flex-column  flex-grow-1 gap-12" Elevation="2">
+         <MudButton Style="position: absolute; top: 25px; right: 25px;" Color="Color.Error" Variant="Variant.Filled" OnClick="ToggleSettings">x</MudButton>
+         <MudText Typo="Typo.h3" Align="Align.Center" Style="padding-top: 25px;">SETTINGS</MudText>
+         <MudButton Class="align-self-center justify-center" Color="Color.Error" Variant="Variant.Filled" OnClick="logout">Logout</MudButton>
+         <MudButton Class="align-self-center justify-center" Color="Color.Warning" Variant="Variant.Filled" OnClick="updatepopup">Update</MudButton>
+     </MudPaper>
+ </MudOverlay>
+
+ @code {
+    Popup popup = new();
+
+    bool mute = false;
+    bool deaf = false;
+    bool openSettings = false;
+
+    public readonly StringToColor stringToColor = new();
+
+    [Parameter]
+    public UserFullDTO self { get; set; }
+
+    private void OpenProfile()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraExtraLarge };
+        Console.WriteLine(popup.Hover);
+        popup.ShowPopup("Echo member since", DateTime.UtcNow.AddDays(-2).ToString("dd MMMM yyyy"), self.UserProfile.User.DisplayName);
+        //DialogService.Show<Profile>("Simple Dialog", options);
+    }
+
+    void ToggleMute()
+    {
+        mute = !mute;
+    }
+    void ToggleDeaf()
+    {
+        deaf = !deaf;
+    }
+    void ToggleSettings()
+    {
+        openSettings = !openSettings;
+    }
+
+
+    private async void logout()
+    {
+        await LocalStorage.RemoveItemAsync("AccountId");
+        await LocalStorage.RemoveItemAsync("Token");
+        AccountContainer.SetValue(0, string.Empty);
+        nav.NavigateTo("/login");
+    }
+
+    private async void updatepopup()
+    {
+
+    }
+
+    public void HandelOnChatChanged(ActiveActivityStatusDTO s)
+    {
+        self.UserProfile.User.ActiveStatus = s;
+        StateHasChanged();
+    }
 }
