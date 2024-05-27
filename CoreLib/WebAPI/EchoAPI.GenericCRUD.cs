@@ -1,5 +1,7 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
+using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
+using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using System;
@@ -55,8 +57,8 @@ namespace CoreLib.WebAPI
                 //    return "orderdetail";
                 //case OrderDetailComment:
                 //    return "orderdetailcomment";
-                //case OrderStatus:
-                //    return "orderstatus";
+                case Chat:
+                    return "Chat";
                 case Role:
                     return "Role";
                 case SecurityCredentials:

@@ -89,11 +89,11 @@
             AccountContainer.SetValue(result);
             await LocalStorage.SetItemAsync("AccountId", AccountContainer.Value);
             await LocalStorage.SetItemAsync("Token", result);
-
+            
             /* this is how we can call the api */
-            // var test = await _echoAPI.GetEntityAsync<Account>(AccountContainer.Value , new AuthenticationHeaderValue("Bearer", AccountContainer.Token));
-
-            var test = await authstate.GetAuthenticationStateAsync();
+            //var test = await _echoAPI.GetEntityAsync<Account>(AccountContainer.Value , new AuthenticationHeaderValue("Bearer", await LocalStorage.GetItemAsStringAsync("Token")));
+            
+            await authstate.GetAuthenticationStateAsync();
             nav.NavigateTo("/");
         }
         else{

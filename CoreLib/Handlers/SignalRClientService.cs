@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
+using CoreLib.DTO.RequestCore.MessageCore;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreLib.Handlers
@@ -13,9 +15,16 @@ namespace CoreLib.Handlers
 
         #region list of Action the hub can do
         public event Action<Exception> ConnectionClosed;
-        public event Action ConnectionOpened;
+        public event Action<Exception> OnConnectedAsync;
+        public event Action<string> JoinGroup;
+        public event Action<string[]> JoinGroups;
+        public event Action<string> LeaveGroup;
+        public event Action<string[]> LeaveGroups;
         public event Action<string> UpdateMessageReceived;
         public event Action<string> ReceiveNotification;
+        public event Action<MessageDTO> ReceiveChatMessageCreateMessageDTO;
+        public event Action<MessageDTO> ReceiveChatMessageUpdateMessageDTO;
+        public event Action<MessageDTO> ReceiveChatMessageDeleteMessageDTO;
         #endregion
 
         public SignalRClientService(/*string serverip*/)
@@ -33,7 +42,7 @@ namespace CoreLib.Handlers
                       //.AddJsonProtocol(a =>
                       //{
                       //    a.PayloadSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-                      //    //    a.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
+                      //    //a.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
                       //})
                       .WithUrl(ServerIP, o =>
                       {
@@ -48,6 +57,13 @@ namespace CoreLib.Handlers
             connection.ServerTimeout = TimeSpan.FromSeconds(2);
             connection.On<string>(nameof(IDomainNotificationHub.ReceiveUpdateMessage), (message) => UpdateMessageReceived?.Invoke(message));
             connection.On<string>(nameof(IDomainNotificationHub.ReceiveNotification), (message) => ReceiveNotification?.Invoke(message));
+            connection.On<string>(nameof(IDomainNotificationHub.JoinGroup), (groupName) => JoinGroup?.Invoke(groupName));
+            connection.On<string[]>(nameof(IDomainNotificationHub.JoinGroups), (groupNames) => JoinGroups?.Invoke(groupNames));
+            connection.On<string>(nameof(IDomainNotificationHub.LeaveGroup), (groupNames) => LeaveGroup?.Invoke(groupNames));
+            connection.On<string[]>(nameof(IDomainNotificationHub.LeaveGroups), (groupNames) => LeaveGroups?.Invoke(groupNames));
+            connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageCreateMessageDTO), (message) => ReceiveChatMessageCreateMessageDTO?.Invoke(message));
+            connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageUpdateMessageDTO), (message) => ReceiveChatMessageUpdateMessageDTO?.Invoke(message));
+            connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageDeleteMessageDTO), (message) => ReceiveChatMessageDeleteMessageDTO?.Invoke(message));
             //Forward invocation of inner event to service event.
             Func<Exception, Task> connectionClosed = async (e) =>
             {
@@ -123,6 +139,11 @@ namespace CoreLib.Handlers
         public async Task SendUpdateMessage(string message)
         {
             await Connection.SendAsync("SendUpdateMessage", message);
+        }
+        
+        public async Task SendAJoinRequestForGroup(string GroupName)
+        {
+            await Connection.InvokeAsync("JoinGroup",GroupName);
         }
 
         public void Dispose()

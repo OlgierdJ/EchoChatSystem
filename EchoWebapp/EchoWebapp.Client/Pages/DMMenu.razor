@@ -1,7 +1,6 @@
 ﻿@page "/messages"
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.ChatCore
-@using CoreLib.Handlers
 @using Microsoft.AspNetCore.SignalR.Client
 @using MudBlazor
 @using System.Net.Http.Headers
@@ -156,8 +155,9 @@
         // await _client.Connect(token);
         if (firstRender)
         {
-            var token = await LocalStorage.GetItemAsStringAsync("Token");
-            await _client.Connect("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5MzYyYjk1MS02ZWMzLTRmODktOTYwZi03NWFiOTBjY2Y1ZjIiLCJzdWIiOiIxIiwibmJmIjoxNzE2NTYyNjEwLCJleHAiOjE3MTY1OTE0MTAsImlhdCI6MTcxNjU2MjYxMCwiaXNzIjoiSHR0cHM6Ly9sb2NhbGhvc3Q6NzI2OS9hcGkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MjgzLyJ9.XNJXUyAgYdKjkF4wdveGmVDkvAOWtfkBSc1sS9Fa9Yg");
+            
+            var token = await LocalStorage.GetItemAsync<string>("Token");
+            await _client.Connect(token);
             _client.ReceiveNotification += ReceiveNotification2;
         }
 
