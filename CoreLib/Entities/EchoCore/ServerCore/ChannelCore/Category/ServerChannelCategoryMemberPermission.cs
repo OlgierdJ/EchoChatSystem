@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
@@ -15,6 +16,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
         public bool? State { get; set; } //state. (true = enabled, null = default, false = disabled)
         public ServerChannelCategoryMemberSettings MemberSettings { get; set; } //cascade
         public ServerChannelCategory ChannelCategory { get; set; } //ignore
+        public Server Server { get; set; } //ignore
         public ServerProfile Profile { get; set; } //ignore
         public ServerPermission Permission { get; set; } //cascade
 

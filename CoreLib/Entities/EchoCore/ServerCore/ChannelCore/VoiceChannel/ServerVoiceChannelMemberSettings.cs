@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
 {
@@ -10,6 +11,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
 
         public ServerVoiceChannel Channel { get; set; }
         public ServerProfile Profile { get; set; }
+        public Server Server { get; set; } //ignore
         public ICollection<ServerVoiceChannelMemberPermission>? Permissions { get; set; }
     }
 }

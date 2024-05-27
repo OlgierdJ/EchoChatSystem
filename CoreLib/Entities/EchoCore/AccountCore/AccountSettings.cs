@@ -32,6 +32,8 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public VoiceSettings VoiceSettings { get; set; }//should be created on account creation
         public VideoSettings VideoSettings { get; set; }//should be created on account creation
         public ActivitySettings ActivitySettings { get; set; }//should be created on account creation
+        public GameOverlaySettings GameOverlaySettings { get; set; }//should be created on account creation
+        public WindowSettings WindowSettings { get; set; }//should be created on account creation
 
 
 

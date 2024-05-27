@@ -2,6 +2,7 @@
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -35,6 +36,10 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.RoleCore
             builder.HasMany(b => b.CategoryMemberPermissions).WithOne(b => b.Permission).HasForeignKey(b => b.PermissionId).OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(b => b.TextChannelMemberSettings).WithOne().HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.Restrict);//
+
+            builder.HasMany(b => b.CategoryRolePermissions).WithOne(b => b.Permission).HasForeignKey(b => b.PermissionId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(b => b.ServerVoiceChannelRolePermissions).WithOne(b => b.Permission).HasForeignKey(b => b.PermissionId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(b => b.TextChannelRolePermissions).WithOne(b => b.Permission).HasForeignKey(b => b.PermissionId).OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(b => b.TextChannelMemberPermissions).WithOne(b => b.Permission).HasForeignKey(b => b.PermissionId).OnDelete(DeleteBehavior.Restrict);
             builder.HasMany(b => b.VoiceChannelMemberSettings).WithOne().HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.Restrict);

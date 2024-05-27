@@ -14,9 +14,12 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
         public ICollection<ServerRolePermission>? RolePermissions { get; set; } //server global permissions
         public ICollection<ServerChannelCategoryMemberSettings>? CategoryMemberSettings { get; set; } //category wide permissiongroups overridden by channelspecific permissions
         public ICollection<ServerChannelCategoryMemberPermission>? CategoryMemberPermissions { get; set; } //category wide permissions overridden by channelspecific permissions
+        public ICollection<ServerChannelCategoryRolePermission>?  CategoryRolePermissions { get; set; } //category wide permissions overridden by channelspecific permissions
         public ICollection<ServerTextChannelMemberSettings>? TextChannelMemberSettings { get; set; } //channel wide permissiongroups
         public ICollection<ServerTextChannelMemberPermission>? TextChannelMemberPermissions { get; set; }  //channel wide permissions
+        public ICollection<ServerTextChannelRolePermission>?  TextChannelRolePermissions { get; set; }  //channel wide permissions
         public ICollection<ServerVoiceChannelMemberSettings>? VoiceChannelMemberSettings { get; set; } //channel wide permissiongroups
         public ICollection<ServerVoiceChannelMemberPermission>? VoiceChannelMemberPermissions { get; set; } //channel wide permissions
+        public ICollection<ServerVoiceChannelRolePermission>?  ServerVoiceChannelRolePermissions { get; set; } //channel wide permissions
     }
 }

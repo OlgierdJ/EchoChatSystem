@@ -13,7 +13,23 @@ namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
         //string Name { get; set; }
         ICollection<TPermission> Permissions { get; set; }
     }
-    public class HierarchalRoleMinimalWithPermissionsDTO : IHierarchalRole, IHierarchalRoleMinimalWithPermissions<StatefulPermissionExtendedDTO>
+    public interface IMentionableRole : IRoleMinimal
+    {
+        bool AllowAnyoneToMention { get; set; }
+    }
+    public interface ISeggregatableRole : IRoleMinimal
+    {
+        public bool DisplaySeperatelyFromOnlineMembers { get; set; }
+    }
+    public interface ICustomizableRole : IRoleMinimal, IMentionableRole, ISeggregatableRole
+    {
+       
+        public string Colour { get; set; }
+        public string IconURL { get; set; }
+        
+    }
+
+    public class HierarchalRoleMinimalWithPermissionsDTO : IHierarchalRole, IHierarchalRoleMinimalWithPermissions<StatefulPermissionExtendedDTO>, ICustomizableRole
     {
         //if a permission is granted it is true
         //if a permission is denied it is false
@@ -23,5 +39,10 @@ namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
         public ulong Id { get; set; }
         public int Importance { get; set; }
         public string Name { get; set; }
+        public bool AllowAnyoneToMention { get; set; }
+        public bool IsAdmin { get; set; }
+        public string Colour { get; set; }
+        public string IconURL { get; set; }
+        public bool DisplaySeperatelyFromOnlineMembers { get; set; }
     }
 }

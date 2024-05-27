@@ -1,6 +1,7 @@
 ﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
 using CoreLib.DTO.EchoCore.MiscCore;
 using CoreLib.DTO.EchoCore.MiscCore.ModerationCore;
+using CoreLib.DTO.EchoCore.ServerCore;
 using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.Entities.Enums;
 
@@ -11,6 +12,7 @@ namespace CoreLib.DTO.EchoCore.ChatCore.VoiceCore
         public ulong Id { get; set; }
         public string Name { get; set; }
         public int OrderWeight { get; set; }
+        public string? CategoryName { get; set; }
         public uint UserLimit { get; set; } //default 0 = unlimited, max99 (maybe some other max cause server stability via signalr)
         public bool IsAgeRestricted { get; set; }
         public bool IsPrivate { get; set; }
@@ -20,6 +22,7 @@ namespace CoreLib.DTO.EchoCore.ChatCore.VoiceCore
         public RegionDTO Region { get; set; }
 
         public ICollection<UserMinimalDTO>? ActiveParticipants { get; set; } //null from api, filled by client rtc relation, used for displaying participants
+        public ICollection<ServerInviteDTO>? VoiceInvites { get; set; } //null from api, filled by client rtc relation, used for displaying participants
 
         public ICollection<UserMinimalWithPermissionsDTO>? MemberSettings { get; set; } //displays specific permission settings for a specific user enforced within this chat.
         public ICollection<HierarchalRoleMinimalWithPermissionsDTO>? RoleSettings { get; set; } //displays specific permission settings for a specific role enforced within this chat. ????mayb hierarchalrole?

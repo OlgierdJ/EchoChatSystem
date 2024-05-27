@@ -5,7 +5,7 @@ using DomainCoreApi.Services.Bases;
 
 namespace DomainCoreApi.Services
 {
-    public class ReportService : BaseEntityService<ProfileReport, ulong>, IReportService
+    public class ReportService : BaseEntityService<ProfileReport, ulong> //, IReportService
     {
         public ReportService(IRepository<ProfileReport> repository) : base(repository)
         {

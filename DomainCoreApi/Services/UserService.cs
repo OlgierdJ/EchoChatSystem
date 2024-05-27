@@ -1,52 +1,148 @@
 ﻿using AutoMapper;
-using CoreLib.DTO.EchoCore.UserCore;
+using Azure.Core;
 using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
+using CoreLib.Entities.EchoCore.FriendCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
+using DomainCoreApi.EFCORE;
 using DomainCoreApi.Handlers;
 using DomainCoreApi.Services.Bases;
+using Microsoft.EntityFrameworkCore;
 
 namespace DomainCoreApi.Services
 {
-    public class UserService : BaseEntityService<User, ulong> ,IUserService //need the interface so the user can login 
+    public class UserService : BaseEntityService<User, ulong>, IUserService
     {
-
+        private readonly EchoDbContext dbContext;
+        private readonly IMapper mapper;
         private readonly IPasswordHandler _pwdHandler;
         private readonly IAccountService _accountService;
-        private readonly ILanguageRepository _languageRepository;
+        private readonly IPushNotificationService notificationService;
         private readonly CreateUserHandler _createUserHandler = new();
-
-        public UserService(IUserRepository repository, IPasswordHandler pwdHandler, IAccountService accountService, ILanguageRepository languageRepository) : base(repository)
+        public UserService(EchoDbContext dbContext, IMapper mapper, IPushNotificationService notificationService, IUserRepository repository, IPasswordHandler pwdHandler, IAccountService accountService) : base(repository)
         {
+            this.dbContext = dbContext;
+            this.mapper = mapper;
             _pwdHandler = pwdHandler;
             _accountService = accountService;
-            _languageRepository = languageRepository;
+            this.notificationService = notificationService;
         }
 
-        public async Task<User> Register(RegisterRequestDTO requestDTO)
+        public async Task<bool> AcceptFriendRequestAsync(ulong senderId, ulong requestId)
         {
             try
             {
-                var data = await _createUserHandler.CreateHandler(requestDTO);
-                var result = await _repository.AddAsync(data.Item1);
-                data.Item2.UserId = result.Id;
-                await _pwdHandler.CreatePassword(requestDTO.Password, data.Item1.Id);
-                await _accountService.AddAsync(data.Item2);
-                return result;
+                Account acceptingAccount = new()
+                {
+                    Id = senderId,
+                };
+                var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                //verify acceptingacc is part of inc request.
+                if (request != null && request.ReceiverId == senderId)
+                {
+                    Account senderAccount = new()
+                    {
+                        Id = request.SenderRequest.SenderId,
+                    };
+                    Friendship friendship = new()
+                    {
+                        Participants = new List<Account>(),
+                    };
+                    dbContext.Set<Friendship>().Attach(friendship);
+                    friendship.Participants.Add(senderAccount);
+                    friendship.Participants.Add(acceptingAccount);
+                    var res = await dbContext.SaveChangesAsync();
+                }
             }
             catch (Exception e)
             {
-
-                throw e;
-            };
+                return false;
+            }
+            return true;
         }
 
-        public async Task<User> CreateUserAsync(RegisterRequestDTO input)
+        public async Task<bool> AddUserConnectionAsync(ulong senderId, AddUserConnectionRequestDTO requestDTO)
+        {
+            try
+            {
+                Account senderAccount = new()
+                {
+                    Id = senderId,
+                    Connections = new List<AccountConnection>()
+                };
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                AccountConnection connection = new()
+                {
+                    Name = requestDTO.Name,
+                    Token = requestDTO.Token,
+                    DisplayOnProfile = requestDTO.DisplayOnProfile,
+                    ConnectionId = requestDTO.TypeId,
+                };
+
+                dbContext.Set<Account>().Attach(senderAccount);
+                senderAccount.Connections.Add(connection);
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> BlockUserAsync(ulong senderId, ulong userId)
+        {
+            try
+            {
+                Account senderAccount = new()
+                {
+                    Id = senderId,
+                    BlockedAccounts = new List<AccountBlock>()
+                };
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                AccountBlock blockrelation = new()
+                {
+                    BlockedId = userId,
+                    BlockerId = senderId,
+                };
+
+                dbContext.Set<Account>().Attach(senderAccount); //throws error if already blocked fyi
+                senderAccount.BlockedAccounts.Add(blockrelation);
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> CancelFriendRequestAsync(ulong senderId, ulong requestId) //revoke //requests should share id so maybe no problem???
+        {
+            try
+            {
+                //verify the sender is sender
+                var request = await dbContext.Set<OutgoingFriendRequest>().AsQueryable().FirstOrDefaultAsync(e => e.Id == requestId);
+                if (request != null && request.SenderId == senderId)
+                {
+                    dbContext.Set<OutgoingFriendRequest>().Remove(request);
+                    var res = await dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> RegisterAsync(RegisterRequestDTO input)
         {
             try
             {
@@ -56,16 +152,66 @@ namespace DomainCoreApi.Services
                 data.Item2.UserId = result.Id;
                 await _pwdHandler.CreatePassword(input.Password, data.Item1.Id);
                 await _accountService.AddAsync(data.Item2);
-                return result;
             }
             catch (Exception e)
             {
 
-                throw e;
+                return false;
             }
+                return true;
         }
 
-        public async Task<string> LoginUserAsync(LoginRequestDTO attempt)
+        public async Task<bool> DeafenSelfAsync(ulong senderId)
+        {
+            try
+            {
+                VoiceSettings voiceSettings = new()
+                {
+                    Id = senderId,
+                };
+
+
+                dbContext.Set<VoiceSettings>().Attach(voiceSettings);
+                voiceSettings.DeafenSelf = true;
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> DeclineFriendRequestAsync(ulong senderId, ulong requestId)
+        {
+            try
+            {
+                //verify the sender is receiver
+                var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                if (request != null && request.ReceiverId == senderId)
+                {
+                    dbContext.Set<OutgoingFriendRequest>().Remove(request.SenderRequest);
+                    var res = await dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public Task<bool> DeleteAccountAsync(ulong senderId, DeleteAccountRequestDTO requestDTO)
+        {
+            throw new NotImplementedException(); //idk not gonna implement maybe just soft delete or delete security credentials
+        }
+
+        public Task<bool> DisableAccountAsync(ulong senderId, DisableAccountRequestDTO requestDTO)
+        {
+            throw new NotImplementedException(); //not gonna implement maybe just enable some flag of a sort to show login is not enabled
+        }
+
+        public async Task<string> LoginAsync(LoginRequestDTO attempt)
         {
             var user = await _repository.GetSingleWithIncludeAsync(e => e.Email == attempt.Email);
             if (user is not null && await _pwdHandler.CheckPassword(attempt.Password, user.Id))
@@ -78,7 +224,261 @@ namespace DomainCoreApi.Services
             throw new Exception("You suck at hacking bruv");
         }
 
-        public async Task<bool> UpdatePassword(ulong id, string password)
+        public async Task<bool> MuteSelfAsync(ulong senderId)
+        {
+            try
+            {
+                VoiceSettings voiceSettings = new()
+                {
+                    Id = senderId,
+                };
+
+
+                dbContext.Set<VoiceSettings>().Attach(voiceSettings);
+                voiceSettings.MuteSelf = true;
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> MuteUserAsync(ulong senderId, ulong userId, MuteRequestDTO requestDTO)
+        {
+            try
+            {
+                Account senderAccount = new()
+                {
+                    Id = senderId,
+                    MutedVoices = new List<AccountMute>()
+                };
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                AccountMute muterelation = new()
+                {
+                    SubjectId = userId,
+                    MuterId = senderId,
+                };
+
+                dbContext.Set<Account>().Attach(senderAccount); //throws error if already blocked fyi
+                senderAccount.MutedVoices.Add(muterelation);
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        
+
+        public async Task<bool> RemoveFriendAsync(ulong senderId, ulong friendId)
+        {
+            //bad way to have friendships with this data or maybe make alternate key in friendship etc..
+            try
+            {
+                Account acc = await dbContext.Set<Account>().AsQueryable().FirstOrDefaultAsync(e => e.Id == senderId);
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                var removed = acc.Friendships.FirstOrDefault(e => e.Participants.Any(e=>e.Id==friendId));
+                dbContext.Set<Friendship>().Remove(removed); //cannot make use of attach cause manytomany usingentity relation
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> RemoveUserConnectionAsync(ulong senderId, ulong connectionId)
+        {
+            try
+            {
+                Account acc = await dbContext.Set<Account>().AsQueryable().Include(e=>e.Connections).FirstOrDefaultAsync(e => e.Id == senderId);
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                var removed = acc.Connections.FirstOrDefault(e => e.Id == connectionId);
+                acc.Connections.Remove(removed);
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> SendFriendRequestAsync(ulong senderId, AddFriendRequestDTO requestDTO)
+        {
+            try
+            {
+                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().FirstOrDefaultAsync(e=>e.Name==requestDTO.Name);
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                IncomingFriendRequest request = new()
+                {
+                      ReceiverId=receiverAcc.Id,
+                       SenderRequest = new()
+                       {
+                           SenderId=senderId
+                       }
+                };
+
+                dbContext.Set<IncomingFriendRequest>().Add(request); //throws error if already blocked fyi
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> SetCustomStatusAsync(ulong senderId, SetCustomStatusRequestDTO requestDTO) //check if this works??
+        {
+            try
+            {
+                Account acc = new()
+                {
+                    Id = senderId,
+                    //something different than potential change //0 is always different than null and no id can have id 0 so its gucci
+                };
+
+                AccountCustomStatus status = new()
+                {
+                    Id= senderId,
+                     CustomMessage= requestDTO.Content,
+                     ExpirationTime = requestDTO.TimeExpires,
+                };
+
+                //efficient update
+                //await dbContext.Set<AccountCustomStatus>().AsQueryable().Where(e=>e.Id==senderId)
+                //    .ExecuteUpdateAsync(setters => 
+                //    setters.SetProperty(b => b.CustomMessage, requestDTO.Content)
+                //    .SetProperty(b=>b.ExpirationTime, requestDTO.TimeExpires)
+                //    );
+                dbContext.Set<Account>().Attach(acc);
+
+                acc.CustomStatus = status;
+
+
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> SetNicknameAsync(ulong senderId, ulong userId, SetNicknameUserRequestDTO requestDTO)
+        {
+            try
+            {
+                Account senderAccount = new()
+                {
+                    Id = senderId,
+                    NicknamedAccounts = new List<AccountNickname>()
+                };
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                AccountNickname relation = new()
+                {
+                    SubjectId = userId,
+                    AuthorId = senderId,
+                    Nickname = requestDTO.Nickname,
+                };
+
+                dbContext.Set<Account>().Attach(senderAccount); //throws error if already noted fyi
+                senderAccount.NicknamedAccounts.Add(relation);
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> SetNoteAsync(ulong senderId, ulong userId, SetNoteUserRequestDTO requestDTO)
+        {
+            try
+            {
+                Account senderAccount = new()
+                {
+                    Id = senderId,
+                    NotedAccounts = new List<AccountNote>()
+                };
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                AccountNote relation = new()
+                {
+                    SubjectId = userId,
+                    AuthorId = senderId,
+                    Note = requestDTO.Note,
+                };
+
+                dbContext.Set<Account>().Attach(senderAccount); //throws error if already noted fyi
+                senderAccount.NotedAccounts.Add(relation);
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> SetPhoneNumberAsync(ulong senderId, EditPhoneNumberRequestDTO requestDTO)
+        {
+            try
+            {
+                //User sender = new()
+                //{
+                //    Id = senderId,
+                //};
+                var senderAcc = await dbContext.Set<Account>().AsQueryable().Include(e => e.User).FirstOrDefaultAsync(x => x.Id == senderId);
+                if (senderAcc != null)
+                {
+                    dbContext.Set<User>().Attach(senderAcc.User);
+                    senderAcc.User.PhoneNumber = requestDTO.NewPhoneNumber;
+                    var res = await dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> SetStatusAsync(ulong senderId, SetStatusRequestDTO requestDTO)
+        {
+            try
+            {
+                Account senderAccount = new()
+                {
+                    Id = senderId,
+                };
+                //var senderAcc = await dbContext.Set<Account>().AsQueryable().Include(e => e.User).FirstOrDefaultAsync(x => x.Id == senderId);
+                //if (senderAcc != null)
+                //{
+                dbContext.Set<Account>().Attach(senderAccount);
+                senderAccount.ActivityStatusId = requestDTO.Id;
+                var res = await dbContext.SaveChangesAsync();
+                //}
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> SetUserVolumeAsync(ulong senderId, ulong userId, SetUserVolumeRequestDTO requestDTO)
+        {
+            throw new NotImplementedException(); //no idea right now where to set this user volume as entity seems to have disappeared?=???
+        }
+
+        public async Task<bool> UpdatePasswordAsync(ulong id, string password)
         {
             try
             {
@@ -91,70 +491,56 @@ namespace DomainCoreApi.Services
                 throw e;
             }
         }
-        public async Task<UserFullDTO> GetFullDTOAsync(ulong id)
+
+        public async Task<bool> ForgotPasswordAsync(string email, string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> SendFriendRequestAsync(ulong senderId, ulong receiverId)
         {
             try
             {
-                var result = await _repository.GetSingleWithIncludeAsync(e => e.Id == id);
-                if(result != null)
+                //Account receiverAcc = await dbContext.Set<Account>().AsQueryable().FirstOrDefaultAsync(e => e.Id == receiverId);
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                IncomingFriendRequest request = new()
                 {
-                    UserFullDTO user = new UserFullDTO()
+                    ReceiverId = receiverId,
+                    SenderRequest = new()
                     {
-                        BlockedUsers = null,
-                        Friends = null,
-                        Requests = null,
-                        UserProfile = new UserProfileDTO()
-                        {
-                            AboutMe = null,
-                            BannerColour = "",
-                            Note = "",
-                            User = new UserDTO()
-                            {
-                                ActiveStatus = new()
-                                {
-                                    DisplayedContent = "Busy",
-                                    Icon = "",
-                                    IconColor = "Warning",
-                                    Name = "Busy"
-                                },
-                                //Profile not included
-                                //DisplayName = result.Account.Profile.DisplayName,
-                                //ImageIconURL = result.Account.Profile.AvatarFileURL,
-                                Name = result.Account.Name
-                            },
-                        },
-                    };
-                    return user;
-                }
-                return null;
-                
+                        SenderId = senderId
+                    }
+                };
+                dbContext.Set<IncomingFriendRequest>().Add(request); //throws error if already blocked fyi
+                var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
             {
-
-                throw e;
+                return false;
             }
+            return true;
         }
 
-
-        public Task<bool> DeafenSelf(ulong id)
+        public async Task<bool> UpdateUserConnectionAsync(ulong senderId, ulong connectionId, UpdateUserConnectionRequestDTO requestDTO)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                AccountConnection connection = new()
+                {
+                    Id=connectionId,
+                    
+                };
 
-        public Task<bool> DeleteAccount(ulong id, DeleteAccountRequestDTO requestDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DisableAccount(ulong id, DisableAccountRequestDTO requestDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> AcceptFriendRequest(ulong id, AcceptFriendRequestRequestDTO requestDTO)
-        {
-            throw new NotImplementedException();
+                dbContext.Set<AccountConnection>().Attach(connection);
+                connection.DisplayOnProfile = requestDTO.DisplayOnProfile;
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
         }
 
         public Task<bool> AddFriend(ulong id, SendFriendRequestDTO requestDTO)

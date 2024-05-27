@@ -7,8 +7,8 @@ namespace DomainCoreApi.Controllers.Auth
     [ApiController]
     public class AuthenticationController 
     {
-        public AuthenticationController(IAuthenticationService service) 
-        {
-        }
+        //public AuthenticationController(IAuthenticationService service) 
+        //{
+        //}
     }
 }
