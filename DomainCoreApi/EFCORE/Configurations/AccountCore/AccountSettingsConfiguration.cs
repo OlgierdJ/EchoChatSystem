@@ -23,6 +23,8 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.HasOne(b => b.Language).WithMany(b => b.AccountSettings).HasForeignKey(b => b.LanguageId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(b => b.NotificationSettings).WithOne(b => b.AccountSettings).HasForeignKey<NotificationSettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasOne(b => b.PrivacySettings).WithOne(b => b.AccountSettings).HasForeignKey<PrivacySettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne(b => b.WindowSettings).WithOne(b => b.AccountSettings).HasForeignKey<WindowSettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne(b => b.GameOverlaySettings).WithOne(b => b.AccountSettings).HasForeignKey<GameOverlaySettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade);
 
             // Vi skal har lave ChatSettings med tænker det kommer til at se sådan ud \\
             /* builder.HasOne(b=>b.ChatSettings).WithOne(b => b.AccountSettings).HasForeignKey<ChatSettings>(b => b.AccountSettingsId).OnDelete(DeleteBehavior.ClientCascade);

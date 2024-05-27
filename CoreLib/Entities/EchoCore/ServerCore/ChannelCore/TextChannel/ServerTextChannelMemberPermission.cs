@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
+﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
+using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
@@ -16,6 +17,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
         public ServerTextChannelMemberSettings MemberSettings { get; set; } //cascade
         public ServerTextChannel Channel { get; set; } //ignore
         public ServerProfile Profile { get; set; } //ignore
+        public Server Server { get; set; } //ignore
         public ServerPermission Permission { get; set; } //cascade
     }
 }

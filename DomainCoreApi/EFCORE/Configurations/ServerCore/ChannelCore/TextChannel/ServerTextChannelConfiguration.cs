@@ -18,7 +18,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
             builder.Property(b => b.IsPrivate).IsRequired();
 
             builder.HasOne(b => b.ServerSettings).WithMany().HasForeignKey(b => b.Id).OnDelete(DeleteBehavior.NoAction);
-            builder.HasOne(b => b.Pinboard).WithOne(b => b.Owner).HasForeignKey<ServerTextChannelPinboard>(b => b.OwnerId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(b => b.Pinboard).WithOne(b => b.Owner).HasForeignKey<ServerTextChannelPinboard>(b => b.Id).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(b => b.Webhooks).WithOne(b => b.TextChannel).HasForeignKey(b => b.TextChannelId).OnDelete(DeleteBehavior.Restrict);
             builder.HasMany(b => b.Messages).WithOne(b => b.MessageHolder).HasForeignKey(b => b.MessageHolderId).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasMany(b => b.MessageTrackers).WithOne(b => b.CoOwner).HasForeignKey(b => b.CoOwnerId).OnDelete(DeleteBehavior.ClientCascade);

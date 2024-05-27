@@ -27,7 +27,13 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore
         public ICollection<ServerSoundboardSound>? SoundboardSounds { get; set; }
 
         public ICollection<ServerChannelCategory>? ChannelCategories { get; set; } //Essentially a grouping of voicechannels and or textchannels
+        public ICollection<ServerChannelCategoryMemberPermission>?  ChannelCategoryMemberPermissions { get; set; } //Essentially a grouping of voicechannels and or textchannels
+        public ICollection<ServerChannelCategoryMemberSettings>?  ChannelCategoryMemberSettings { get; set; } //Essentially a grouping of voicechannels and or textchannels
+        public ICollection<ServerTextChannelMemberPermission>?  TextChannelMemberPermissions { get; set; } //direct channels
+        public ICollection<ServerTextChannelMemberSettings>?  TextChannelMemberSettings { get; set; } //direct channels
         public ICollection<ServerTextChannel>? TextChannels { get; set; } //direct channels
+        public ICollection<ServerVoiceChannelMemberPermission>?  VoiceChannelMemberPermissions { get; set; } //direct channels
+        public ICollection<ServerVoiceChannelMemberSettings>?  VoiceChannelMemberSettings { get; set; } //direct channels
         public ICollection<ServerVoiceChannel>? VoiceChannels { get; set; } //direct channels
 
         public ICollection<ServerProfile>? Members { get; set; } //Joining a server creates a serverprofile for the member and allows them to change the displayed data which is reflected in the server environment

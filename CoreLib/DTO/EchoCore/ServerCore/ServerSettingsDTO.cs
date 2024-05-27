@@ -17,7 +17,7 @@ namespace CoreLib.DTO.EchoCore.ServerCore
         public bool SendRandomWelcomeMessageWhenSomeoneJoins { get; set; }
         public bool PromptMembersToReplyWithASticker { get; set; }
         public bool SendHelpfulTipsForServerSetup { get; set; }
-        public DefaultNotificationSettingsEnum DefaultNotificationSettingsMode { get; set; }
+        public DefaultNotificationSettings DefaultNotificationSettingsMode { get; set; }
         //public string ServerImageUrl { get; set; }
         //public string ServerInviteBackgroundUrl { get; set; }
         //Safety Settings

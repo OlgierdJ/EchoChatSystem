@@ -21,11 +21,11 @@ namespace CoreLib.Entities.Base
         public TMessageHolderId? MessageHolderId { get; set; }
         public TMessageHolder? MessageHolder { get; set; }
     }
-    public abstract class BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId, TParentMessage> : BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId>
+    public abstract class BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId, TParentMessage, TParentMessageId> : BaseMessage<TId, TAuthor, TAuthorId, TMessageHolder, TMessageHolderId>
         where TAuthor : IEntity<TAuthorId>
         where TMessageHolder : IEntity<TMessageHolderId>
     {
-        public TId? ParentId { get; set; }
+        public TParentMessageId ParentId { get; set; }
 
         public TParentMessage? Parent { get; set; }
         public ICollection<TParentMessage>? Children { get; set; }

@@ -1,15 +1,19 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
+using CoreLib.Entities.Enums;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 
 namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.Settings
 {
-    public class WindowSettingsConfiguration : BaseEntity<ulong>
+    public class WindowSettingsConfiguration : IEntityTypeConfiguration<WindowSettings>
     {
-        //public ulong AccountSettingsId { get; set; }
-        public bool OpenEchoOnPCStartup { get; set; }
-        public bool StartMinimized { get; set; }
-        public bool MinimizeOnClose { get; set; }
+        public void Configure(EntityTypeBuilder<WindowSettings> builder)
+        {
+            builder.HasKey(b => b.Id);
 
-        public AccountSettings AccountSettings { get; set; }
+            builder.HasOne(b => b.AccountSettings).WithOne(e => e.WindowSettings).HasForeignKey<WindowSettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+        }
     }
 }

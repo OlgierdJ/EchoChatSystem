@@ -10,9 +10,9 @@ namespace DomainCoreApi.Controllers
     [ApiController]
     public class AuthorizationController
     {
-        public AuthorizationController(IUserActionService service, IPushNotificationService notificationService)
-        {
-            //_Service = service;
-        }
+        //public AuthorizationController(IUserActionService service, IPushNotificationService notificationService)
+        //{
+        //    //_Service = service;
+        //}
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    [Migration("20240518175832_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240527145433_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,9 +51,6 @@ namespace DomainCoreApi.Migrations
                     b.Property<byte>("ActivityStatusId")
                         .HasColumnType("tinyint");
 
-                    b.Property<decimal?>("CustomStatusId")
-                        .HasColumnType("decimal(20,0)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -73,10 +70,6 @@ namespace DomainCoreApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityStatusId");
-
-                    b.HasIndex("CustomStatusId")
-                        .IsUnique()
-                        .HasFilter("[CustomStatusId] IS NOT NULL");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -168,7 +161,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<DateTime>("TimeBlocked")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.HasKey("BlockerId", "BlockedId");
 
@@ -188,30 +182,17 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("AccountId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<string>("AuthorizeClientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AuthorizeCodeChallenge")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AuthorizeResponseType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AuthorizeState")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long>("ConnectionId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("ExternalRefreshToken")
+                    b.Property<bool>("DisplayOnProfile")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("InternalRefreshToken")
+                    b.Property<string>("Token")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -227,10 +208,7 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountCustomStatus", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<string>("CustomMessage")
                         .IsRequired()
@@ -490,10 +468,15 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("Id")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<decimal>("GameOverlaySettingsId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<long>("LanguageId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GameOverlaySettingsId");
 
                     b.HasIndex("LanguageId");
 
@@ -712,6 +695,10 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1329,6 +1316,25 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("VoiceSettings");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Settings.WindowSettings", b =>
+                {
+                    b.Property<decimal>("Id")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<bool>("MinimizeOnClose")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("OpenEchoOnPCStartup")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("StartMinimized")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WindowSettings");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore.BillingInformation", b =>
                 {
                     b.Property<decimal>("Id")
@@ -1607,7 +1613,6 @@ namespace DomainCoreApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<string>("IconUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -1692,8 +1697,11 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("MessageHolderId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("ParentId")
+                    b.Property<decimal?>("ParentId")
                         .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime?>("TimeEdited")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
@@ -1719,7 +1727,14 @@ namespace DomainCoreApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
-                    b.Property<string>("FileURL")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileLocationURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1785,12 +1800,28 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<decimal?>("AccountId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal?>("ChatId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<bool>("Hidden")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOwner")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("TimeJoined")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
                     b.HasKey("ParticipantId", "SubjectId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("ChatId");
 
                     b.HasIndex("SubjectId");
 
@@ -1800,18 +1831,12 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatPinboard", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<decimal>("OwnerId")
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId")
-                        .IsUnique();
 
                     b.ToTable("ChatPinboard");
                 });
@@ -1978,7 +2003,10 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("BillingInformationId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<bool>("IsDefaultPaymentMethod")
+                    b.Property<bool>("Description")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefaultMethod")
                         .HasColumnType("bit");
 
                     b.Property<long>("PaymentTypeId")
@@ -2249,6 +2277,9 @@ namespace DomainCoreApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("TimeEdited")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -2269,7 +2300,14 @@ namespace DomainCoreApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
-                    b.Property<string>("FileURL")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileLocationURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -2426,6 +2464,8 @@ namespace DomainCoreApi.Migrations
 
                     b.HasIndex("PermissionId");
 
+                    b.HasIndex("ServerId");
+
                     b.HasIndex("AccountId", "ChannelCategoryId");
 
                     b.HasIndex("AccountId", "ServerId");
@@ -2447,6 +2487,8 @@ namespace DomainCoreApi.Migrations
                     b.HasKey("AccountId", "ChannelCategoryId");
 
                     b.HasIndex("ChannelCategoryId");
+
+                    b.HasIndex("ServerId");
 
                     b.HasIndex("AccountId", "ServerId");
 
@@ -2582,6 +2624,8 @@ namespace DomainCoreApi.Migrations
 
                     b.HasIndex("PermissionId");
 
+                    b.HasIndex("ServerId");
+
                     b.HasIndex("AccountId", "ServerId");
 
                     b.ToTable("ServerTextChannelMemberPermission");
@@ -2599,6 +2643,8 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("ChannelId", "AccountId");
+
+                    b.HasIndex("ServerId");
 
                     b.HasIndex("AccountId", "ServerId");
 
@@ -2741,6 +2787,8 @@ namespace DomainCoreApi.Migrations
 
                     b.HasIndex("PermissionId");
 
+                    b.HasIndex("ServerId");
+
                     b.HasIndex("AccountId", "ServerId");
 
                     b.ToTable("ServerVoiceChannelMemberPermission");
@@ -2758,6 +2806,8 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("ChannelId", "AccountId");
+
+                    b.HasIndex("ServerId");
 
                     b.HasIndex("AccountId", "ServerId");
 
@@ -2855,8 +2905,11 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("MessageHolderId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("ParentId")
+                    b.Property<decimal?>("ParentId")
                         .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime?>("TimeEdited")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
@@ -2882,10 +2935,17 @@ namespace DomainCoreApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
-                    b.Property<string>("FileURL")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileLocationURL")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MessageId")
                         .HasColumnType("decimal(20,0)");
@@ -2916,18 +2976,12 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelPinboard", b =>
                 {
                     b.Property<decimal>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
                     b.Property<decimal>("OwnerId")
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId")
-                        .IsUnique();
 
                     b.ToTable("ServerTextChannelPinboard");
                 });
@@ -3067,6 +3121,13 @@ namespace DomainCoreApi.Migrations
                     b.Property<string>("FolderName")
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("ImageIconURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsOwner")
+                        .HasColumnType("bit");
+
                     b.Property<string>("JoinMethod")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -3137,14 +3198,14 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("AccountId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<DateTime?>("ExpirationTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ServerId")
                         .HasColumnType("decimal(20,0)");
-
-                    b.Property<DateTime?>("TimeExpired")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("TimeKeepMessagesBefore")
                         .HasColumnType("datetime2");
@@ -3255,7 +3316,12 @@ namespace DomainCoreApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("OwnerId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("ServerRole");
                 });
@@ -3384,10 +3450,6 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ServerImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ServerInviteBackgroundUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -3642,11 +3704,6 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountCustomStatus", "CustomStatus")
-                        .WithOne("Account")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.AccountCore.Account", "CustomStatusId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
                     b.HasOne("CoreLib.Entities.EchoCore.UserCore.User", "User")
                         .WithOne("Account")
                         .HasForeignKey("CoreLib.Entities.EchoCore.AccountCore.Account", "UserId")
@@ -3654,8 +3711,6 @@ namespace DomainCoreApi.Migrations
                         .IsRequired();
 
                     b.Navigation("ActivityStatus");
-
-                    b.Navigation("CustomStatus");
 
                     b.Navigation("User");
                 });
@@ -3696,6 +3751,17 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Account");
 
                     b.Navigation("Connection");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountCustomStatus", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Account")
+                        .WithOne("CustomStatus")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.AccountCore.AccountCustomStatus", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountMute", b =>
@@ -3866,6 +3932,12 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", b =>
                 {
+                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Settings.GameOverlaySettings", "GameOverlaySettings")
+                        .WithMany()
+                        .HasForeignKey("GameOverlaySettingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Account")
                         .WithOne("Settings")
                         .HasForeignKey("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "Id")
@@ -3879,6 +3951,8 @@ namespace DomainCoreApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+
+                    b.Navigation("GameOverlaySettings");
 
                     b.Navigation("Language");
                 });
@@ -4094,7 +4168,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne()
                         .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.Settings.GameOverlaySettings", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("AccountSettings");
@@ -4177,6 +4251,17 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("VoiceSettings")
                         .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.Settings.VoiceSettings", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("AccountSettings");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Settings.WindowSettings", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
+                        .WithOne("WindowSettings")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.Settings.WindowSettings", "Id")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
@@ -4441,6 +4526,14 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatParticipancy", b =>
                 {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
+                        .WithMany("Chats")
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", null)
+                        .WithMany("Participants")
+                        .HasForeignKey("ChatId");
+
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Participant")
                         .WithMany()
                         .HasForeignKey("ParticipantId")
@@ -4462,7 +4555,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Owner")
                         .WithOne("Pinboard")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ChatCore.ChatPinboard", "OwnerId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ChatCore.ChatPinboard", "Id")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
@@ -4737,6 +4830,12 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Server")
+                        .WithMany("ChannelCategoryMemberPermissions")
+                        .HasForeignKey("ServerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category.ServerChannelCategoryMemberSettings", "MemberSettings")
                         .WithMany("Permissions")
                         .HasForeignKey("AccountId", "ChannelCategoryId")
@@ -4755,6 +4854,8 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Permission");
 
                     b.Navigation("Profile");
+
+                    b.Navigation("Server");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category.ServerChannelCategoryMemberSettings", b =>
@@ -4771,6 +4872,12 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Server")
+                        .WithMany("ChannelCategoryMemberSettings")
+                        .HasForeignKey("ServerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerProfile", "Profile")
                         .WithMany("CategoryMemberSettings")
                         .HasForeignKey("AccountId", "ServerId")
@@ -4779,6 +4886,8 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("ChannelCategory");
 
                     b.Navigation("Profile");
+
+                    b.Navigation("Server");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category.ServerChannelCategoryPermission", b =>
@@ -4832,9 +4941,9 @@ namespace DomainCoreApi.Migrations
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerPermission", "Permission")
-                        .WithMany()
+                        .WithMany("CategoryRolePermissions")
                         .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerRole", "Role")
@@ -4895,6 +5004,12 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Server")
+                        .WithMany("TextChannelMemberPermissions")
+                        .HasForeignKey("ServerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerProfile", "Profile")
                         .WithMany("TextChannelMemberPermissions")
                         .HasForeignKey("AccountId", "ServerId")
@@ -4913,6 +5028,8 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Permission");
 
                     b.Navigation("Profile");
+
+                    b.Navigation("Server");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannelMemberSettings", b =>
@@ -4929,6 +5046,12 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Server")
+                        .WithMany("TextChannelMemberSettings")
+                        .HasForeignKey("ServerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerProfile", "Profile")
                         .WithMany("TextChannelMemberSettings")
                         .HasForeignKey("AccountId", "ServerId")
@@ -4937,6 +5060,8 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Channel");
 
                     b.Navigation("Profile");
+
+                    b.Navigation("Server");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannelPermission", b =>
@@ -4961,7 +5086,7 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannelRole", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "Channel")
-                        .WithMany("AllowedRoles")
+                        .WithMany("RoleSettings")
                         .HasForeignKey("ChannelCategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4986,9 +5111,9 @@ namespace DomainCoreApi.Migrations
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerPermission", "Permission")
-                        .WithMany()
+                        .WithMany("TextChannelRolePermissions")
                         .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerRole", "Role")
@@ -5053,6 +5178,12 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Server")
+                        .WithMany("VoiceChannelMemberPermissions")
+                        .HasForeignKey("ServerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerProfile", "Profile")
                         .WithMany("VoiceChannelMemberPermissions")
                         .HasForeignKey("AccountId", "ServerId")
@@ -5071,6 +5202,8 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Permission");
 
                     b.Navigation("Profile");
+
+                    b.Navigation("Server");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerVoiceChannelMemberSettings", b =>
@@ -5087,6 +5220,12 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Server")
+                        .WithMany("VoiceChannelMemberSettings")
+                        .HasForeignKey("ServerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerProfile", "Profile")
                         .WithMany("VoiceChannelMemberSettings")
                         .HasForeignKey("AccountId", "ServerId")
@@ -5095,6 +5234,8 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Channel");
 
                     b.Navigation("Profile");
+
+                    b.Navigation("Server");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerVoiceChannelPermission", b =>
@@ -5144,9 +5285,9 @@ namespace DomainCoreApi.Migrations
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerPermission", "Permission")
-                        .WithMany()
+                        .WithMany("ServerVoiceChannelRolePermissions")
                         .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerRole", "Role")
@@ -5254,7 +5395,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "Owner")
                         .WithOne("Pinboard")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelPinboard", "OwnerId")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelPinboard", "Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -5426,6 +5567,17 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Profile");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerRole", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Owner")
+                        .WithMany("Roles")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore.ServerRolePermission", b =>
@@ -5638,7 +5790,11 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("ChatMessages");
 
+                    b.Navigation("Chats");
+
                     b.Navigation("Connections");
+
+                    b.Navigation("CustomStatus");
 
                     b.Navigation("CustomStatusReports");
 
@@ -5704,12 +5860,6 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Accounts");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountCustomStatus", b =>
-                {
-                    b.Navigation("Account")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", b =>
                 {
                     b.Navigation("AccessibilitySettings")
@@ -5752,6 +5902,9 @@ namespace DomainCoreApi.Migrations
                         .IsRequired();
 
                     b.Navigation("VoiceSettings")
+                        .IsRequired();
+
+                    b.Navigation("WindowSettings")
                         .IsRequired();
                 });
 
@@ -5847,6 +6000,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("Mutes");
 
+                    b.Navigation("Participants");
+
                     b.Navigation("Pinboard");
                 });
 
@@ -5928,8 +6083,6 @@ namespace DomainCoreApi.Migrations
                 {
                     b.Navigation("AllowedPermissions");
 
-                    b.Navigation("AllowedRoles");
-
                     b.Navigation("Invites");
 
                     b.Navigation("MemberPermissions");
@@ -5945,6 +6098,8 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Pinboard");
 
                     b.Navigation("RolePermissions");
+
+                    b.Navigation("RoleSettings");
 
                     b.Navigation("ServerSettings");
 
@@ -6029,11 +6184,17 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("CategoryMemberSettings");
 
+                    b.Navigation("CategoryRolePermissions");
+
                     b.Navigation("RolePermissions");
+
+                    b.Navigation("ServerVoiceChannelRolePermissions");
 
                     b.Navigation("TextChannelMemberPermissions");
 
                     b.Navigation("TextChannelMemberSettings");
+
+                    b.Navigation("TextChannelRolePermissions");
 
                     b.Navigation("VoiceChannelMemberPermissions");
 
@@ -6072,6 +6233,10 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("ChannelCategories");
 
+                    b.Navigation("ChannelCategoryMemberPermissions");
+
+                    b.Navigation("ChannelCategoryMemberSettings");
+
                     b.Navigation("Emotes");
 
                     b.Navigation("Events");
@@ -6082,11 +6247,21 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("Muters");
 
+                    b.Navigation("Roles");
+
                     b.Navigation("Settings");
 
                     b.Navigation("SoundboardSounds");
 
+                    b.Navigation("TextChannelMemberPermissions");
+
+                    b.Navigation("TextChannelMemberSettings");
+
                     b.Navigation("TextChannels");
+
+                    b.Navigation("VoiceChannelMemberPermissions");
+
+                    b.Navigation("VoiceChannelMemberSettings");
 
                     b.Navigation("VoiceChannels");
                 });

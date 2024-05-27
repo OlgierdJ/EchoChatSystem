@@ -21,7 +21,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             //builder.Property(b => b.FocusModeEnabled).HasDefaultValue(true).IsRequired();
             builder.HasOne(b => b.User).WithOne(b => b.Account).HasForeignKey<Account>(b => b.UserId).OnDelete(DeleteBehavior.Restrict).IsRequired(false); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
             builder.HasOne(b => b.ActivityStatus).WithMany(b => b.Accounts).HasForeignKey(b => b.ActivityStatusId).OnDelete(DeleteBehavior.Restrict).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
-            builder.HasOne(b => b.CustomStatus).WithOne(b => b.Account).HasForeignKey<Account>(b => b.CustomStatusId).OnDelete(DeleteBehavior.Restrict).IsRequired(false); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
+            builder.HasOne(b => b.CustomStatus).WithOne(b => b.Account).HasForeignKey<AccountCustomStatus>(b => b.Id).OnDelete(DeleteBehavior.Restrict).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
             builder.HasOne(b => b.Profile).WithOne(b => b.Account).HasForeignKey<AccountProfile>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
 
             builder.HasMany(e => e.Connections).WithOne(e => e.Account).HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
