@@ -83,7 +83,7 @@ namespace DomainCoreApi.Controllers
         //    try
         //    {
         //        var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
-                
+
         //        //note: get token, validate still works, get id from token, change user password
 
 
@@ -101,6 +101,35 @@ namespace DomainCoreApi.Controllers
         //        return Problem(ex.Message); ;
         //    }
         //}
+
+        [Authorize]
+        [HttpGet("session")]
+        public async Task<IActionResult> LoadUserSessionDataAsync()
+        {
+            try
+            {
+                var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                //var token = await HttpContext.GetTokenAsync(JwtBearerDefaults.AuthenticationScheme, "access_token");
+                //var handler = new JwtSecurityTokenHandler();
+                //var jwtSecurityToken = handler.ReadJwtToken(token);
+                //var id = Convert.ToUInt64(jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
+
+
+
+
+                var result = await _userService.LoadUserSessionDataAsync(id);
+                if (result==null)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message); ;
+            }
+        }
 
         [Authorize]
         [HttpPut("UpdatePassword")]

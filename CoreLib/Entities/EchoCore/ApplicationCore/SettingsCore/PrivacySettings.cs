@@ -13,6 +13,6 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore.Settings
         public DMAllow DMFromUnknownUsers { get; set; }
         public DMAllow DMFromServerChatroom { get; set; }
         public DMSpamFilter DMSpamFilter { get; set; }
-        public Account? Account { get; set; }
+        //public Account? Account { get; set; }
     }
 }

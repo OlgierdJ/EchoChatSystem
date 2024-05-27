@@ -11,6 +11,6 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore.Settings
         public bool Everyone { get; set; }
         public bool FriendsOfFriends { get; set; }
         public bool ServerMembers { get; set; }
-        public Account? RequestedAccount { get; set; }
+        //public Account? RequestedAccount { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CoreLib.DTO.RequestCore.FriendCore;
+﻿using CoreLib.DTO.EchoCore.UserCore;
+using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.UserCore;
@@ -32,6 +33,7 @@ namespace CoreLib.Interfaces.Services
         Task<bool> DisableAccountAsync(ulong senderId, DisableAccountRequestDTO requestDTO);
         Task<bool> SetPhoneNumberAsync(ulong senderId, EditPhoneNumberRequestDTO requestDTO);
         Task<string> LoginAsync(LoginRequestDTO requestDTO);
+        Task<UserFullDTO> LoadUserSessionDataAsync(ulong senderId);
         Task<bool> MuteSelfAsync(ulong senderId);
         Task<bool> RegisterAsync(RegisterRequestDTO requestDTO);
         Task<bool> RemoveUserConnectionAsync(ulong senderId, ulong connectionId);
