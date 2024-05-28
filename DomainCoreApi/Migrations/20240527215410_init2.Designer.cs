@@ -4,6 +4,7 @@ using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    partial class EchoDbContextModelSnapshot : ModelSnapshot
+<<<<<<<< HEAD:DomainCoreApi/Migrations/20240527170121_InitialCreate.Designer.cs
+    [Migration("20240527170121_InitialCreate")]
+    partial class InitialCreate
+========
+    [Migration("20240527215410_init2")]
+    partial class init2
+>>>>>>>> ControllerActionSetup:DomainCoreApi/Migrations/20240527215410_init2.Designer.cs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -465,10 +473,15 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("Id")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<decimal>("GameOverlaySettingsId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<long>("LanguageId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GameOverlaySettingsId");
 
                     b.HasIndex("LanguageId");
 
@@ -1240,8 +1253,14 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Settings.FriendRequestSettings", b =>
                 {
                     b.Property<decimal>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(20,0)");
 
+<<<<<<<< HEAD:DomainCoreApi/Migrations/20240527170121_InitialCreate.Designer.cs
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
+
+========
+>>>>>>>> ControllerActionSetup:DomainCoreApi/Migrations/20240527215410_init2.Designer.cs
                     b.Property<decimal>("AccountSettingsId")
                         .HasColumnType("decimal(20,0)");
 
@@ -1262,6 +1281,12 @@ namespace DomainCoreApi.Migrations
 
                     b.HasKey("Id");
 
+<<<<<<<< HEAD:DomainCoreApi/Migrations/20240527170121_InitialCreate.Designer.cs
+                    b.HasIndex("AccountSettingsId")
+                        .IsUnique();
+
+========
+>>>>>>>> ControllerActionSetup:DomainCoreApi/Migrations/20240527215410_init2.Designer.cs
                     b.ToTable("FriendRequestSettings");
                 });
 
@@ -4510,6 +4535,12 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", b =>
                 {
+                    b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.Settings.GameOverlaySettings", "GameOverlaySettings")
+                        .WithMany()
+                        .HasForeignKey("GameOverlaySettingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Account")
                         .WithOne("Settings")
                         .HasForeignKey("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "Id")
@@ -4523,6 +4554,8 @@ namespace DomainCoreApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+
+                    b.Navigation("GameOverlaySettings");
 
                     b.Navigation("Language");
                 });
@@ -4719,7 +4752,7 @@ namespace DomainCoreApi.Migrations
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.AccountSettings", "AccountSettings")
                         .WithOne("FriendRequestSettings")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.Settings.FriendRequestSettings", "Id")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.ApplicationCore.Settings.FriendRequestSettings", "AccountSettingsId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 

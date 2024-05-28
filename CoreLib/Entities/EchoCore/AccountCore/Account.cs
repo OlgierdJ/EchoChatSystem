@@ -61,7 +61,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         //friend stuff - also private settings and information about this account only used by the user and the application / api
         public ICollection<IncomingFriendRequest>? IncomingFriendRequests { get; set; }
         public ICollection<OutgoingFriendRequest>? OutgoingFriendRequests { get; set; }
-        public ICollection<Friendship>? Friendships { get; set; } //mapped through friendshipparticipant
+        public ICollection<FriendshipParticipancy>? Friendships { get; set; } //mapped through friendshipparticipant
         public ICollection<FriendSuggestion>? FriendSuggestions { get; set; } //mapped through connections?
 
         //chat stuff - public to other members of the chat

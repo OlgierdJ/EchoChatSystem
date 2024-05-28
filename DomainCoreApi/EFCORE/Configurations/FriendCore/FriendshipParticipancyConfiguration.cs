@@ -11,14 +11,14 @@ namespace DomainCoreApi.EFCORE.Configurations.FriendCore
             builder
                 .HasKey(b => new { b.ParticipantId, b.SubjectId });
             builder.HasOne(b => b.Participant)
-                .WithMany()
+                .WithMany(e=>e.Friendships)
                 .HasForeignKey(b => b.ParticipantId)
-                .OnDelete(DeleteBehavior.ClientCascade)
+                .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
             builder.HasOne(b => b.Subject)
-                .WithMany()
+                .WithMany(e=>e.Participants)
                 .HasForeignKey(b => b.SubjectId)
-                .OnDelete(DeleteBehavior.ClientCascade)
+                .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
             ////builder.HasIndex(b => new { b.ParticipantId, b.SubjectId }).IsUnique();
             builder.Property(e => e.TimeJoined).HasDefaultValueSql("getdate()").IsRequired();

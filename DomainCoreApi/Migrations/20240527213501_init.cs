@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DomainCoreApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -1207,21 +1207,29 @@ namespace DomainCoreApi.Migrations
                 {
                     ParticipantId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
                     TimeJoined = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FriendshipParticipancy", x => new { x.ParticipantId, x.SubjectId });
                     table.ForeignKey(
+                        name: "FK_FriendshipParticipancy_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_FriendshipParticipancy_Account_ParticipantId",
                         column: x => x.ParticipantId,
                         principalTable: "Account",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FriendshipParticipancy_Friendship_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Friendship",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2991,11 +2999,6 @@ namespace DomainCoreApi.Migrations
                         column: x => x.Id,
                         principalTable: "AccountSettings",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_PrivacySettings_Account_Id",
-                        column: x => x.Id,
-                        principalTable: "Account",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -3099,6 +3102,8 @@ namespace DomainCoreApi.Migrations
 
             migrationBuilder.CreateTable(
                 name: "WindowSettings",
+<<<<<<<< HEAD:DomainCoreApi/Migrations/20240527170121_InitialCreate.cs
+========
                 columns: table => new
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
@@ -3113,6 +3118,619 @@ namespace DomainCoreApi.Migrations
                         name: "FK_WindowSettings_AccountSettings_Id",
                         column: x => x.Id,
                         principalTable: "AccountSettings",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccountViolationAppeal",
+>>>>>>>> ControllerActionSetup:DomainCoreApi/Migrations/20240527213501_init.cs
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    OpenEchoOnPCStartup = table.Column<bool>(type: "bit", nullable: false),
+                    StartMinimized = table.Column<bool>(type: "bit", nullable: false),
+                    MinimizeOnClose = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WindowSettings", x => x.Id);
+                    table.ForeignKey(
+<<<<<<<< HEAD:DomainCoreApi/Migrations/20240527170121_InitialCreate.cs
+                        name: "FK_WindowSettings_AccountSettings_Id",
+                        column: x => x.Id,
+                        principalTable: "AccountSettings",
+========
+                        name: "FK_AccountViolationAppeal_AccountViolation_ViolationId",
+                        column: x => x.ViolationId,
+                        principalTable: "AccountViolation",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BugReportBugReportReason",
+                columns: table => new
+                {
+                    ReasonsId = table.Column<byte>(type: "tinyint", nullable: false),
+                    ReportsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BugReportBugReportReason", x => new { x.ReasonsId, x.ReportsId });
+                    table.ForeignKey(
+                        name: "FK_BugReportBugReportReason_BugReportReason_ReasonsId",
+                        column: x => x.ReasonsId,
+                        principalTable: "BugReportReason",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BugReportBugReportReason_BugReport_ReportsId",
+                        column: x => x.ReportsId,
+                        principalTable: "BugReport",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatAccountMessageTracker",
+                columns: table => new
+                {
+                    OwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    CoOwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatAccountMessageTracker", x => new { x.OwnerId, x.CoOwnerId });
+                    table.ForeignKey(
+                        name: "FK_ChatAccountMessageTracker_Account_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ChatAccountMessageTracker_ChatMessage_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "ChatMessage",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ChatAccountMessageTracker_Chat_CoOwnerId",
+                        column: x => x.CoOwnerId,
+                        principalTable: "Chat",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatMessageAttachment",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MessageId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    FileLocationURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessageAttachment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChatMessageAttachment_ChatMessage_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "ChatMessage",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatMessagePin",
+                columns: table => new
+                {
+                    PinboardId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    MessageId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessagePin", x => new { x.PinboardId, x.MessageId });
+                    table.ForeignKey(
+                        name: "FK_ChatMessagePin_ChatMessage_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "ChatMessage",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ChatMessagePin_ChatPinboard_PinboardId",
+                        column: x => x.PinboardId,
+                        principalTable: "ChatPinboard",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FeedbackReportFeedbackReportReason",
+                columns: table => new
+                {
+                    ReasonsId = table.Column<byte>(type: "tinyint", nullable: false),
+                    ReportsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FeedbackReportFeedbackReportReason", x => new { x.ReasonsId, x.ReportsId });
+                    table.ForeignKey(
+                        name: "FK_FeedbackReportFeedbackReportReason_FeedbackReportReason_ReasonsId",
+                        column: x => x.ReasonsId,
+                        principalTable: "FeedbackReportReason",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FeedbackReportFeedbackReportReason_FeedbackReport_ReportsId",
+                        column: x => x.ReportsId,
+                        principalTable: "FeedbackReport",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IncomingFriendRequest",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SenderRequestId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ReceiverId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IncomingFriendRequest", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_IncomingFriendRequest_Account_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_IncomingFriendRequest_OutgoingFriendRequest_SenderRequestId",
+                        column: x => x.SenderRequestId,
+                        principalTable: "OutgoingFriendRequest",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomStatusReport",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    ReporterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ViolationId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomStatusReport", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomStatusReport_AccountViolation_ViolationId",
+                        column: x => x.ViolationId,
+                        principalTable: "AccountViolation",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CustomStatusReport_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomStatusReport_Account_ReporterId",
+                        column: x => x.ReporterId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CustomStatusReport_ReportedCustomStatus_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "ReportedCustomStatus",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MessageReport",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    ReporterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ViolationId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageReport", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MessageReport_AccountViolation_ViolationId",
+                        column: x => x.ViolationId,
+                        principalTable: "AccountViolation",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MessageReport_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MessageReport_Account_ReporterId",
+                        column: x => x.ReporterId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MessageReport_ReportedMessage_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "ReportedMessage",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReportedMessageAttachment",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MessageId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    FileLocationURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReportedMessageAttachment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReportedMessageAttachment_ReportedMessage_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "ReportedMessage",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProfileReport",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TimeSent = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    ReporterId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ViolationId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfileReport", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProfileReport_AccountViolation_ViolationId",
+                        column: x => x.ViolationId,
+                        principalTable: "AccountViolation",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProfileReport_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProfileReport_Account_ReporterId",
+                        column: x => x.ReporterId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProfileReport_ReportedProfile_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "ReportedProfile",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerSoundboardSound",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    UploaderId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    AssociatedEmoteId = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SoundFileUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerSoundboardSound", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ServerSoundboardSound_Account_UploaderId",
+                        column: x => x.UploaderId,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerSoundboardSound_ServerEmote_AssociatedEmoteId",
+                        column: x => x.AssociatedEmoteId,
+                        principalTable: "ServerEmote",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerSoundboardSound_Server_ServerId",
+                        column: x => x.ServerId,
+                        principalTable: "Server",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerTextChannelAccountMessageTracker",
+                columns: table => new
+                {
+                    OwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    CoOwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerTextChannelAccountMessageTracker", x => new { x.OwnerId, x.CoOwnerId, x.SubjectId });
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelAccountMessageTracker_Account_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelAccountMessageTracker_ServerTextChannelMessage_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "ServerTextChannelMessage",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelAccountMessageTracker_ServerTextChannel_CoOwnerId",
+                        column: x => x.CoOwnerId,
+                        principalTable: "ServerTextChannel",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerTextChannelMessageAttachment",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MessageId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    FileLocationURL = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerTextChannelMessageAttachment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMessageAttachment_ServerTextChannelMessage_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "ServerTextChannelMessage",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerTextChannelMessagePin",
+                columns: table => new
+                {
+                    PinboardId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    MessageId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerTextChannelMessagePin", x => new { x.PinboardId, x.MessageId });
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMessagePin_ServerTextChannelMessage_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "ServerTextChannelMessage",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMessagePin_ServerTextChannelPinboard_PinboardId",
+                        column: x => x.PinboardId,
+                        principalTable: "ServerTextChannelPinboard",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerTextChannelRolePermission",
+                columns: table => new
+                {
+                    ChannelId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    PermissionId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    State = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerTextChannelRolePermission", x => new { x.ChannelId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelRolePermission_ServerPermission_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "ServerPermission",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelRolePermission_ServerRole_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "ServerRole",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelRolePermission_ServerTextChannelRole_ChannelId_RoleId",
+                        columns: x => new { x.ChannelId, x.RoleId },
+                        principalTable: "ServerTextChannelRole",
+                        principalColumns: new[] { "ChannelCategoryId", "RoleId" });
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelRolePermission_ServerTextChannel_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "ServerTextChannel",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerVoiceChannelRolePermission",
+                columns: table => new
+                {
+                    ChannelId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    PermissionId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    State = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerVoiceChannelRolePermission", x => new { x.ChannelId, x.RoleId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelRolePermission_ServerPermission_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "ServerPermission",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelRolePermission_ServerRole_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "ServerRole",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelRolePermission_ServerVoiceChannelRole_ChannelId_RoleId",
+                        columns: x => new { x.ChannelId, x.RoleId },
+                        principalTable: "ServerVoiceChannelRole",
+                        principalColumns: new[] { "ChannelCategoryId", "RoleId" });
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelRolePermission_ServerVoiceChannel_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "ServerVoiceChannel",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerChannelCategoryMemberSettings",
+                columns: table => new
+                {
+                    ChannelCategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerChannelCategoryMemberSettings", x => new { x.AccountId, x.ChannelCategoryId });
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryMemberSettings_ServerChannelCategory_ChannelCategoryId",
+                        column: x => x.ChannelCategoryId,
+                        principalTable: "ServerChannelCategory",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryMemberSettings_ServerPermission_ChannelCategoryId",
+                        column: x => x.ChannelCategoryId,
+                        principalTable: "ServerPermission",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryMemberSettings_ServerProfile_AccountId_ServerId",
+                        columns: x => new { x.AccountId, x.ServerId },
+                        principalTable: "ServerProfile",
+                        principalColumns: new[] { "AccountId", "ServerId" });
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryMemberSettings_Server_ServerId",
+                        column: x => x.ServerId,
+                        principalTable: "Server",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerProfileServerRole",
+                columns: table => new
+                {
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    TimeGranted = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerProfileServerRole", x => new { x.AccountId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_ServerProfileServerRole_ServerProfile_AccountId_ServerId",
+                        columns: x => new { x.AccountId, x.ServerId },
+                        principalTable: "ServerProfile",
+                        principalColumns: new[] { "AccountId", "ServerId" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerProfileServerRole_ServerRole_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "ServerRole",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerTextChannelMemberSettings",
+                columns: table => new
+                {
+                    ChannelId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerTextChannelMemberSettings", x => new { x.ChannelId, x.AccountId });
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMemberSettings_ServerPermission_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "ServerPermission",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMemberSettings_ServerProfile_AccountId_ServerId",
+                        columns: x => new { x.AccountId, x.ServerId },
+                        principalTable: "ServerProfile",
+                        principalColumns: new[] { "AccountId", "ServerId" });
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMemberSettings_ServerTextChannel_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "ServerTextChannel",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMemberSettings_Server_ServerId",
+                        column: x => x.ServerId,
+                        principalTable: "Server",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerVoiceChannelMemberSettings",
+                columns: table => new
+                {
+                    ChannelId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerVoiceChannelMemberSettings", x => new { x.ChannelId, x.AccountId });
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelMemberSettings_ServerPermission_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "ServerPermission",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelMemberSettings_ServerProfile_AccountId_ServerId",
+                        columns: x => new { x.AccountId, x.ServerId },
+                        principalTable: "ServerProfile",
+                        principalColumns: new[] { "AccountId", "ServerId" });
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelMemberSettings_ServerVoiceChannel_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "ServerVoiceChannel",
+>>>>>>>> ControllerActionSetup:DomainCoreApi/Migrations/20240527213501_init.cs
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelMemberSettings_Server_ServerId",
+                        column: x => x.ServerId,
+                        principalTable: "Server",
                         principalColumn: "Id");
                 });
 
@@ -3211,6 +3829,229 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+<<<<<<<< HEAD:DomainCoreApi/Migrations/20240527170121_InitialCreate.cs
+========
+                name: "AccountViolationAppealReview",
+                columns: table => new
+                {
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AppealId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ReviewerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    IsDenied = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountViolationAppealReview", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AccountViolationAppealReview_AccountViolationAppeal_AppealId",
+                        column: x => x.AppealId,
+                        principalTable: "AccountViolationAppeal",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AccountViolationAppealReview_Account_ReviewerId",
+                        column: x => x.ReviewerId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomStatusReportCustomStatusReportReason",
+                columns: table => new
+                {
+                    ReasonsId = table.Column<byte>(type: "tinyint", nullable: false),
+                    ReportsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomStatusReportCustomStatusReportReason", x => new { x.ReasonsId, x.ReportsId });
+                    table.ForeignKey(
+                        name: "FK_CustomStatusReportCustomStatusReportReason_CustomStatusReportReason_ReasonsId",
+                        column: x => x.ReasonsId,
+                        principalTable: "CustomStatusReportReason",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomStatusReportCustomStatusReportReason_CustomStatusReport_ReportsId",
+                        column: x => x.ReportsId,
+                        principalTable: "CustomStatusReport",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MessageReportMessageReportReason",
+                columns: table => new
+                {
+                    ReasonsId = table.Column<byte>(type: "tinyint", nullable: false),
+                    ReportsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageReportMessageReportReason", x => new { x.ReasonsId, x.ReportsId });
+                    table.ForeignKey(
+                        name: "FK_MessageReportMessageReportReason_MessageReportReason_ReasonsId",
+                        column: x => x.ReasonsId,
+                        principalTable: "MessageReportReason",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MessageReportMessageReportReason_MessageReport_ReportsId",
+                        column: x => x.ReportsId,
+                        principalTable: "MessageReport",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProfileReportProfileReportReason",
+                columns: table => new
+                {
+                    ReasonsId = table.Column<byte>(type: "tinyint", nullable: false),
+                    ReportsId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfileReportProfileReportReason", x => new { x.ReasonsId, x.ReportsId });
+                    table.ForeignKey(
+                        name: "FK_ProfileReportProfileReportReason_ProfileReportReason_ReasonsId",
+                        column: x => x.ReasonsId,
+                        principalTable: "ProfileReportReason",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProfileReportProfileReportReason_ProfileReport_ReportsId",
+                        column: x => x.ReportsId,
+                        principalTable: "ProfileReport",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerChannelCategoryMemberPermission",
+                columns: table => new
+                {
+                    ChannelCategoryId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    PermissionId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    State = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerChannelCategoryMemberPermission", x => new { x.ChannelCategoryId, x.AccountId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryMemberPermission_ServerChannelCategoryMemberSettings_AccountId_ChannelCategoryId",
+                        columns: x => new { x.AccountId, x.ChannelCategoryId },
+                        principalTable: "ServerChannelCategoryMemberSettings",
+                        principalColumns: new[] { "AccountId", "ChannelCategoryId" });
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryMemberPermission_ServerChannelCategory_ChannelCategoryId",
+                        column: x => x.ChannelCategoryId,
+                        principalTable: "ServerChannelCategory",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryMemberPermission_ServerPermission_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "ServerPermission",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryMemberPermission_ServerProfile_AccountId_ServerId",
+                        columns: x => new { x.AccountId, x.ServerId },
+                        principalTable: "ServerProfile",
+                        principalColumns: new[] { "AccountId", "ServerId" });
+                    table.ForeignKey(
+                        name: "FK_ServerChannelCategoryMemberPermission_Server_ServerId",
+                        column: x => x.ServerId,
+                        principalTable: "Server",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerTextChannelMemberPermission",
+                columns: table => new
+                {
+                    ChannelId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    PermissionId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    State = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerTextChannelMemberPermission", x => new { x.ChannelId, x.AccountId });
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMemberPermission_ServerPermission_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "ServerPermission",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMemberPermission_ServerProfile_AccountId_ServerId",
+                        columns: x => new { x.AccountId, x.ServerId },
+                        principalTable: "ServerProfile",
+                        principalColumns: new[] { "AccountId", "ServerId" });
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMemberPermission_ServerTextChannelMemberSettings_ChannelId_AccountId",
+                        columns: x => new { x.ChannelId, x.AccountId },
+                        principalTable: "ServerTextChannelMemberSettings",
+                        principalColumns: new[] { "ChannelId", "AccountId" });
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMemberPermission_ServerTextChannel_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "ServerTextChannel",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerTextChannelMemberPermission_Server_ServerId",
+                        column: x => x.ServerId,
+                        principalTable: "Server",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServerVoiceChannelMemberPermission",
+                columns: table => new
+                {
+                    ChannelId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    PermissionId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ServerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    State = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServerVoiceChannelMemberPermission", x => new { x.ChannelId, x.AccountId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelMemberPermission_ServerPermission_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "ServerPermission",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelMemberPermission_ServerProfile_AccountId_ServerId",
+                        columns: x => new { x.AccountId, x.ServerId },
+                        principalTable: "ServerProfile",
+                        principalColumns: new[] { "AccountId", "ServerId" });
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelMemberPermission_ServerVoiceChannelMemberSettings_ChannelId_AccountId",
+                        columns: x => new { x.ChannelId, x.AccountId },
+                        principalTable: "ServerVoiceChannelMemberSettings",
+                        principalColumns: new[] { "ChannelId", "AccountId" });
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelMemberPermission_ServerVoiceChannel_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "ServerVoiceChannel",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ServerVoiceChannelMemberPermission_Server_ServerId",
+                        column: x => x.ServerId,
+                        principalTable: "Server",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+>>>>>>>> ControllerActionSetup:DomainCoreApi/Migrations/20240527213501_init.cs
                 name: "SubscriptionActivePeriod",
                 columns: table => new
                 {
@@ -3732,10 +4573,16 @@ namespace DomainCoreApi.Migrations
                 column: "ReportsId");
 
             migrationBuilder.CreateIndex(
+<<<<<<<< HEAD:DomainCoreApi/Migrations/20240527170121_InitialCreate.cs
                 name: "IX_FriendRequestSettings_AccountSettingsId",
                 table: "FriendRequestSettings",
                 column: "AccountSettingsId",
                 unique: true);
+========
+                name: "IX_FriendshipParticipancy_AccountId",
+                table: "FriendshipParticipancy",
+                column: "AccountId");
+>>>>>>>> ControllerActionSetup:DomainCoreApi/Migrations/20240527213501_init.cs
 
             migrationBuilder.CreateIndex(
                 name: "IX_FriendshipParticipancy_SubjectId",

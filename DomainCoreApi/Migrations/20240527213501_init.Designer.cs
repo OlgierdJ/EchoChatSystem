@@ -4,6 +4,7 @@ using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    partial class EchoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240527213501_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2217,12 +2220,17 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<decimal?>("AccountId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<DateTime>("TimeJoined")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
                     b.HasKey("ParticipantId", "SubjectId");
+
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("SubjectId");
 
@@ -5137,8 +5145,12 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.FriendshipParticipancy", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Participant")
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
                         .WithMany("Friendships")
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Participant")
+                        .WithMany()
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

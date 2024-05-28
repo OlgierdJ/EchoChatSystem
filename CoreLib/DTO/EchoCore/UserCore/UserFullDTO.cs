@@ -17,6 +17,7 @@ namespace CoreLib.DTO.EchoCore.UserCore
         public string? PhoneNumber { get; set; }
         //public string BannerColour { get; set; } //present in userprofile
         //public DateTime MemberSince { get; set; } //present in userprofile
+        public ActiveActivityStatusDTO? ActiveStatus { get; set; } //display always
 
         public LanguageDTO? Language { get; set; } //display always
         public AccessibilitySettingsDTO? AccessibilitySettings { get; set; } //display always

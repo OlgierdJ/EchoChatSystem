@@ -1,4 +1,4 @@
-﻿@page "/channels"
+﻿@* @page "/channels"
 @rendermode InteractiveAuto
 @inject IJSRuntime _js
 @using CoreLib.Entities.EchoCore.AccountCore
@@ -109,7 +109,7 @@
 <MudToolBar Class="d-flex flex-column-reverse flex-grow-1 gap-0 my-5" Style="@($"background:{Colors.Shades.Transparent}")">
     <MudTextField FullWidth @bind-Value="TextValue" Margin="Margin.Dense" Variant="Variant.Filled" OnKeyDown="SendMessage" AutoGrow MaxLines="11" Placeholder="Message #general" Class="px-5 py-2" Immediate="true" MaxLength="1000" TextUpdateSuppression="false" Style="background: var(--mud-palette-dark);opacity:1;">
     </MudTextField>
-     @* <MudIconButton Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" ButtonType="ButtonType.Button" /> *@
+     @* <MudIconButton Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" ButtonType="ButtonType.Button" /> 
  </MudToolBar>
 
  @code {
@@ -219,4 +219,4 @@
         //msg3.Author = chat.Participants.Where(e => e.Id == 114).First();
         chat.Messages.Add(msg3);
     }
-}
+} *@
