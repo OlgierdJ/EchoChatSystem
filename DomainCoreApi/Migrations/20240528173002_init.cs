@@ -695,6 +695,29 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AccountAccountVolume",
+                columns: table => new
+                {
+                    OwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    Volume = table.Column<byte>(type: "tinyint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountAccountVolume", x => new { x.OwnerId, x.SubjectId });
+                    table.ForeignKey(
+                        name: "FK_AccountAccountVolume_Account_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AccountAccountVolume_Account_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AccountBlock",
                 columns: table => new
                 {
@@ -3496,6 +3519,11 @@ namespace DomainCoreApi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AccountAccountVolume_SubjectId",
+                table: "AccountAccountVolume",
+                column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AccountBlock_BlockedId",
                 table: "AccountBlock",
                 column: "BlockedId");
@@ -4295,6 +4323,9 @@ namespace DomainCoreApi.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AccessibilitySettings");
+
+            migrationBuilder.DropTable(
+                name: "AccountAccountVolume");
 
             migrationBuilder.DropTable(
                 name: "AccountBlock");

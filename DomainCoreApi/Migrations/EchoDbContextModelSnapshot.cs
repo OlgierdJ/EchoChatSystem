@@ -77,6 +77,24 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("Account");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountAccountVolume", b =>
+                {
+                    b.Property<decimal>("OwnerId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("SubjectId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<byte>("Volume")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("OwnerId", "SubjectId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("AccountAccountVolume");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountActivityStatus", b =>
                 {
                     b.Property<byte>("Id")
@@ -4322,6 +4340,25 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountAccountVolume", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Owner")
+                        .WithMany("PersonalAccountVolumes")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Subject");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountBlock", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Blocked")
@@ -6418,6 +6455,8 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("NotedAccounts");
 
                     b.Navigation("OutgoingFriendRequests");
+
+                    b.Navigation("PersonalAccountVolumes");
 
                     b.Navigation("Profile")
                         .IsRequired();
