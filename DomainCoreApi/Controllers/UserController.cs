@@ -13,6 +13,7 @@ using CoreLib.DTO.RequestCore.UserCore;
 using Microsoft.AspNetCore.Identity.Data;
 using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.RelationCore;
+using CoreLib.DTO.EchoCore.UserCore;
 
 namespace DomainCoreApi.Controllers
 {
@@ -34,7 +35,7 @@ namespace DomainCoreApi.Controllers
             try
             {
 
-                var result = await _userService.LoginAsync(login);
+                var result =new TokenDTO { Token =await _userService.LoginAsync(login) };
                 if (result == null)
                 {
                     return Problem("Something went wrong. Contact an Admin / Server representative");

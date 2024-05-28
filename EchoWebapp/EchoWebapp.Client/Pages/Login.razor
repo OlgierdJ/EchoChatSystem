@@ -88,7 +88,7 @@
         {
             AccountContainer.SetValue(result);
             await LocalStorage.SetItemAsync("AccountId", AccountContainer.Value);
-            await LocalStorage.SetItemAsync("Token", result);
+            await LocalStorage.SetItemAsStringAsync("Token", result);
             
             /* this is how we can call the api */
             //var test = await _echoAPI.GetEntityAsync<Account>(AccountContainer.Value , new AuthenticationHeaderValue("Bearer", await LocalStorage.GetItemAsStringAsync("Token")));

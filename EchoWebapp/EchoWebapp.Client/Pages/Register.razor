@@ -98,7 +98,7 @@
         User.DisplayName = displayName != "" ? displayName : null;
         //send user to api
         var data = await _echoAPI.RegisterAsync(User);
-        if (data.Equals("all looks good"))
+        if (data)
         {
             GoToLogin();
         }
