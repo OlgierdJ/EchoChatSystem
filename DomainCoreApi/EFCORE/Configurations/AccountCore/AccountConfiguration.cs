@@ -38,6 +38,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
 
             builder.HasMany(e => e.Sessions).WithOne(e => e.Account).HasForeignKey(e => e.AccountId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasMany(e => e.BlockedAccounts).WithOne(e => e.Blocker).HasForeignKey(e => e.BlockerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasMany(e => e.PersonalAccountVolumes).WithOne(e => e.Owner).HasForeignKey(e => e.OwnerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasMany(e => e.NicknamedAccounts).WithOne(e => e.Author).HasForeignKey(e => e.AuthorId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasMany(e => e.NotedAccounts).WithOne(e => e.Author).HasForeignKey(e => e.AuthorId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
 

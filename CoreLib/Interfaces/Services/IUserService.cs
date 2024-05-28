@@ -20,7 +20,9 @@ namespace CoreLib.Interfaces.Services
 
         //other users
         Task<bool> BlockUserAsync(ulong senderId, ulong userId);
+        Task<bool> UnblockUserAsync(ulong senderId, ulong userId);
         Task<bool> MuteUserAsync(ulong senderId, ulong userId, MuteRequestDTO requestDTO);
+        Task<bool> UnmuteUserAsync(ulong senderId, ulong userId);
         Task<bool> SetNicknameAsync(ulong senderId, ulong userId, SetNicknameUserRequestDTO requestDTO);
         Task<bool> SetNoteAsync(ulong senderId, ulong userId, SetNoteUserRequestDTO requestDTO);
         Task<bool> SetUserVolumeAsync(ulong senderId, ulong userId, SetUserVolumeRequestDTO requestDTO);
@@ -29,12 +31,14 @@ namespace CoreLib.Interfaces.Services
         Task<bool> AddUserConnectionAsync(ulong senderId, AddUserConnectionRequestDTO requestDTO);
         Task<bool> UpdateUserConnectionAsync(ulong senderId, ulong connectionId, UpdateUserConnectionRequestDTO requestDTO);
         Task<bool> DeafenSelfAsync(ulong senderId);
+        Task<bool> UndeafenSelfAsync(ulong senderId);
         Task<bool> DeleteAccountAsync(ulong senderId, DeleteAccountRequestDTO requestDTO);
         Task<bool> DisableAccountAsync(ulong senderId, DisableAccountRequestDTO requestDTO);
         Task<bool> SetPhoneNumberAsync(ulong senderId, EditPhoneNumberRequestDTO requestDTO);
         Task<string> LoginAsync(LoginRequestDTO requestDTO);
         Task<UserFullDTO> LoadUserSessionDataAsync(ulong senderId);
         Task<bool> MuteSelfAsync(ulong senderId);
+        Task<bool> UnmuteSelfAsync(ulong senderId);
         Task<bool> RegisterAsync(RegisterRequestDTO requestDTO);
         Task<bool> RemoveUserConnectionAsync(ulong senderId, ulong connectionId);
         Task<bool> SetCustomStatusAsync(ulong senderId, SetCustomStatusRequestDTO requestDTO);

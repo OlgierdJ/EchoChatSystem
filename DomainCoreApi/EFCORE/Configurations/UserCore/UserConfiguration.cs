@@ -12,6 +12,7 @@ namespace DomainCoreApi.EFCORE.Configurations.UserCore
             builder.HasKey(x => x.Id);
             builder.Property(x => x.PhoneNumber).HasMaxLength(16).IsRequired(false);
             builder.Property(x => x.EmailConfirmed).IsRequired();
+            builder.HasIndex(x => x.Email).IsUnique();
             builder.Property(x => x.PhoneNumberConfirmed).IsRequired();
             builder.Property(x => x.PasswordSetDate).IsRequired();
             builder.Property(x => x.DateOfBirth).IsRequired();

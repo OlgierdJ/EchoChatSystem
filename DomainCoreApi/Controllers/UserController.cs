@@ -13,6 +13,7 @@ using CoreLib.DTO.RequestCore.UserCore;
 using Microsoft.AspNetCore.Identity.Data;
 using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.RelationCore;
+using CoreLib.DTO.EchoCore.UserCore;
 
 namespace DomainCoreApi.Controllers
 {
@@ -34,7 +35,7 @@ namespace DomainCoreApi.Controllers
             try
             {
 
-                var result = await _userService.LoginAsync(login);
+                var result =new TokenDTO { Token =await _userService.LoginAsync(login) };
                 if (result == null)
                 {
                     return Problem("Something went wrong. Contact an Admin / Server representative");
@@ -306,6 +307,27 @@ namespace DomainCoreApi.Controllers
             }
         }
         [Authorize]
+        [HttpPut("{userId}/unblock")]
+        public async Task<IActionResult> UnblockUserAsync(ulong userId)
+        {
+            try
+            {
+                var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                var result = await _userService.UnblockUserAsync(id, userId);
+
+                if (!result)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+        [Authorize]
         [HttpPut("{userId}/mute")]
         public async Task<IActionResult> MuteUserAsync(ulong userId, MuteRequestDTO requestDTO)
         {
@@ -313,6 +335,27 @@ namespace DomainCoreApi.Controllers
             {
                 var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
                 var result = await _userService.MuteUserAsync(id, userId, requestDTO);
+
+                if (!result)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+        [Authorize]
+        [HttpPut("{userId}/unmute")]
+        public async Task<IActionResult> UnmuteUserAsync(ulong userId)
+        {
+            try
+            {
+                var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                var result = await _userService.UnmuteUserAsync(id, userId);
 
                 if (!result)
                 {
@@ -432,6 +475,27 @@ namespace DomainCoreApi.Controllers
             }
         }
         [Authorize]
+        [HttpPut("undeafen")]
+        public async Task<IActionResult> UndeafenSelfAsync()
+        {
+            try
+            {
+                var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                var result = await _userService.UndeafenSelfAsync(id);
+
+                if (!result)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+        [Authorize]
         [HttpPut("account/delete")] //does not delete
         public async Task<IActionResult> DeleteAccountAsync(DeleteAccountRequestDTO requestDTO)
         {
@@ -502,6 +566,27 @@ namespace DomainCoreApi.Controllers
             {
                 var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
                 var result = await _userService.MuteSelfAsync(id);
+
+                if (!result)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+        [Authorize]
+        [HttpPut("unmute")]
+        public async Task<IActionResult> UnmuteSelfAsync()
+        {
+            try
+            {
+                var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                var result = await _userService.UnmuteSelfAsync(id);
 
                 if (!result)
                 {

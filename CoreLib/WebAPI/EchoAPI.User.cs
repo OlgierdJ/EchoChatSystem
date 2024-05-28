@@ -402,7 +402,7 @@ namespace CoreLib.WebAPI
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Put, $"user/session");
+                var request = new HttpRequestMessage(HttpMethod.Get, $"user/session");
                 request.Headers.Authorization = authenticationHeaderValue(Token);
                 var response = await client.SendAsync(request).ConfigureAwait(false);
 

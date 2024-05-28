@@ -203,8 +203,7 @@
     {
         if (firstRender)
         {
-            // we need to get the token like this now or the string will be '"Token value"'
-            token = await LocalStorage.GetItemAsync<string>("Token");
+            token = await LocalStorage.GetItemAsStringAsync("Token");
             await _client.Connect(token);
             _client.ReceiveChatMessageCreateMessageDTO += ReceiveChatMessageCreateMessageDTO;
             _client.ReceiveChatMessageUpdateMessageDTO += ReceiveChatMessageUpdateMessageDTO;

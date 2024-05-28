@@ -3,7 +3,7 @@ using CoreLib.Entities.EchoCore.AccountCore;
 
 namespace CoreLib.Entities.EchoCore
 {
-    public class Connection : BaseEntity<uint>
+    public class ConnectionType : BaseEntity<uint>
     {
         //platform connections like facebook or x or steam
 

@@ -397,8 +397,8 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.Description, opts => opts.MapFrom(val => val.Permission.Description))
                 .ForMember(dest => dest.GroupingName, opts => opts.MapFrom(val => val.Permission.Category.Name));
 
-            CreateMap<Connection, ConnectionDTO>(); //output members are same name so no need to map
-            CreateMap<AccountConnection, UserConnectionDTO>().ForMember(dest => dest.Type, opts => opts.MapFrom(e => e.Connection)); //output members are same name so no need to map
+            CreateMap<ConnectionType, ConnectionDTO>(); //output members are same name so no need to map
+            CreateMap<AccountConnection, UserConnectionDTO>().ForMember(dest => dest.Type, opts => opts.MapFrom(e => e.ConnectionType)); //output members are same name so no need to map
             CreateMap<Country, CountryDTO>(); //output members are same name so no need to map
             CreateMap<AcceptedCurrency, CurrencyDTO>(); //output members are same name so no need to map
             CreateMap<Keybind, KeybindDTO>()
