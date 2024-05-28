@@ -98,9 +98,9 @@ namespace DomainCoreApi.Controllers
         //    catch (Exception ex)
         //    {
 
-                return Problem(ex.Message); ;
-            }
-        }
+        //        return Problem(ex.Message); ;
+        //    }
+        //}
 
         [Authorize]
         [HttpGet("session")]
@@ -230,7 +230,7 @@ namespace DomainCoreApi.Controllers
             try
             {
                 var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
-                var result = await _userService.DeclineFriendRequestAsync(id, outgoingrequestId);
+                var result = await _userService.CancelFriendRequestAsync(id, outgoingrequestId);
 
                 if (!result)
                 {
@@ -621,27 +621,6 @@ namespace DomainCoreApi.Controllers
                     return Problem("Something went wrong. Contact an Admin / Server representative");
                 }
                 return Ok();
-            }
-            catch (Exception ex)
-            {
-
-                return Problem(ex.Message); ;
-            }
-        }
-
-        [AllowAnonymous]
-        [HttpGet("GetFullUserAsync/{id}")]
-        public async Task<IActionResult> GetFullUserAsync(ulong id)
-        {
-            try
-            {
-                var result = await _userService.GetFullDTOAsync(id);
-                if (result == null)
-                {
-                    return Problem("Something went wrong. Contact an Admin / Server representative");
-                }
-                              
-                return Ok(result);
             }
             catch (Exception ex)
             {

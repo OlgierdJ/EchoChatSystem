@@ -36,12 +36,13 @@ namespace DomainCoreApi.Services
             try
             {
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants).ThenInclude(e=>e.Participant).ThenInclude(e=>e.Friendships)
+                    .Include(e => e.Participants).ThenInclude(e=>e.Participant).ThenInclude(e=>e.Friendships).ThenInclude(e=>e.Subject).ThenInclude(e=>e.Participants)
+                    .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
 
                 var senderacc = chat.Participants.FirstOrDefault(e => e.ParticipantId == senderId).Participant; //i know the double check is redundant but whatever
                 var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
-                var friendIds = senderacc.Friendships.SelectMany(friendship => friendship.Participants.Where(e => e.Id != senderId)).Select(e => e.Id); //select friendids
+                var friendIds = senderacc.Friendships.SelectMany(friendship => friendship.Subject.Participants.Where(e => e.ParticipantId != senderId)).Select(e => e.ParticipantId); //select friendids
                 var canAddParticipant = !friendIds.Contains(participantId); //must be friends with all
                 if (!isMember || !canAddParticipant)
                 {
@@ -168,12 +169,14 @@ namespace DomainCoreApi.Services
                 //    }).ToList(); 
 
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.Friendships)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants)
+                    .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
 
                 var senderacc = chat.Participants.FirstOrDefault(e => e.ParticipantId == senderId).Participant; //i know the double check is redundant but whatever
                 var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
-                var friendIds = senderacc.Friendships.SelectMany(friendship => friendship.Participants.Where(e=>e.Id!=senderId)).Select(e=>e.Id); //select friendids
+
+                var friendIds = senderacc.Friendships.SelectMany(friendship => friendship.Subject.Participants.Where(e=>e.ParticipantId!=senderId)).Select(e=>e.ParticipantId); //select friendids
                 var canAddParticipants = !participantIds.Except(friendIds).Any(); //must be friends with all
                 if (!isMember || !canAddParticipants)
                 {
