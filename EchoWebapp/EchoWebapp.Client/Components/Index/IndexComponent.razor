@@ -51,9 +51,9 @@ else
             else
             {
                 var token = await LocalStorage.GetItemAsStringAsync("Token");
-                AccountContainer.SetValue(Convert.ToUInt64(id), token);
+                //AccountContainer.SetValue(Convert.ToUInt64(id), token);
 
-                var result = await _echoAPI.GetFullUserAsync(Convert.ToUInt64(id));
+                var result = await _echoAPI.LoadUserSessionDataAsync(token);
                 Console.WriteLine(result.UserProfile.User.Name);
                 if(result != null)
                 {
