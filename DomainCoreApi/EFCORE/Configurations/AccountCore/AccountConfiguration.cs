@@ -21,7 +21,7 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             //builder.Property(b => b.FocusModeEnabled).HasDefaultValue(true).IsRequired();
             builder.HasOne(b => b.User).WithOne(b => b.Account).HasForeignKey<Account>(b => b.UserId).OnDelete(DeleteBehavior.Restrict).IsRequired(false); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
             builder.HasOne(b => b.ActivityStatus).WithMany(b => b.Accounts).HasForeignKey(b => b.ActivityStatusId).OnDelete(DeleteBehavior.Restrict).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
-            builder.HasOne(b => b.CustomStatus).WithOne(b => b.Account).HasForeignKey<Account>(b => b.CustomStatusId).OnDelete(DeleteBehavior.Restrict).IsRequired(false); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
+            builder.HasOne(b => b.CustomStatus).WithOne(b => b.Account).HasForeignKey<AccountCustomStatus>(b => b.Id).OnDelete(DeleteBehavior.Restrict).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
             builder.HasOne(b => b.Profile).WithOne(b => b.Account).HasForeignKey<AccountProfile>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
 
             builder.HasMany(e => e.Connections).WithOne(e => e.Account).HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
@@ -61,15 +61,17 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
 
             builder.HasMany(e => e.IncomingFriendRequests).WithOne(e => e.Receiver).HasForeignKey(e => e.ReceiverId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasMany(e => e.OutgoingFriendRequests).WithOne(e => e.Sender).HasForeignKey(e => e.SenderId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
-            builder.HasMany(e => e.Friendships).WithMany(e => e.Participants).UsingEntity<FriendshipParticipancy>(
-                 l => l.HasOne(e => e.Subject).WithMany().HasForeignKey(e => e.SubjectId),
-                  r => r.HasOne(e => e.Participant).WithMany().HasForeignKey(e => e.ParticipantId)
-             );
+            builder.HasMany(e => e.Friendships).WithOne(e => e.Participant).HasForeignKey(e => e.ParticipantId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            //builder.HasMany(e => e.Friendships).WithMany(e => e.Participants).UsingEntity<FriendshipParticipancy>(
+            //     l => l.HasOne(e => e.Subject).WithMany().HasForeignKey(e => e.SubjectId),
+            //      r => r.HasOne(e => e.Participant).WithMany().HasForeignKey(e => e.ParticipantId)
+            // );
             builder.HasMany(e => e.FriendSuggestions).WithOne(e => e.Receiver).HasForeignKey(e => e.ReceiverId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
-            builder.HasMany(e => e.Chats).WithMany(e => e.Participants).UsingEntity<ChatParticipancy>(
-                l => l.HasOne(e => e.Subject).WithMany().HasForeignKey(e => e.SubjectId),
-                  r => r.HasOne(e => e.Participant).WithMany().HasForeignKey(e => e.ParticipantId)
-                );
+            builder.HasMany(e => e.Chats).WithOne(e => e.Participant).HasForeignKey(e => e.ParticipantId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            //builder.HasMany(e => e.Chats).WithMany(e => e.Participants).UsingEntity<ChatParticipancy>(
+            //    l => l.HasOne(e => e.Subject).WithMany().HasForeignKey(e => e.SubjectId),
+            //      r => r.HasOne(e => e.Participant).WithMany().HasForeignKey(e => e.ParticipantId)
+            //    );
 
             builder.HasMany(e => e.ChatInvites).WithOne(e => e.Inviter).HasForeignKey(e => e.InviterId).OnDelete(DeleteBehavior.Restrict).IsRequired();
             builder.HasMany(e => e.ChatMessages).WithOne(e => e.Author).HasForeignKey(e => e.AuthorId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();

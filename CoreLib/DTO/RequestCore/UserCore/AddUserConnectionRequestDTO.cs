@@ -9,4 +9,11 @@
         public string Token { get; set; }
         public bool DisplayOnProfile { get; set; }
     }
+
+    public class UpdateUserConnectionRequestDTO //used for updating connection to the user
+    {
+        //public ulong UserId { get; set; } //get from jwt
+       
+        public bool DisplayOnProfile { get; set; }
+    }
 }

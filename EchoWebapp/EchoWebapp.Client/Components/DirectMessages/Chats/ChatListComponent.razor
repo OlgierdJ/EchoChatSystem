@@ -122,9 +122,9 @@
                     Id = 2,
                     TimeSent = DateTime.Now.AddMinutes(-3),
                     Content = "New Message",
-                    Replied =  new MessageDTO()
+                    Replied =  new MessageMinimalDTO()
                     {
-                        Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
+                        // Sender = new user() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" },
                         Id = 1,
                         TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
                         Content = "Old Message"
@@ -239,9 +239,9 @@
                     Id = 2,
                     TimeSent = DateTime.Now.AddMinutes(-3),
                     Content = "New Message",                   
-                    Replied =  new MessageDTO()
+                    Replied =  new MessageMinimalDTO()
                     {
-                        Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg" },
+                        // Sender = new UserMinimalDTO() { Id = 113, DisplayName = "Bob The Builder", ImageIconURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg" },
                         Id = 1,
                         TimeSent = DateTime.Now.AddDays(-2).AddMinutes(3),
                         Content = "Old Message"

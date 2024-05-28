@@ -17,6 +17,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.Category
 
             builder.HasOne(b => b.ChannelCategory).WithMany(b => b.MemberSettings).HasForeignKey(b => b.ChannelCategoryId).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(b => b.Profile).WithMany(b => b.CategoryMemberSettings).HasForeignKey(b => new { b.AccountId, b.ServerId }).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(b => b.Server).WithMany(b => b.ChannelCategoryMemberSettings).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

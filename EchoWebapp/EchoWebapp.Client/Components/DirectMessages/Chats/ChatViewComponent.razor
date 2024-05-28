@@ -2,7 +2,11 @@
 @using CoreLib.DTO.EchoCore.UserCore
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.ChatCore
+@using CoreLib.Handlers
 @using EchoWebapp.Client.Components.Shared
+@inject EchoAPI _echoAPI
+@inject SignalRClientService _client
+@inject ILocalStorageService LocalStorage
 @inject IJSRuntime _js
 @*
     Layout for the chatviewcomponent that exists within the directmessagesviewcomponent.
@@ -182,15 +186,36 @@
 
 
 @code {
+    
     [Parameter]
     // public Chat? Content { get; set; }
-
     public ChatDTO? Content { get; set; }
+    [Parameter]
+    public UserFullDTO self { get; set; }
 
+    private string? token { get; set; }
     public bool ToggleSidePanel = false;
 
     public string TextValue { get; set; }
     public string TextPlaceholder { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // we need to get the token like this now or the string will be '"Token value"'
+            token = await LocalStorage.GetItemAsync<string>("Token");
+            await _client.Connect(token);
+            _client.ReceiveChatMessageCreateMessageDTO += ReceiveChatMessageCreateMessageDTO;
+            _client.ReceiveChatMessageUpdateMessageDTO += ReceiveChatMessageUpdateMessageDTO;
+            _client.ReceiveChatMessageDeleteMessageDTO += ReceiveChatMessageDeleteMessageDTO;
+            //Content = await _echoAPI.GetEntityWithIncludeAsync<Chat>(self.Id, (new AuthenticationHeaderValue("Bearer", token)));
+            //eller skal det være Id'en for chat'en? + er det ik sådan man skal gære det
+            await _client.SendAJoinRequestForGroup(nameof(Chat) +"/"+ Content.Id);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     bool checkTime(DateTime dt)
     {
@@ -214,6 +239,7 @@
             // {
             if (!string.IsNullOrWhiteSpace(TextValue))
             {
+                // skal det ik være en SendMessageRequestDTO?
                 MessageDTO newmsg = new();
                 newmsg.Content = TextValue.Trim();
                 newmsg.TimeSent = DateTime.Now;
@@ -226,6 +252,8 @@
                 //code to reflect your id
 
                 Content.Messages.Add(newmsg);
+                //skal lige snakke om hvordan vi vil gøre det 
+                //await _echoAPI.CreateAsync<ChatDTO>(newmsg, (new AuthenticationHeaderValue("Bearer", token));
                 _js.InvokeVoidAsync("console.log", newmsg.Content);
 
                 await Task.Delay(50);
@@ -235,6 +263,30 @@
         }
         prevKey = e.Key;
         _js.InvokeVoidAsync("console.log", e.Key);
+    }
+
+    /*public async void JoinGroup(string GroupName)
+    {
+    }*/
+
+    public async void ReceiveChatMessageCreateMessageDTO(MessageDTO entity)
+    {
+        Content.Messages.Add(entity);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    //don't know if thats all it takes
+    public async void ReceiveChatMessageUpdateMessageDTO(MessageDTO entity)
+    {
+        var updatevalue = Content.Messages.FirstOrDefault(o =>o.Id == entity.Id);
+        updatevalue.Content = entity.Content;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async void ReceiveChatMessageDeleteMessageDTO(MessageDTO entity)
+    {
+        Content.Messages.Remove(entity);
+        await InvokeAsync(StateHasChanged);
     }
 
     private string prevKey = "";

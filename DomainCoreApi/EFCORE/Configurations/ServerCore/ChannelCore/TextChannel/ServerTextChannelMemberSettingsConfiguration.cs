@@ -12,6 +12,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
 
             builder.HasOne(b => b.Channel).WithMany(b => b.MemberSettings).HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasOne(b => b.Profile).WithMany(b => b.TextChannelMemberSettings).HasForeignKey(b => new { b.AccountId, b.ServerId }).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasOne(b => b.Server).WithMany(b => b.TextChannelMemberSettings).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(b => b.Permissions).WithOne(b => b.MemberSettings).HasForeignKey(b => new { b.ChannelId, b.AccountId }).OnDelete(DeleteBehavior.ClientCascade);
         }
     }

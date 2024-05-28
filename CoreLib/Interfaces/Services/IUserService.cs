@@ -9,25 +9,37 @@ namespace CoreLib.Interfaces.Services
 {
     public interface IUserService //users personal action servíce for general functionality /*: IEntityService<User, ulong>*/
     {
-        Task<User> Register(RegisterRequestDTO requestDTO);
-        Task<string> LoginUserAsync(LoginRequestDTO requestDTO);
-        Task<bool> UpdatePassword(ulong id, string password);
+        //friend
+        Task<bool> AcceptFriendRequestAsync(ulong senderId, ulong requestId);
+        Task<bool> SendFriendRequestAsync(ulong senderId, AddFriendRequestDTO requestDTO);
+        Task<bool> SendFriendRequestAsync(ulong senderId, ulong receiverId);
+        Task<bool> CancelFriendRequestAsync(ulong senderId, ulong requestId); //yes they are different appearently
+        Task<bool> DeclineFriendRequestAsync(ulong senderId, ulong requestId); 
+        Task<bool> RemoveFriendAsync(ulong senderId, ulong friendId);
 
-        Task<bool> AcceptFriendRequest(ulong id, AcceptFriendRequestRequestDTO requestDTO);
-        Task<bool> AddFriend(ulong id, SendFriendRequestDTO requestDTO);
-        Task<bool> AddUserConnection(ulong id, AddUserConnectionRequestDTO requestDTO);
-        Task<UserFullDTO> GetFullDTOAsync(ulong id);
-        Task<bool> BlockUser(ulong id, BlockUserRequestDTO requestDTO);
-        Task<bool> MuteUser(ulong id, MuteRequestDTO requestDTO);
-        Task<bool> RemoveFriend(ulong id, RemoveFriendRequestDTO requestDTO);
-        Task<bool> SetCustomStatus(ulong id, SetStatusRequestDTO requestDTO);
-        Task<bool> SetStatus(ulong id, SetStatusRequestDTO requestDTO);
-        Task<bool> SetNickname(ulong id, SetNicknameUserRequestDTO requestDTO);
-        Task<bool> SetNote(ulong id, SetNoteUserRequestDTO requestDTO);
-        Task<bool> SetPhoneNumber(ulong id, EditPhoneNumberRequestDTO requestDTO);
-        Task<bool> MuteSelf(ulong id);
-        Task<bool> DeafenSelf(ulong id);
-        Task<bool> DisableAccount(ulong id, DisableAccountRequestDTO requestDTO);
-        Task<bool> DeleteAccount(ulong id, DeleteAccountRequestDTO requestDTO);
+
+        //other users
+        Task<bool> BlockUserAsync(ulong senderId, ulong userId);
+        Task<bool> MuteUserAsync(ulong senderId, ulong userId, MuteRequestDTO requestDTO);
+        Task<bool> SetNicknameAsync(ulong senderId, ulong userId, SetNicknameUserRequestDTO requestDTO);
+        Task<bool> SetNoteAsync(ulong senderId, ulong userId, SetNoteUserRequestDTO requestDTO);
+        Task<bool> SetUserVolumeAsync(ulong senderId, ulong userId, SetUserVolumeRequestDTO requestDTO);
+
+        //userself
+        Task<bool> AddUserConnectionAsync(ulong senderId, AddUserConnectionRequestDTO requestDTO);
+        Task<bool> UpdateUserConnectionAsync(ulong senderId, ulong connectionId, UpdateUserConnectionRequestDTO requestDTO);
+        Task<bool> DeafenSelfAsync(ulong senderId);
+        Task<bool> DeleteAccountAsync(ulong senderId, DeleteAccountRequestDTO requestDTO);
+        Task<bool> DisableAccountAsync(ulong senderId, DisableAccountRequestDTO requestDTO);
+        Task<bool> SetPhoneNumberAsync(ulong senderId, EditPhoneNumberRequestDTO requestDTO);
+        Task<string> LoginAsync(LoginRequestDTO requestDTO);
+        Task<UserFullDTO> LoadUserSessionDataAsync(ulong senderId);
+        Task<bool> MuteSelfAsync(ulong senderId);
+        Task<bool> RegisterAsync(RegisterRequestDTO requestDTO);
+        Task<bool> RemoveUserConnectionAsync(ulong senderId, ulong connectionId);
+        Task<bool> SetCustomStatusAsync(ulong senderId, SetCustomStatusRequestDTO requestDTO);
+        Task<bool> SetStatusAsync(ulong senderId, SetStatusRequestDTO requestDTO);
+        Task<bool> UpdatePasswordAsync(ulong senderId, string password);
+        Task<bool> ForgotPasswordAsync(string email, string username);
     }
 }

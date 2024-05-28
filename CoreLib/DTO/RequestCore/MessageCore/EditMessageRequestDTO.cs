@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLib.Interfaces.Services
+namespace CoreLib.DTO.RequestCore.MessageCore
 {
-    internal interface ITextChannelService
+    public class EditMessageRequestDTO
     {
+        public string Content { get; set; }
     }
 }

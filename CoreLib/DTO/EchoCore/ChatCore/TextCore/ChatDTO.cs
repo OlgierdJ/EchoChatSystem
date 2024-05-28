@@ -11,10 +11,10 @@ namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
         public int OrderWeight { get; set; }
         public ulong? LastReadMessageId { get; set; } //from messagetracker used to determine start point when entering chat, which messages to load by pagination. (update locally after first retrieval)
         public bool Muted { get; set; }
-        //public string Name { get; set; }
+        public string? IconUrl { get; set; }
         //public int OrderWeight { get; set; }
         //public DateTime TimeLastInteracted { get; set; }
-        public PinboardDTO? PinboardDTO { get; set; } //mayb remove and keep decoupled?=?
+        public PinboardDTO? Pinboard { get; set; } //mayb remove and keep decoupled?=?
         //public ICollection<NotificationMessageDTO>? TrackedNotifications { get; set; }
         public ICollection<MemberDTO>? Participants { get; set; } //mapped through chatparticipany or textchannel roles
         public ICollection<MessageDTO>? Messages { get; set; } //mapped through chatparticipany or textchannel roles
@@ -22,6 +22,7 @@ namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
         //public ICollection<RoleMinimalDTO>? Roles { get; set; } //the users role within the chat, such as everyone, admin, owner, etc
         public ICollection<UserMinimalWithPermissionsDTO>? MemberSettings { get; set; } //displays specific permission settings for a specific user enforced within this chat.
         public ICollection<HierarchalRoleMinimalWithPermissionsDTO>? RoleSettings { get; set; } //displays specific permission settings for a specific role enforced within this chat.
+        public string? CategoryName { get; set; }
         //public ICollection<ServerInviteDTO>? Invites { get; set; } //invites posted to this chat. //maybe extend chatdto to textchanneldto or ignore it.
     }
 }

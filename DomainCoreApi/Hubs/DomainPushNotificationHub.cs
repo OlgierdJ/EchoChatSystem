@@ -18,10 +18,47 @@ namespace DomainCoreApi.Hubs
            await base.OnConnectedAsync();
         }
 
-        public async Task DmMessage(string Group, MessageDTO Message)
+        public async Task JoinGroup(string groupName)
         {
-            await Clients.Group(Group).SendDTOMessage(Message);
+            await Clients.Caller.JoinGroup(groupName);
         }
+
+        public async Task JoinGroups(string[] groupNames)
+        {
+            await Clients.Caller.JoinGroups(groupNames);
+        }
+        public async Task LeaveGroup(string groupName)
+        {
+            await Clients.Caller.LeaveGroup(groupName);
+        }
+        public async Task LeaveGroups(string[] groupNames)
+        {
+            await Clients.Caller.LeaveGroups(groupNames);
+        }
+
+
+        //public async Task ReceiveChatMessageCreateMessageDTO(MessageDTO entity,string Group)
+        //{
+        //    await Clients.Group(Group).SendDTOMessage(entity);
+        //}
+        //public async Task ReceiveChatMessageUpdateMessageDTO(MessageDTO entity, string Group)
+        //{
+        //    await Clients.Group(Group).SendDTOMessage(entity);
+        //}
+        //public async Task ReceiveChatMessageDeleteMessageDTO(MessageDTO entity, string Group)
+        //{
+        //    await Clients.Group(Group).SendDTOMessage(entity);
+        //}
+
+        //public async Task SendDTOMessage(MessageDTO entity)
+        //{
+
+        //}
+
+        //public async Task DmMessage(string Group, MessageDTO Message)
+        //{
+        //    await Clients.Group(Group).SendDTOMessage(Message);
+        //}
 
     }
 }

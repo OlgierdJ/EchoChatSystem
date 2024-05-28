@@ -14,24 +14,21 @@ namespace CoreLib.Handlers
         {
             _PasswordRepo = PasswordRepo;
         }
-        public Passwordhandler(ISecurityCredentialsService security)
-        {
 
-        }
-        public async Task<bool> CheckPassword(string Password, ulong UserId)
+        public async Task<bool> CheckPassword(string Password, SecurityCredentials userPwd)
         {
-            var UserPassword = await _PasswordRepo.GetSingleAsync(obj => obj.UserId == UserId);
+            //var UserPassword = await _PasswordRepo.GetSingleAsync(obj => obj.UserId == UserId);
 
-            using (var pbkdf2 = new Rfc2898DeriveBytes(Password, UserPassword.Salt, 10000))
+            using (var pbkdf2 = new Rfc2898DeriveBytes(Password, userPwd.Salt, 10000))
             {
                 byte[] hash = pbkdf2.GetBytes(20);
 
-                return hash.SequenceEqual(UserPassword.PasswordHash);
+                return hash.SequenceEqual(userPwd.PasswordHash);
             }
 
         }
-
-        public async Task<SecurityCredentials> CreatePassword(string password, ulong Userid)
+    
+        public async Task<SecurityCredentials> CreatePassword(string password)
         {
 
             // Generate a random salt value.
@@ -49,9 +46,8 @@ namespace CoreLib.Handlers
                 {
                     PasswordHash = hash,
                     Salt = salt,
-                    UserId = Userid
                 };
-                await _PasswordRepo.AddAsync(credentials);
+                //await _PasswordRepo.AddAsync(credentials);
                 return credentials;
             }
 
