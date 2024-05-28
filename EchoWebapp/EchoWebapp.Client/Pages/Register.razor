@@ -98,13 +98,16 @@
         User.DisplayName = displayName != "" ? displayName : null;
         //send user to api
         var data = await _echoAPI.CreateUserAsync(User);
-        if (data.Equals("all looks good"))
+        if(data != null)
         {
-            GoToLogin();
-        }
-        else
-        {
-            CloseMe(true);
+            if (data.Equals("all looks good"))
+            {
+                GoToLogin();
+            }
+            else
+            {
+                CloseMe(true);
+            }
         }
     }
 
