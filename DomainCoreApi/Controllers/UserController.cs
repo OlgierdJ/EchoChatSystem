@@ -98,9 +98,9 @@ namespace DomainCoreApi.Controllers
         //    catch (Exception ex)
         //    {
 
-                return Problem(ex.Message); ;
-            }
-        }
+        //        return Problem(ex.Message); ;
+        //    }
+        //}
 
         [Authorize]
         [HttpPut("UpdatePassword")]
@@ -600,25 +600,25 @@ namespace DomainCoreApi.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpGet("GetFullUserAsync/{id}")]
-        public async Task<IActionResult> GetFullUserAsync(ulong id)
-        {
-            try
-            {
-                var result = await _userService.GetFullDTOAsync(id);
-                if (result == null)
-                {
-                    return Problem("Something went wrong. Contact an Admin / Server representative");
-                }
+        //[AllowAnonymous]
+        //[HttpGet("GetFullUserAsync/{id}")]
+        //public async Task<IActionResult> GetFullUserAsync(ulong id)
+        //{
+        //    try
+        //    {
+        //        var result = await _userService.GetFullDTOAsync(id);
+        //        if (result == null)
+        //        {
+        //            return Problem("Something went wrong. Contact an Admin / Server representative");
+        //        }
                               
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                return Problem(ex.Message); ;
-            }
-        }
+        //        return Problem(ex.Message); ;
+        //    }
+        //}
     }
 }

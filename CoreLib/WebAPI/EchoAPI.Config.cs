@@ -25,5 +25,10 @@ namespace CoreLib.WebAPI
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             // _notificationPipeline = NotificationPipeline;
         }
+
+        private AuthenticationHeaderValue authenticationHeaderValue(string token)
+        {
+            return new AuthenticationHeaderValue("Bearer", token);
+        }
     }
 }

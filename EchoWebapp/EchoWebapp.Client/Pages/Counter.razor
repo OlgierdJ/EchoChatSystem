@@ -142,7 +142,7 @@
                 newmsg.Content = TextValue.Trim();
                 newmsg.MessageHolder = chat;
                 newmsg.TimeSent = DateTime.Now;
-                newmsg.Author = chat.Participants.Where(e => e.Id == 112).First();
+                //newmsg.Author = chat.Participants.Where(e => e.Id == 112).First();
                 chat.Messages.Add(newmsg);
                 _js.InvokeVoidAsync("console.log", newmsg.Content);
 
@@ -162,61 +162,61 @@
     private Chat chat = new();
     protected override async Task OnInitializedAsync()
     {
-        chat.Participants = new List<Account>();
+        //chat.Participants = new List<Account>();
         chat.Messages = new List<ChatMessage>();
 
         chat.Id = 111;
-        chat.Participants.Add(new Account() { Id = 112, Name = "TheDoe", Profile = new AccountProfile() { AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg" } });
-        chat.Participants.Add(new Account() { Id = 113, Name = "BobTheBuilder", Profile = new AccountProfile() { AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" } });
-        chat.Participants.Add(new Account() { Id = 114, Name = "Mary Jane", Profile = new AccountProfile() { AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg" } });
+        // chat.Participants.Add(new Account() { Id = 112, Name = "TheDoe", Profile = new AccountProfile() { AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg" } });
+        // chat.Participants.Add(new Account() { Id = 113, Name = "BobTheBuilder", Profile = new AccountProfile() { AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp" } });
+        // chat.Participants.Add(new Account() { Id = 114, Name = "Mary Jane", Profile = new AccountProfile() { AvatarFileURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg" } });
 
         ChatMessage msg = new ChatMessage();
         msg.Content = "First Message sent! Yay";
         msg.MessageHolder = chat;
         msg.TimeSent = DateTime.Now.AddDays(-15).AddHours(-8);
-        msg.Author = chat.Participants.Where(e => e.Id == 112).First();
+        //msg.Author = chat.Participants.Where(e => e.Id == 112).First();
         chat.Messages.Add(msg);
 
         ChatMessage msg1 = new ChatMessage();
         msg1.Content = "Hey Jom";
         msg1.MessageHolder = chat;
         msg1.TimeSent = DateTime.Now.AddDays(-8).AddHours(-2).AddMinutes(-2).AddSeconds(32);
-        msg1.Author = chat.Participants.Where(e => e.Id == 113).First();
+        ///msg1.Author = chat.Participants.Where(e => e.Id == 113).First();
         chat.Messages.Add(msg1);
 
         ChatMessage msg1b = new ChatMessage();
         msg1b.Content = "John o/";
         msg1b.MessageHolder = chat;
         msg1b.TimeSent = DateTime.Now.AddDays(-8).AddHours(-2).AddMinutes(1).AddSeconds(11);
-        msg1b.Author = chat.Participants.Where(e => e.Id == 113).First();
+        //msg1b.Author = chat.Participants.Where(e => e.Id == 113).First();
         chat.Messages.Add(msg1b);
 
         ChatMessage msg1c = new ChatMessage();
         msg1c.Content = "xD";
         msg1c.MessageHolder = chat;
         msg1c.TimeSent = DateTime.Now.AddDays(-8).AddHours(-2).AddMinutes(1).AddSeconds(15);
-        msg1c.Author = chat.Participants.Where(e => e.Id == 113).First();
+        //msg1c.Author = chat.Participants.Where(e => e.Id == 113).First();
         chat.Messages.Add(msg1c);
 
         ChatMessage msg1d = new ChatMessage();
         msg1d.Content = "Hello Bob";
         msg1d.MessageHolder = chat;
         msg1d.TimeSent = DateTime.Now.AddDays(-8).AddHours(-2).AddMinutes(3).AddSeconds(15);
-        msg1d.Author = chat.Participants.Where(e => e.Id == 112).First();
+        //msg1d.Author = chat.Participants.Where(e => e.Id == 112).First();
         chat.Messages.Add(msg1d);
 
         ChatMessage msg2 = new ChatMessage();
         msg2.Content = "Party tonight?";
         msg2.MessageHolder = chat;
         msg2.TimeSent = DateTime.Now.AddDays(-1).AddHours(7).AddMinutes(14);
-        msg2.Author = chat.Participants.Where(e => e.Id == 114).First();
+        //msg2.Author = chat.Participants.Where(e => e.Id == 114).First();
         chat.Messages.Add(msg2);
 
         ChatMessage msg3 = new ChatMessage();
         msg3.Content = "Where are you guys?";
         msg3.MessageHolder = chat;
         msg3.TimeSent = DateTime.Now.AddHours(-3).AddMinutes(14);
-        msg3.Author = chat.Participants.Where(e => e.Id == 114).First();
+        //msg3.Author = chat.Participants.Where(e => e.Id == 114).First();
         chat.Messages.Add(msg3);
     }
 }
