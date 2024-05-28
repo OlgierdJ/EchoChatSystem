@@ -99,6 +99,10 @@ namespace DomainCoreApi.Services
         {
             try
             {
+                if (requestDTO.TypeId==0)
+                {
+                    return false;
+                }
                 Account senderAccount = new()
                 {
                     Id = senderId,
@@ -469,10 +473,10 @@ namespace DomainCoreApi.Services
             //bad way to have friendships with this data or maybe make alternate key in friendship etc..
             try
             {
-                var acc = await dbContext.Set<Account>().AsQueryable().FirstOrDefaultAsync(e => e.Id == senderId);
+                var acc = await dbContext.Set<Account>().Include(e=>e.Friendships).ThenInclude(e=>e.Participant).AsQueryable().FirstOrDefaultAsync(e => e.Id == senderId);
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 var removed = acc.Friendships.FirstOrDefault(e => e.Subject.Participants.Any(e => e.ParticipantId == friendId)).Subject;
-                if (removed != null)
+                if (removed == null)
                 {
                     return false;
                 }
@@ -511,12 +515,59 @@ namespace DomainCoreApi.Services
         {
             try
             {
-                if (requestDTO.Name.IsNullOrEmpty())
+                if (requestDTO.Name.IsNullOrEmpty()) //request validation
                 {
                     return false;
                 }
-                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().FirstOrDefaultAsync(e => e.Name == requestDTO.Name);
+                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(e => e.Name == requestDTO.Name);
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+
+                if (senderId == receiverAcc.Id) //validate user is other than self
+                {
+                    return false;
+                }
+
+                var senderAcc = await dbContext.Set<Account>().AsQueryable()
+                    .Include(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants.Where(e => e.ParticipantId != senderId))
+                    .Include(e => e.OutgoingFriendRequests).ThenInclude(e => e.ReceiverRequest)
+                    .Include(e => e.IncomingFriendRequests).ThenInclude(e => e.SenderRequest)
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(e => e.Id == senderId);
+
+
+                if (senderAcc.OutgoingFriendRequests.Any(e => e.ReceiverRequest.ReceiverId == receiverAcc.Id) || senderAcc.Friendships.Any(e => e.Subject.Participants.Select(e => e.ParticipantId).Contains(receiverAcc.Id)))
+                //check if already sent request or already friends
+                {
+                    return false;
+                }
+
+                var incomingFromReceiver = senderAcc.IncomingFriendRequests.FirstOrDefault(e => e.SenderRequest.SenderId == receiverAcc.Id);
+                if (incomingFromReceiver != null) //if receiver already sent sender a request
+                {
+                    // if already received friendrequest and trying to send one then just accept incoming.
+                    Friendship friendship = new()
+                    {
+                        Participants = new List<FriendshipParticipancy>()
+                        {
+                            new FriendshipParticipancy()
+                            {
+                                    ParticipantId = incomingFromReceiver.SenderRequest.SenderId,
+                            },
+                            new FriendshipParticipancy()
+                            {
+                                    ParticipantId = senderId,
+                            }
+                        },
+                    };
+
+                    dbContext.Set<OutgoingFriendRequest>().Remove(incomingFromReceiver.SenderRequest);
+                    dbContext.Set<IncomingFriendRequest>().Remove(incomingFromReceiver); //cleanup cause appearently clientcascade doesnt work????
+                    await dbContext.Set<Friendship>().AddAsync(friendship);
+                    await dbContext.SaveChangesAsync();
+                    return true;
+                }
+
+                //send request
                 IncomingFriendRequest request = new()
                 {
                     ReceiverId = receiverAcc.Id,
@@ -525,8 +576,10 @@ namespace DomainCoreApi.Services
                         SenderId = senderId
                     }
                 };
+               
 
                 dbContext.Set<IncomingFriendRequest>().Add(request); //throws error if already blocked fyi
+
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -596,11 +649,13 @@ namespace DomainCoreApi.Services
                 {
                     return false;
                 }
-                Account senderAccount = new()
+
+                var senderAcc = await dbContext.Set<Account>().Include(e => e.NicknamedAccounts.Where(e => e.SubjectId == userId)).FirstOrDefaultAsync(e => e.Id == senderId);
+                if (senderAcc == null)
                 {
-                    Id = senderId,
-                    NicknamedAccounts = new List<AccountNickname>()
-                };
+                    return false;
+                }
+               
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 AccountNickname relation = new()
                 {
@@ -609,8 +664,23 @@ namespace DomainCoreApi.Services
                     Nickname = requestDTO.Nickname,
                 };
 
-                dbContext.Set<Account>().Attach(senderAccount); //throws error if already noted fyi
-                senderAccount.NicknamedAccounts.Add(relation);
+                var relationExists = senderAcc.NicknamedAccounts.Any();
+
+                if (requestDTO.Nickname.IsNullOrEmpty() && !relationExists) //if request is null ignore by now
+                {
+                    return false;
+                }
+
+                if (requestDTO.Nickname.IsNullOrEmpty() && relationExists) //if status exists and request is null then remove it
+                {
+                    dbContext.Set<AccountNickname>().Remove(relation);
+                }
+
+                if (!requestDTO.Nickname.IsNullOrEmpty() && !relationExists) //add if not null and content not null
+                {
+                    senderAcc.NicknamedAccounts.Add(relation);
+                }
+
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -628,11 +698,13 @@ namespace DomainCoreApi.Services
                 {
                     return false;
                 }
-                Account senderAccount = new()
+
+                var senderAcc = await dbContext.Set<Account>().Include(e => e.NotedAccounts.Where(e=>e.SubjectId == userId)).FirstOrDefaultAsync(e => e.Id == senderId);
+                if (senderAcc == null)
                 {
-                    Id = senderId,
-                    NotedAccounts = new List<AccountNote>()
-                };
+                    return false;
+                }
+
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 AccountNote relation = new()
                 {
@@ -641,8 +713,27 @@ namespace DomainCoreApi.Services
                     Note = requestDTO.Note,
                 };
 
-                dbContext.Set<Account>().Attach(senderAccount); //throws error if already noted fyi
-                senderAccount.NotedAccounts.Add(relation);
+
+
+
+                var relationExists = senderAcc.NotedAccounts.Any();
+
+                if (requestDTO.Note.IsNullOrEmpty() && !relationExists) //if request is null ignore by now
+                {
+                    return false;
+                }
+
+                if (requestDTO.Note.IsNullOrEmpty() && relationExists) //if status exists and request is null then remove it
+                {
+                    dbContext.Set<AccountNote>().Remove(relation);
+                }
+
+                if (!requestDTO.Note.IsNullOrEmpty() && !relationExists) //add if not null and content not null
+                {
+                    senderAcc.NotedAccounts.Add(relation);
+                }
+
+
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -686,6 +777,10 @@ namespace DomainCoreApi.Services
         {
             try
             {
+                if (requestDTO.Id == 0)
+                {
+                    return false;
+                }
                 Account senderAccount = new()
                 {
                     Id = senderId,
@@ -707,7 +802,55 @@ namespace DomainCoreApi.Services
 
         public async Task<bool> SetUserVolumeAsync(ulong senderId, ulong userId, SetUserVolumeRequestDTO requestDTO)
         {
-            throw new NotImplementedException(); //no idea right now where to set this user volume as entity seems to have disappeared?=???
+            try
+            {
+                if (senderId == userId)
+                {
+                    return false;
+                }
+
+                var senderAcc = await dbContext.Set<Account>().Include(e => e.PersonalAccountVolumes.Where(e => e.SubjectId == userId)).FirstOrDefaultAsync(e => e.Id == senderId);
+                if (senderAcc == null)
+                {
+                    return false;
+                }
+
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                AccountAccountVolume relation = new()
+                {
+                    OwnerId = senderId,
+                    SubjectId = userId,
+                    Volume = requestDTO.Volume,
+                };
+
+                int defaultVolume = 100;
+
+
+                var relationExists = senderAcc.PersonalAccountVolumes.Any();
+
+                if (requestDTO.Volume==defaultVolume && !relationExists) //if request is null ignore by now
+                {
+                    return false;
+                }
+
+                if (requestDTO.Volume == defaultVolume && relationExists) //if status exists and request is null then remove it
+                {
+                    dbContext.Set<AccountAccountVolume>().Remove(relation);
+                }
+
+                if (requestDTO.Volume != defaultVolume && !relationExists) //add if not null and content not null
+                {
+                    senderAcc.PersonalAccountVolumes.Add(relation);
+                }
+
+
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<bool> UpdatePasswordAsync(ulong id, string password)
@@ -839,7 +982,7 @@ namespace DomainCoreApi.Services
 
                 //self
                 .Include(x => x.ActivityStatus) //probably not needed
-                .Include(x => x.Connections).ThenInclude(e => e.Connection)
+                .Include(x => x.Connections).ThenInclude(e => e.ConnectionType)
                 .Include(x => x.CustomStatus)
                 .Include(x => x.Sessions)
                 .Include(x => x.Servers)
@@ -989,6 +1132,114 @@ namespace DomainCoreApi.Services
 
                 throw;
             }
+        }
+
+        public async Task<bool> UndeafenSelfAsync(ulong senderId)
+        {
+            try
+            {
+                VoiceSettings voiceSettings = new()
+                {
+                    Id = senderId,
+                    DeafenSelf = true, //must be different value than new value
+                };
+
+
+                dbContext.Set<VoiceSettings>().Attach(voiceSettings);
+                voiceSettings.DeafenSelf = false;
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> UnmuteSelfAsync(ulong senderId)
+        {
+            try
+            {
+                VoiceSettings voiceSettings = new()
+                {
+                    Id = senderId,
+                    MuteSelf = true,
+                };
+
+
+                dbContext.Set<VoiceSettings>().Attach(voiceSettings);
+                voiceSettings.MuteSelf = false;
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> UnblockUserAsync(ulong senderId, ulong userId)
+        {
+            try
+            {
+                if (senderId == userId)
+                {
+                    return false;
+                }
+                Account senderAccount = new()
+                {
+                    Id = senderId,
+                    BlockedAccounts = new List<AccountBlock>()
+                };
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                AccountBlock blockrelation = new()
+                {
+                    BlockedId = userId,
+                    BlockerId = senderId,
+                };
+
+                senderAccount.BlockedAccounts.Add(blockrelation);
+                dbContext.Set<Account>().Attach(senderAccount); //throws error if already blocked fyi
+                senderAccount.BlockedAccounts.Remove(blockrelation);
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> UnmuteUserAsync(ulong senderId, ulong userId)
+        {
+            try
+            {
+                if (senderId == userId)
+                {
+                    return false;
+                }
+                Account senderAccount = new()
+                {
+                    Id = senderId,
+                    MutedVoices = new List<AccountMute>()
+                };
+                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                AccountMute muterelation = new()
+                {
+                    SubjectId = userId,
+                    MuterId = senderId,
+                };
+                senderAccount.MutedVoices.Add(muterelation);
+
+                dbContext.Set<Account>().Attach(senderAccount); //throws error if already blocked fyi
+                senderAccount.MutedVoices.Remove(muterelation);
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

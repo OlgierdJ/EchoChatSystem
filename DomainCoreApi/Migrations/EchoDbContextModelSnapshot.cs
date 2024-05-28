@@ -2120,7 +2120,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ChatPinboard");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.Connection", b =>
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ConnectionType", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -2162,7 +2162,33 @@ namespace DomainCoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Connection");
+                    b.ToTable("ConnectionType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AuthenticationEndpoint = "PayPal.com/api/v3/authenticate",
+                            AuthorizationEndpoint = "PayPal.com/api/v3/authorization",
+                            AuthorizeEndpoint = "PayPal.com/api/v3/authorize",
+                            ExchangeReturnEndpoint = "PayPal.com/api/v3/token/exchange",
+                            PlatformIcon = "PayPalIcon.png",
+                            PlatformName = "PayPal",
+                            TokenCheckEndpoint = "PayPal.com/api/v3/token/validate",
+                            TokenRefreshEndpoint = "PayPal.com/api/v3/token/refresh"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            AuthenticationEndpoint = "stripe.com/api/v3/authenticate",
+                            AuthorizationEndpoint = "stripe.com/api/v3/authorization",
+                            AuthorizeEndpoint = "stripe.com/api/v3/authorize",
+                            ExchangeReturnEndpoint = "stripe.com/api/v3/token/exchange",
+                            PlatformIcon = "CreditCard.png",
+                            PlatformName = "Card",
+                            TokenCheckEndpoint = "stripe.com/api/v3/token/validate",
+                            TokenRefreshEndpoint = "stripe.com/api/v3/token/refresh"
+                        });
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.FriendSuggestion", b =>
@@ -4179,7 +4205,7 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -4195,6 +4221,9 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("User");
                 });
@@ -4320,7 +4349,7 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.Connection", "Connection")
+                    b.HasOne("CoreLib.Entities.EchoCore.ConnectionType", "ConnectionType")
                         .WithMany("AccountConnections")
                         .HasForeignKey("ConnectionId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -4328,7 +4357,7 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("Account");
 
-                    b.Navigation("Connection");
+                    b.Navigation("ConnectionType");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountCustomStatus", b =>
@@ -6593,7 +6622,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("PinnedMessages");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.Connection", b =>
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ConnectionType", b =>
                 {
                     b.Navigation("AccountConnections");
                 });

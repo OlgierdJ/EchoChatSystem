@@ -19,6 +19,6 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public string Token { get; set; }
 
         public Account Account { get; set; }
-        public Connection Connection { get; set; }
+        public ConnectionType ConnectionType { get; set; }
     }
 }
