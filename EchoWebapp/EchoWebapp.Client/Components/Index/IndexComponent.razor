@@ -54,15 +54,12 @@ else
                 AccountContainer.SetValue(Convert.ToUInt64(id), token);
 
                 var result = await _echoAPI.GetFullUserAsync(Convert.ToUInt64(id));
-                Console.WriteLine(result.UserProfile.User.Name);
                 if(result != null)
                 {
                     self = result;
                     self.UserProfile.User.DisplayName = self.UserProfile.User.Name;
                 }
-                Console.WriteLine(result.UserProfile.User.Name);
                 StateHasChanged();
-                Console.WriteLine(result.UserProfile.User.Name);
             }
         }
         await base.OnAfterRenderAsync(firstRender);
