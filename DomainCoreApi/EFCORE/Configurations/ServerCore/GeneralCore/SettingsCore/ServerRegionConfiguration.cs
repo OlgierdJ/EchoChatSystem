@@ -20,6 +20,21 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.SettingsCor
 
             builder.HasMany(b => b.VoiceChannels).WithOne(b => b.Region).HasForeignKey(b => b.RegionId).OnDelete(DeleteBehavior.Restrict);
             builder.HasMany(b => b.ServerSettings).WithOne(b => b.Region).HasForeignKey(b => b.RegionId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasData( new ServerRegion
+            {
+                Id = 1,
+                Name= "Mr Worldwide",
+                Icon= "https://upload.wikimedia.org/wikipedia/commons/4/4a/Brazilian_flag_icon_round.svg",
+                RegionServerURL= "https://echo.chat/rtc/brazil/rtchub"
+            });
+            builder.HasData(new ServerRegion
+            {
+                Id = 2,
+                Name = "holy pop",
+                Icon = "https://en.wikipedia.org/wiki/St._Peter%27s_Basilica#/media/File:Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg",
+                RegionServerURL = "https://echo.chat/rtc/vatikanet/rtchub"
+            });
         }
     }
 }

@@ -1,10 +1,14 @@
-﻿@using CoreLib.Entities.EchoCore.AccountCore
+﻿@using CoreLib.DTO.EchoCore.UserCore
+@using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.WebAPI
 @using MudBlazor
-@rendermode InteractiveAuto
+@using System.Net.Http.Headers
+@inject Provider.AccountIdContainer AccountContainer
+@inject ILocalStorageService LocalStorage
 
 
-    <div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 25px; width: 300px; position:fixed; z-index: 2; ">
+
+<div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 25px; width: 300px; position:fixed; z-index: 2; ">
     <div class="modal-dialog" style="background: var(--mud-palette-surface);">
         <div class="modal-content" style="background: var(--mud-palette-transparent);">
             <div class="modal-header justify-start">
@@ -14,7 +18,7 @@
                 <h5 class="modal-title pl-3">@Name</h5>
             </div>
             <div class="modal-body">
-                @if(Message is not null)
+                @if (Message != null)
                 {
                     <MudText Typo="Typo.button">@((MarkupString)Message.Replace(Environment.NewLine, "<br />"))</MudText>
                     <MudText Typo="Typo.body1">@((MarkupString)Date.Replace(Environment.NewLine, "<br />"))</MudText>
@@ -24,14 +28,14 @@
                 <!-- Button and div menu does work tho LUL -->
             </div>
             <div class="modal-footer justify-start">
-                <MudButton Color="StringToColor(currentStatus.IconColor)" @onclick="@(()=>Hover=!Hover)">Status: @currentStatus.Name</MudButton>
-                <div id="myDropdown" class="modal-content pa-3" style="display: @(Hover ? "block" : "none"); bottom: 126px;  left: 327px; width: 125px; position:fixed; background: var(--mud-palette-surface);">
+                <MudButton Color="stringToColor.ConvertStringToColor(currentStatus?.IconColor)" @onclick="@(()=>Hover=!Hover)">Status: @currentStatus?.Name</MudButton>
+                <div class="modal-content pa-3" style="display: @(Hover ? "block" : "none"); bottom: 126px;  left: 327px; width: 125px; position:fixed; background: var(--mud-palette-surface);">
                     <div class="d-flex flex-column my-2">
                         @foreach (var s in status)
                         {
                             <MudItem>
-                                <MudButton @onclick="@(()=>SwtichStatus(s))">
-                                    <MudIcon Icon="@s.Icon" Color="@StringToColor(s.IconColor)" />
+                                <MudButton @onclick="@(()=>{OnItemSelected.InvokeAsync(s);SwtichStatus(s);})">
+                                    <MudIcon Icon="@s.Icon" Color="@stringToColor.ConvertStringToColor(s.IconColor)" />
                                     <MudText Class="ml-2">@s.Name</MudText>
                                 </MudButton>
                             </MudItem>
@@ -45,77 +49,80 @@
         </div>
     </div>
 </div>
-<div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 0px; width: 100vw; height: 100vh; position:fixed; z-index: 1; background: var(--mud-palette-transparent);" @onclick="@(()=> {Visible = false; Hover = false;})">
-</div>
+
+
 @code {
     public readonly EchoAPI _echoAPI = new();
-    public string? Message { get; set; }
-    public string? Date { get; set; }
-    public string? Name { get; set; }
+    public string? Message { get; set; } = "";
+    public string? Date { get; set; } = "";
+    public string? Name { get; set; } = "";
 
-    public bool Visible { get; set; }
-    public bool Hover { get; set; }
+    public bool Visible { get; set; } = false;
+    public bool Hover { get; set; } = false;
 
-    public static List<AccountActivityStatus> status = new() { 
-        //"rgba(11,186,131,1)"
-        new AccountActivityStatus { Icon = Icons.Material.Filled.Circle, IconColor = "Success", Name = "Online", Id = 0 },
-        new AccountActivityStatus { Icon = Icons.Material.Filled.Brightness2, IconColor = "Warning", Name = "Away", Id = 1 },
-        new AccountActivityStatus { Icon = Icons.Material.Filled.RemoveCircle, IconColor = "Error", Name = "Busy", Id = 2 },
-        new AccountActivityStatus { Icon = Icons.Material.Filled.StopCircle, IconColor = "Dark", Name = "Offline", Id = 3 },
+    [Parameter]
+    public UserFullDTO self { get; set; }
+
+    ActiveActivityStatusDTO? currentStatus;
+
+    /** Get ActiveActivityStatusDTO from DB and populate status **/
+    public static List<ActiveActivityStatusDTO> status = new() {
+        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.Circle, IconColor = "Success", Name = "Online", Id = 0, DisplayedContent = "Online" },
+        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.Brightness2, IconColor = "Warning", Name = "Away", Id = 1, DisplayedContent = "Away"},
+        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.RemoveCircle, IconColor = "Error", Name = "Busy", Id = 2, DisplayedContent = "Busy"},
+        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.StopCircle, IconColor = "Dark", Name = "Offline", Id = 3, DisplayedContent = "Offline"},
     };
 
-    public AccountActivityStatus currentStatus = status.FirstOrDefault();
 
-    public Color StringToColor(string s)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        switch (s)
+        if (self != null)
         {
-            case "Success":
-                return Color.Success;
+            if (firstRender)
+            {
+                currentStatus = self.UserProfile.User.ActiveStatus;
+            }
+        }
 
-            case "Warning":
-                return Color.Warning;
-
-            case "Error":
-                return Color.Error;
-
-            case "Dark":
-                return Color.Default;
-
-            default:
-                return Color.Default;
-        }   
+        await base.OnAfterRenderAsync(firstRender);
     }
 
-    public async void SwtichStatus(AccountActivityStatus s)
+
+    /** change to provider **/
+    public readonly StringToColor stringToColor = new();
+
+    public async void SwtichStatus(ActiveActivityStatusDTO s)
     {
         currentStatus = s;
-        // hardcoded id, fetch from storage of sorts?
-        ulong testid = 4;
-        var acc = await _echoAPI.GetEntityAsync<Account>(testid);
-        acc.ActivityStatusId = s.Id;
-        var data = await _echoAPI.UpdateAsync<Account>(acc);
+
+        /** Update ActivityStatusId for self (own account/user?) or based on id **/
+        // var data = await _echoAPI.UpdateAsync<Account>(acc, new AuthenticationHeaderValue("Bearer", await LocalStorage.GetItemAsStringAsync("Token")));
 
         Hover = false;
         StateHasChanged();
     }
 
-    public void ShowPopup(string message, string date, string name)
+    public async void ShowPopup(string message, string date, string name)
     {
-        Visible = true;
         Message = message;
         Date = date;
         Name = name;
-        StateHasChanged();
+        Visible = true;
+        Console.WriteLine(Visible + " " + Message + " " + Date + " " + Name);
+        await InvokeAsync(StateHasChanged);
     }
 
     public void CloseErrorPopup()
     {
         Visible = false;
         Hover = false;
-        Message = ""; 
+        Message = "";
         Date = "";
         Name = "";
         StateHasChanged();
     }
+
+
+    [Parameter]
+    public EventCallback<ActiveActivityStatusDTO> OnItemSelected { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿@using CoreLib.Entities.EchoCore.AccountCore
+﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
+@using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.UserCore
 @*
     Layout for the user profile section that exists within the chatviewcomponent if it is a private chat between two users.
@@ -11,30 +12,37 @@
 
 <div style="display: @(Visible ? "block" : "none");">
     <MudPaper Width="20vw" Height="95vh" Square Style="background: var(--mud-palette-dark);">
-        @if (Account != null)
+        @if (Member != null)
         {
-            <MudPaper Style="@($"background: {(Account.Profile.BannerColor != null ? Account.Profile.BannerColor : "#5C23D9")};")" Height="150px">
+            <MudPaper Style="@($"background: {(Member.Profile.BannerColour != null ? Member.Profile.BannerColour : "#5C23D9")};")" Height="150px">
                 <div>
                     <MudAvatar Style="height:80px; width:80px; position:relative; top:110px; left:15px; border:solid 2px var(--mud-palette-dark);">
-                    <MudImage Src="@Account.Profile.AvatarFileURL" />
+                    <MudImage Src="@Member.ImageIconURL" />
                 </MudAvatar>
                 </div>
             </MudPaper>
             <MudPaper Style="background: var(--mud-palette-dark);" Height="50px" />
             <div style="padding-left: 15px;">
                 <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
-                    <h4>@Account.Profile.DisplayName</h4>
-                    <p>@Account.Name.ToLower()</p>
+                    <h4>@Member.DisplayName</h4>
+                    <p>@Member.Profile.User.Name.ToLower()</p>
                 </MudPaper>
                 <MudDivider />
                 <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
                     <MudText Typo="Typo.button" style="margin-top: 10px;">Echo Member since</MudText>
-                    <MudText Typo="Typo.body1">@Account.TimeCreated.ToString("dd MMMM yyyy")</MudText>
+                    <MudText Typo="Typo.body1">@DateTime.Now.AddDays(-13).AddMinutes(23).ToString("dd MMMM yyyy")</MudText>  <!-- CreationDate is missing? -->
                 </MudPaper>
                 <MudDivider />
                 <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
                     <MudText Typo="Typo.button" style="margin-top: 10px;">Note</MudText>
-                    <MudText Typo="Typo.body1">Note goes here...</MudText>  <!-- Insert note, whereever its hiding -->
+                    @if (Editable)
+                    {
+                        <MudTextField FullWidth @bind-Value="Member.Profile.Note" @onfocusout="(()=> Editable = false)" Margin="Margin.Dense" Variant="Variant.Filled" MaxLines="4" Placeholder="@(Member.Profile.Note != "" ? Member.Profile.Note : "Click to add a note")" Class="px-5 py-2" Immediate="true" MaxLength="255" TextUpdateSuppression="false" Style="background: var(--mud-palette-dark);opacity:1;" />
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body1" @onclick="(()=> Editable = true)">@Member.Profile.Note</MudText>
+                    }
                 </MudPaper>
             </div>
         }
@@ -44,6 +52,8 @@
     [Parameter]
     public bool Visible { get; set; }
 
+    public bool Editable { get; set; } = false;
+
     [Parameter]
-    public Account Account { get; set; }
+    public MemberDTO Member { get; set; }
 }

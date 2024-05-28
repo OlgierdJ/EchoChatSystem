@@ -21,7 +21,8 @@ namespace DomainCoreApi.Handlers
             var claims = new List<Claim>
                 {
                     new(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                    new(JwtRegisteredClaimNames.Sub,obj.Id.ToString())
+                    new(JwtRegisteredClaimNames.Sub,obj.Id.ToString()),
+                    new(ClaimTypes.NameIdentifier,obj.Id.ToString()),
                 };
 
             var tokenDescriptor = new SecurityTokenDescriptor

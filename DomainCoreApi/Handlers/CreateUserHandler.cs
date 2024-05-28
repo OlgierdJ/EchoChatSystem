@@ -38,6 +38,7 @@ namespace DomainCoreApi.Handlers
                 },
                 Settings = new()
                 {
+                    LanguageId = 10,
                     AccessibilitySettings = new AccessibilitySettings()
                     {
                         SaturationPercent = 255,
@@ -77,11 +78,6 @@ namespace DomainCoreApi.Handlers
                         ServerMembers = false,
                     },
                     KeybindSettings = new KeybindSettings(),
-                    Language = new Language()
-                    {
-                        Name = "English (United States)",
-                        LanguageCode = "en-US",
-                    },
                     NotificationSettings = new NotificationSettings()
                     {
                         FocusModeEnabled = false,
@@ -123,7 +119,12 @@ namespace DomainCoreApi.Handlers
                     VideoSettings = new VideoSettings()
                     {
                         AlwaysPreviewVideo = false,
-                        CameraDevice = ""
+                        CameraDevice = "",
+                        VideoBackground ="",
+                        UseOpenH264VideoCodec =false,
+                        EnableHardwareAccelerationForVideo =false,
+                        EnableForceQualityOfServicePacketPrio = false,
+                        UseDDLInjectionToCaptureScreen = false
                     },
                     ActivitySettings = new ActivitySettings()
                     {

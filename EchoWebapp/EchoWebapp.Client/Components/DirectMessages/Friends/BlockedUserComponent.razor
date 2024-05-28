@@ -11,13 +11,11 @@
 <div class="d-flex flex-grow-1">
     @if(Account != null)
     {
-        @* <MudBadge Color="@stringToColor.ConvertStringToColor(Account.ActivityStatus.IconColor)"
-            Bordered Overlap="true" Origin="Origin.BottomRight">*@
-             <MudImage Src="@Account.Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
-        @* </MudBadge> *@
-        <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)(Account.Name + "\r\n" + "Blocked").Replace(Environment.NewLine, "<br />"))</MudText>
+        <MudImage Src="@Account.Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+
+        <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)("<b>" + Account.Profile.DisplayName + "</b> " + "\r\n" + "Blocked").Replace(Environment.NewLine, "<br />"))</MudText>
         <MudSpacer />
-        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.PersonRemove" />
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.PersonRemove" Title="Unblock" />
     }
  </div>
 

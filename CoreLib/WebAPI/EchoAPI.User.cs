@@ -1,4 +1,5 @@
-﻿using CoreLib.DTO.RequestCore.UserCore;
+﻿using CoreLib.DTO.EchoCore.UserCore;
+using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using System.Text;
 using System.Text.Json;
@@ -42,8 +43,8 @@ namespace CoreLib.WebAPI
                 var response = await client.PostAsync("user/login", content).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
-                    var data = JsonSerializer.Deserialize<string>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-                    return data;
+                    var data = JsonSerializer.Deserialize<TokenDTO>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+                    return data.Token;
                 }
             }
             catch (Exception e)
@@ -55,7 +56,7 @@ namespace CoreLib.WebAPI
             return null;
         }
 
-        public async Task<User> CreateUserAsync(RegisterRequestDTO user)
+        public async Task<string> CreateUserAsync(RegisterRequestDTO user)
         {
             //User user = new()
             //{
@@ -68,7 +69,7 @@ namespace CoreLib.WebAPI
                 var response = await client.PostAsync("user/createuser", content).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonSerializer.Deserialize<User>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+                    return JsonSerializer.Deserialize<string>(await response.Content.ReadAsStringAsync(), SerializerOptions);
                 }
             }
             catch (Exception e)
@@ -79,7 +80,24 @@ namespace CoreLib.WebAPI
 
             return null;
         }
+        public async Task<UserFullDTO> GetFullUserAsync(ulong id)
+        {
+            try
+            {
+                var response = await client.GetAsync($"user/GetFullUserAsync/{id}").ConfigureAwait(false);
+                if (response.IsSuccessStatusCode)
+                {
+                    return JsonSerializer.Deserialize<UserFullDTO>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+                }
+            }
+            catch (Exception e)
+            {
+                //_notificationPipeline?.SetCurrentMessage(e.Message, Models.Stores.MessageType.Error);
+                await Console.Out.WriteLineAsync(e.Message);
+            }
 
+            return null;
+        }
 
         public async Task<User> GetUserWithIncludeAsync(ulong Id)
         {

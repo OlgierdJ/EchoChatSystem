@@ -9,6 +9,11 @@
 @inject EchoAPI _echoAPI
 @rendermode InteractiveAuto
 
+@if (Alert)
+{
+    <MudAlert Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Center" ShowCloseIcon="true" CloseIconClicked="(() => CloseMe(true))">Time to leave. Please close me!</MudAlert>
+}
+
 <div id="unique_id_scroll_section" class="ma-0" style="height:100vh;overflow: auto;">
     <MudPaper Width="60%" Style="margin: 20%; padding: 50px 100px 50px 100px">
         <MudForm @bind-IsValid="@success" @bind-Errors="@errors">
@@ -37,6 +42,7 @@
     public string username { get; set; } = "";
     public bool allowmail { get; set; } = true;
     public DateTime? date { get; set; } = DateTime.UtcNow.AddYears(-18);
+    private bool Alert = false;
 
     public RegisterRequestDTO User = new();
     // public readonly EchoAPI _echoAPI = new();
@@ -91,7 +97,20 @@
         User.DateOfBirth = date.Value;
         User.DisplayName = displayName != "" ? displayName : null;
         //send user to api
-        // var data = await _echoAPI.CreateUserAsync(User);
+        var data = await _echoAPI.CreateUserAsync(User);
+        if (data.Equals("all looks good"))
+        {
+            GoToLogin();
+        }
+        else
+        {
+            CloseMe(true);
+        }
+    }
+
+    private void CloseMe(bool value)
+    {
+        Alert = value;
     }
 
     void GoToLogin()

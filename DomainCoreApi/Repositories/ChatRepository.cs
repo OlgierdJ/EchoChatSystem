@@ -12,7 +12,7 @@ namespace DomainCoreApi.Repositories
         public ChatRepository(EchoDbContext context) : base(context)
         {
         }
-
+        
         public override async Task<IEnumerable<Chat>> GetAllWithIncludeAsync(Expression<Func<Chat, bool>> expression = null)
         {
             return await QueryAll()

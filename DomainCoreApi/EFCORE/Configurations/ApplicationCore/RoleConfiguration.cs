@@ -13,7 +13,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
         {
             builder.HasKey(b => b.Id);
 
-            //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
+            builder.Property(b => b.Name).IsRequired(); // not mapped most of stuff
 
             builder.HasMany(e => e.Recipients).WithMany(e => e.Roles).UsingEntity<AccountRole>(
                 l => l.HasOne(e => e.Account).WithMany().HasForeignKey(e => e.AccountId),
@@ -25,6 +25,12 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
                 r => r.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId)
             );
 
+            builder.HasData(new Role { Id = 1, Name = "User" });
+            builder.HasData(new Role { Id = 2, Name = "Admin" });
+            builder.HasData(new Role { Id = 3, Name = "Moderator" });
+            builder.HasData(new Role { Id = 4, Name = "System_Owner" });
+            builder.HasData(new Role { Id = 5, Name = "Premium_Sonar" });
+            builder.HasData(new Role { Id = 6, Name = "Premium_Sonar_Plus" });
         }
     }
 }

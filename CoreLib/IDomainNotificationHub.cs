@@ -1,4 +1,6 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
+using CoreLib.DTO.RequestCore.MessageCore;
+using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
 using CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore;
@@ -15,6 +17,11 @@ namespace CoreLib
 {
     public interface IDomainNotificationHub //used for pushing events to domain related servers
     {
+        //for testing
+        Task ReceiveNotification(string Message);
+
+        Task SendDTOMessage(MessageDTO message);
+
         //Task Login(string user);
         Task JoinGroup(string groupName);
         Task JoinGroups(string[] groupNames);
@@ -22,6 +29,10 @@ namespace CoreLib
         Task LeaveGroups(string[] groupNames);
         Task OnConnectedAsync();
         Task OnDisconnectedAsync();
+        // tro det er den dto.
+        Task ReceiveChatMessageCreateMessageDTO(MessageDTO entity);
+        Task ReceiveChatMessageUpdateMessageDTO(MessageDTO entity);
+        Task ReceiveChatMessageDeleteMessageDTO(MessageDTO entity);
 
         Task ReceiveAccountCreateMessage(Account entity);
         Task ReceiveAccountUpdateMessage(Account entity);

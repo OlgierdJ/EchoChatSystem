@@ -14,7 +14,7 @@ namespace CoreLib.Entities.EchoCore
         //not fully implemented cause havent implemented payment system integration
         //Everything should be stored safely
 
-        //public uint CountryId { get; set; }
+        public uint CountryId { get; set; }
         //public string? ExternalTransactionToken { get; set; }
         //public string CardNumber { get; set; }
         //public string NameOnCard { get; set; }
@@ -26,7 +26,7 @@ namespace CoreLib.Entities.EchoCore
         //public string CountyRegion { get; set; }
         //public string PostalCode { get; set; }
 
-        //public Country Country { get; set; }
+        public Country Country { get; set; }
 
         //public PaypalInformation PaypalInformation { get; set; }
         //public StripeInformation StripeInformation { get; set; }

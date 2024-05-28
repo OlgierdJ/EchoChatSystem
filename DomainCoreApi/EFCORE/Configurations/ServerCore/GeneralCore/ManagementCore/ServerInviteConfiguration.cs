@@ -7,10 +7,6 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.ManagementC
 {
     public class ServerInviteConfiguration : IEntityTypeConfiguration<ServerInvite>
     {
-
-        public ulong? ChannelId { get; set; } //if no textchannel is specified the invite still works to the server
-        public ServerTextChannel? Channel { get; set; } //if the invite is to a specific textchannel
-
         public void Configure(EntityTypeBuilder<ServerInvite> builder)
         {
             builder.HasKey(b => new { b.SubjectId, b.InviterId });

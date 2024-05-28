@@ -1,10 +1,39 @@
 ﻿@page "/messages"
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.ChatCore
+@using Microsoft.AspNetCore.SignalR.Client
 @using MudBlazor
-@* @attribute [Authorize] *@
+@using System.Net.Http.Headers
+@rendermode InteractiveWebAssembly
 @inject NavigationManager nav
+@inject EchoAPI _Echoapi
+@inject SignalRClientService _client
+@inject ILocalStorageService LocalStorage
+@* @implements IAsyncDisposable *@
+@* @attribute [Authorize] *@
 
+
+<AuthorizeView>
+    <Authorized>
+        <span>You're authorized as @context?.User?.Identity?.Name</span>
+    </Authorized>
+    <NotAuthorized>
+        <span>You're not authorized, buddy.</span>
+    </NotAuthorized>
+</AuthorizeView>
+
+<input type="text" @bind="messageInput"/>
+
+<p>here should be some message</p>
+<ul>
+    @foreach (var message in _message)
+    {
+        <li>@message</li>
+    }
+</ul>
+
+<ul>
+@*
 <div style="height:5vh;">
     <MudPaper Class="pa-2 d-flex align-content-center flex-wrap flex-grow-1 gap-2" Square Style="@($"background:{Colors.Shades.Transparent}")" Elevation="1">
          <MudAvatar Size="Size.Small">
@@ -14,140 +43,184 @@
         </MudPaper>
 </div>
 
-<div id="unique_id_scroll_section" class="ma-0" style="max-height:80vh;height:80vh;overflow: auto;">
+
+    <div id="unique_id_scroll_section" class="ma-0" style="max-height:80vh;height:80vh;overflow: auto;">
         @foreach (ChatMessage m in chat.Messages)
-    {
-        if (m.TimeSent.Date != prevDate.Date)
         {
-            @if (m.TimeSent.Date == DateTime.Now.Date)
+            if (m.TimeSent.Date != prevDate.Date)
             {
-                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                        <MudDivider FlexItem />
-                     </MudPaper>
-                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                         <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">Today</MudText>
-                     </MudPaper>
-                     <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                         <MudDivider FlexItem />
-                     </MudPaper>
-                 </MudPaper>
-            }
-            else if (m.TimeSent.Date == DateTime.Now.AddDays(-1).Date)
-            {
-                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                        <MudDivider FlexItem />
-                     </MudPaper>
-                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                         <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">Yesterday</MudText>
-                     </MudPaper>
-                     <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                         <MudDivider FlexItem />
-                     </MudPaper>
-                 </MudPaper>
-            }
-            else
-            {
-                <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                    <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                        <MudDivider FlexItem />
-                     </MudPaper>
-                     <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                         <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">@m.TimeSent.Day @m.TimeSent.ToString("MMMM") @m.TimeSent.Year</MudText>
-                        </MudPaper>
+                @if (m.TimeSent.Date == DateTime.Now.Date)
+                {
+                    <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
                         <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
                             <MudDivider FlexItem />
+                         </MudPaper>
+                         <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                             <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">Today</MudText>
+                         </MudPaper>
+                         <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                             <MudDivider FlexItem />
+                         </MudPaper>
                      </MudPaper>
-                 </MudPaper>
+                }
+                else if (m.TimeSent.Date == DateTime.Now.AddDays(-1).Date)
+                {
+                    <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                        <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                            <MudDivider FlexItem />
+                         </MudPaper>
+                         <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                             <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">Yesterday</MudText>
+                         </MudPaper>
+                         <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                             <MudDivider FlexItem />
+                         </MudPaper>
+                     </MudPaper>
+                }
+                else
+                {
+                    <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                        <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                            <MudDivider FlexItem />
+                         </MudPaper>
+                         <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                             <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">@m.TimeSent.Day @m.TimeSent.ToString("MMMM") @m.TimeSent.Year</MudText>
+                            </MudPaper>
+                            <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                <MudDivider FlexItem />
+                         </MudPaper>
+                     </MudPaper>
+                }
+
             }
+            @if (prevSender == m.Author && checkTime(m.TimeSent))
+            {
 
-        }
-        @if (prevSender == m.Author && checkTime(m.TimeSent))
-        {
-
-            <MudPaper Elevation="0" class="d-flex flex-grow-1 px-4 align-center" Style="@($"background:{Colors.Shades.Transparent}")">
-                <div class="d-flex flex-grow-1 gap-4 align-center">
-                    <MudAvatar Style="background-color:unset" Size="Size.Medium"></MudAvatar>
-                    <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                        <MudText Typo="Typo.body1">@((MarkupString)m.Content.Replace(Environment.NewLine, "<br />"))</MudText>
-                    </MudPaper>
-                </div>
-            </MudPaper>
-        }
-        else
-        {
-            <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 px-4 pt-4 mt-2" Style="@($"background:{Colors.Shades.Transparent}")">
-                <div class="d-flex flex-grow-1 gap-4">
-                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">
-                        @if (m.Author?.Profile != null)
-                        {
-                            <MudImage Src="@m.Author.Profile.AvatarFileURL"></MudImage>
-                        }
-                        else{                        
-                            @m.Author?.Name.First()
-                        }
-                    </MudAvatar>
-                       
+                <MudPaper Elevation="0" class="d-flex flex-grow-1 px-4 align-center" Style="@($"background:{Colors.Shades.Transparent}")">
+                    <div class="d-flex flex-grow-1 gap-4 align-center">
+                        <MudAvatar Style="background-color:unset" Size="Size.Medium"></MudAvatar>
                         <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                            <div class="d-flex flex-grow-1 gap-3">
-                                <MudText Color="Color.Primary">@m.Author?.Name </MudText>
-                                <MudText Style="@($"color:{Colors.Grey.Default};")">@m.TimeSent.ToString("HH:mm")</MudText>
-                            </div>
                             <MudText Typo="Typo.body1">@((MarkupString)m.Content.Replace(Environment.NewLine, "<br />"))</MudText>
                         </MudPaper>
                     </div>
                 </MudPaper>
-        }
+            }
+            else
+            {
+                <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 px-4 pt-4 mt-2" Style="@($"background:{Colors.Shades.Transparent}")">
+                    <div class="d-flex flex-grow-1 gap-4">
+                        <MudAvatar Color="Color.Secondary" Size="Size.Medium">
+                            @if (m.Author?.Profile != null)
+                            {
+                                <MudImage Src="@m.Author.Profile.AvatarFileURL"></MudImage>
+                            }
+                            else
+                            {
+                                @m.Author?.Name.First()
+                            }
+                        </MudAvatar>
 
-        prevDate = m.TimeSent;
-        prevSender = m.Author;
-    }
-</div>
+                        <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                            <div class="d-flex flex-grow-1 gap-3">
+                                <MudText Color="Color.Primary">@m.Author?.Name </MudText>
+                                    <MudText Style="@($"color:{Colors.Grey.Default};")">@m.TimeSent.ToString("HH:mm")</MudText>
+                                </div>
+                                <MudText Typo="Typo.body1">@((MarkupString)m.Content.Replace(Environment.NewLine, "<br />"))</MudText>
+                            </MudPaper>
+                        </div>
+                    </MudPaper>
+            }
+
+            prevDate = m.TimeSent;
+            prevSender = m.Author;
+        }
+    </div>
+ *@
+</ul>
+
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
     public Account acc1 = new();
     public Account acc2 = new();
+    private readonly List<string> _message = new();
+
+    private string? messageInput;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // var token = await LocalStorage.GetItemAsStringAsync("Token");
+        // await _client.Connect(token);
+        if (firstRender)
+        {
+            
+            var token = await LocalStorage.GetItemAsync<string>("Token");
+            await _client.Connect(token);
+            _client.ReceiveNotification += ReceiveNotification2;
+        }
+
+        
+        
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public async void ReceiveNotification2(string Notifica)
+    {
+        _message.Add(Notifica);
+        await InvokeAsync(StateHasChanged);
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        acc1 = new Account { Id = 112, Name = "TheDoe", Profile = new AccountProfile() { AvatarFileURL = "https://cdn.discordapp.com/attachments/808696253659611226/1233306035528400939/image.png?ex=662c9d40&is=662b4bc0&hm=75ab9ae1d1e87dc59cdb63dec2f21276211359cace7e55a2e15adafb09e19327&", } };
-        acc2 = new Account { Id = 113, Name = "Yourname", Profile = new AccountProfile() { AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } };
+        // if (authenticationState is not null)
+        // {
+        //     var state = await authenticationState;
+        //     var user = state.User;
+        // }
+         //acc1 = await _Echoapi.GetEntityAsync<Account>(AccountContainer.Value, new AuthenticationHeaderValue("Bearer", AccountContainer.Token));
+        // await _client.Connect("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmZDNhOWZlZS01YzE2LTRmOWYtODk5Mi1kZTdhOTAyODBkNGQiLCJzdWIiOiIxIiwibmJmIjoxNzE2NTU2NzgwLCJleHAiOjE3MTY1ODU1ODAsImlhdCI6MTcxNjU1Njc4MCwiaXNzIjoiSHR0cHM6Ly9sb2NhbGhvc3Q6NzI2OS9hcGkiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MjgzLyJ9.U9I14e9WpsiIlqXKu7rFGMZNrfY4bqYSZY9vZBpWSfg");
+        // _client.ReceiveNotification += ReceiveNotification2;
+        #region old code
+        // acc1 = new Account { Id = 112, Name = "TheDoe", Profile = new AccountProfile() { AvatarFileURL = "https://cdn.discordapp.com/attachments/808696253659611226/1233306035528400939/image.png?ex=662c9d40&is=662b4bc0&hm=75ab9ae1d1e87dc59cdb63dec2f21276211359cace7e55a2e15adafb09e19327&", } };
+        // acc2 = new Account { Id = 113, Name = "Yourname", Profile = new AccountProfile() { AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp", } };
 
-        chat.Participants = new List<Account>();
-        chat.Messages = new List<ChatMessage>();
+        // chat.Participants = new List<Account>();
+        // chat.Messages = new List<ChatMessage>();
 
-        chat.Id = 111;
-        chat.Participants.Add(acc1);
-        chat.Participants.Add(new Account { Id = 113, Name = "Yourname" });
+        // chat.Id = 111;
+        // chat.Participants.Add(acc1);
+        // chat.Participants.Add(new Account { Id = 113, Name = "Yourname" });
 
-        ChatMessage msg = new ChatMessage();
-        msg.Content = "Hey";
-        msg.MessageHolder = chat;
-        msg.TimeSent = DateTime.Now.AddDays(-4).AddHours(-8);
-        msg.Author = chat.Participants.Where(e => e.Id == 112).First();
-        chat.Messages.Add(msg);
+        // ChatMessage msg = new ChatMessage();
+        // msg.Content = "Hey";
+        // msg.MessageHolder = chat;
+        // msg.TimeSent = DateTime.Now.AddDays(-4).AddHours(-8);
+        // msg.Author = chat.Participants.Where(e => e.Id == 112).First();
+        // chat.Messages.Add(msg);
 
-        ChatMessage msg1 = new ChatMessage();
-        msg1.Content = "Hey o/";
-        msg1.MessageHolder = chat;
-        msg1.TimeSent = DateTime.Now.AddDays(-3).AddHours(-8).AddMinutes(7);
-        msg1.Author = chat.Participants.Where(e => e.Id == 113).First();
-        chat.Messages.Add(msg1);
+        // ChatMessage msg1 = new ChatMessage();
+        // msg1.Content = "Hey o/";
+        // msg1.MessageHolder = chat;
+        // msg1.TimeSent = DateTime.Now.AddDays(-3).AddHours(-8).AddMinutes(7);
+        // msg1.Author = chat.Participants.Where(e => e.Id == 113).First();
+        // chat.Messages.Add(msg1);
 
-        ChatMessage msg1b = new ChatMessage();
-        msg1b.Content = "Thanks for adding me";
-        msg1b.MessageHolder = chat;
-        msg1b.TimeSent = DateTime.Now.AddDays(-3).AddHours(-8).AddMinutes(9);
-        msg1b.Author = chat.Participants.Where(e => e.Id == 113).First();
-        chat.Messages.Add(msg1b);
+        // ChatMessage msg1b = new ChatMessage();
+        // msg1b.Content = "Thanks for adding me";
+        // msg1b.MessageHolder = chat;
+        // msg1b.TimeSent = DateTime.Now.AddDays(-3).AddHours(-8).AddMinutes(9);
+        // msg1b.Author = chat.Participants.Where(e => e.Id == 113).First();
+        // chat.Messages.Add(msg1b);
 
-        ChatMessage msg2 = new ChatMessage();
-        msg2.Content = "How's it going?";
-        msg2.MessageHolder = chat;
-        msg2.TimeSent = DateTime.Now.AddDays(-1).AddHours(-2).AddMinutes(2);
-        msg2.Author = chat.Participants.Where(e => e.Id == 113).First();
-        chat.Messages.Add(msg2);
+        // ChatMessage msg2 = new ChatMessage();
+        // msg2.Content = "How's it going?";
+        // msg2.MessageHolder = chat;
+        // msg2.TimeSent = DateTime.Now.AddDays(-1).AddHours(-2).AddMinutes(2);
+        // msg2.Author = chat.Participants.Where(e => e.Id == 113).First();
+        // chat.Messages.Add(msg2);
+        #endregion
     }
 
     bool checkTime(DateTime dt)
@@ -156,5 +229,5 @@
     }
     private DateTime prevDate = DateTime.MinValue;
     private Account prevSender = new();
-    private Chat chat = new();
+    private Chat chat = null;
 }

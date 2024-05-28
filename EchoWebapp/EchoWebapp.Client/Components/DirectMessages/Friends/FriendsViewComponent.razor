@@ -1,7 +1,10 @@
 ﻿@page "/friends"
+@using CoreLib.DTO.EchoCore.UserCore
 @using EchoWebapp.Client.Components.DirectMessages.Chats
 @using MudBlazor
 @rendermode InteractiveAuto
+@inject NavigationManager nav
+
 @*
     Layout for the friends section that exists within the DirectMessagesViewComponent in the Direct Messages section.
 
@@ -10,30 +13,49 @@
 *@
 @* <h3>FriendsViewComponent</h3> *@
 
-<div class="ma-0 overflow-auto" style="min-width: 70vw; max-width:90vw; height: 100vh;">
-    <MudTabs Elevation="0" ApplyEffectsToContainer="true" PanelClass="pa-6" Position=Position.Top>
-        <MudButton Color="Color.Success" Variant="Variant.Filled">Add Friend</MudButton>
-        <MudTabPanel Text="Online">
-            <FriendListComponent displayAll=false />
-        </MudTabPanel>
-        <MudTabPanel Text="All">
-            <FriendListComponent displayAll=true />
-        </MudTabPanel>
-        <MudTabPanel Text="Pending">
-            <FriendRequestListComponent />
-        </MudTabPanel>    
-        <MudTabPanel Text="Blocked">
-            <BlockedListComponent />
-        </MudTabPanel>
-   
+<div class="ma-0 overflow-auto" style="width: 65vw; height: 100vh;">
+    <MudTabs Elevation="0" ApplyEffectsToContainer="true" PanelClass="pa-6" @bind-ActivePanelIndex="@_activePanel">
+        <Header>
+            <MudButton Class="align-self-center justify-start" Color="Color.Success" Variant="Variant.Filled" Style="width: 120px; margin-right: 25px;">Add Friend</MudButton>
+        </Header>
+        <ChildContent>
+            <MudTabPanel Text="Online" tabindex="0" >
+                <FriendListComponent displayAll=false />
+            </MudTabPanel>
+            <MudTabPanel Text="All" tabindex="1" >
+                <FriendListComponent displayAll=true />
+            </MudTabPanel>
+            <MudTabPanel Text="Pending" tabindex="2" >
+                <FriendRequestListComponent />
+            </MudTabPanel>    
+            <MudTabPanel Text="Blocked" tabindex="3" >
+                <BlockedListComponent />
+            </MudTabPanel>
+        </ChildContent>
     </MudTabs>
 </div
+
 @* <ChatUserProfileComponent Visible="ToggleSidePanel" /> *@
 
-    <MudPaper Width="20vw" Height="100vh" Square Style="background: var(--mud-palette-dark);">
+    <MudPaper Width="18vw" Height="100vh" Square Style="background: var(--mud-palette-dark);">
          <h1>Activity Test</h1>
      </MudPaper>
 
-@code {
+ @code {
+    [Parameter]
+    public UserFullDTO self { get; set; }
+
     public bool ToggleSidePanel = true;
+
+    int _activePanel;
+
+    @* 
+        It's possible to naviagte the tabs with buttons, so can make custom MudToolBar with MudButtons for each tab and add friend.
+        Alternatively, add friend button is in the header, but the MudTabToolbarContent's width is filling all it can.
+        <MudButton OnClick="@(()=>GoToTab(2))">Go To Tab 3</MudButton>
+    
+        void GoToTab(int tabIndex){
+            _activePanel = tabIndex;
+        }
+    *@
 }
