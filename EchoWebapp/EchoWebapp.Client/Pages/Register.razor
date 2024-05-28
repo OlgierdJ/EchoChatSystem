@@ -97,8 +97,8 @@
         User.DateOfBirth = date.Value;
         User.DisplayName = displayName != "" ? displayName : null;
         //send user to api
-        var data = await _echoAPI.CreateUserAsync(User);
-        if (data.Equals("all looks good"))
+        var data = await _echoAPI.RegisterAsync(User);
+        if (data)
         {
             GoToLogin();
         }

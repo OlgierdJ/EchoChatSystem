@@ -13,6 +13,7 @@ using CoreLib.DTO.RequestCore.UserCore;
 using Microsoft.AspNetCore.Identity.Data;
 using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.RelationCore;
+using CoreLib.DTO.EchoCore.UserCore;
 
 namespace DomainCoreApi.Controllers
 {
@@ -34,7 +35,7 @@ namespace DomainCoreApi.Controllers
             try
             {
 
-                var result = await _userService.LoginAsync(login);
+                var result =new TokenDTO { Token =await _userService.LoginAsync(login) };
                 if (result == null)
                 {
                     return Problem("Something went wrong. Contact an Admin / Server representative");
@@ -72,7 +73,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
 
@@ -98,7 +99,7 @@ namespace DomainCoreApi.Controllers
         //    catch (Exception ex)
         //    {
 
-        //        return Problem(ex.Message); ;
+        //        return Problem(ex.Message);
         //    }
         //}
 
@@ -114,9 +115,6 @@ namespace DomainCoreApi.Controllers
                 //var jwtSecurityToken = handler.ReadJwtToken(token);
                 //var id = Convert.ToUInt64(jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
 
-
-
-
                 var result = await _userService.LoadUserSessionDataAsync(id);
                 if (result==null)
                 {
@@ -127,7 +125,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
 
@@ -156,7 +154,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -177,7 +175,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
 
@@ -199,7 +197,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -220,7 +218,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -241,7 +239,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -262,7 +260,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -283,7 +281,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
 
@@ -305,7 +303,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -326,7 +324,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -347,7 +345,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -368,7 +366,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -389,7 +387,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -410,7 +408,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -431,7 +429,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -452,7 +450,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -473,7 +471,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -494,7 +492,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -515,7 +513,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [AllowAnonymous]
@@ -535,7 +533,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -556,7 +554,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -577,7 +575,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -601,7 +599,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
         [Authorize]
@@ -625,7 +623,7 @@ namespace DomainCoreApi.Controllers
             catch (Exception ex)
             {
 
-                return Problem(ex.Message); ;
+                return Problem(ex.Message);
             }
         }
     }

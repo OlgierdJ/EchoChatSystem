@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <Folder Include="EFCORE\Configurations\ServerCore\Integrations\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
