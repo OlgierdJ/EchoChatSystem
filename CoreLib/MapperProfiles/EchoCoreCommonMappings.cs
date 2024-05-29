@@ -29,6 +29,7 @@ using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
 using CoreLib.Entities.EchoCore.ServerCore.Management;
 using CoreLib.Entities.Enums;
+using CoreLib.MapperProfiles.MapperProfileConverters;
 using System;
 
 namespace CoreLib.MapperProfiles
@@ -58,7 +59,7 @@ namespace CoreLib.MapperProfiles
             CreateMap<Account, UserMinimalDTO>()
                .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(src => src.Profile.AvatarFileURL))
                .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(src => src.Profile.DisplayName))
-               .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id));
+               .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id)).PreserveReferences();
             CreateMap<ServerTextChannel, ChatDTO>()
                 .ForMember(dest => dest.RoleSettings, opts => opts.MapFrom(src => src.RoleSettings)) //output members are same name so no need to map
                 .ForMember(dest => dest.MemberSettings, opts => opts.MapFrom(src => src.MemberSettings))
@@ -98,7 +99,8 @@ namespace CoreLib.MapperProfiles
             CreateMap<ServerVoiceChannel, ChatMinimalDTO>().ForMember(dest => dest.CategoryName, opts => opts.MapFrom(src => src.Category.Name)); //output members are same name so no need to map
             CreateMap<Chat, ChatMinimalDTO>()
                 .ForMember(dest => dest.CategoryName, opts => opts.Ignore())
-                .ForMember(dest => dest.OrderWeight, opts => opts.Ignore());
+                .ForMember(dest => dest.OrderWeight, opts => opts.Ignore())
+                .PreserveReferences();
 
             CreateMap<PaymentMethod, PaymentMethodDTO>(); //output members are same name so no need to map
             CreateMap<PaymentType, PaymentTypeDTO>(); //output members are same name so no need to map
@@ -337,11 +339,11 @@ namespace CoreLib.MapperProfiles
             .ForMember(dest => dest.Id, opts => opts.MapFrom(val => val.PermissionId))
             .ForMember(dest => dest.Name, opts => opts.MapFrom(val => val.Permission.Name)); //state is the same so no need to map
 
-            CreateMap<Permission, PermissionMinimalDTO>(); //output members are same name so no need to map ??? mayb make mapping from RolePermission
-            CreateMap<ServerPermission, PermissionMinimalDTO>(); //output members are same name so no need to map ????
+            CreateMap<Permission, PermissionMinimalDTO>().PreserveReferences(); //output members are same name so no need to map ??? mayb make mapping from RolePermission
+            CreateMap<ServerPermission, PermissionMinimalDTO>().PreserveReferences(); //output members are same name so no need to map ????
 
             CreateMap<ServerPermission, PermissionDTO>()
-               .ForMember(dest => dest.GroupingName, opts => opts.MapFrom(val => val.Category.Name)); //state is the same so no need to map; //output members are same name so no need to map ????
+               .ForMember(dest => dest.GroupingName, opts => opts.MapFrom(val => val.Category.Name)).PreserveReferences(); //state is the same so no need to map; //output members are same name so no need to map ????
 
             CreateMap<ServerRolePermission, PermissionDTO>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(val => val.PermissionId))
@@ -386,6 +388,7 @@ namespace CoreLib.MapperProfiles
                .ForMember(dest => dest.Name, opts => opts.MapFrom(val => val.Permission.Name))
                .ForMember(dest => dest.Description, opts => opts.MapFrom(val => val.Permission.Description))
                .ForMember(dest => dest.GroupingName, opts => opts.MapFrom(val => val.Permission.Category.Name));
+               
             CreateMap<ServerChannelCategoryMemberPermission, PermissionDTO>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(val => val.PermissionId))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(val => val.Permission.Name))
@@ -434,32 +437,41 @@ namespace CoreLib.MapperProfiles
             CreateMap<ServerPermissionCategory, PermissionCategoryDTO>();//.ForMember(dest => dest.Permissions, opts => opts.MapFrom(val => val.Permissions)); //output members are same name so no need to map probably??????
 
 
-            CreateMap<Role, RoleMinimalDTO>(); //output members are same name so no need to map
-            CreateMap<Role, RoleMinimalWithPermissionsDTO>(); //output members are same name so no need to map
+            CreateMap<Role, RoleMinimalDTO>().PreserveReferences(); //output members are same name so no need to map
+            CreateMap<Role, RoleMinimalWithPermissionsDTO>().PreserveReferences(); //output members are same name so no need to map
 
-            CreateMap<Server, ServerMinimalDTO>().ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(src => src.Settings.ServerImageUrl));
+            CreateMap<Server, ServerMinimalDTO>()
+                .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(src => src.Settings.ServerImageUrl))
+                .PreserveReferences();
+            CreateMap<IList<Server>, IList<ServerMinimalDTO>>().ConvertUsing<IServerListServerMinimalListConverter>();
+
             CreateMap<ServerProfile, ServerMinimalDTO>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.ServerId))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Server.Name))
-                .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(e => e.Server.Settings.ServerImageUrl));
+                .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(e => e.Server.Settings.ServerImageUrl))
+                .PreserveReferences();
 
 
-            CreateMap<ServerRole, RoleMinimalDTO>(); //output members are same name so no need to map
-            CreateMap<ServerRole, RoleMinimalWithPermissionsDTO>(); //output members are same name so no need to map
+            CreateMap<ServerRole, RoleMinimalDTO>().PreserveReferences(); //output members are same name so no need to map
+            CreateMap<ServerRole, RoleMinimalWithPermissionsDTO>().PreserveReferences(); //output members are same name so no need to map
             CreateMap<AccountRole, RoleMinimalDTO>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
-                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name));
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
+                .PreserveReferences();
             CreateMap<AccountRole, RoleMinimalWithPermissionsDTO>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
                 .ForMember(dest => dest.Permissions, opts => opts.MapFrom(e => e.Role.Permissions))
-                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name));
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
+                .PreserveReferences();
             CreateMap<ServerProfileServerRole, RoleMinimalDTO>()
                .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
-               .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name));
+               .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
+               .PreserveReferences();
             CreateMap<ServerProfileServerRole, RoleMinimalWithPermissionsDTO>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
                 .ForMember(dest => dest.Permissions, opts => opts.MapFrom(e => e.Role.Permissions))
-                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name));
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
+                .PreserveReferences();
             CreateMap<ServerProfileServerRole, HierarchalRoleMinimalDTO>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
                 .ForMember(dest => dest.DisplaySeperatelyFromOnlineMembers, opts => opts.MapFrom(e => e.Role.DisplaySeperatelyFromOnlineMembers))
@@ -468,7 +480,8 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.IconURL, opts => opts.MapFrom(e => e.Role.IconURL))
                 .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance))
                 .ForMember(dest => dest.IsAdmin, opts => opts.MapFrom(e => e.Role.IsAdmin))
-                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name)); ; //output members are same name so no need to map
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
+                .PreserveReferences(); //output members are same name so no need to map
             CreateMap<ServerProfileServerRole, HierarchalRoleMinimalWithPermissionsDTO>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
                 .ForMember(dest => dest.DisplaySeperatelyFromOnlineMembers, opts => opts.MapFrom(e => e.Role.DisplaySeperatelyFromOnlineMembers))
@@ -478,9 +491,10 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance))
                 .ForMember(dest => dest.IsAdmin, opts => opts.MapFrom(e => e.Role.IsAdmin))
                 .ForMember(dest => dest.Permissions, opts => opts.MapFrom(e => e.Role.Permissions))
-                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name)); ; //output members are same name so no need to map
-            CreateMap<ServerRole, HierarchalRoleMinimalDTO>(); //output members are same name so no need to map
-            CreateMap<ServerRole, HierarchalRoleMinimalWithPermissionsDTO>(); //output members are same name so no need to map
+                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
+                .PreserveReferences();  //output members are same name so no need to map
+            CreateMap<ServerRole, HierarchalRoleMinimalDTO>().PreserveReferences(); //output members are same name so no need to map
+            CreateMap<ServerRole, HierarchalRoleMinimalWithPermissionsDTO>().PreserveReferences(); //output members are same name so no need to map
             //CreateMap<ServerRole, ServerRoleDTO>(); // ??????????????? have we actually made an entity that allows for global permissions towards a role or user within a server ??????????????????
             CreateMap<ServerVoiceChannelRole, HierarchalRoleMinimalWithPermissionsDTO>()
                .ForMember(dest => dest.AllowAnyoneToMention, opts => opts.MapFrom(e => e.Role.AllowAnyoneToMention))
@@ -490,7 +504,8 @@ namespace CoreLib.MapperProfiles
                .ForMember(dest => dest.IsAdmin, opts => opts.MapFrom(e => e.Role.IsAdmin))
                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
                .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
-               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance));
+               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance))
+               .PreserveReferences();
             CreateMap<ServerVoiceChannelRole, HierarchalRoleMinimalDTO>()
                .ForMember(dest => dest.AllowAnyoneToMention, opts => opts.MapFrom(e => e.Role.AllowAnyoneToMention))
                .ForMember(dest => dest.Colour, opts => opts.MapFrom(e => e.Role.Colour))
@@ -499,7 +514,8 @@ namespace CoreLib.MapperProfiles
                .ForMember(dest => dest.IsAdmin, opts => opts.MapFrom(e => e.Role.IsAdmin))
                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
                .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
-               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance));
+               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance))
+               .PreserveReferences();
 
             CreateMap<ServerTextChannelRole, HierarchalRoleMinimalWithPermissionsDTO>()
                 .ForMember(dest => dest.AllowAnyoneToMention, opts => opts.MapFrom(e => e.Role.AllowAnyoneToMention))
@@ -509,7 +525,8 @@ namespace CoreLib.MapperProfiles
                .ForMember(dest => dest.IsAdmin, opts => opts.MapFrom(e => e.Role.IsAdmin))
                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
                .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
-               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance));
+               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance))
+               .PreserveReferences();
             CreateMap<ServerTextChannelRole, HierarchalRoleMinimalDTO>()
                 .ForMember(dest => dest.AllowAnyoneToMention, opts => opts.MapFrom(e => e.Role.AllowAnyoneToMention))
                .ForMember(dest => dest.Colour, opts => opts.MapFrom(e => e.Role.Colour))
@@ -518,7 +535,8 @@ namespace CoreLib.MapperProfiles
                .ForMember(dest => dest.IsAdmin, opts => opts.MapFrom(e => e.Role.IsAdmin))
                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
                .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
-               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance));
+               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance))
+               .PreserveReferences();
 
             CreateMap<ServerChannelCategoryRole, HierarchalRoleMinimalWithPermissionsDTO>()
                 .ForMember(dest => dest.AllowAnyoneToMention, opts => opts.MapFrom(e => e.Role.AllowAnyoneToMention))
@@ -528,7 +546,8 @@ namespace CoreLib.MapperProfiles
                .ForMember(dest => dest.IsAdmin, opts => opts.MapFrom(e => e.Role.IsAdmin))
                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
                .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
-               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance));
+               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance))
+               .PreserveReferences();
             CreateMap<ServerChannelCategoryRole, HierarchalRoleMinimalDTO>()
                .ForMember(dest => dest.AllowAnyoneToMention, opts => opts.MapFrom(e => e.Role.AllowAnyoneToMention))
                .ForMember(dest => dest.Colour, opts => opts.MapFrom(e => e.Role.Colour))
@@ -537,7 +556,8 @@ namespace CoreLib.MapperProfiles
                .ForMember(dest => dest.IsAdmin, opts => opts.MapFrom(e => e.Role.IsAdmin))
                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Role.Name))
                .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.RoleId))
-               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance));
+               .ForMember(dest => dest.Importance, opts => opts.MapFrom(e => e.Role.Importance))
+               .PreserveReferences();
 
 
 
@@ -549,18 +569,21 @@ namespace CoreLib.MapperProfiles
             CreateMap<AccountBlock, UserMinimalDTO>()
                 .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(src => src.Blocked.Profile.AvatarFileURL))
                 .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(src => src.Blocked.Name))
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.BlockedId));
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.BlockedId))
+                .PreserveReferences();
 
             CreateMap<AccountProfile, UserProfileDTO>()
                 .ForMember(dest => dest.BannerColour, opts => opts.MapFrom(src => src.BannerColor))
                 .ForMember(dest => dest.AboutMe, opts => opts.MapFrom(src => src.About))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.AccountId))
-                .ForMember(dest => dest.User, opts => opts.MapFrom(src => src.Account));
+                .ForMember(dest => dest.User, opts => opts.MapFrom(src => src.Account))
+                .PreserveReferences();
             CreateMap<ServerProfile, UserProfileDTO>()
                 .ForMember(dest => dest.BannerColour, opts => opts.MapFrom(src => src.Account.Profile.BannerColor))
                 .ForMember(dest => dest.AboutMe, opts => opts.MapFrom(src => src.Account.Profile.About))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.AccountId))
-                .ForMember(dest => dest.User, opts => opts.MapFrom(src => src.Account));
+                .ForMember(dest => dest.User, opts => opts.MapFrom(src => src.Account))
+                .PreserveReferences();
 
             CreateMap<FriendSuggestion, UserDTO>()
                 .ForMember(dest => dest.ActiveStatus, opts => opts.Ignore())
@@ -571,7 +594,8 @@ namespace CoreLib.MapperProfiles
                 .AfterMap((src, dest, context) =>
                 {
                     dest.ActiveStatus = context.Mapper.Map<ActiveActivityStatusDTO>(src.Suggestion);
-                });
+                })
+                .PreserveReferences();
 
             CreateMap<FriendshipParticipancy, UserDTO>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Participant.Name))
@@ -584,12 +608,17 @@ namespace CoreLib.MapperProfiles
                     dest.ActiveStatus = context.Mapper.Map<ActiveActivityStatusDTO>(src.Participant);
                 });
 
+                CreateMap<IList<FriendshipParticipancy>, IList<UserDTO>>()
+                .ConvertUsing<IFriendshipParticipancyListUserDTOListConverter>();
+                /*.PreserveReferences()*/;
+
             CreateMap<Account, ActiveActivityStatusDTO>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ActivityStatus.Id))
                 .ForMember(dest => dest.Icon, opts => opts.MapFrom(src => src.ActivityStatus.Icon))
                 .ForMember(dest => dest.IconColor, opts => opts.MapFrom(src => src.ActivityStatus.IconColor))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.ActivityStatus.Name))
-                .ForMember(dest => dest.DisplayedContent, opts => opts.MapFrom(src => src.CustomStatus.CustomMessage));
+                .ForMember(dest => dest.DisplayedContent, opts => opts.MapFrom(src => src.CustomStatus.CustomMessage))
+                .PreserveReferences();
 
 
             CreateMap<Account, UserFullDTO>()
@@ -628,7 +657,7 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.Language, opts => opts.MapFrom(e => e.Settings.Language))
                 .ForMember(dest => dest.PhoneNumber, opts => opts.MapFrom(e => e.User.PhoneNumber))
                 .ForMember(dest => dest.Requests, opts => opts.Ignore()) //map aftermap to use mapper to translate request.
-                .ForMember(dest => dest.AppPermissions, opts => opts.MapFrom(src => src.Roles.SelectMany(e => e.Permissions).DistinctBy(p => p.Id))) //map aftermap to use mapper to translate request.
+                .ForMember(dest => dest.AppPermissions, opts => opts.MapFrom(src => src.Roles.SelectMany(e => e.Role.Permissions).DistinctBy(p => p.Id))) //map aftermap to use mapper to translate request.
                 .ForMember(dest => dest.ServerFolders, opts => opts.MapFrom(e => e.Folders))
                 .ForMember(dest => dest.Suggestions, opts => opts.MapFrom(e => e.FriendSuggestions))
                 .ForMember(dest => dest.UserProfile, opts => opts.MapFrom(e => e.Profile))
@@ -642,7 +671,7 @@ namespace CoreLib.MapperProfiles
                      rqlist.AddRange(context.Mapper.Map<List<FriendRequestDTO>>(src.OutgoingFriendRequests));
                      dest.Requests = rqlist.OrderBy(e => e.Person.DisplayName).ToList();
                      dest.Devices = context.Mapper.Map<List<DeviceSessionDTO>>(src.Sessions);
-                 });
+                 }).PreserveReferences();
             CreateMap<ServerProfile, ServerDTO>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.ServerId))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Server.Name))
@@ -771,7 +800,7 @@ namespace CoreLib.MapperProfiles
                .AfterMap((src, dest, context) =>
                {
                    dest.ActiveStatus = context.Mapper.Map<ActiveActivityStatusDTO>(src.Account);
-               });
+               }).PreserveReferences();
 
             //CreateMap<ChatParticipancy, UserDTO>()
             //  .ForMember(dest => dest.ActiveStatus, opts => opts.MapFrom(e => new ActiveActivityStatusDTO()
@@ -810,7 +839,7 @@ namespace CoreLib.MapperProfiles
                    //     new BadgeDTO(){ Description="Echo member", IconURL="EchoLogo.png", OrderingWeight=0  },
                    //     //new MembershipBadgeDTO(){ IconName=e.Server.Name, IconURL=e.Server.Settings.ServerImageUrl, OrderingWeight=1, TimeJoined=e.TimeJoined   }
                    //};
-               }); //map notes after mapping from user relation.
+               }).PreserveReferences(); //map notes after mapping from user relation.
                                                                      //.ForMember(dest=>dest.Note, opts=>opts.MapFrom(e=>e.Account.)) //map notes after mapping from user relation.
 
 
@@ -822,7 +851,7 @@ namespace CoreLib.MapperProfiles
                 .AfterMap((src, dest, context) =>
                 {
                     dest.ActiveStatus = context.Mapper.Map<ActiveActivityStatusDTO>(src);
-                });
+                }).PreserveReferences();
 
 
 

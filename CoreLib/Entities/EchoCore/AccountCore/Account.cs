@@ -33,7 +33,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
 
         //Interactivity stuff - also private settings and information about this account only used by the user and the application / api
         //public ICollection<AccountBadge>? Badges { get; set; } //some are only owned by account, removed by external factors such as no longer subscriber.
-        public ICollection<Role>? Roles { get; set; } //System / Application roles (perhaps not needed)
+        public ICollection<AccountRole>? Roles { get; set; } //System / Application roles (perhaps not needed)
         public ICollection<AccountViolation>? Violations { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
         public ICollection<AccountViolation>? IssuedViolations { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
         public ICollection<AccountViolationAppealReview>? ReviewedAppeals { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations

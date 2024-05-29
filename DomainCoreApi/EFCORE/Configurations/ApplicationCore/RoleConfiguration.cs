@@ -15,10 +15,11 @@ namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore
 
             builder.Property(b => b.Name).IsRequired(); // not mapped most of stuff
 
-            builder.HasMany(e => e.Recipients).WithMany(e => e.Roles).UsingEntity<AccountRole>(
-                l => l.HasOne(e => e.Account).WithMany().HasForeignKey(e => e.AccountId),
-                r => r.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId)
-                );
+            //builder.HasMany(e => e.Recipients).WithMany(e => e.Roles).UsingEntity<AccountRole>(
+            //    l => l.HasOne(e => e.Account).WithMany().HasForeignKey(e => e.AccountId),
+            //    r => r.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId)
+            //    );
+            builder.HasMany(b => b.Recipients).WithOne(e => e.Role).HasForeignKey(e => e.RoleId).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(b => b.Permissions).WithMany(e => e.Roles).UsingEntity<RolePermission>(
 
                   l => l.HasOne(e => e.Permission).WithMany().HasForeignKey(e => e.PermissionId),

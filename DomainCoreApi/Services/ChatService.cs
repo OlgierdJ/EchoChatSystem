@@ -265,6 +265,7 @@ namespace DomainCoreApi.Services
 
         public async Task<bool> CreateChat(ulong senderId, ICollection<ulong> startParticipants)
         {
+            using var transaction = await context.Database.BeginTransactionAsync(); //need transaction cause multiple database transaction steps and possibility of rollback
             try
             {
                 if (!startParticipants.Contains(senderId))
@@ -275,7 +276,8 @@ namespace DomainCoreApi.Services
                 var accs = await context.Set<Account>()
                     .Include(a=>a.Profile)
                     .AsSplitQuery()
-                    .Where(l => startParticipants.Contains(l.Id)).ToListAsync();
+                    .Where(l => startParticipants.Contains(l.Id))
+                    .AsNoTracking().ToListAsync();
 
                 var chatName = accs.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
                 if (chatName.Length > 100) //if chatname is too long given domain rules
@@ -287,19 +289,37 @@ namespace DomainCoreApi.Services
                 {
                     Name = chatName,
                     Pinboard = new(),
-                    Participants = accs.Select(e => new ChatParticipancy()
-                    {
-                         IsOwner = e.Id==senderId,
-                          ParticipantId = e.Id,
-                    }).ToList()
+                    Participants = new List<ChatParticipancy>()
+                    
                 };
+
                 context.Set<Chat>().Add(newChat);
 
-                var res = await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
+
+                context.Attach<Chat>(newChat);
+
+                var participants = accs.Select(e => new ChatParticipancy()
+                {
+                    IsOwner = e.Id == senderId,
+                    ParticipantId = e.Id,
+                    SubjectId = newChat.Id
+                }).ToList();
+
+                foreach (var participant in participants)
+                {
+                    //context.Set<ChatParticipancy>().Add(participant);
+                    newChat.Participants.Add(participant);
+                }
+
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                //res = await context.SaveChangesAsync();
 
             }
             catch (Exception e)
             {
+                await transaction.RollbackAsync();
                 return false;
             }
             return true;

@@ -4,6 +4,7 @@ using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    partial class EchoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240528185755_init3")]
+    partial class init3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2094,6 +2097,12 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<decimal?>("AccountId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal?>("ChatId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<bool>("Hidden")
                         .HasColumnType("bit");
 
@@ -2106,6 +2115,10 @@ namespace DomainCoreApi.Migrations
                         .HasDefaultValueSql("getdate()");
 
                     b.HasKey("ParticipantId", "SubjectId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("ChatId");
 
                     b.HasIndex("SubjectId");
 
@@ -5133,14 +5146,22 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatParticipancy", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Participant")
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
                         .WithMany("Chats")
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", null)
+                        .WithMany("Participants")
+                        .HasForeignKey("ChatId");
+
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Participant")
+                        .WithMany()
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Subject")
-                        .WithMany("Participants")
+                        .WithMany()
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();

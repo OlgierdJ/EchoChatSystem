@@ -27,11 +27,12 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
             builder.HasMany(e => e.Connections).WithOne(e => e.Account).HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasOne(b => b.Settings).WithOne(b => b.Account).HasForeignKey<AccountSettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired(); //skal lige kig på det kan ikke lige find ud hvorfor den ikke vil får en "Compiler Error CS0452"
 
-            builder.HasMany(e => e.Roles).WithMany(e => e.Recipients).UsingEntity<AccountRole>(
-                l => l.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId),
-                 r => r.HasOne(e => e.Account).WithMany().HasForeignKey(e => e.AccountId)
-            );
+            //builder.HasMany(e => e.Roles).WithMany(e => e.Recipients).UsingEntity<AccountRole>(
+            //    l => l.HasOne(e => e.Role).WithMany().HasForeignKey(e => e.RoleId),
+            //     r => r.HasOne(e => e.Account).WithMany().HasForeignKey(e => e.AccountId)
+            //);
 
+            builder.HasMany(e => e.Roles).WithOne(e => e.Account).HasForeignKey(e => e.AccountId).OnDelete(DeleteBehavior.Cascade).IsRequired();
             builder.HasMany(e => e.Violations).WithOne(e => e.Subject).HasForeignKey(e => e.SubjectId).OnDelete(DeleteBehavior.Restrict).IsRequired();
             builder.HasMany(e => e.IssuedViolations).WithOne(e => e.Issuer).HasForeignKey(e => e.IssuerId).OnDelete(DeleteBehavior.Restrict).IsRequired();
             builder.HasMany(e => e.ReviewedAppeals).WithOne(e => e.Reviewer).HasForeignKey(e => e.ReviewerId).OnDelete(DeleteBehavior.Restrict).IsRequired();
