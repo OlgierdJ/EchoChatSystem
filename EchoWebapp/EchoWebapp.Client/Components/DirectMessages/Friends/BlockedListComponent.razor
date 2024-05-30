@@ -1,4 +1,5 @@
-﻿@using CoreLib.Entities.EchoCore.AccountCore
+﻿@using CoreLib.DTO.EchoCore.UserCore
+@using CoreLib.Entities.EchoCore.AccountCore
 @*
     Layout for the blocked list that exists within the friendsviewcomponent.
 
@@ -8,48 +9,48 @@
 
     The user can also unblock the blocked user by clicking the unblock button relative to the user.
 *@
-<MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
-     <MudTextField Placeholder=" Search" @bind-Value="searchTerm"
-                   @onkeyup="(()=>SearchChanged())" Immediate />
- </MudPaper>
- <MudText Class="px-5 py-2" Typo="Typo.button">Blocked - @accounts.Count()</MudText>
+
+@if (List.Count > 0)
+{
+    <MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
+         <MudTextField Placeholder=" Search" @bind-Value="searchTerm"
+                       @onkeyup="(()=>SearchChanged())" Immediate />
+     </MudPaper>
+    <MudText Class="px-5 py-2" Typo="Typo.button">Blocked - @List.Count()</MudText>
     <MudList Clickable="true">
-        @foreach (var c in filtered.OrderBy(x => x.Name))
-    {
-        <MudDivider />
-        <MudListItem Dense="true" Class="mb-3 mt-2">
-            <BlockedUserComponent Account="c" />
-        </MudListItem>
-    }
-</MudList>
+        @foreach (var u in filtered.OrderBy(x => x.DisplayName))
+        {
+            <MudDivider />
+            <MudListItem Dense="true" Class="mb-3 mt-2">
+                <BlockedUserComponent User="u" />
+            </MudListItem>
+        }
+    </MudList>
+
+}
+else
+{
+    <MudPaper Square Class="px-3 mb-6" Elevation="0">
+         <MudText>There are no blocked users at the moment.</MudText>
+     </MudPaper>
+}
 @code {
     public string searchTerm = "";
-    public List<Account> filtered;
+
+    [Parameter]
+    public List<UserMinimalDTO> List { get; set; }
+
+    public List<UserMinimalDTO> filtered = new();
 
     public BlockedListComponent()
     {
-        filtered = accounts;
+        if (List != null)
+            filtered = List;
     }
     void SearchChanged()
     {
         Console.WriteLine(searchTerm);
-        filtered = accounts.Where(e => e.Name.ToLower().Contains(searchTerm.ToLower())).ToList();
+        filtered = List.Where(e => e.DisplayName.ToLower().Contains(searchTerm.ToLower())).ToList();
         StateHasChanged();
     }
-
-
-    // DUMMY DATA - BlockedUserDTO? Or what type of entity is it?
-    public List<Account> accounts = new(){
-        new Account() { Id = 112, Name = "TheDoe",
-        Profile = new AccountProfile(){ AvatarFileURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg", DisplayName = "The Doe"},
-            ActivityStatus = new AccountActivityStatus(){ Name = "Online", Icon = Icons.Material.Filled.Circle, IconColor = Color.Success.ToString()
-        }, TimeCreated = DateTime.Now.AddDays(-17) },
-        new Account() { Id = 113, Name = "BobTheBuilder",
-            Profile = new AccountProfile(){ AvatarFileURL = "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Shrek.Shrek.webp",  DisplayName = "Bob The Builder"},
-            ActivityStatus = new AccountActivityStatus(){ Name = "Online", Icon = Icons.Material.Filled.Circle, IconColor = Color.Success.ToString()
-        }, TimeCreated = DateTime.Now.AddDays(-16) },
-        new Account() { Id = 115, Name = "BillieJean",  Profile = new AccountProfile(){ AvatarFileURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg",  DisplayName = "Billie Jeans"},
-            ActivityStatus = new AccountActivityStatus(){ Name = "Offline", Icon = Icons.Material.Filled.StopCircle, IconColor = "Dark"
-        } }
-    };
 }

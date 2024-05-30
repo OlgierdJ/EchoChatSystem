@@ -1,4 +1,5 @@
-﻿@using CoreLib.Entities.EchoCore.AccountCore
+﻿@using CoreLib.DTO.EchoCore.UserCore
+@using CoreLib.Entities.EchoCore.AccountCore
 @*
     Friend Request layout for when it exists within the scrollable list in the FriendRequestListComponent.
 
@@ -9,11 +10,11 @@
     If the request is incoming the request should allow the user to accept or decline it.
 *@
 <div class="d-flex flex-grow-1">
-    @if(Account != null)
+    @if (User != null)
     {
-        <MudImage Src="@Account.Profile.AvatarFileURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+        <MudImage Src="@User.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
 
-        <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)("<b>" + Account.Profile.DisplayName + "</b> " + "\r\n" + "Blocked").Replace(Environment.NewLine, "<br />"))</MudText>
+        <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)("<b>" + User.DisplayName + "</b> " + "\r\n" + "Blocked").Replace(Environment.NewLine, "<br />"))</MudText>
         <MudSpacer />
         <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.PersonRemove" Title="Unblock" />
     }
@@ -21,5 +22,5 @@
 
  @code {
     [Parameter]
-    public Account? Account { get; set; }
+    public UserMinimalDTO? User { get; set; }
 }
