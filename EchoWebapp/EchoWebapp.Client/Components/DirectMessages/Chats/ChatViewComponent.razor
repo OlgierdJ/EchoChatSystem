@@ -167,14 +167,13 @@
                  </MudToolBar>
              </MudPaper>
 
-             @if (Content?.Participants?.Count() > 2)
+            @if (Content?.Participants?.Count() > 2)
             {
-                <!-- remove logic of removing yourself to before sending content -->
                 <MemberListComponent Visible="ToggleSidePanel" Members="@Content?.Participants?.ToList()" />
             }
             else
             {
-                <ChatUserProfileComponent Visible="ToggleSidePanel" Member="@Content?.Participants?.Where(e => e.Id != 112).First()" />
+                <ChatUserProfileComponent Visible="ToggleSidePanel" Member="@Content?.Participants?.Where(e => e.Id != self.Id).First()" />
             }
 
         </div>
@@ -203,8 +202,9 @@
     {
         if (firstRender)
         {
-            token = await LocalStorage.GetItemAsStringAsync("Token");
+            var token = await LocalStorage.GetItemAsStringAsync("Token");
             await _client.Connect(token);
+            Console.WriteLine(token);
             _client.ReceiveChatMessageCreateMessageDTO += ReceiveChatMessageCreateMessageDTO;
             _client.ReceiveChatMessageUpdateMessageDTO += ReceiveChatMessageUpdateMessageDTO;
             _client.ReceiveChatMessageDeleteMessageDTO += ReceiveChatMessageDeleteMessageDTO;
@@ -244,9 +244,9 @@
                 newmsg.TimeSent = DateTime.Now;
                 newmsg.Sender = new UserMinimalDTO()
                     {
-                        Id = 112,
-                        ImageIconURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg",
-                        DisplayName = "John Doe",
+                        Id = self.Id,
+                        ImageIconURL = self.UserProfile.User.ImageIconURL,
+                        DisplayName = self.UserProfile.User.DisplayName,
                     };
                 //code to reflect your id
 
