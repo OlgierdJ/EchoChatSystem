@@ -18,15 +18,15 @@
              <MudListItem Dense="true">
                  <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
                      <Popup self=self @ref=popup OnItemSelected=@HandelOnChatChanged />
-                     <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile">
+                     <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile" @onmouseover="MouseOver" @onmouseout="MouseOut">
 
                          <MudBadge Color="@stringToColor.ConvertStringToColor(self.UserProfile.User.ActiveStatus.IconColor)" Bordered Overlap="true" Origin="Origin.BottomRight">
                              <MudImage Src="@self.UserProfile.User.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
                          </MudBadge>
 
                          <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
-                            <MudText Typo="Typo.caption">@self.UserProfile.User.DisplayName</MudText>
-                            <MudText Typo="Typo.caption">@self.UserProfile.User.ActiveStatus.DisplayedContent</MudText>
+                         <MudText Typo="Typo.caption">@((MarkupString)("<b>" + self.UserProfile.User.DisplayName + "</b> "))</MudText>
+                         <MudText Typo="Typo.caption">@((MarkupString)(handleVisible ? self.UserProfile.User.Name : self.UserProfile.User.ActiveStatus.DisplayedContent))</MudText>
                         </MudPaper>
                         </div>
                         <style>
@@ -62,6 +62,12 @@
     bool mute = false;
     bool deaf = false;
     bool openSettings = false;
+
+
+
+    bool handleVisible = false;
+    void MouseOver(MouseEventArgs e) { handleVisible = true; }
+    void MouseOut(MouseEventArgs e) { handleVisible = false; }
 
     public readonly StringToColor stringToColor = new();
 

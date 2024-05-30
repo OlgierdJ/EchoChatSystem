@@ -13,9 +13,12 @@
         <div class="modal-content" style="background: var(--mud-palette-transparent);">
             <div class="modal-header justify-start">
                 <MudAvatar>
-                    <MudImage Src="https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg" />
+                    <MudImage Src="@self.UserProfile.User.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
                 </MudAvatar>
-                <h5 class="modal-title pl-3">@Name</h5>
+                <div class="row pl-3 mt-2">
+                    <h5>@self.UserProfile.User.DisplayName</h5>
+                    <p>@self.UserProfile.User.Name</p>
+                </div>
             </div>
             <div class="modal-body">
                 @if (Message != null)
@@ -23,9 +26,6 @@
                     <MudText Typo="Typo.button">@((MarkupString)Message.Replace(Environment.NewLine, "<br />"))</MudText>
                     <MudText Typo="Typo.body1">@((MarkupString)Date.Replace(Environment.NewLine, "<br />"))</MudText>
                 }
-
-                <!-- Menu doesnt seem to work in our solution. Might be due to rendermode -->
-                <!-- Button and div menu does work tho LUL -->
             </div>
             <div class="modal-footer justify-start">
                 <MudButton Color="stringToColor.ConvertStringToColor(currentStatus?.IconColor)" @onclick="@(()=>Hover=!Hover)">Status: @currentStatus?.Name</MudButton>
