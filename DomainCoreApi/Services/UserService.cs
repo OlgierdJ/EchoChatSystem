@@ -225,7 +225,7 @@ namespace DomainCoreApi.Services
                 {
                     DisplayName = !String.IsNullOrEmpty(displayName) ? displayName : name,
                     AvatarFileURL = GetIconFromList(),
-                    BannerColor = "Success",
+                    BannerColor = "#5C23D9",
                 },
                 Settings = new()
                 {
