@@ -13,7 +13,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ChatCore
             builder
                 .Property(b => b.FileLocationURL)
                 .IsRequired();
-            builder.HasOne(b => b.Message).WithMany(e => e.Attachments).HasForeignKey(b => b.MessageId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasOne(b => b.Message).WithMany(e => e.Attachments).HasForeignKey(b => b.MessageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
 
         }
     }

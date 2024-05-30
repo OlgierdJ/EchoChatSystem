@@ -13,7 +13,7 @@ namespace CoreLib.Entities.EchoCore.ApplicationCore
     ///     should be checked when making decisions regarding allowing the user something or not.
     /// </para>
     /// </summary>
-    public class Role : BaseRole<ulong, Account, Permission>
+    public class Role : BaseRole<ulong, AccountRole, Permission>
     {
     }
 }

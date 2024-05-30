@@ -10,8 +10,8 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
         {
             builder
                 .HasKey(b => new { b.RoleId, b.AccountId });
-            builder.HasOne(x => x.Role).WithMany().HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.ClientCascade);
-            builder.HasOne(x => x.Account).WithMany().HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Role).WithMany(e=>e.Recipients).HasForeignKey(b => b.RoleId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Account).WithMany(e=>e.Roles).HasForeignKey(b => b.AccountId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

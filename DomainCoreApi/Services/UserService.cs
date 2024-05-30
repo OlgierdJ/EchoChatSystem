@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Core;
+using CoreLib.DTO.EchoCore.ServerCore;
 using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.RelationCore;
@@ -18,13 +19,17 @@ using CoreLib.Entities.Enums;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
+using CoreLib.MapperProfiles.MapperProfileConverters;
 using DomainCoreApi.EFCORE;
 using DomainCoreApi.EFCORE.Configurations.FriendCore;
 using DomainCoreApi.Handlers;
 using DomainCoreApi.Services.Bases;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PhoneNumbers;
+using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace DomainCoreApi.Services
@@ -99,7 +104,7 @@ namespace DomainCoreApi.Services
         {
             try
             {
-                if (requestDTO.TypeId==0)
+                if (requestDTO.TypeId == 0)
                 {
                     return false;
                 }
@@ -195,152 +200,161 @@ namespace DomainCoreApi.Services
             return ((string)list[r]);
         }
 
+        private Account GetNewDefaultAccount(string name, string email, DateTime dateOfBirth, string displayName, bool allowMails)
+        {
+            return new Account()
+            {
+                Name = name,
+                TimeCreated = DateTime.UtcNow,
+                //CustomStatus = new() //should not contain at first
+                //{
+                //    CustomMessage = "Online"
+                //},
+                ActivityStatusId = 1,
+                Roles = new List<AccountRole>() { },
+                User = new()
+                {
+                    Email = email,
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = false,
+                    PasswordSetDate = DateTime.UtcNow,
+                    DateOfBirth = dateOfBirth,
+                    //SecurityCredentials = userPwd
+                },
+                Profile = new()
+                {
+                    DisplayName = !String.IsNullOrEmpty(displayName) ? displayName : name,
+                    AvatarFileURL = GetIconFromList(),
+                    BannerColor = "Success",
+                },
+                Settings = new()
+                {
+                    LanguageId = 10,
+                    AccessibilitySettings = new()
+                    {
+                        SaturationPercent = 255,
+                        ApplySaturationToCustomColors = false,
+                        AlwaysUnderlineLinks = true,
+                        SyncProfileThemes = true,
+                        SyncContrastSettings = true,
+                        RoleColorMode = RoleColorMode.ShowRoleColorsInNames,
+                        SyncReducedMotionWithPC = true,
+                        ReducedMotion = true,
+                        AutoPlayGIFsOnAppFocus = true,
+                        PlayAnimatedEmojis = true,
+                        StickerAnimationMode = StickerAnimationMode.AlwaysAnimate,
+                        ShowSendMessageButton = true,
+                        AllowTextToSpeech = false,
+                        TextToSpeechRate = 255,
+                    },
+                    AppearanceSettings = new()
+                    {
+                        ThemeId = 1,
+                        InAppIcon = "",
+                        DarkSideBar = true,
+                        PixelChatFontScale = 255,
+                        PixelSpaceBetweenMessageGroupsScale = 255,
+                    },
+                    AdvancedSettings = new()
+                    {
+                        DeveloperMode = false,
+                        AutoNavigateServerHome = false,
+                    },
+                    BillingInformation = new(),
+                    ChatSettings = new(),
+                    FriendRequestSettings = new()
+                    {
+                        Everyone = true,
+                        FriendsOfFriends = false,
+                        ServerMembers = false,
+                    },
+                    KeybindSettings = new(),
+                    NotificationSettings = new()
+                    {
+                        FocusModeEnabled = false,
+                        EnableDesktopNotifications = true,
+                        EnableUnreadMessageBadge = true,
+                        EnableTaskbarFlashing = true,
+                        ReceiveCommunicationEmails = allowMails,
+                        ReceiveRecommendationEmails = allowMails,
+                        ReceiveSocialEmails = allowMails,
+                        ReceiveTipEmails = allowMails,
+                        ReceiveAnnouncementAndUpdateEmails = allowMails,
+                    },
+                    PrivacySettings = new()
+                    {
+                        DMFromFriends = DMAllow.Show,
+                        DMFromUnknownUsers = DMAllow.Show,
+                        DMFromServerChatroom = DMAllow.Show,
+                    },
+                    SoundboardSettings = new()
+                    {
+                        SoundboardVolume = 100,
+                        //Soundboard = 100,
+                    },
+                    StreamerModeSettings = new()
+                    {
+                        EnableStreamerMode = false,
+                        HidePersonalInformation = true,
+                        HideInviteLinks = false,
+                        DisableNotifications = false,
+                        DisableSounds = false,
+                    },
+                    VoiceSettings = new()
+                    {
+                        InputDevice = "",
+                        OutputDevice = "",
+                        InputVolume = 100,
+                        OutputVolume = 100,
+                        InputMode = InputMode.VoiceActivity,
+                        EchoCancellation = true,
+                        NoiseSuppression = NoiseSuppression.Standard,
+                        AdvancedVoiceActivity = false,
+                        AutomaticGainControl = false,
+                    },
+                    VideoSettings = new()
+                    {
+                        AlwaysPreviewVideo = false,
+                        CameraDevice = "",
+                        VideoBackground = "",
+                        UseOpenH264VideoCodec = false,
+                        EnableHardwareAccelerationForVideo = false,
+                        EnableForceQualityOfServicePacketPrio = false,
+                        UseDDLInjectionToCaptureScreen = false
+                    },
+                    ActivitySettings = new()
+                    {
+                        DisplayCurrentActivityAsAStatusMessage = true,
+                        ShareActivityStatusOnLargeServerJoin = true,
+                        AllowFriendsToJoinGame = true,
+                        AllowVoiceChannelParticipantsToJoinGame = true,
+                    },
+                    WindowSettings = new(),
+                    GameOverlaySettings = new(),
+                },
+            };
+        }
+
         public async Task<bool> RegisterAsync(RegisterRequestDTO input)
         {
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
             try
             {
                 var userPwd = await _pwdHandler.CreatePassword(input.Password);
-                Account account = new Account()
-                {
-                    Name = input.Username,
-                    TimeCreated = DateTime.UtcNow,
-                    //CustomStatus = new() //should not contain at first
-                    //{
-                    //    CustomMessage = "Online"
-                    //},
-                    ActivityStatusId = 1,
-                    Roles = new List<Role>() { },
-                    User = new()
-                    {
-                        Email = input.Email,
-                        EmailConfirmed = true,
-                        PhoneNumberConfirmed = false,
-                        PasswordSetDate = DateTime.UtcNow,
-                        DateOfBirth = input.DateOfBirth,
-                        SecurityCredentials = userPwd
-                    },
-                    Profile = new()
-                    {
-                        DisplayName = !String.IsNullOrEmpty(input.DisplayName) ? input.DisplayName : input.Username,
-                        AvatarFileURL = GetIconFromList(),
-                        BannerColor = "Success",
-                    },
-                    Settings = new()
-                    {
-                        LanguageId = 10,
-                        AccessibilitySettings = new()
-                        {
-                            SaturationPercent = 255,
-                            ApplySaturationToCustomColors = false,
-                            AlwaysUnderlineLinks = true,
-                            SyncProfileThemes = true,
-                            SyncContrastSettings = true,
-                            RoleColorMode = RoleColorMode.ShowRoleColorsInNames,
-                            SyncReducedMotionWithPC = true,
-                            ReducedMotion = true,
-                            AutoPlayGIFsOnAppFocus = true,
-                            PlayAnimatedEmojis = true,
-                            StickerAnimationMode = StickerAnimationMode.AlwaysAnimate,
-                            ShowSendMessageButton = true,
-                            AllowTextToSpeech = false,
-                            TextToSpeechRate = 255,
-                        },
-                        AppearanceSettings = new()
-                        {
-                            ThemeId = 1,
-                            InAppIcon = "",
-                            DarkSideBar = true,
-                            PixelChatFontScale = 255,
-                            PixelSpaceBetweenMessageGroupsScale = 255,
-                        },
-                        AdvancedSettings = new()
-                        {
-                            DeveloperMode = false,
-                            AutoNavigateServerHome = false,
-                        },
-                        BillingInformation = new(),
-                        ChatSettings = new(),
-                        FriendRequestSettings = new()
-                        {
-                            Everyone = true,
-                            FriendsOfFriends = false,
-                            ServerMembers = false,
-                        },
-                        KeybindSettings = new(),
-                        NotificationSettings = new()
-                        {
-                            FocusModeEnabled = false,
-                            EnableDesktopNotifications = true,
-                            EnableUnreadMessageBadge = true,
-                            EnableTaskbarFlashing = true,
-                        },
-                        PrivacySettings = new()
-                        {
-                            DMFromFriends = DMAllow.Show,
-                            DMFromUnknownUsers = DMAllow.Show,
-                            DMFromServerChatroom = DMAllow.Show,
-                        },
-                        SoundboardSettings = new()
-                        {
-                            SoundboardVolume = 100,
-                            //Soundboard = 100,
-                        },
-                        StreamerModeSettings = new()
-                        {
-                            EnableStreamerMode = false,
-                            HidePersonalInformation = true,
-                            HideInviteLinks = false,
-                            DisableNotifications = false,
-                            DisableSounds = false,
-                        },
-                        VoiceSettings = new()
-                        {
-                            InputDevice = "",
-                            OutputDevice = "",
-                            InputVolume = 100,
-                            OutputVolume = 100,
-                            InputMode = InputMode.VoiceActivity,
-                            EchoCancellation = true,
-                            NoiseSuppression = NoiseSuppression.Standard,
-                            AdvancedVoiceActivity = false,
-                            AutomaticGainControl = false,
-                        },
-                        VideoSettings = new()
-                        {
-                            AlwaysPreviewVideo = false,
-                            CameraDevice = "",
-                            VideoBackground = "",
-                            UseOpenH264VideoCodec = false,
-                            EnableHardwareAccelerationForVideo = false,
-                            EnableForceQualityOfServicePacketPrio = false,
-                            UseDDLInjectionToCaptureScreen = false
-                        },
-                        ActivitySettings = new()
-                        {
-                            DisplayCurrentActivityAsAStatusMessage = true,
-                            ShareActivityStatusOnLargeServerJoin = true,
-                            AllowFriendsToJoinGame = true,
-                            AllowVoiceChannelParticipantsToJoinGame = true,
-                        },
-                        WindowSettings = new(),
-                        GameOverlaySettings = new(),
-                    },
-                };
+                Account account = GetNewDefaultAccount(input.Username, input.Email, input.DateOfBirth, input.DisplayName, input.AllowEchoMails);
+                account.User.SecurityCredentials = userPwd;
                 await dbContext.Set<Account>().AddAsync(account);
 
                 await dbContext.SaveChangesAsync();
-                account.Roles.Add(new Role() { Id = 1 });
+                var role = new AccountRole() { RoleId = 1 };
+                dbContext.Attach<Account>(account);
+                account.Roles.Add(role);
                 await dbContext.SaveChangesAsync();
-
-                //var data = await _createUserHandler.CreateHandler(input);
-                //var result = await _repository.AddAsync(data.Item1);
-                //data.Item2.UserId = result.Id;
-                //await _pwdHandler.CreatePassword(input.Password, data.Item1.Id);
-                //await _accountService.AddAsync(data.Item2);
+                await transaction.CommitAsync();
             }
             catch (Exception e)
             {
-
+                await transaction.RollbackAsync();
                 return false;
             }
             return true;
@@ -473,7 +487,7 @@ namespace DomainCoreApi.Services
             //bad way to have friendships with this data or maybe make alternate key in friendship etc..
             try
             {
-                var acc = await dbContext.Set<Account>().Include(e=>e.Friendships).ThenInclude(e=>e.Participant).AsQueryable().FirstOrDefaultAsync(e => e.Id == senderId);
+                var acc = await dbContext.Set<Account>().Include(e => e.Friendships).ThenInclude(e => e.Participant).AsQueryable().FirstOrDefaultAsync(e => e.Id == senderId);
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 var removed = acc.Friendships.FirstOrDefault(e => e.Subject.Participants.Any(e => e.ParticipantId == friendId)).Subject;
                 if (removed == null)
@@ -576,7 +590,7 @@ namespace DomainCoreApi.Services
                         SenderId = senderId
                     }
                 };
-               
+
 
                 dbContext.Set<IncomingFriendRequest>().Add(request); //throws error if already blocked fyi
 
@@ -655,7 +669,7 @@ namespace DomainCoreApi.Services
                 {
                     return false;
                 }
-               
+
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 AccountNickname relation = new()
                 {
@@ -699,7 +713,7 @@ namespace DomainCoreApi.Services
                     return false;
                 }
 
-                var senderAcc = await dbContext.Set<Account>().Include(e => e.NotedAccounts.Where(e=>e.SubjectId == userId)).FirstOrDefaultAsync(e => e.Id == senderId);
+                var senderAcc = await dbContext.Set<Account>().Include(e => e.NotedAccounts.Where(e => e.SubjectId == userId)).FirstOrDefaultAsync(e => e.Id == senderId);
                 if (senderAcc == null)
                 {
                     return false;
@@ -828,7 +842,7 @@ namespace DomainCoreApi.Services
 
                 var relationExists = senderAcc.PersonalAccountVolumes.Any();
 
-                if (requestDTO.Volume==defaultVolume && !relationExists) //if request is null ignore by now
+                if (requestDTO.Volume == defaultVolume && !relationExists) //if request is null ignore by now
                 {
                     return false;
                 }
@@ -885,16 +899,16 @@ namespace DomainCoreApi.Services
                 }
 
                 var acc = await dbContext.Set<Account>().AsQueryable()
-                    .Include(e=>e.Friendships).ThenInclude(e=>e.Subject).ThenInclude(e=>e.Participants.Where(e=>e.ParticipantId!=senderId))
-                    .Include(e => e.OutgoingFriendRequests).ThenInclude(e=>e.ReceiverRequest)
-                    .Include(e=>e.IncomingFriendRequests).ThenInclude(e=>e.SenderRequest)
+                    .Include(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants.Where(e => e.ParticipantId != senderId))
+                    .Include(e => e.OutgoingFriendRequests).ThenInclude(e => e.ReceiverRequest)
+                    .Include(e => e.IncomingFriendRequests).ThenInclude(e => e.SenderRequest)
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == senderId);
 
                 //var requests = await dbContext.Set<OutgoingFriendRequest>().AsQueryable().Include(e => e.ReceiverRequest).Where(e => e.SenderId == senderId).AsNoTracking().ToListAsync();
 
-                if (acc.OutgoingFriendRequests.Any(e => e.ReceiverRequest.ReceiverId == receiverId) || acc.Friendships.Any(e=>e.Subject.Participants.Select(e=>e.ParticipantId).Contains(receiverId))) 
-                    //check if already sent request or already friends
+                if (acc.OutgoingFriendRequests.Any(e => e.ReceiverRequest.ReceiverId == receiverId) || acc.Friendships.Any(e => e.Subject.Participants.Select(e => e.ParticipantId).Contains(receiverId)))
+                //check if already sent request or already friends
                 {
                     return false;
                 }
@@ -970,12 +984,71 @@ namespace DomainCoreApi.Services
             return true;
         }
 
+        private async Task<List<Chat>> LoadChatsFromIdsAsync(List<ulong> chatIdsToLoad)
+        {
+            var chats = await dbContext.Set<Chat>()
+                         //chat
+                         .Include(e => e.Messages).ThenInclude(e => e.Attachments) //auto includes parent and children
+                         .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.Profile)
+                         .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.ActivityStatus)
+                         .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.CustomStatus)
+                         .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants)
+                         .Include(e => e.Invites).ThenInclude(e => e.Inviter)
+                         .Include(e => e.PinnedMessages)//.ThenInclude(e => e.PinnedMessages) //auto connects messages
+                         .Where(e => chatIdsToLoad.Contains(e.Id))
+                         //.AsNoTrackingWithIdentityResolution()
+                         .AsSplitQuery()
+                         .ToListAsync();
+            return chats;
+        }
+
+        private async Task<List<Server>> LoadServersFromIdsAsync(List<ulong> serverIdsToLoad)
+        {
+            var servers = await dbContext.Set<Server>()
+                    //server
+                    .Include(e => e.AuditLogs).ThenInclude(e => e.Account)
+                    .Include(e => e.BanList).ThenInclude(e => e.Account)
+                    .Include(e => e.ChannelCategories).ThenInclude(e => e.RolePermissions)
+                    .Include(e => e.ChannelCategoryMemberPermissions!)
+                    .Include(e => e.ChannelCategoryMemberSettings!)
+                    .Include(e => e.Emotes).ThenInclude(e => e.Uploader)
+                    .Include(e => e.Events).ThenInclude(e => e.Creator)
+                    .Include(e => e.Invites).ThenInclude(e => e.Inviter)
+                    .Include(e => e.Members).ThenInclude(e => e.Account).ThenInclude(e => e.Profile)
+                    .Include(e => e.Members).ThenInclude(e => e.Account).ThenInclude(e => e.ActivityStatus)
+                    .Include(e => e.Members).ThenInclude(e => e.Account).ThenInclude(e => e.CustomStatus)
+                    .Include(e => e.Members).ThenInclude(e => e.Account).ThenInclude(e => e.Friendships).ThenInclude(e => e.Participant)
+                    .Include(e => e.Roles).ThenInclude(e => e.Permissions).ThenInclude(e => e.Permission)
+                    .Include(e => e.Roles).ThenInclude(e => e.Recipients)
+                    //.Include(x => x.Servers).ThenInclude(e=>e.Server).ThenInclude(e=>e.Roles).ThenInclude(e=>e.ChannelCategoryRolePermissions)
+                    //.Include(x => x.Servers).ThenInclude(e=>e.Server).ThenInclude(e=>e.Roles).ThenInclude(e=>e.TextChannelRolePermissions)
+                    //.Include(x => x.Servers).ThenInclude(e=>e.Server).ThenInclude(e=>e.Roles).ThenInclude(e=>e.VoiceChannelRolePermissions)
+                    .Include(e => e.Roles).ThenInclude(e => e.ChannelCategoryRoles).ThenInclude(e => e.Permissions)
+                    .Include(e => e.Roles).ThenInclude(e => e.TextChannelRoles).ThenInclude(e => e.Permissions)
+                    .Include(e => e.Roles).ThenInclude(e => e.VoiceChannelRoles).ThenInclude(e => e.Permissions)
+                    .Include(e => e.Settings).ThenInclude(e => e.Region)
+                    .Include(e => e.SoundboardSounds).ThenInclude(e => e.Uploader).ThenInclude(e => e.Profile)
+                    //txtchannel
+                    .Include(e => e.TextChannels).ThenInclude(e => e.Messages).ThenInclude(e => e.Author)
+                    .Include(e => e.TextChannels).ThenInclude(e => e.PinnedMessages)
+                    .Include(e => e.TextChannelMemberPermissions)
+                    .Include(e => e.TextChannelMemberSettings)
+                    //voicechannel
+                    .Include(e => e.VoiceChannels).ThenInclude(e => e.VoiceInvites)
+                    .Include(e => e.VoiceChannels).ThenInclude(e => e.Region)
+                    .Include(e => e.VoiceChannelMemberPermissions)
+                    .Include(e => e.VoiceChannelMemberSettings)
+                     .Where(e => serverIdsToLoad.Contains(e.Id))
+                    //.AsNoTrackingWithIdentityResolution()
+                    .AsSplitQuery().ToListAsync();
+            return servers;
+        }
+
         public async Task<UserFullDTO> LoadUserSessionDataAsync(ulong senderId) //perhaps split this into multiple sections that get called upon loading application
         {
             try
             {
                 //load account first, then load chats and servers
-
                 var senderAcc = await dbContext.Set<Account>()//.AsQueryable() //probably make this queryable and make the joins reused query appends or make compiled query
                 .Include(x => x.TextChannelMessageTrackers) //users own textchannelmessagetrackers
                 .Include(x => x.ChatMessageTrackers) //only users own trackers
@@ -991,7 +1064,7 @@ namespace DomainCoreApi.Services
                 .Include(x => x.Violations).ThenInclude(e => e.Appeal) //users violations and if they appealed
                 .Include(x => x.Profile) //probably dont need this cause this account gets included from chat or server
 
-                .Include(x => x.Roles).ThenInclude(e => e.Permissions)
+                .Include(x => x.Roles).ThenInclude(e => e.Role).ThenInclude(e => e.Permissions)
                 .Include(x => x.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.ActivityStatus)
                 .Include(x => x.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.CustomStatus)
 
@@ -1046,92 +1119,148 @@ namespace DomainCoreApi.Services
                 .Include(x => x.Settings).ThenInclude(e => e.VoiceSettings)
                 .Include(x => x.Settings).ThenInclude(e => e.WindowSettings)
                 .AsSplitQuery()
+                //.AsNoTrackingWithIdentityResolution()
                 .FirstOrDefaultAsync(e => e.Id == senderId);
 
                 var chatsToLoad = new List<ulong>(senderAcc.Chats.Select(e => e.SubjectId));
-                var friendshipsToLoad = new List<ulong>(senderAcc.Chats.Select(e => e.SubjectId));
+                //var friendshipsToLoad = new List<ulong>(senderAcc.Chats.Select(e => e.SubjectId)); //not needed
                 var serversToLoad = new List<ulong>(senderAcc.Servers.Select(e => e.ServerId));
                 List<Chat> senderChats = null;
                 List<Server> senderServers = null;
                 if (chatsToLoad.Count > 0)
                 {
-
-                    senderChats = await dbContext.Set<Chat>()
-                         //chat
-                         .Include(e => e.Messages).ThenInclude(e => e.Attachments) //auto includes parent and children
-                         .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.Profile).ThenInclude(e => e.Account).ThenInclude(e => e.ActivityStatus)
-                         .Include(e => e.Invites)
-                         .Include(e => e.Pinboard).ThenInclude(e => e.PinnedMessages) //auto connects messages
-                         .Where(e => chatsToLoad.Contains(e.Id))
-                         .AsSplitQuery().ToListAsync();
+                    senderChats = await LoadChatsFromIdsAsync(chatsToLoad); //actually doesnt need to assign chats cause dbcontext handles lifetime scope
+                    
                 }
                 if (serversToLoad.Count > 0)
                 {
-                    senderServers = await dbContext.Set<Server>()
-                    //server
-                    .Include(e => e.AuditLogs).ThenInclude(e => e.Account)
-                    .Include(e => e.BanList).ThenInclude(e => e.Account)
-                    .Include(e => e.ChannelCategories).ThenInclude(e => e.RolePermissions)
-                    .Include(e => e.ChannelCategoryMemberPermissions)
-                    .Include(e => e.ChannelCategoryMemberSettings)
-                    .Include(e => e.Emotes).ThenInclude(e => e.Uploader)
-                    .Include(e => e.Events).ThenInclude(e => e.Creator)
-                    .Include(e => e.Invites).ThenInclude(e => e.Inviter)
-                    .Include(e => e.Members).ThenInclude(e => e.Account).ThenInclude(e => e.Profile)
-                    .Include(e => e.Members).ThenInclude(e => e.Account).ThenInclude(e => e.ActivityStatus)
-                    .Include(e => e.Roles).ThenInclude(e => e.Permissions).ThenInclude(e => e.Permission)
-                    .Include(e => e.Roles).ThenInclude(e => e.Recipients)
-                    //.Include(x => x.Servers).ThenInclude(e=>e.Server).ThenInclude(e=>e.Roles).ThenInclude(e=>e.ChannelCategoryRolePermissions)
-                    //.Include(x => x.Servers).ThenInclude(e=>e.Server).ThenInclude(e=>e.Roles).ThenInclude(e=>e.TextChannelRolePermissions)
-                    //.Include(x => x.Servers).ThenInclude(e=>e.Server).ThenInclude(e=>e.Roles).ThenInclude(e=>e.VoiceChannelRolePermissions)
-                    .Include(e => e.Roles).ThenInclude(e => e.ChannelCategoryRoles).ThenInclude(e => e.Permissions)
-                    .Include(e => e.Roles).ThenInclude(e => e.TextChannelRoles).ThenInclude(e => e.Permissions)
-                    .Include(e => e.Roles).ThenInclude(e => e.VoiceChannelRoles).ThenInclude(e => e.Permissions)
-                    .Include(e => e.Settings).ThenInclude(e => e.Region)
-                    .Include(e => e.SoundboardSounds).ThenInclude(e => e.Uploader).ThenInclude(e => e.Profile)
-                    //txtchannel
-                    .Include(e => e.TextChannels).ThenInclude(e => e.Messages).ThenInclude(e => e.Author)
-                    .Include(e => e.TextChannels).ThenInclude(e => e.Pinboard).ThenInclude(e => e.PinnedMessages)
-                    .Include(e => e.TextChannelMemberPermissions)
-                    .Include(e => e.TextChannelMemberSettings)
-                    //voicechannel
-                    .Include(e => e.VoiceChannels).ThenInclude(e => e.VoiceInvites)
-                    .Include(e => e.VoiceChannels).ThenInclude(e => e.Region)
-                    .Include(e => e.VoiceChannelMemberPermissions)
-                    .Include(e => e.VoiceChannelMemberSettings)
-                     .Where(e => serversToLoad.Contains(e.Id))
-                    .AsSplitQuery().ToListAsync();
+                    senderServers = await LoadServersFromIdsAsync(serversToLoad);
                 }
-                ////get list to crosscheck
-                //var senderFriends = senderAcc.Friendships.SelectMany(e => e.Subject.Participants.Where(e=>e.ParticipantId!=senderAcc.Id)).Select(e => e.ParticipantId);
-                ////get accs in context other than sender
-                //var otherFriendshipsWithMutualFriends = dbContext.Set<Friendship>().Local.Where(f => !f.Participants.Any(fp=>fp.ParticipantId == senderAcc.Id) && f.Participants.Any(fp=>senderFriends.Contains(fp.ParticipantId)));
 
-
-                //var mutualAquaintances = otherFriendshipsWithMutualFriends.SelectMany(e => e.Participants.Select(e=>e.Participant));
-
-
-                return mapper.Map<UserFullDTO>(senderAcc
-                //,opts=>opts
-                //.AfterMap((src, dest) =>
-                //{
-                //    //select server and chat member's profile
-                //    var memberProfileInstances = dest.Servers.SelectMany(e => e.Members.Where(e=>e.Profile!=null).Select(e=>e.Profile))
-                //    .Concat(dest.DirectMessages.SelectMany(e => e.Participants.Where(e => e.Profile != null).Select(e => e.Profile)))
-                //    .ToList();
-                //    foreach (var memberProfile in memberProfileInstances)
-                //    {
-                //        memberProfile.MutualFriends = mapper.Map<List<UserDTO>>(mutualAquaintances.Where(e => e.Id == memberProfile.Id));
-                //    }
-
-                //})
-                );
+                return GetUserFullDTO(senderAcc, true, true, true);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
                 throw;
             }
+        }
+
+        /// <summary>
+        /// attempts to find friendship participancies where one side of the friendship contains an account that the <paramref name="accountWithContext"/> is also friends with.
+        /// to make use of this function you must have loaded the friendships, participants and external accounts into the current dbset local of the caller context.
+        /// <see href="https://learn.microsoft.com/en-us/ef/core/querying/related-data/eager"/>
+        /// </summary>
+        /// <param name="accountWithContext"></param>
+        /// <returns>lookup list containing the external accounts participancies link to a mutual friend.</returns>
+        private List<IGrouping<ulong,FriendshipParticipancy>> GetMutualFriendLookup(Account accountWithContext)
+        {
+            //mutual friendship calculation.
+            ////get lists to crosscheck with
+            var senderFriendIds = accountWithContext.Friendships.SelectMany(e => e.Subject.Participants.Where(e => e.ParticipantId != accountWithContext.Id)).Select(e => e.ParticipantId);
+            var senderFriendshipIds = accountWithContext.Friendships.Select(e => e.SubjectId);
+
+            ////get friendshipparticipancies in context that contain senderfriends
+            var FriendshipsWithSenderFriends = dbContext.Set<FriendshipParticipancy>().Local.Where(fp => senderFriendIds.Contains(fp.ParticipantId));
+
+            //filter away friendships where sender is in from local list.
+            FriendshipsWithSenderFriends = FriendshipsWithSenderFriends.Where(fp => !senderFriendshipIds.Contains(fp.SubjectId));
+
+            //now we must group the friendparticipancies by participants that are not friends to make a lookup list
+            var groupedFriendships = FriendshipsWithSenderFriends.GroupBy(e => e.ParticipantId).ToList();
+            return groupedFriendships;
+        }
+        /// <summary>
+        /// attempts to find server profiles which is shared with the <paramref name="accountWithContext"/>. 
+        /// to make use of this function you must have loaded the servers and server profiles into the current dbset local of the caller context.
+        /// <see href="https://learn.microsoft.com/en-us/ef/core/querying/related-data/eager"/>
+        /// </summary>
+        /// <param name="accountWithContext"></param>
+        /// <returns>lookup list containing the external accounts server profiles.</returns>
+        private List<IGrouping<ulong, ServerProfile>> GetMutualServerServerProfileLookup(Account accountWithFullServerContext)
+        {
+            //mutual server calculation
+            //we've already loaded senderservers in account context so we just need to select all memberships from servers to lookup by members accountid and then later when we need to use it flatten the group and select the server.
+            var senderMutualServerProfiles = accountWithFullServerContext.Servers.Select(e => e.Server)?.SelectMany(e => e.Members).GroupBy(e => e.AccountId);
+            var groupedServerProfiles = senderMutualServerProfiles.ToList();
+            return groupedServerProfiles;
+        }
+        /// <summary>
+        /// encapsulates userfulldto mapping option logic.
+        /// </summary>
+        /// <param name="accountWithContext"></param>
+        /// <param name="resolveMutualFriends"></param>
+        /// <param name="resolveMutualServers"></param>
+        /// <param name="minimizeDuplicatesUsingCacheLookup"></param>
+        /// <returns></returns>
+        private UserFullDTO GetUserFullDTO(Account accountWithContext, bool resolveMutualFriends = false, bool resolveMutualServers = false, bool minimizeDuplicatesUsingCacheLookup = false)
+        {
+            List<IGrouping<ulong, FriendshipParticipancy>> mutualFriendsLookup = new();
+            List<IGrouping<ulong, ServerProfile>> mutualServersLookup = new();
+            if (resolveMutualFriends)
+            {
+                mutualFriendsLookup = GetMutualFriendLookup(accountWithContext);
+            }
+            if (resolveMutualServers)
+            {
+                mutualServersLookup = GetMutualServerServerProfileLookup(accountWithContext);
+
+            }
+            
+            //to keep references to minimize data throughput keep mapped references where possible
+            //make converter factory to get same converter instances essentially keeping context for mapped objects allowing us to make a dictionary lookup within them to look for existing maps
+            var ConverterFactory = new EchoMappingConverterFactory();
+
+            return mapper.Map<UserFullDTO>(accountWithContext, opts =>
+            {
+                if (minimizeDuplicatesUsingCacheLookup)
+                {
+                    opts.ConstructServicesUsing(ConverterFactory.Resolve);
+                }
+                opts.AfterMap((src, dest) =>
+                {
+                    //select server and chat member's profile
+                    var memberProfileInstances = dest.Servers.SelectMany(e => e.Members.Where(e => e.Profile != null).Select(e => e.Profile))
+                    .Concat(dest.DirectMessages.SelectMany(e => e.Participants.Where(e => e.Profile != null).Select(e => e.Profile)))
+                    .Where(e => e.Id != accountWithContext.Id) //filter away own profile cause no reason to know own mutual friends xd
+                    .ToList();
+
+                    foreach (var memberProfile in memberProfileInstances)
+                    {
+                        var mutualFriends = mutualFriendsLookup?.FirstOrDefault(e => e.Key == memberProfile.Id)? //find member relevant list from lookup
+                        .Select(e => e.Subject.Participants.FirstOrDefault(e => e.ParticipantId != memberProfile.Id)); //select the other end of the participancy.
+                                                                                                                       //.ToList(); //need to tolist in case no friends were loaded
+                    if (mutualFriends != null && mutualFriends.Any())
+                    {
+                        memberProfile.MutualFriends = mapper.Map<List<UserDTO>>(mutualFriends.ToList(), opts => 
+                        {
+                            if (minimizeDuplicatesUsingCacheLookup)
+                            {
+                                opts.ConstructServicesUsing(ConverterFactory.Resolve);
+                            }
+                        });
+
+                        }
+
+                        var mutualServers = mutualServersLookup?.FirstOrDefault(e => e.Key == memberProfile.Id)? //find member serverprofiles from lookup
+                        .Select(e => e.Server); //select servers instead of the profiles.
+                                                //.ToList(); //need to tolist in case servers werent loaded
+                        if (mutualServers != null && mutualServers.Any())
+                        {
+                            memberProfile.MutualServers = mapper.Map<List<ServerMinimalDTO>>(mutualServers, opts =>
+                            {
+                                if (minimizeDuplicatesUsingCacheLookup)
+                                {
+                                    opts.ConstructServicesUsing(ConverterFactory.Resolve);
+                                }
+
+                            });
+
+                        }
+                    }
+
+                });
+            });
         }
 
         public async Task<bool> UndeafenSelfAsync(ulong senderId)

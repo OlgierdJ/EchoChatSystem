@@ -16,12 +16,16 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(opts =>
+{
+    opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 var connectionString = builder.Configuration.GetConnectionString("EchoDBConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<EchoDbContext>(options => options.UseSqlServer(connectionString));
@@ -61,6 +65,7 @@ builder.Services.AddTransient(typeof(ISecurityCredentialsRepository), typeof(Sec
 builder.Services.AddTransient(typeof(ILanguageRepository), typeof(LanguageRepository));
 //Add services to the container.
 builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
+builder.Services.AddTransient(typeof(IChatService), typeof(ChatService));
 builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
 
 builder.Services.AddSignalR();

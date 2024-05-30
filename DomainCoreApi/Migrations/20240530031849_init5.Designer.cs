@@ -4,6 +4,7 @@ using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    partial class EchoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240530031849_init5")]
+    partial class init5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -624,6 +627,29 @@ namespace DomainCoreApi.Migrations
                         .IsUnique();
 
                     b.ToTable("DirectMessageRelation");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.ServerTextChannelMute", b =>
+                {
+                    b.Property<decimal>("MuterId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("SubjectId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime?>("ExpirationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TimeMuted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.HasKey("MuterId", "SubjectId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("ServerTextChannelMute");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.AcceptedCurrency", b =>
@@ -3274,29 +3300,6 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ServerTextChannelMessagePin");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelMute", b =>
-                {
-                    b.Property<decimal>("MuterId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal>("SubjectId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<DateTime?>("ExpirationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TimeMuted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.HasKey("MuterId", "SubjectId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("ServerTextChannelMute");
-                });
-
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel.ServerVoiceInvite", b =>
                 {
                     b.Property<decimal>("SubjectId")
@@ -4676,6 +4679,25 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Chat");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.ServerTextChannelMute", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Muter")
+                        .WithMany("MutedTextChannels")
+                        .HasForeignKey("MuterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "Subject")
+                        .WithMany("Muters")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Muter");
+
+                    b.Navigation("Subject");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Keybind", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.ApplicationCore.ApplicationKeybind", "ApplicationKeybind")
@@ -5990,25 +6012,6 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Message");
 
                     b.Navigation("Pinboard");
-                });
-
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelMute", b =>
-                {
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Muter")
-                        .WithMany("MutedTextChannels")
-                        .HasForeignKey("MuterId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "Subject")
-                        .WithMany("Muters")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Muter");
-
-                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel.ServerVoiceInvite", b =>

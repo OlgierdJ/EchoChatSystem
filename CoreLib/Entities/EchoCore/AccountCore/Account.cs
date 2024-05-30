@@ -33,7 +33,7 @@ namespace CoreLib.Entities.EchoCore.AccountCore
 
         //Interactivity stuff - also private settings and information about this account only used by the user and the application / api
         //public ICollection<AccountBadge>? Badges { get; set; } //some are only owned by account, removed by external factors such as no longer subscriber.
-        public ICollection<Role>? Roles { get; set; } //System / Application roles (perhaps not needed)
+        public ICollection<AccountRole>? Roles { get; set; } //System / Application roles (perhaps not needed)
         public ICollection<AccountViolation>? Violations { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
         public ICollection<AccountViolation>? IssuedViolations { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
         public ICollection<AccountViolationAppealReview>? ReviewedAppeals { get; set; } //Violations affecting system functions depending on total severity of nonexpired violations
@@ -41,12 +41,13 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<AccountBlock>? BlockedAccounts { get; set; } //This account blocks other accounts through this
         public ICollection<AccountNickname>? NicknamedAccounts { get; set; } //This account adds notes about other accounts
         public ICollection<AccountAccountVolume>? PersonalAccountVolumes { get; set; } //This account adds notes about other accounts
+        public ICollection<AccountDirectMessageRelation>? DirectMessageRelations { get; set; } //This account adds notes about other accounts
         //public ICollection<AccountAccountVolume>? PersonalAccountVolumes { get; set; } //This account adds notes about other accounts
         public ICollection<AccountNote>? NotedAccounts { get; set; } //This account adds notes about other accounts
         public ICollection<AccountMute>? MutedVoices { get; set; } //This account adds mutes for other accounts voice
         public ICollection<ChatMute>? MutedChats { get; set; } //This account adds mutes for other accounts voice
         public ICollection<AccountServerMute>? MutedServers { get; set; } //This account adds mutes for other Servers
-        public ICollection<AccountServerTextChannelMute>? MutedTextChannels { get; set; } //This account adds mutes for other ServerChannel
+        public ICollection<ServerTextChannelMute>? MutedTextChannels { get; set; } //This account adds mutes for other ServerChannel
         public ICollection<AccountServerVoiceChannelMute>? MutedVoiceChannels { get; set; } //This account adds mutes for other ServerChannel
         public ICollection<AccountSoundboardMute>? MutedSoundboards { get; set; } //This account adds mutes for other accounts soundboard
         public ICollection<ChatAccountMessageTracker>? ChatMessageTrackers { get; set; }

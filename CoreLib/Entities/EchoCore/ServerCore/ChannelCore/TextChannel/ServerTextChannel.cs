@@ -1,5 +1,4 @@
 ﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
@@ -12,14 +11,15 @@ namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
     {
         public int OrderWeight { get; set; }
         public ServerSettings? ServerSettings { get; set; } //mapped through systemmessageschannel
-        public ServerTextChannelPinboard? Pinboard { get; set; }
+        //public ServerTextChannelPinboard? Pinboard { get; set; }
         public ICollection<ServerWebhook>? Webhooks { get; set; } //webhooks monitoring or posting to this channel
         public ICollection<ServerTextChannelMessage>? Messages { get; set; }
+        public ICollection<ServerTextChannelMessagePin>? PinnedMessages { get; set; }
         public ICollection<ServerTextChannelAccountMessageTracker>? MessageTrackers { get; set; }
         public ICollection<ServerInvite>? Invites { get; set; }
 
         //maybe add notification setting (all, onlymentions, nothing) to the mute or a specific new object with linked collection
-        public ICollection<AccountServerTextChannelMute>? Muters { get; set; }
+        public ICollection<ServerTextChannelMute>? Muters { get; set; }
         //allowed groups or specific permission????
         public ICollection<ServerTextChannelPermission>? AllowedPermissions { get; set; } //related permissions used for creating subset of all permissions showed to the user
 
