@@ -207,6 +207,7 @@ namespace DomainCoreApi.Controllers
             try
             {
                 var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                await Console.Out.WriteLineAsync(id+" : "+requestDTO.Name);
                 var result = await _userService.SendFriendRequestAsync(id, requestDTO);
 
                 if (!result)

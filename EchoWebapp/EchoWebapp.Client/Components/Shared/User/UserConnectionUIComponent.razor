@@ -54,10 +54,6 @@
         <MudButton Style="position: absolute; top: 25px; right: 25px;" Color="Color.Error" Variant="Variant.Filled" OnClick="ToggleSettings">x</MudButton>
         <MudText Typo="Typo.h3" Align="Align.Center" Style="padding-top: 25px;">SETTINGS</MudText>
 
-
-
-
-
         <MudTextField @bind-Value="displayName" Margin="Margin.Dense" Variant="Variant.Outlined" Label="DISPLAY NAME" Placeholder="@self.UserProfile.User.DisplayName"
                       Class="align-self-center justify-center px-5 py-2" MaxLength="32" MaxLines="1"
                       Immediate="true" TextUpdateSuppression="false" Style="background: var(--mud-palette-darken);opacity:1;width: 500px;" TextChanged="checkValue" />
@@ -69,11 +65,6 @@
         }
 
         <MudButton Class="align-self-center justify-center" Color="Color.Error" Variant="Variant.Filled" OnClick="logout">Logout</MudButton>
-
-
-
-
-
     </MudPaper>
 </MudOverlay>
 
