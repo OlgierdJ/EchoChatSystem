@@ -6,6 +6,7 @@ using CoreLib.Entities.EchoCore;
 using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces.Services;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
@@ -496,6 +497,53 @@ namespace CoreLib.WebAPI
             {
                 return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
             }
+            return false;
+        }
+
+        public async Task<List<ActivityStatusDTO>> GetListOfStatusAsync()
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, $"user/status/getall");
+                var response = await client.SendAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return JsonSerializer.Deserialize<List<ActivityStatusDTO>> (await response.Content.ReadAsStringAsync(), SerializerOptions);
+                }
+            }
+            catch (Exception e)
+            {
+                //_notificationPipeline?.SetCurrentMessage(e.Message, Models.Stores.MessageType.Error);
+                await Console.Out.WriteLineAsync(e.Message);
+            }
+
+            return null;
+        }
+
+        public async Task<bool> SetDisplayNameAsync(string Token, UserMinimalDTO user)
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Put, $"user/displayname/set");
+                request.Headers.Authorization = authenticationHeaderValue(Token);
+
+                var load = JsonSerializer.Serialize(user, SerializerOptions);
+                request.Content = new StringContent(load, Encoding.UTF8, "application/json");
+
+                var response = await client.SendAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                //_notificationPipeline?.SetCurrentMessage(e.Message, Models.Stores.MessageType.Error);
+                await Console.Out.WriteLineAsync(e.Message);
+            }
+
             return false;
         }
     }

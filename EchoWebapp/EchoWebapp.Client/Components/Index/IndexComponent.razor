@@ -56,6 +56,7 @@ else
                 var result = await _echoAPI.LoadUserSessionDataAsync(token);
                 if(result != null)
                 {
+                    result.ActiveStatus.DisplayedContent = result.ActiveStatus.Name;
                     self = result;
                 }
                 StateHasChanged();
