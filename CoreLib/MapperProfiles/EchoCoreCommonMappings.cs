@@ -75,7 +75,7 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Subject.Id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Subject.Name))
                 .ForMember(dest => dest.Messages, opts => opts.MapFrom(src => src.Subject.Messages))
-                .ForMember(dest => dest.Pinboard, opts => opts.MapFrom(src => src.Subject.Pinboard))
+                .ForMember(dest => dest.Pinboard, opts => opts.Ignore())
                 .ForMember(dest => dest.Participants, opts => opts.MapFrom(src => src.Subject.Participants))
                 .ForMember(dest => dest.Muted, opts => opts.MapFrom(src => src.Participant.MutedChats.Any(c => c.SubjectId == src.SubjectId)))
                 .ForMember(dest => dest.RoleSettings, opts => opts.Ignore())
@@ -168,8 +168,8 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.InviteLink, opts => opts.MapFrom(e => "https://localhost:7269/Server/voicechannel/ConsumeInvite/" + e.InviteCode)) //map InviteLink (httpslink to Server/consumeInvite/code), 
                 .ForMember(dest => dest.Type, opts => opts.MapFrom(e => InviteType.Server)); //map InviteType (server) // aftermap
                                                                                              //map ImageIconURL (server icon), Title (Server name), Description (for server where to), InviteLink (httpslink to Server/consumeInvite/code), InviteType (server) // aftermap
-            CreateMap<ChatPinboard, PinboardDTO>(); //output members are same name so no need to map
-            CreateMap<ServerTextChannelPinboard, PinboardDTO>(); //output members are same name so no need to map
+            //CreateMap<ChatPinboard, PinboardDTO>(); //output members are same name so no need to map
+            //CreateMap<ServerTextChannelPinboard, PinboardDTO>(); //output members are same name so no need to map
             CreateMap<ChatMessageAttachment, MessageAttachmentDTO>(); //output members are same name so no need to map
             CreateMap<ServerTextChannelMessageAttachment, MessageAttachmentDTO>(); //output members are same name so no need to map
             CreateMap<ChatMessage, MessageMinimalDTO>();

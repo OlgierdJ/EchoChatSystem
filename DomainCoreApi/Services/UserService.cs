@@ -994,7 +994,7 @@ namespace DomainCoreApi.Services
                          .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.CustomStatus)
                          .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants)
                          .Include(e => e.Invites).ThenInclude(e => e.Inviter)
-                         .Include(e => e.Pinboard).ThenInclude(e => e.PinnedMessages) //auto connects messages
+                         .Include(e => e.PinnedMessages)//.ThenInclude(e => e.PinnedMessages) //auto connects messages
                          .Where(e => chatIdsToLoad.Contains(e.Id))
                          //.AsNoTrackingWithIdentityResolution()
                          .AsSplitQuery()
@@ -1030,7 +1030,7 @@ namespace DomainCoreApi.Services
                     .Include(e => e.SoundboardSounds).ThenInclude(e => e.Uploader).ThenInclude(e => e.Profile)
                     //txtchannel
                     .Include(e => e.TextChannels).ThenInclude(e => e.Messages).ThenInclude(e => e.Author)
-                    .Include(e => e.TextChannels).ThenInclude(e => e.Pinboard).ThenInclude(e => e.PinnedMessages)
+                    .Include(e => e.TextChannels).ThenInclude(e => e.PinnedMessages)
                     .Include(e => e.TextChannelMemberPermissions)
                     .Include(e => e.TextChannelMemberSettings)
                     //voicechannel

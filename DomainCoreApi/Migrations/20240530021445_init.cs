@@ -73,9 +73,9 @@ namespace DomainCoreApi.Migrations
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IconUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
+                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    IconUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -343,20 +343,23 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ChatPinboard",
+                name: "DirectMessageRelation",
                 columns: table => new
                 {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    OwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    ChatId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChatPinboard", x => x.Id);
+                    table.PrimaryKey("PK_DirectMessageRelation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ChatPinboard_Chat_Id",
-                        column: x => x.Id,
+                        name: "FK_DirectMessageRelation_Chat_ChatId",
+                        column: x => x.ChatId,
                         principalTable: "Chat",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -571,7 +574,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ServerTextChannel_ServerChannelCategory_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "ServerChannelCategory",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ServerTextChannel_Server_OwnerId",
                         column: x => x.OwnerId,
@@ -786,6 +790,30 @@ namespace DomainCoreApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AccountDirectMessageRelation",
+                columns: table => new
+                {
+                    OwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    RelationId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountDirectMessageRelation", x => new { x.OwnerId, x.RelationId });
+                    table.ForeignKey(
+                        name: "FK_AccountDirectMessageRelation_Account_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AccountDirectMessageRelation_DirectMessageRelation_RelationId",
+                        column: x => x.RelationId,
+                        principalTable: "DirectMessageRelation",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AccountMute",
                 columns: table => new
                 {
@@ -887,8 +915,7 @@ namespace DomainCoreApi.Migrations
                 columns: table => new
                 {
                     AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                    RoleId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -898,12 +925,13 @@ namespace DomainCoreApi.Migrations
                         column: x => x.AccountId,
                         principalTable: "Account",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AccountRole_Role_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Role",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1116,13 +1144,14 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ChatInvite_Account_InviterId",
                         column: x => x.InviterId,
                         principalTable: "Account",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ChatInvite_Chat_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Chat",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1145,18 +1174,19 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ChatMessage_Account_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "Account",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ChatMessage_ChatMessage_ParentId",
                         column: x => x.ParentId,
                         principalTable: "ChatMessage",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ChatMessage_Chat_MessageHolderId",
                         column: x => x.MessageHolderId,
                         principalTable: "Chat",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1176,7 +1206,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ChatMute_Account_MuterId",
                         column: x => x.MuterId,
                         principalTable: "Account",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ChatMute_Chat_ChatId",
                         column: x => x.ChatId,
@@ -1186,7 +1217,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ChatMute_Chat_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Chat",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1197,33 +1229,23 @@ namespace DomainCoreApi.Migrations
                     SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Hidden = table.Column<bool>(type: "bit", nullable: false),
                     IsOwner = table.Column<bool>(type: "bit", nullable: false),
-                    AccountId = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
-                    ChatId = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
                     TimeJoined = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ChatParticipancy", x => new { x.ParticipantId, x.SubjectId });
                     table.ForeignKey(
-                        name: "FK_ChatParticipancy_Account_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Account",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_ChatParticipancy_Account_ParticipantId",
                         column: x => x.ParticipantId,
                         principalTable: "Account",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ChatParticipancy_Chat_ChatId",
-                        column: x => x.ChatId,
-                        principalTable: "Chat",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ChatParticipancy_Chat_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Chat",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1519,7 +1541,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_AccountServerTextChannelMute_ServerTextChannel_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "ServerTextChannel",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1582,7 +1605,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ServerTextChannelMessage_Account_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "Account",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ServerTextChannelMessage_ServerTextChannelMessage_ParentId",
                         column: x => x.ParentId,
@@ -1593,7 +1617,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ServerTextChannelMessage_ServerTextChannel_MessageHolderId",
                         column: x => x.MessageHolderId,
                         principalTable: "ServerTextChannel",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1614,23 +1639,6 @@ namespace DomainCoreApi.Migrations
                     table.ForeignKey(
                         name: "FK_ServerTextChannelPermission_ServerTextChannel_PermissionId",
                         column: x => x.PermissionId,
-                        principalTable: "ServerTextChannel",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServerTextChannelPinboard",
-                columns: table => new
-                {
-                    Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    OwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServerTextChannelPinboard", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ServerTextChannelPinboard_ServerTextChannel_Id",
-                        column: x => x.Id,
                         principalTable: "ServerTextChannel",
                         principalColumn: "Id");
                 });
@@ -2362,7 +2370,7 @@ namespace DomainCoreApi.Migrations
                 {
                     OwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     CoOwnerId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
+                    SubjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2371,7 +2379,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ChatAccountMessageTracker_Account_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "Account",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ChatAccountMessageTracker_ChatMessage_SubjectId",
                         column: x => x.SubjectId,
@@ -2382,7 +2391,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ChatAccountMessageTracker_Chat_CoOwnerId",
                         column: x => x.CoOwnerId,
                         principalTable: "Chat",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2403,7 +2413,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ChatMessageAttachment_ChatMessage_MessageId",
                         column: x => x.MessageId,
                         principalTable: "ChatMessage",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2420,11 +2431,12 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ChatMessagePin_ChatMessage_MessageId",
                         column: x => x.MessageId,
                         principalTable: "ChatMessage",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ChatMessagePin_ChatPinboard_PinboardId",
+                        name: "FK_ChatMessagePin_Chat_PinboardId",
                         column: x => x.PinboardId,
-                        principalTable: "ChatPinboard",
+                        principalTable: "Chat",
                         principalColumn: "Id");
                 });
 
@@ -2662,7 +2674,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ServerTextChannelAccountMessageTracker_Account_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "Account",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ServerTextChannelAccountMessageTracker_ServerTextChannelMessage_SubjectId",
                         column: x => x.SubjectId,
@@ -2673,7 +2686,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ServerTextChannelAccountMessageTracker_ServerTextChannel_CoOwnerId",
                         column: x => x.CoOwnerId,
                         principalTable: "ServerTextChannel",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2694,7 +2708,8 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ServerTextChannelMessageAttachment_ServerTextChannelMessage_MessageId",
                         column: x => x.MessageId,
                         principalTable: "ServerTextChannelMessage",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2711,11 +2726,12 @@ namespace DomainCoreApi.Migrations
                         name: "FK_ServerTextChannelMessagePin_ServerTextChannelMessage_MessageId",
                         column: x => x.MessageId,
                         principalTable: "ServerTextChannelMessage",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ServerTextChannelMessagePin_ServerTextChannelPinboard_PinboardId",
+                        name: "FK_ServerTextChannelMessagePin_ServerTextChannel_PinboardId",
                         column: x => x.PinboardId,
-                        principalTable: "ServerTextChannelPinboard",
+                        principalTable: "ServerTextChannel",
                         principalColumn: "Id");
                 });
 
@@ -3539,6 +3555,11 @@ namespace DomainCoreApi.Migrations
                 column: "ConnectionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AccountDirectMessageRelation_RelationId",
+                table: "AccountDirectMessageRelation",
+                column: "RelationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AccountMute_SubjectId",
                 table: "AccountMute",
                 column: "SubjectId");
@@ -3713,16 +3734,6 @@ namespace DomainCoreApi.Migrations
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatParticipancy_AccountId",
-                table: "ChatParticipancy",
-                column: "AccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChatParticipancy_ChatId",
-                table: "ChatParticipancy",
-                column: "ChatId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ChatParticipancy_SubjectId",
                 table: "ChatParticipancy",
                 column: "SubjectId");
@@ -3752,6 +3763,12 @@ namespace DomainCoreApi.Migrations
                 name: "IX_CustomStatusReportCustomStatusReportReason_ReportsId",
                 table: "CustomStatusReportCustomStatusReportReason",
                 column: "ReportsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DirectMessageRelation_ChatId",
+                table: "DirectMessageRelation",
+                column: "ChatId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_FeedbackReport_ReporterId",
@@ -4337,6 +4354,9 @@ namespace DomainCoreApi.Migrations
                 name: "AccountCustomStatus");
 
             migrationBuilder.DropTable(
+                name: "AccountDirectMessageRelation");
+
+            migrationBuilder.DropTable(
                 name: "AccountMute");
 
             migrationBuilder.DropTable(
@@ -4547,6 +4567,9 @@ namespace DomainCoreApi.Migrations
                 name: "ConnectionType");
 
             migrationBuilder.DropTable(
+                name: "DirectMessageRelation");
+
+            migrationBuilder.DropTable(
                 name: "AccountViolationAppeal");
 
             migrationBuilder.DropTable(
@@ -4560,9 +4583,6 @@ namespace DomainCoreApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "ChatMessage");
-
-            migrationBuilder.DropTable(
-                name: "ChatPinboard");
 
             migrationBuilder.DropTable(
                 name: "CustomStatusReportReason");
@@ -4620,9 +4640,6 @@ namespace DomainCoreApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "ServerTextChannelMessage");
-
-            migrationBuilder.DropTable(
-                name: "ServerTextChannelPinboard");
 
             migrationBuilder.DropTable(
                 name: "ServerTextChannelRole");

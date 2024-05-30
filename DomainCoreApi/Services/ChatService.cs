@@ -8,6 +8,7 @@ using CoreLib.DTO.RequestCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ChatCore;
+using CoreLib.Entities.EchoCore.FriendCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Bases;
@@ -30,21 +31,60 @@ namespace DomainCoreApi.Services
             this.mapper = mapper;
             this.notificationService = notificationService;
         }
-
+        /// <summary>
+        /// attempts to add a user as a participant to a chat (must be friends)
+        /// </summary>
+        /// <param name="senderId"></param>
+        /// <param name="chatId"></param>
+        /// <param name="participantId"></param>
+        /// <returns></returns>
         public async Task<bool> AddChatParticipant(ulong senderId, ulong chatId, ulong participantId)
         {
             try
             {
+                if (senderId == participantId) //dont do anything in db if invalid call
+                {
+                    return false;
+                }
+                //find sender and receiver and include chat if present
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants).ThenInclude(e=>e.Participant).ThenInclude(e=>e.Friendships).ThenInclude(e=>e.Subject).ThenInclude(e=>e.Participants)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e=>e.Profile)
+                    .Include(e => e.DirectMessageRelation)
+                    .FirstOrDefaultAsync(e => e.Id == chatId); //need chat participancies to find out if sender is part of chat and if participant is already part of chat
+                if (chat == null)
+                {
+                    return false;
+                }
+                if (chat.DirectMessageRelation != null)
+                {
+                    //cant add participants to dm therefore create new chat
+                    return await CreateChat(senderId, new List<ulong>(chat.Participants.Select(e=>e.ParticipantId)) { participantId }); //probably dont need to clear cached context.
+                }
+                var accs = await context.Set<Account>()
+                    .Include(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants.Where(e => e.ParticipantId == participantId || e.ParticipantId == senderId))
+                    .Include(e => e.Chats.Where(e=>e.SubjectId==chatId)) //need chat participancies to find out if sender is part of chat and if participant is already part of chat
+                    .Include(e=>e.Profile)
+                    .Where(e=>e.Id == senderId || e.Id == participantId)
                     .AsSplitQuery()
-                    .FirstOrDefaultAsync(e => e.Id == chatId);
+                    .ToListAsync();
 
-                var senderacc = chat.Participants.FirstOrDefault(e => e.ParticipantId == senderId).Participant; //i know the double check is redundant but whatever
-                var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
-                var friendIds = senderacc.Friendships.SelectMany(friendship => friendship.Subject.Participants.Where(e => e.ParticipantId != senderId)).Select(e => e.ParticipantId); //select friendids
-                var canAddParticipant = !friendIds.Contains(participantId); //must be friends with all
-                if (!isMember || !canAddParticipant)
+                //get sender and receiver for processing
+                var senderacc = accs.FirstOrDefault(e => e.Id == senderId);
+                var receiveracc = accs.FirstOrDefault(e => e.Id == participantId);
+
+                //check if sender is part of chat otherwise just ignore call and go back
+                var addedIsMemberAlready = receiveracc.Chats.Any(); //just check if any participancies has been included cause we've filtered by chatid
+                var isMember = senderacc.Chats.Any(); //just check if any participancies has been included cause we've filtered by chatid
+                if (!isMember || addedIsMemberAlready)
+                {
+                    return false;
+                }
+                
+                //check if participant can be added by sender
+                var relatedFriendship = context.Set<FriendshipParticipancy>().Local.GroupBy(e=>e.SubjectId).FirstOrDefault(e=>e.Count()>1); //group by subject cause we've only included friendship participancies into the context where id is senderid or participantid
+                
+                var canAddParticipant = relatedFriendship != null; //must be friends with all
+                if (!canAddParticipant)
                 {
                     return false;
                 }
@@ -57,28 +97,38 @@ namespace DomainCoreApi.Services
 
                 await context.Set<ChatParticipancy>().AddAsync(participant);
 
-                var res = await context.SaveChangesAsync();
-                if (res < 1)
-                {
-                    return false;
-                }
-
-                //should attach participants to chat participants automatically
-                var participants = await context.Set<ChatParticipancy>()
-                    .Include(e => e.Participant).ThenInclude(e => e.Profile)
-                    .AsSplitQuery()
-                    .Where(e => e.SubjectId == chatId).ToListAsync();
-
-
-                var accs = participants.Select(e => e.Participant);
+                await context.SaveChangesAsync();
+                
 
                 //need to make roundtrip to get name data
-                var chatName = accs.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
+                //should attach participants to chat participants automatically
+                //var participancies = await context.Set<ChatParticipancy>()
+                //    .Include(e => e.Participant).ThenInclude(e => e.Profile)
+                //    .Include(e=>e.Subject)
+                //    .AsSplitQuery()
+                //    .Where(e => e.SubjectId == chatId).ToListAsync();
+
+
+                //var participants = participancies.Select(e => e.Participant);
+                var participants = chat.Participants.Select(e => e.Participant);
+
+                //generate default naming for previous added participants and check if chat is named that
+                var prevChatName = participants.Where(e=>e.Id != participantId).Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
+                if (prevChatName.Length > 100) //if chatname is too long given domain rules
+                {
+                    prevChatName = prevChatName.Substring(0, 97) + "...";
+                }
+                if (chat.Name != prevChatName) //if name is not the same then it has been set manually and should be kept
+                {
+                    return true;
+                }
+                //if chat is named prev generated name, generate new name and assign it.
+                var chatName = participants.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
                 if (chatName.Length > 100) //if chatname is too long given domain rules
                 {
                     chatName = chatName.Substring(0, 97) + "...";
                 }
-
+                chat.Name = chatName;
                 await context.SaveChangesAsync();
 
             }
@@ -88,51 +138,65 @@ namespace DomainCoreApi.Services
             }
             return true;
         }
-
+        /// <summary>
+        /// attempts to remove a user participant from a chat.
+        /// </summary>
+        /// <param name="senderId"></param>
+        /// <param name="chatId"></param>
+        /// <param name="participantId"></param>
+        /// <returns></returns>
         public async Task<bool> RemoveChatParticipant(ulong senderId, ulong chatId, ulong participantId)
         {
             try
             {
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants)
+                    .Include(e => e.Participants).ThenInclude(e=>e.Participant).ThenInclude(e=>e.Profile)
+                    .Include(e => e.Participants).ThenInclude(e=>e.Participant).ThenInclude(e=>e.NicknamedAccounts.Where(e=>e.AuthorId == senderId)) //perhaps use nickname in future or displayname or something.
+                    .Include(e=>e.DirectMessageRelation)
                     .FirstOrDefaultAsync(e => e.Id == chatId);
-
-                var isMember = chat.Participants.Any(e => e.ParticipantId == senderId); //i know the double check is redundant but whatever
-                if (!isMember)
+                if (chat == null || chat.DirectMessageRelation != null)
+                {
+                    //cant process empty chat or remove participant from dm chat.
+                    return false;
+                }
+               
+                var sender = chat.Participants.FirstOrDefault(e => e.ParticipantId == senderId);
+                var participant = chat.Participants.FirstOrDefault(e => e.ParticipantId == participantId);
+                var isMember = senderId!=null; //i know the double check is redundant but whatever
+                var participantIsMember = participant!=null; //i know the double check is redundant but whatever
+                if (!isMember || !participantIsMember)
+                {
+                    return false;
+                }
+                var canRemove = sender.IsOwner && !participant.IsOwner; //can only remove if higher permission status than participant.
+                if (!canRemove)
                 {
                     return false;
                 }
 
-                var participant = new ChatParticipancy()
+                //await context.SaveChangesAsync(); //actually dont need to make a roundtrip before changing name since participant is loaded into context
+
+                var participantAccs = chat.Participants.Select(e => e.Participant);
+
+                //generate default naming for previous added participants and check if chat is named that
+                var prevChatName = participantAccs.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
+                if (prevChatName.Length > 100) //if chatname is too long given domain rules
                 {
-                    ParticipantId = participantId,
-                    SubjectId = chatId
-                };
-
-                context.Set<ChatParticipancy>().Remove(participant);
-
-                var res = await context.SaveChangesAsync();
-
-                if (res<1)
-                {
-                    return false;
+                    prevChatName = prevChatName.Substring(0, 97) + "...";
                 }
-
-                //should attach participants to chat participants automatically
-                var participants = await context.Set<ChatParticipancy>()
-                    .Include(e => e.Participant).ThenInclude(e => e.Profile)
-                    .AsSplitQuery()
-                    .Where(e => e.SubjectId == chatId).ToListAsync();
-
-
-                var accs = participants.Select(e => e.Participant);
-
-                //need to make roundtrip to get name data
-                var chatName = accs.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
+                //if (chat.Name != prevChatName) //if name is not the same then it has been set manually and should be kept
+                //{
+                //    return true;
+                //}
+                //if chat is named prev generated name, generate new name and assign it.
+                var chatName = participantAccs.Where(e=>e.Id!=participantId).Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
                 if (chatName.Length > 100) //if chatname is too long given domain rules
                 {
                     chatName = chatName.Substring(0, 97) + "...";
                 }
+                chat.Name = chat.Name != prevChatName ? chat.Name : chatName;
+
+                context.Set<ChatParticipancy>().Remove(participant); //removing the relation can be done in one fell swoop.
 
                 await context.SaveChangesAsync();
 
@@ -143,78 +207,107 @@ namespace DomainCoreApi.Services
             }
             return true;
         }
-
+        /// <summary>
+        /// filters existing participants and tries to add rest at once (must be friends)
+        /// </summary>
+        /// <param name="senderId"></param>
+        /// <param name="chatId"></param>
+        /// <param name="participantIds"></param>
+        /// <returns></returns>
         public async Task<bool> AddChatParticipants(ulong senderId, ulong chatId, ICollection<ulong> participantIds)
         {
             try
             {
-                //if (participantIds.Contains(senderId)) // cant add yourself can you???
-                //{
-                //    participantIds.Remove(senderId);
-                //}
-                //ICollection<ulong> partCheckIds = new List<ulong>(participantIds) //crazy way to instantiate list wth
-                //{
-                //    senderId
-                //};
-                //var chat = await context.Set<Chat>()
-                //    .Include(e => e.Participants.Where(l => partCheckIds.Contains(l.ParticipantId))).ThenInclude(e=>e.Participant).ThenInclude(e=>e.Profile)
-                //    .AsSplitQuery()
-                //    .FirstOrDefaultAsync(e => e.Id == chatId);
-
-                //var newParticipants = partCheckIds.Where(id => chat.Participants.Any(e => e.ParticipantId == id))
-                //    .Select(id => new ChatParticipancy()
-                //    {
-                //        ParticipantId = id,
-                //        SubjectId = chatId
-                //    }).ToList(); 
-
+                var lookupIds = new List<ulong>(participantIds) { senderId }; //accounts to pull into context.
+                //find sender and receivers and include chat if present
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants)
-                    .AsSplitQuery()
-                    .FirstOrDefaultAsync(e => e.Id == chatId);
-
-                var senderacc = chat.Participants.FirstOrDefault(e => e.ParticipantId == senderId).Participant; //i know the double check is redundant but whatever
-                var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
-
-                var friendIds = senderacc.Friendships.SelectMany(friendship => friendship.Subject.Participants.Where(e=>e.ParticipantId!=senderId)).Select(e=>e.ParticipantId); //select friendids
-                var canAddParticipants = !participantIds.Except(friendIds).Any(); //must be friends with all
-                if (!isMember || !canAddParticipants)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e=>e.Profile)
+                    .Include(e => e.DirectMessageRelation)
+                    .FirstOrDefaultAsync(e => e.Id == chatId); //need chat participancies to find out if sender is part of chat and if participant is already part of chat
+                if (chat == null)
                 {
                     return false;
                 }
+                if (chat.DirectMessageRelation != null)
+                {
+                    //cant add participants to dm therefore create new chat
+                    return await CreateChat(senderId, participantIds); //probably dont need to clear cached context.
+                }
+                var accs = await context.Set<Account>()
+                    .Include(e => e.Friendships).ThenInclude(e => e.Subject)
+                    .ThenInclude(e => e.Participants.Where(e => participantIds.Contains(e.ParticipantId))) //filter away non context participants
+                    .Include(e=>e.Chats.Where(e=>e.SubjectId==chatId))
+                    .Include(e=>e.Profile)
+                    .Where(e=>lookupIds.Contains(e.Id))
+                    .AsSplitQuery()
+                    .ToListAsync();
                 
-                var participancies = participantIds
-                    .Where(id=>id!=senderId) //filter just in case so it doesnt throw error if they accidentially posted sender in added
+                //get sender and receivers for processing
+                var senderacc = accs.FirstOrDefault(e => e.Id == senderId);
+                //find accounts to be added
+                var receiverAccs = accs.Where(e => !e.Chats.Any()); //if chats are empty then they need to be added else just ignore them.
+                var noMembersToBeAdded = !receiverAccs.Any(); //if there are no members to add from participantids
+
+                //check if sender is part of chat otherwise just ignore call and go back
+                var isMember = senderacc.Chats.Any(); //just check if any participancies has been included cause we've filtered by chatid
+                if (!isMember || noMembersToBeAdded)
+                {
+                    return false;
+                }
+
+                var friendIds = senderacc.Friendships.Where(fp => fp.Subject.Participants.Count > 1) //loop through sender friends, find friendships where has more than 1 participant loaded in context.
+                    .SelectMany(e=>e.Subject.Participants.Where(e=>e.ParticipantId!=senderId)) //get other end of friendship, then flatten
+                    .Select(e => e.ParticipantId); //get ids
+                    
+                var canAddParticipants = !receiverAccs.Select(e=>e.Id).Except(friendIds).Any(); //check if receiver ids has ids which are not in friendids
+                if (!canAddParticipants)
+                {
+                    return false;
+                }
+
+                var newParticipancies = receiverAccs.Select(e=>e.Id)
+                     //take filtered receiverlist and try to add them
                     .Select(id => new ChatParticipancy()
                 {
                     ParticipantId = id,
                     SubjectId = chatId
                 }).ToList();
 
-                await context.Set<ChatParticipancy>().AddRangeAsync(participancies);
+                var prevParticipants = chat.Participants.Select(e=>e.Participant).ToList(); //save local list of prev pointers
 
-                var res = await context.SaveChangesAsync();
+                await context.Set<ChatParticipancy>().AddRangeAsync(newParticipancies);
 
-                if (res < 1)
-                {
-                    return false;
-                }
-
-                //should attach participants to chat participants automatically
-                var participants = await context.Set<ChatParticipancy>()
-                    .Include(e => e.Participant).ThenInclude(e => e.Profile)
-                    .AsSplitQuery()
-                    .Where(e => e.SubjectId == chatId).ToListAsync();
-
-
-                var accs = participants.Select(e => e.Participant);
+                await context.SaveChangesAsync();
 
                 //need to make roundtrip to get name data
-                var chatName = accs.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
+                //should attach participants to chat participants automatically
+                //var participancies = await context.Set<ChatParticipancy>()
+                //    .Include(e => e.Participant).ThenInclude(e => e.Profile)
+                //    .Include(e => e.Subject)
+                //    .AsSplitQuery()
+                //    .Where(e => e.SubjectId == chatId).ToListAsync();
+
+
+
+                //generate default naming for previous added participants and check if chat is named that
+                var prevChatName = prevParticipants.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
+                if (prevChatName.Length > 100) //if chatname is too long given domain rules
+                {
+                    prevChatName = prevChatName.Substring(0, 97) + "...";
+                }
+                if (chat.Name != prevChatName) //if name is not the same then it has been set manually and should be kept
+                {
+                    return true;
+                }
+
+                var participants = prevParticipants.Concat(newParticipancies.Select(e => e.Participant));
+                //if chat is named prev generated name, generate new name and assign it.
+                var chatName = participants.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
                 if (chatName.Length > 100) //if chatname is too long given domain rules
                 {
                     chatName = chatName.Substring(0, 97) + "...";
                 }
+                chat.Name = chatName;
 
                 await context.SaveChangesAsync();
 
@@ -236,11 +329,20 @@ namespace DomainCoreApi.Services
                     .Include(e => e.Invites.Where(e=>e.InviteCode == inviteCode).Take(1))
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
-                //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
-                var isMember = chat.Participants.Any(e => e.ParticipantId == senderId); //i know the double check is redundant but whatever
-                var invite = chat.Invites.FirstOrDefault(e=>e.InviteCode==inviteCode); //i know the double check is redundant but whatever
-                var inviteValid = invite.ExpirationTime > DateTime.Now && invite.TotalUses<invite.TimesUsed && invite.InviterId!=senderId;
-                if (invite==null || isMember || !inviteValid)
+                if (chat==null || !chat.Invites.Any())
+                {
+                    //cant process nonexistant chat or nonexistant invite within chat. therefore go away plebian
+                    return false;
+                }
+                var invite = chat.Invites.FirstOrDefault(); //already filtered from loading
+                var isMember = chat.Participants.Any(); //already filtered from loading.
+                //the invite has to be not expired, and the inviter cant use their own invite.
+                //also if the totaluses is not 0 which means unlimited then the validation should also take times used in regard.
+                var notExpired = invite.ExpirationTime > DateTime.Now;
+                var notIssuedBySender = invite.InviterId != senderId;
+                var canBeUsedStill = invite.TotalUses == 0 ? true : invite.TotalUses > invite.TimesUsed;
+                var inviteValid = notExpired && notIssuedBySender && canBeUsedStill;
+                if (isMember || !inviteValid)
                 {
                     return false;
                 }
@@ -262,22 +364,45 @@ namespace DomainCoreApi.Services
             }
             return true;
         }
-
+        /// <summary>
+        /// attempts to create a new chat from a group of participants (must be friends).
+        /// </summary>
+        /// <param name="senderId"></param>
+        /// <param name="startParticipants"></param>
+        /// <returns></returns>
         public async Task<bool> CreateChat(ulong senderId, ICollection<ulong> startParticipants)
         {
             using var transaction = await context.Database.BeginTransactionAsync(); //need transaction cause multiple database transaction steps and possibility of rollback
             try
             {
-                if (!startParticipants.Contains(senderId))
-                {
-                    startParticipants.Add(senderId);
-                }
-                //verify sender is member
+                var lookupIds = new List<ulong>(startParticipants) { senderId }; //accounts to pull into context.
+                //find sender and receivers and include chat if present
                 var accs = await context.Set<Account>()
-                    .Include(a=>a.Profile)
+                    //.Include(e => e.BlockedAccounts)
+                    .Include(e => e.Friendships).ThenInclude(e => e.Subject)
+                    .ThenInclude(e => e.Participants.Where(e => lookupIds.Contains(e.ParticipantId))) //filter away non context participants
+                    .Where(e => lookupIds.Contains(e.Id))
                     .AsSplitQuery()
-                    .Where(l => startParticipants.Contains(l.Id))
-                    .AsNoTracking().ToListAsync();
+                    .ToListAsync();
+
+                //get sender and receivers for processing
+                var senderacc = accs.FirstOrDefault(e => e.Id == senderId);
+                //find accounts to be added
+                var receiverAccs = accs.Where(e => e.Id!=senderId); //if chats are empty then they need to be added else just ignore them.
+                var noMembersToBeAdded = !receiverAccs.Any(); //if there are no members to add from participantids
+                if (noMembersToBeAdded)
+                {
+                    return false;
+                }
+                var friendIds = senderacc.Friendships.Where(fp => fp.Subject.Participants.Count > 1) //loop through sender friends, find friendships where has more than 1 participant loaded in context.
+                    .SelectMany(e => e.Subject.Participants.Where(e => e.ParticipantId != senderId)) //get other end of friendship, then flatten
+                    .Select(e => e.ParticipantId); //get ids
+
+                var canAddParticipants = !receiverAccs.Select(e => e.Id).Except(friendIds).Any(); //check if receiver ids has ids which are not in friendids
+                if (!canAddParticipants)
+                {
+                    return false;
+                }
 
                 var chatName = accs.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
                 if (chatName.Length > 100) //if chatname is too long given domain rules
@@ -288,7 +413,7 @@ namespace DomainCoreApi.Services
                 Chat newChat = new()
                 {
                     Name = chatName,
-                    Pinboard = new(),
+                    //Pinboard = new(),
                     Participants = new List<ChatParticipancy>()
                     
                 };
@@ -334,7 +459,10 @@ namespace DomainCoreApi.Services
                     .Include(e => e.Participants.Where(t => t.ParticipantId == senderId).Take(1))
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
-                //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
+                if (chat == null)
+                {
+                    return false;
+                }
                 var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
                 if (!isMember)
                 {
@@ -360,17 +488,29 @@ namespace DomainCoreApi.Services
             }
             return true;
         }
-
+        /// <summary>
+        /// attempts to delete a chat (sender must be part of chat and have ownership and the chat must not be a direct message chat.)
+        /// </summary>
+        /// <param name="senderId"></param>
+        /// <param name="chatId"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteChat(ulong senderId, ulong chatId)
         {
             try
             {
                 //verify sender is member && owner
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants.Where(t => t.ParticipantId == senderId).Take(1))
+                    .Include(e => e.Participants.Where(t => t.ParticipantId == senderId).Take(1)) //filter from db
+                    .Include(e=>e.DirectMessageRelation)
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
-                var isAllowed = chat.Participants.Any(e => e.ParticipantId == senderId && e.IsOwner==true);
+                if (chat == null || chat.DirectMessageRelation != null)
+                {
+                    //cant process empty chat or delete dm chat.
+                    return false;
+                }
+                //sender must be part of chat and owner aswell.
+                var isAllowed = chat.Participants.Any(e => e.IsOwner==true); //if any then sender is here since already filtered, only need to check if owner
                 if (!isAllowed)
                 {
                     return false;
@@ -386,6 +526,12 @@ namespace DomainCoreApi.Services
             return true;
         }
 
+        /// <summary>
+        /// tries to hide a chat from the user effectively not showing the chat.
+        /// </summary>
+        /// <param name="senderId"></param>
+        /// <param name="chatId"></param>
+        /// <returns></returns>
         public async Task<bool> HideChat(ulong senderId, ulong chatId)
         {
             try
@@ -425,28 +571,36 @@ namespace DomainCoreApi.Services
                 var chat = await context.Set<Chat>()
                     //.Include(e => e.Messages.OrderByDescending(m => m.TimeSent).Take(1))
                     .Include(e => e.MessageTrackers.Where(t => t.OwnerId == senderId).Take(1))
-                    .Include(e => e.Participants)
-                    .Include(e => e.Invites.Where(t => t.InviterId == senderId).Take(1))
                     .Include(e => e.Mutes.Where(t => t.MuterId == senderId).Take(1))
+                    .Include(e => e.Participants) // need all participants here to make someone owner afterwards if possible
+                    .Include(e=>e.DirectMessageRelation)
+                    .Include(e => e.Invites.Where(t => t.InviterId == senderId))
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
+                if (chat == null || chat.DirectMessageRelation != null)
+                {
+                    //cant process empty chat or leave dm chat.
+                    return false;
+                }
                 //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
                 var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
                 if (!isMember)
                 {
                     return false;
                 }
-                var newOwner = chat.Participants.OrderBy(e => e.TimeJoined).FirstOrDefault();
+                //find participants other than sender if any and order them by join order (last in first out).
+                var newOwner = chat.Participants.Where(e=>e.ParticipantId!=senderId).OrderBy(e => e.TimeJoined).FirstOrDefault();
                 if (newOwner == null) //then chat is orphan and should be removed
                 {
                     context.Set<Chat>().Remove(chat);
                 }
                 newOwner.IsOwner = true;
+                //cleanup relations for sender account. (wait with invite cause we dont know how to invalidate it yet.)
                 context.Set<ChatAccountMessageTracker>().RemoveRange(chat.MessageTrackers);
                 //context.Set<ChatInvite>().RemoveRange(chat.Invites); //maybe wait with this one
                 context.Set<ChatMute>().RemoveRange(chat.Mutes);
                 context.Set<ChatParticipancy>().RemoveRange(chat.Participants.Where(e=>e.ParticipantId==senderId).Take(1));
-                var res = await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
 
             }
             catch (Exception e)
@@ -462,21 +616,39 @@ namespace DomainCoreApi.Services
             {
                 //verify sender is member
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Messages.OrderByDescending(m=>m.TimeSent).Take(1))
-                    .Include(e=>e.MessageTrackers.Where(t=>t.OwnerId == senderId).Take(1))
-                    .Include(e=>e.Participants.Where(t=>t.ParticipantId == senderId).Take(1))
+                    .Include(e => e.Messages.OrderByDescending(m=>m.TimeSent).Take(1)) //get newest message
+                    .Include(e=>e.MessageTrackers.Where(t=>t.OwnerId == senderId).Take(1)) //get users tracking relation
+                    .Include(e=>e.Participants.Where(t=>t.ParticipantId == senderId).Take(1)) //get users participation
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
+                if (chat == null)
+                {
+                    //cant process non existant chat.
+                    return false;
+                }
                 //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
-                var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
+                var isMember = chat.Participants.Any(); //if any then sender is here since already filtered
                 if (!isMember)
                 {
                     return false;
                 }
                 var tracker = chat.MessageTrackers.FirstOrDefault(e=>e.OwnerId == senderId);
-                var newestMsg = chat.Messages.First();
-                tracker.SubjectId = newestMsg.Id;
-                var res = await context.SaveChangesAsync();
+                if (tracker == null)
+                {
+                    tracker = new()
+                    {
+                         CoOwnerId=chat.Id,
+                          OwnerId=senderId,
+                    };
+                    await context.Set<ChatAccountMessageTracker>().AddAsync(tracker);
+                }
+                var newestMsg = chat.Messages.FirstOrDefault(); //can be empty resulting in null which is ok
+                
+                //assign message if any or null if not.
+                tracker.SubjectId = newestMsg != null ? newestMsg.Id : null;
+
+               
+                await context.SaveChangesAsync();
 
             }
             catch (Exception e)
@@ -524,9 +696,11 @@ namespace DomainCoreApi.Services
             try
             {
                 //verify sender is member
-                var isMember = context.Set<ChatParticipancy>().Any(o => o.ParticipantId == senderId && o.SubjectId == chatId);
+                var isMember = await context.Set<ChatParticipancy>().AnyAsync(o => o.ParticipantId == senderId && o.SubjectId == chatId);
+                //verify chat has message
+                var canPin = await context.Set<ChatMessage>().AnyAsync(o => o.Id == messageId && o.MessageHolderId == chatId && o.AuthorId!=null); //filter away sys msg as you cant pin them business wise
                 //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
-                if (!isMember)
+                if (!isMember || !canPin)
                 {
                     return false;
                 }
@@ -541,10 +715,10 @@ namespace DomainCoreApi.Services
                      Content = "@" +senderId.ToString() + " pinned https://echo.chat/"+chatId.ToString()+"/"+messageId.ToString()+" to this chat.",
                       MessageHolderId = chatId,
                 };
-                context.Set<ChatMessagePin>().Add(relation);
-                context.Set<ChatMessage>().Add(sysmsg);
+                await context.Set<ChatMessagePin>().AddAsync(relation);
+                await context.Set<ChatMessage>().AddAsync(sysmsg);
 
-                var res = await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
 
             }
             catch (Exception e)
@@ -561,24 +735,35 @@ namespace DomainCoreApi.Services
                 //verify sender is member //doesnt matter here
                 var chat = await context.Set<Chat>().Include(e => e.Participants)
                     //.Include(e=>e.MessageTrackers) //ignore tracker logic for now cause seems quite complex and doesnt really do anything
-                    .Include(e =>e.Messages.Where(msg=> msg.Id==messageId && msg.AuthorId==senderId))
-                    //.Include(e=>e.Messages.OrderByDescending(msg=>msg.TimeSent))
-                    .Include(e => e.Participants)
+                    .Include(e =>e.Messages.Where(e=>e.Id==messageId))
+                    .ThenInclude(e=>e.Children) //load message replies cause else you cant delete parent appearently event though you could in efcore5 just via restrict and sql
+                    .Include(e=>e.MessageTrackers) //can i do this?
+                    .Include(e => e.Participants.Where(e=>e.ParticipantId == senderId)) //filter from db
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
-                var isMember = chat.Participants.Any(e=>e.ParticipantId==senderId);
-                //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
-                if (!isMember)
+                if (chat == null || !chat.Messages.Any())
                 {
+                    //cant process nonexistant chat and cant remove nonexistant message
                     return false;
                 }
-
-                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                var senderAcc = chat.Participants.FirstOrDefault(); //only sender should be loaded in context.
+                var isMember = senderAcc!=null; //if not null then sender is here since already filtered
                 var msg = chat.Messages.FirstOrDefault(e => e.Id == messageId);
-                if (msg != null) //if null then either the message doesnt exist or the author is wrong therefore they are not allowed
+                var canRemove = senderAcc.IsOwner || msg.AuthorId==senderId; //can only remove messages you own or in chats you own
+                //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
+                if (!isMember || !canRemove)
                 {
                     return false;
                 }
+                //sadly have to make another roundtrip
+                //take the newest message which has an id less than deleted message.
+                var newestMessage = await context.Set<ChatMessage>().Where(e=>e.MessageHolderId==chatId && e.Id<messageId).OrderByDescending(e=>e.TimeSent).Take(1).FirstOrDefaultAsync();
+                ulong? newestMessageId = newestMessage == null ? null : newestMessage.Id;
+                foreach(var tracker in msg.MessageTrackers)
+                {
+                    tracker.SubjectId = newestMessageId; //puts the previous message if any or null if none.
+                }
+                
                 chat.Messages.Remove(msg);
 
                 var res = await context.SaveChangesAsync();
@@ -595,14 +780,22 @@ namespace DomainCoreApi.Services
         {
             try
             {
+                if (requestDTO.ReplyId==0) //converts defaulted int to null in case sender forgot it
+                {
+                    requestDTO.ReplyId = null;
+                }
                 //verify sender is member
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants)
-                    .Include(e=>e.Messages.Take(0))
+                    .Include(e => e.Participants.Where(e=>e.ParticipantId == senderId)) //filter participants from db
+                    .Include(e=>e.Messages.Take(0)) //make efcore init list kinda cheap but im lazy rn
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e=>e.Id == chatId);
+                if (chat==null)
+                {
+                    return false;
+                }
                 //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
-                var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
+                var isMember = chat.Participants.Any(); //if any then sender is here since already filtered
                 if (!isMember)
                 {
                     return false;
@@ -639,19 +832,22 @@ namespace DomainCoreApi.Services
             {
                 //verify sender is member
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants)
+                    .Include(e => e.Participants.Where(e => e.ParticipantId == senderId)) // filter participants from db
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
-                //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
-                var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
+                if (chat == null || chat.DirectMessageRelation != null)
+                {
+                    //cant process nonexistant chat and you are not allowed to change dm image as it will use accountprofile image of friend in chat when getting user session data
+                    return false;
+                }
+                var isMember = chat.Participants.Any(); //if any then sender is here since already filtered
                 if (!isMember)
                 {
                     return false;
                 }
-                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 chat.IconUrl = requestDTO.ImageFileURL;
 
-                var res = await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
 
             }
             catch (Exception e)
@@ -666,13 +862,11 @@ namespace DomainCoreApi.Services
             try
             {
                 //verify sender is member //doesnt matter here
-                var isMember = context.Set<ChatParticipancy>().Any(o => o.ParticipantId == senderId && o.SubjectId == chatId);
-                //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
+                var isMember = await context.Set<ChatParticipancy>().AnyAsync(o => o.ParticipantId == senderId && o.SubjectId == chatId);
                 if (!isMember)
                 {
                     return false;
                 }
-                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 ChatMute relation = new()
                 {
                     SubjectId = chatId,
@@ -695,13 +889,13 @@ namespace DomainCoreApi.Services
             try
             {
                 //verify sender is member
-                var isMember = context.Set<ChatParticipancy>().Any(o => o.ParticipantId == senderId && o.SubjectId == chatId);
-                //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
-                if (!isMember)
+                var isMember = await context.Set<ChatParticipancy>().AnyAsync(o => o.ParticipantId == senderId && o.SubjectId == chatId);
+                //verify chat has message
+                var canUnpin = await context.Set<ChatMessage>().AnyAsync(o => o.Id == messageId && o.MessageHolderId == chatId && o.AuthorId!=null); //filter away sysmsg cause you cant pin them business wise
+                if (!isMember || !canUnpin)
                 {
                     return false;
                 }
-                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 ChatMessagePin relation = new()
                 {
                     PinboardId = chatId,
@@ -726,16 +920,19 @@ namespace DomainCoreApi.Services
             {
                 //verify sender is member
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants)
+                    .Include(e => e.Participants.Where(e => e.ParticipantId == senderId)) //filter participants from db
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
-                //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
-                var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
+                if (chat == null || chat.DirectMessageRelation != null)
+                {
+                    //cant process nonexistant chat and you are not allowed to change dm name as it will use name / displayname of friend in chat when getting user session data
+                    return false;
+                }
+                var isMember = chat.Participants.Any(); //if any then sender is here since already filtered
                 if (!isMember)
                 {
                     return false;
                 }
-                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 chat.Name = requestDTO.Name;
 
                 var res = await context.SaveChangesAsync();
@@ -754,26 +951,24 @@ namespace DomainCoreApi.Services
             {
                 //verify sender is member
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants)
-                    .Include(e=>e.Messages.Where(e=>e.Id == messageId))
+                    .Include(e => e.Participants.Where(e=>e.ParticipantId==senderId)) //filter participants from db
+                    .Include(e=>e.Messages.Where(e=>e.Id == messageId && e.AuthorId == senderId)) //to change message sender must be owner
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
-                //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
                 if (chat == null)
                 {
                     return false;
                 }
-                var isMember = chat.Participants.Any(e => e.ParticipantId == senderId);
+                var isMember = chat.Participants.Any(); //if any then sender is here since already filtered
                 if (!isMember)
                 {
                     return false;
                 }
                 var msg = chat.Messages.FirstOrDefault(e => e.Id == messageId);
-                if (msg == null || msg.AuthorId != senderId)
+                if (msg == null)
                 {
                     return false;
                 }
-                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 msg.Content = requestDTO.Content;
                 msg.TimeEdited = DateTime.Now;
 

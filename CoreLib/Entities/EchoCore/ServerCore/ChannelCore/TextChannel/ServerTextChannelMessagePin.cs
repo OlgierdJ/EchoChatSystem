@@ -2,7 +2,7 @@
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel
 {
-    public class ServerTextChannelMessagePin : BaseMessagePin<ServerTextChannelMessage, ulong, ServerTextChannelPinboard, ulong>
+    public class ServerTextChannelMessagePin : BaseMessagePin<ServerTextChannelMessage, ulong, ServerTextChannel, ulong>
     {
     }
 }

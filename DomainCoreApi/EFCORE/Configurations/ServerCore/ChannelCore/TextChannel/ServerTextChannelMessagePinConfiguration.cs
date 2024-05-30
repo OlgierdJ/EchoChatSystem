@@ -10,8 +10,8 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.TextChannel
         {
             builder.HasKey(b => new { b.PinboardId, b.MessageId });
 
-            builder.HasOne(b => b.Pinboard).WithMany(b => b.PinnedMessages).HasForeignKey(b => b.PinboardId).OnDelete(DeleteBehavior.ClientCascade);
-            builder.HasOne(b => b.Message).WithOne(b => b.MessagePin).HasForeignKey<ServerTextChannelMessagePin>(b => b.MessageId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            builder.HasOne(b => b.Pinboard).WithMany(b => b.PinnedMessages).HasForeignKey(b => b.PinboardId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(b => b.Message).WithOne(b => b.MessagePin).HasForeignKey<ServerTextChannelMessagePin>(b => b.MessageId).OnDelete(DeleteBehavior.Cascade).IsRequired();
         }
     }
 }

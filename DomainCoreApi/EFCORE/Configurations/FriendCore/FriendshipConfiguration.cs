@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.FriendCore;
+﻿using CoreLib.Entities.EchoCore.ChatCore;
+using CoreLib.Entities.EchoCore.FriendCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -338,7 +338,7 @@ namespace DomainCoreApi.Controllers
             }
         }
         [Authorize]
-        [HttpDelete("{chatId}/unmute")]
+        [HttpPut("{chatId}/unmute")]
         public async Task<IActionResult> UnmuteChat(ulong chatId)
         {
             try
@@ -359,7 +359,7 @@ namespace DomainCoreApi.Controllers
             }
         }
         [Authorize]
-        [HttpDelete("{chatId}/{messageId}/unpin")]
+        [HttpPut("{chatId}/{messageId}/unpin")]
         public async Task<IActionResult> UnpinChatMessage(ulong chatId, ulong messageId)
         {
             try

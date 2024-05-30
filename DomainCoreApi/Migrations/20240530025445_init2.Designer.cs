@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    [Migration("20240528185755_init3")]
-    partial class init3
+    [Migration("20240530025445_init2")]
+    partial class init2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,6 +239,21 @@ namespace DomainCoreApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AccountCustomStatus");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountDirectMessageRelation", b =>
+                {
+                    b.Property<decimal>("OwnerId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("RelationId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.HasKey("OwnerId", "RelationId");
+
+                    b.HasIndex("RelationId");
+
+                    b.ToTable("AccountDirectMessageRelation");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountMute", b =>
@@ -616,6 +631,30 @@ namespace DomainCoreApi.Migrations
                     b.HasIndex("ReviewerId");
 
                     b.ToTable("AccountViolationAppealReview");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.DirectMessageRelation", b =>
+                {
+                    b.Property<decimal>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(20,0)");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
+
+                    b.Property<decimal>("ChatId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime>("TimeCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId")
+                        .IsUnique();
+
+                    b.ToTable("DirectMessageRelation");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.AcceptedCurrency", b =>
@@ -1934,7 +1973,7 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("CoOwnerId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("SubjectId")
+                    b.Property<decimal?>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("OwnerId", "CoOwnerId");
@@ -2097,12 +2136,6 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal?>("AccountId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal?>("ChatId")
-                        .HasColumnType("decimal(20,0)");
-
                     b.Property<bool>("Hidden")
                         .HasColumnType("bit");
 
@@ -2116,26 +2149,9 @@ namespace DomainCoreApi.Migrations
 
                     b.HasKey("ParticipantId", "SubjectId");
 
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("ChatId");
-
                     b.HasIndex("SubjectId");
 
                     b.ToTable("ChatParticipancy");
-                });
-
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatPinboard", b =>
-                {
-                    b.Property<decimal>("Id")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal>("OwnerId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ChatPinboard");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ConnectionType", b =>
@@ -3295,19 +3311,6 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ServerTextChannelMessagePin");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelPinboard", b =>
-                {
-                    b.Property<decimal>("Id")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal>("OwnerId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ServerTextChannelPinboard");
-                });
-
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel.ServerVoiceInvite", b =>
                 {
                     b.Property<decimal>("SubjectId")
@@ -4408,6 +4411,25 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountDirectMessageRelation", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Owner")
+                        .WithMany("DirectMessageRelations")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.DirectMessageRelation", "Relation")
+                        .WithMany("AccountsInRelation")
+                        .HasForeignKey("RelationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Relation");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountMute", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Muter")
@@ -4533,7 +4555,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "Subject")
                         .WithMany("Muters")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Muter");
@@ -4678,6 +4700,17 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Appeal");
 
                     b.Navigation("Reviewer");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.DirectMessageRelation", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Chat")
+                        .WithOne("DirectMessageRelation")
+                        .HasForeignKey("CoreLib.Entities.EchoCore.AccountCore.DirectMessageRelation", "ChatId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.Keybind", b =>
@@ -5025,13 +5058,13 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "CoOwner")
                         .WithMany("MessageTrackers")
                         .HasForeignKey("CoOwnerId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Owner")
                         .WithMany("ChatMessageTrackers")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", "Subject")
@@ -5051,13 +5084,13 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Inviter")
                         .WithMany("ChatInvites")
                         .HasForeignKey("InviterId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Subject")
                         .WithMany("Invites")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Inviter");
@@ -5070,19 +5103,19 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Author")
                         .WithMany("ChatMessages")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "MessageHolder")
                         .WithMany("Messages")
                         .HasForeignKey("MessageHolderId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Author");
 
@@ -5096,7 +5129,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", "Message")
                         .WithMany("Attachments")
                         .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Message");
@@ -5107,13 +5140,13 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", "Message")
                         .WithOne("MessagePin")
                         .HasForeignKey("CoreLib.Entities.EchoCore.ChatCore.ChatMessagePin", "MessageId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.ChatPinboard", "Pinboard")
+                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Pinboard")
                         .WithMany("PinnedMessages")
                         .HasForeignKey("PinboardId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Message");
@@ -5130,13 +5163,13 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Muter")
                         .WithMany("MutedChats")
                         .HasForeignKey("MuterId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Subject")
                         .WithMany()
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Muter");
@@ -5146,40 +5179,21 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatParticipancy", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
-                        .WithMany("Chats")
-                        .HasForeignKey("AccountId");
-
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", null)
-                        .WithMany("Participants")
-                        .HasForeignKey("ChatId");
-
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Participant")
-                        .WithMany()
+                        .WithMany("Chats")
                         .HasForeignKey("ParticipantId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Subject")
-                        .WithMany()
+                        .WithMany("Participants")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Participant");
 
                     b.Navigation("Subject");
-                });
-
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatPinboard", b =>
-                {
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Owner")
-                        .WithOne("Pinboard")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ChatCore.ChatPinboard", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.FriendSuggestion", b =>
@@ -5604,7 +5618,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category.ServerChannelCategory", "Category")
                         .WithMany("TextChannels")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Owner")
@@ -5944,12 +5958,14 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "CoOwner")
                         .WithMany("MessageTrackers")
                         .HasForeignKey("CoOwnerId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Owner")
                         .WithMany("TextChannelMessageTrackers")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelMessage", "Subject")
                         .WithMany("MessageTrackers")
@@ -5968,13 +5984,13 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Author")
                         .WithMany("ChannelMessages")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "MessageHolder")
                         .WithMany("Messages")
                         .HasForeignKey("MessageHolderId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelMessage", "Parent")
@@ -5994,7 +6010,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelMessage", "Message")
                         .WithMany("Attachments")
                         .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Message");
@@ -6005,29 +6021,18 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelMessage", "Message")
                         .WithOne("MessagePin")
                         .HasForeignKey("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelMessagePin", "MessageId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelPinboard", "Pinboard")
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "Pinboard")
                         .WithMany("PinnedMessages")
                         .HasForeignKey("PinboardId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Message");
 
                     b.Navigation("Pinboard");
-                });
-
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelPinboard", b =>
-                {
-                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "Owner")
-                        .WithOne("Pinboard")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelPinboard", "Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel.ServerVoiceInvite", b =>
@@ -6426,6 +6431,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("CustomStatusReports");
 
+                    b.Navigation("DirectMessageRelations");
+
                     b.Navigation("Folders");
 
                     b.Navigation("FriendSuggestions");
@@ -6561,6 +6568,11 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Review");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.DirectMessageRelation", b =>
+                {
+                    b.Navigation("AccountsInRelation");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ApplicationCore.AcceptedCurrency", b =>
                 {
                     b.Navigation("Subscriptions");
@@ -6639,6 +6651,8 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.Chat", b =>
                 {
+                    b.Navigation("DirectMessageRelation");
+
                     b.Navigation("Invites");
 
                     b.Navigation("MessageTrackers");
@@ -6649,7 +6663,7 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("Participants");
 
-                    b.Navigation("Pinboard");
+                    b.Navigation("PinnedMessages");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", b =>
@@ -6661,11 +6675,6 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("MessagePin");
 
                     b.Navigation("MessageTrackers");
-                });
-
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatPinboard", b =>
-                {
-                    b.Navigation("PinnedMessages");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ConnectionType", b =>
@@ -6747,7 +6756,7 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("Muters");
 
-                    b.Navigation("Pinboard");
+                    b.Navigation("PinnedMessages");
 
                     b.Navigation("RolePermissions");
 
@@ -6806,11 +6815,6 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("MessagePin");
 
                     b.Navigation("MessageTrackers");
-                });
-
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelPinboard", b =>
-                {
-                    b.Navigation("PinnedMessages");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerProfile", b =>

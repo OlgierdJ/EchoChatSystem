@@ -202,9 +202,9 @@ namespace CoreLib
         Task ReceiveChatParticipancyMessageUpdateMessage(ChatParticipancy entity);
         Task ReceiveChatParticipancyMessageDeleteMessage(ChatParticipancy entity);
 
-        Task ReceiveChatPinboardMessageCreateMessage(ChatPinboard entity);
-        Task ReceiveChatPinboardMessageUpdateMessage(ChatPinboard entity);
-        Task ReceiveChatPinboardMessageDeleteMessage(ChatPinboard entity);
+        //Task ReceiveChatPinboardMessageCreateMessage(ChatPinboard entity);
+        //Task ReceiveChatPinboardMessageUpdateMessage(ChatPinboard entity);
+        //Task ReceiveChatPinboardMessageDeleteMessage(ChatPinboard entity);
 
         Task ReceiveFriendshipMessageCreateMessage(Friendship entity);
         Task ReceiveFriendshipMessageUpdateMessage(Friendship entity);

@@ -12,8 +12,8 @@ namespace DomainCoreApi.EFCORE.Configurations.ChatCore
                 .HasKey(b => new { b.ParticipantId, b.SubjectId });
             builder
                .Property(b => b.TimeJoined).HasDefaultValueSql("getdate()").IsRequired();
-            builder.HasOne(b => b.Subject).WithMany(e=>e.Participants).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
-            builder.HasOne(b => b.Participant).WithMany(e=>e.Chats).HasForeignKey(b => b.ParticipantId).OnDelete(DeleteBehavior.ClientCascade).IsRequired(); // have changed ClientCascade to cascade
+            builder.HasOne(b => b.Subject).WithMany(e=>e.Participants).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Participant).WithMany(e=>e.Chats).HasForeignKey(b => b.ParticipantId).OnDelete(DeleteBehavior.Cascade).IsRequired(); // have changed ClientCascade to cascade
         }
     }
 }
