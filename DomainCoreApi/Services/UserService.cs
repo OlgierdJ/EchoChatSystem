@@ -58,7 +58,7 @@ namespace DomainCoreApi.Services
 
                 var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 //verify acceptingacc is part of inc request.
-                if (request == null || request.ReceiverId == senderId)
+                if (request == null || request.ReceiverId != senderId)
                 {
                     return false;
                 }
