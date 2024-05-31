@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.EchoCore.UserCore;
+using CoreLib.DTO.RequestCore.MessageCore;
 
 namespace DomainCoreApi.Controllers
 {
@@ -694,6 +695,56 @@ namespace DomainCoreApi.Controllers
             {
                 var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
                 var result = await _userService.SetStatusAsync(id, requestDTO);
+
+
+
+
+                if (!result)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("{userId}/StartDirectMessages")]
+        public async Task<IActionResult> SetStatusAsync(ulong userId)
+        {
+            try
+            {
+                var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                var result = await _userService.StartDirectMessages(id, userId);
+
+
+
+
+                if (!result)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("{userId}/StartDirectMessages")]
+        public async Task<IActionResult> SetStatusAsync(ulong userId, SendMessageRequestDTO requestDTO)
+        {
+            try
+            {
+                var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                var result = await _userService.StartDirectMessages(id, userId, requestDTO);
 
 
 

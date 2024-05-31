@@ -49,6 +49,7 @@ namespace DomainCoreApi.Services
                 //find sender and receiver and include chat if present
                 var chat = await context.Set<Chat>()
                     .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e=>e.Profile)
+                    .Include(e=>e.Messages.OrderByDescending(e=>e.TimeSent).Take(1))
                     .Include(e => e.DirectMessageRelation)
                     .FirstOrDefaultAsync(e => e.Id == chatId); //need chat participancies to find out if sender is part of chat and if participant is already part of chat
                 if (chat == null)
@@ -88,13 +89,20 @@ namespace DomainCoreApi.Services
                 {
                     return false;
                 }
-
+                var tracker = new ChatAccountMessageTracker()
+                {
+                    OwnerId = participantId,
+                    CoOwnerId = chatId,
+                    SubjectId = chat.Messages.FirstOrDefault()?.Id
+                };
+                
                 var participant = new ChatParticipancy()
                     {
                         ParticipantId = participantId,
                         SubjectId = chatId
                     };
 
+                await context.Set<ChatAccountMessageTracker>().AddAsync(tracker); // add new tracker since messages are "read" when added to chat.
                 await context.Set<ChatParticipancy>().AddAsync(participant);
 
                 await context.SaveChangesAsync();
@@ -150,6 +158,8 @@ namespace DomainCoreApi.Services
             try
             {
                 var chat = await context.Set<Chat>()
+                    .Include(e=>e.MessageTrackers.Where(e=>e.OwnerId==participantId).Take(1))
+                    .Include(e=>e.Mutes.Where(e=>e.MuterId==participantId).Take(1))
                     .Include(e => e.Participants).ThenInclude(e=>e.Participant).ThenInclude(e=>e.Profile)
                     .Include(e => e.Participants).ThenInclude(e=>e.Participant).ThenInclude(e=>e.NicknamedAccounts.Where(e=>e.AuthorId == senderId)) //perhaps use nickname in future or displayname or something.
                     .Include(e=>e.DirectMessageRelation)
@@ -195,7 +205,9 @@ namespace DomainCoreApi.Services
                     chatName = chatName.Substring(0, 97) + "...";
                 }
                 chat.Name = chat.Name != prevChatName ? chat.Name : chatName;
-
+                
+                context.Set<ChatMute>().Remove(chat.Mutes.FirstOrDefault()); //removing the relation can be done in one fell swoop.
+                context.Set<ChatAccountMessageTracker>().Remove(chat.MessageTrackers.FirstOrDefault()); //removing the relation can be done in one fell swoop.
                 context.Set<ChatParticipancy>().Remove(participant); //removing the relation can be done in one fell swoop.
 
                 await context.SaveChangesAsync();
@@ -222,6 +234,7 @@ namespace DomainCoreApi.Services
                 //find sender and receivers and include chat if present
                 var chat = await context.Set<Chat>()
                     .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e=>e.Profile)
+                    .Include(e => e.Messages.OrderByDescending(e => e.TimeSent).Take(1))
                     .Include(e => e.DirectMessageRelation)
                     .FirstOrDefaultAsync(e => e.Id == chatId); //need chat participancies to find out if sender is part of chat and if participant is already part of chat
                 if (chat == null)
@@ -273,8 +286,16 @@ namespace DomainCoreApi.Services
                     SubjectId = chatId
                 }).ToList();
 
+                var newTrackers = newParticipancies.Select(e => new ChatAccountMessageTracker()
+                {
+                     OwnerId=e.ParticipantId,
+                      CoOwnerId = chatId,
+                       SubjectId = chat.Messages.FirstOrDefault()?.Id
+                });
+
                 var prevParticipants = chat.Participants.Select(e=>e.Participant).ToList(); //save local list of prev pointers
 
+                await context.Set<ChatAccountMessageTracker>().AddRangeAsync(newTrackers);
                 await context.Set<ChatParticipancy>().AddRangeAsync(newParticipancies);
 
                 await context.SaveChangesAsync();
@@ -327,6 +348,7 @@ namespace DomainCoreApi.Services
                 var chat = await context.Set<Chat>()
                     .Include(e => e.Participants.Where(t => t.ParticipantId == senderId).Take(1))
                     .Include(e => e.Invites.Where(e=>e.InviteCode == inviteCode).Take(1))
+                    .Include(e => e.Messages.OrderByDescending(e => e.TimeSent).Take(1))
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
                 if (chat==null || !chat.Invites.Any())
@@ -353,7 +375,14 @@ namespace DomainCoreApi.Services
                       SubjectId = invite.SubjectId,
                     //temp membership is not supported yet
                 };
+                ChatAccountMessageTracker tracker = new()
+                {
+                     OwnerId = senderId,
+                      CoOwnerId = invite.SubjectId,
+                      SubjectId=chat.Messages.FirstOrDefault()?.Id
+                };
                 context.Set<ChatParticipancy>().Add(participancy);
+                context.Set<ChatAccountMessageTracker>().Add(tracker);
 
                 var res = await context.SaveChangesAsync();
 
@@ -414,7 +443,8 @@ namespace DomainCoreApi.Services
                 {
                     Name = chatName,
                     //Pinboard = new(),
-                    Participants = new List<ChatParticipancy>()
+                    Participants = new List<ChatParticipancy>(),
+                     MessageTrackers = new List<ChatAccountMessageTracker>()
                     
                 };
 
@@ -435,6 +465,18 @@ namespace DomainCoreApi.Services
                 {
                     //context.Set<ChatParticipancy>().Add(participant);
                     newChat.Participants.Add(participant);
+                }
+
+                var trackers = participants.Select(e => new ChatAccountMessageTracker()
+                {
+                     OwnerId=e.ParticipantId,
+                     CoOwnerId = e.SubjectId,
+                      SubjectId=null
+                });
+                foreach (var tracker in trackers)
+                {
+                    //context.Set<ChatParticipancy>().Add(participant);
+                    newChat.MessageTrackers.Add(tracker);
                 }
 
                 await context.SaveChangesAsync();
@@ -786,7 +828,11 @@ namespace DomainCoreApi.Services
                 }
                 //verify sender is member
                 var chat = await context.Set<Chat>()
-                    .Include(e => e.Participants.Where(e=>e.ParticipantId == senderId)) //filter participants from db
+                    .Include(e => e.Participants)
+                    .ThenInclude(e=>e.Participant)
+                    .ThenInclude(e=>e.BlockedAccounts
+                    .Where(e=>e.BlockedId == senderId)) //find out if message should be ignored // this will be implemented later
+                    .Include(e=>e.DirectMessageRelation)
                     .Include(e=>e.Messages.Take(0)) //make efcore init list kinda cheap but im lazy rn
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e=>e.Id == chatId);
@@ -795,7 +841,7 @@ namespace DomainCoreApi.Services
                     return false;
                 }
                 //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
-                var isMember = chat.Participants.Any(); //if any then sender is here since already filtered
+                var isMember = chat.Participants.Any(e=>e.ParticipantId==senderId); //check if participants contain sender
                 if (!isMember)
                 {
                     return false;
@@ -815,6 +861,10 @@ namespace DomainCoreApi.Services
                      }).ToList(),
                 };
                 chat.Messages.Add(msg);
+                foreach (var participant in chat.Participants) //loop through participants
+                {
+                        participant.Hidden = false; //show chat if hidden since activity has been registered
+                }
 
                 var res = await context.SaveChangesAsync();
 
@@ -833,6 +883,7 @@ namespace DomainCoreApi.Services
                 //verify sender is member
                 var chat = await context.Set<Chat>()
                     .Include(e => e.Participants.Where(e => e.ParticipantId == senderId)) // filter participants from db
+                    .Include(e => e.DirectMessageRelation)
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
                 if (chat == null || chat.DirectMessageRelation != null)
@@ -863,7 +914,7 @@ namespace DomainCoreApi.Services
             {
                 //verify sender is member //doesnt matter here
                 var isMember = await context.Set<ChatParticipancy>().AnyAsync(o => o.ParticipantId == senderId && o.SubjectId == chatId);
-                if (!isMember)
+                if (!isMember) //muting an account only mutes the volume so you should be able to mute direct message chats and chats both
                 {
                     return false;
                 }
@@ -921,6 +972,7 @@ namespace DomainCoreApi.Services
                 //verify sender is member
                 var chat = await context.Set<Chat>()
                     .Include(e => e.Participants.Where(e => e.ParticipantId == senderId)) //filter participants from db
+                    .Include(e => e.DirectMessageRelation) 
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == chatId);
                 if (chat == null || chat.DirectMessageRelation != null)
@@ -982,9 +1034,9 @@ namespace DomainCoreApi.Services
             return true;
         }
 
-        public Task<bool> SendDirectMessageMessage(ulong senderId, ulong receiverId, SendMessageRequestDTO requestDTO)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<bool> SendDirectMessageMessage(ulong senderId, ulong receiverId, SendMessageRequestDTO requestDTO)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
