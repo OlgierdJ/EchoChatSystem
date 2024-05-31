@@ -12,7 +12,7 @@
 <div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 25px; width: 300px; position:fixed; z-index: 2; ">
     <div class="modal-dialog" style="background: var(--mud-palette-surface);">
         <div class="modal-content" style="background: var(--mud-palette-transparent);">
-            <div class="modal-header row pa-0 ma-0" style="height: 250px; width: 300px;">
+            <div class="modal-header row pa-1 ma-0" style="height: 250px; width: 300px;">
                 <MudPaper Style="@($"background: {(self.UserProfile.BannerColour != null ? self.UserProfile.BannerColour : "#5C23D9")};")" Height="125px" Width="300px">
                     <div>
                         <MudAvatar Style="height:64px; width:64px; position:relative; top:90px; left:15px; border:solid 2px var(--mud-palette-dark);">
@@ -20,7 +20,7 @@
                         </MudAvatar>
                     </div>
                 </MudPaper>
-                <MudPaper Style="background: var(--mud-palette-surface);" Height="75px" Elevation="0">
+                <MudPaper Height="75px" Elevation="0">
                     <div class="row pl-3 mt-4">
                         <h5>@self.UserProfile.User.DisplayName</h5>
                         <p>@self.UserProfile.User.Name</p>
