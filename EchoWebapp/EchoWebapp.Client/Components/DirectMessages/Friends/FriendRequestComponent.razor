@@ -1,4 +1,6 @@
 ﻿@using CoreLib.DTO.EchoCore.UserCore
+@inject ILocalStorageService LocalStorage
+@inject EchoAPI _echoAPI
 @*
     Friend Request layout for when it exists within the scrollable list in the FriendRequestListComponent.
 
@@ -13,22 +15,22 @@
     {
         <MudImage Src="@Request.Person.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
         <MudText Class="ml-3" Typo="Typo.caption">
-            @((MarkupString)("<b>" + Request.Person.DisplayName + "</b> " + (handleVisible ? $"<i> {Request.Person.Name} </i>" : "") + 
-            "\r\n" + Request.Type.ToString()+" Friend Request").Replace(Environment.NewLine, "<br />"))
+            @((MarkupString)("<b>" + Request.Id +": "+ Request.Person.DisplayName + "</b> " + (handleVisible ? $"<i> {Request.Person.Name} </i>" : "") +
+                "\r\n" + Request.Type.ToString() + " Friend Request").Replace(Environment.NewLine, "<br />"))
         </MudText>
-        <MudSpacer/>
+        <MudSpacer />
 
         @if (Request.Type == CoreLib.Entities.Enums.RequestType.Outgoing)
         {
-            <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Cancel" Title="Cancel"  />
+            <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Cancel" Title="Cancel" OnClick="cancelRequest" />
         }
         else
         {
-            <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Check" Title="Accept" />
-            <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Cancel" Title="Reject" />
+            <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Check" Title="Accept" OnClick="acceptRequest" />
+            <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Cancel" Title="Decline" OnClick="declineRequest" />
         }
     }
- </div>
+</div>
 
 @code {
     [Parameter]
@@ -37,4 +39,43 @@
     bool handleVisible = false;
     void MouseOver(MouseEventArgs e) { handleVisible = true; }
     void MouseOut(MouseEventArgs e) { handleVisible = false; }
+
+    async void acceptRequest()
+    {
+        var token = await LocalStorage.GetItemAsStringAsync("Token");
+
+        var result = await _echoAPI.AcceptFriendRequestAsync(token, Request.Id);
+        Console.WriteLine(result);
+        if (result)
+        {
+            Console.WriteLine("Accept success!");
+            StateHasChanged();
+        }
+    }
+
+    async void declineRequest()
+    {
+        var token = await LocalStorage.GetItemAsStringAsync("Token");
+
+        var result = await _echoAPI.DeclineFriendRequestAsync(token, Request.Id);
+        Console.WriteLine(result);
+        if (result)
+        {
+            Console.WriteLine("Decline success!");
+            StateHasChanged();
+        }
+    }
+
+    async void cancelRequest()
+    {
+        var token = await LocalStorage.GetItemAsStringAsync("Token");
+
+        var result = await _echoAPI.CancelFriendRequestAsync(token, Request.Id);
+        Console.WriteLine(result);
+        if (result)
+        {
+            Console.WriteLine("Cancel success!");
+            StateHasChanged();
+        }
+    }
 }

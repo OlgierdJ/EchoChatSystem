@@ -13,7 +13,8 @@
     User can also delete a friend directly from the friendslist.
 *@
 @* <h3>FriendListComponent</h3> *@
-@if (List.Count > 0)
+
+@if (filtered != null || filtered?.Count>0)
 {
 
     @if (displayAll)
@@ -61,7 +62,6 @@ else
 
 @code {
     public string searchTerm = "";
-    public List<UserDTO> filtered = new();
 
     [Parameter]
     public bool displayAll { get; set; } = false;
@@ -69,16 +69,15 @@ else
     [Parameter]
     public List<UserDTO> List { get; set; }
 
-    public FriendListComponent()
-    {
-        if (List != null)
-            filtered = List;
-    }
+    public List<UserDTO> filtered { get; set; }
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            filtered = List;
+            StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);

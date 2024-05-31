@@ -10,7 +10,7 @@
     The user can also unblock the blocked user by clicking the unblock button relative to the user.
 *@
 
-@if (List.Count > 0)
+@if (filtered != null)
 {
     <MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
          <MudTextField Placeholder=" Search" @bind-Value="searchTerm"
@@ -40,13 +40,19 @@ else
     [Parameter]
     public List<UserMinimalDTO> List { get; set; }
 
-    public List<UserMinimalDTO> filtered = new();
+    public List<UserMinimalDTO> filtered { get; set; }
 
-    public BlockedListComponent()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (List != null)
+        if (firstRender)
+        {
             filtered = List;
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
     }
+
     void SearchChanged()
     {
         Console.WriteLine(searchTerm);

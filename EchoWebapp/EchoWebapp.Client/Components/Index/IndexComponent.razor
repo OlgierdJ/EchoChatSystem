@@ -18,7 +18,7 @@
 @* <h3>IndexComponent</h3> *@
 
 @* so you dont see the UI befor you are logget in*@
-@if (AccountContainer.Value != 0)
+@if (loggedIn)
 {
     <div class="d-flex">
         <ServerListComponent OnItemSelected=@HandelOnChanged/>
@@ -35,7 +35,7 @@ else
 @code {
 
     bool display = true;
-
+    bool loggedIn = false;
     public UserFullDTO self { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -56,6 +56,7 @@ else
                 var result = await _echoAPI.LoadUserSessionDataAsync(token);
                 if(result != null)
                 {
+                    loggedIn = true;
                     result.ActiveStatus.DisplayedContent = result.ActiveStatus.Name;
                     self = result;
                 }

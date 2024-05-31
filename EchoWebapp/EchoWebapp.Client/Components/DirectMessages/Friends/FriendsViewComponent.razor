@@ -48,7 +48,7 @@
     </MudTabs>
 </div
 
-@* <ChatUserProfileComponent Visible="ToggleSidePanel" /> *@
+<!--@* <ChatUserProfileComponent Visible="ToggleSidePanel" /> *@ -->
 
     <MudPaper Width="18vw" Height="100vh" Square Style="background: var(--mud-palette-dark);">
          <h1>Activity Test</h1>
@@ -82,7 +82,7 @@
     {
         if (firstRender)
         {
-            self = null;
+            StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
