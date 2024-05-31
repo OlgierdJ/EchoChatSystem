@@ -14,16 +14,18 @@
 *@
 
 <div class="d-flex flex-grow-1" @onmouseover="MouseOver" @onmouseout="MouseOut">
-    <MudBadge Color="@stringToColor.ConvertStringToColor(User.ActiveStatus.IconColor)" Icon="@User.ActiveStatus.Icon"
-                Bordered Overlap="true" Origin="Origin.BottomRight">
-         <MudImage Src="@User.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
-     </MudBadge>
-
-     <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)("<b>" + User.DisplayName + "</b> " + (handleVisible ? $"<i> {User.Name} </i>" : "") + "\r\n" + User.ActiveStatus.Name).Replace(Environment.NewLine, "<br />"))</MudText>
-     <MudSpacer />
-     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.ChatBubble" Title="Message" />
-     <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.MoreVert" Title="More" />
- </div>
+    @if (User != null)
+    {
+        <MudBadge Color="@stringToColor.ConvertStringToColor(User.ActiveStatus.IconColor)" Icon="@User.ActiveStatus.Icon"
+                    Bordered Overlap="true" Origin="Origin.BottomRight">
+             <MudImage Src="@User.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+         </MudBadge>
+        <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)("<b>" + User.DisplayName + "</b> " + (handleVisible ? $"<i> {User.Name} </i>" : "") + "\r\n" + User.ActiveStatus.Name).Replace(Environment.NewLine, "<br />"))</MudText>
+        <MudSpacer />
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.ChatBubble" Title="Message" />
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.MoreVert" Title="More" />
+    }
+</div>
 @code {
     [Parameter]
     public UserDTO? User { get; set; }

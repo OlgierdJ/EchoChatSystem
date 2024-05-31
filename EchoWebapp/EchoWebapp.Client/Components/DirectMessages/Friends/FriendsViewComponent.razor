@@ -70,10 +70,8 @@
         var token = await LocalStorage.GetItemAsStringAsync("Token");
 
         var result = await _echoAPI.SendFriendRequestAsync(token, new AddFriendRequestDTO(){ Name = searchTerm });
-        Console.WriteLine(result);
         if (result)
         {
-            Console.WriteLine("success!");
             StateHasChanged();
         }
     }
