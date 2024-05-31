@@ -23,7 +23,7 @@ namespace CoreLib.Interfaces.Services
         Task<bool> SetChatImage(ulong senderId, ulong chatId, SetImageRequestDTO requestDTO); //uploads and uses only serverimage
         Task<bool> LeaveChat(ulong senderId, ulong chatId);
         //message
-        Task<bool> SendDirectMessageMessage(ulong senderId, ulong receiverId, SendMessageRequestDTO requestDTO);
+        //Task<bool> SendDirectMessageMessage(ulong senderId, ulong receiverId, SendMessageRequestDTO requestDTO); //moved to userservice
         Task<bool> SendChatMessage(ulong senderId, ulong chatId, SendMessageRequestDTO requestDTO);
         Task<bool> RemoveChatMessage(ulong senderId, ulong chatId, ulong messageId);
         Task<bool> PinChatMessage(ulong senderId, ulong chatId, ulong messageId);

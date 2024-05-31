@@ -13,6 +13,7 @@ namespace CoreLib.Interfaces.Services
         Task<bool> AcceptFriendRequestAsync(ulong senderId, ulong requestId);
         Task<bool> SendFriendRequestAsync(ulong senderId, AddFriendRequestDTO requestDTO);
         Task<bool> SendFriendRequestAsync(ulong senderId, ulong receiverId);
+        Task<bool> StartDirectMessages(ulong senderId, ulong receiverId);
         Task<bool> CancelFriendRequestAsync(ulong senderId, ulong requestId); //yes they are different appearently
         Task<bool> DeclineFriendRequestAsync(ulong senderId, ulong requestId); 
         Task<bool> RemoveFriendAsync(ulong senderId, ulong friendId);
