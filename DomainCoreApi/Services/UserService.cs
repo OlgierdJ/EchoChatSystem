@@ -58,16 +58,16 @@ namespace DomainCoreApi.Services
 
                 var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 //verify acceptingacc is part of inc request.
-                if (request == null || request.ReceiverId == senderId)
+                if (request == null || request.ReceiverId != senderId)
                 {
                     return false;
                 }
-                var existingFriendship = await dbContext.Set<FriendshipParticipancy>().AsQueryable()
+                var participancies = await dbContext.Set<FriendshipParticipancy>().AsQueryable()
                     .Where(e => e.ParticipantId == senderId || e.ParticipantId == request.SenderRequest.SenderId) //filter rows by participantid part of key.
                     .GroupBy(r => r.SubjectId) // find rows where friendship is same id and group them
-                 .Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
-                 .SelectMany(g => g) //flatten result into list
                  .ToListAsync();
+                 var existingFriendship = participancies.Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
+                 .SelectMany(g => g); //flatten result into list
                 if (existingFriendship.Any()) //list will be empty if no matches
                 {
                     return false;

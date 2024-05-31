@@ -981,5 +981,10 @@ namespace DomainCoreApi.Services
             }
             return true;
         }
+
+        public Task<bool> SendDirectMessageMessage(ulong senderId, ulong receiverId, SendMessageRequestDTO requestDTO)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
