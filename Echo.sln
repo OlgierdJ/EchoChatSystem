@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoWebapp.Client", "EchoWe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuthServer", "OAuthServer\OAuthServer.csproj", "{6AF31512-6B80-429D-87C7-86A67C340FF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainCoreApi.Tests", "DomainCoreApi.Tests\DomainCoreApi.Tests.csproj", "{ABAE5D24-64BF-4382-9346-8A355D8CDC55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{6AF31512-6B80-429D-87C7-86A67C340FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AF31512-6B80-429D-87C7-86A67C340FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AF31512-6B80-429D-87C7-86A67C340FF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABAE5D24-64BF-4382-9346-8A355D8CDC55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABAE5D24-64BF-4382-9346-8A355D8CDC55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABAE5D24-64BF-4382-9346-8A355D8CDC55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABAE5D24-64BF-4382-9346-8A355D8CDC55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
