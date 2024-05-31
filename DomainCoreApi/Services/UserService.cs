@@ -1067,6 +1067,7 @@ namespace DomainCoreApi.Services
                 .Include(x => x.Roles).ThenInclude(e => e.Role).ThenInclude(e => e.Permissions)
                 .Include(x => x.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.ActivityStatus)
                 .Include(x => x.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.CustomStatus)
+                .Include(x => x.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.Profile)
 
                 .Include(x => x.IncomingFriendRequests).ThenInclude(e => e.SenderRequest).ThenInclude(e => e.Sender).ThenInclude(e => e.Profile) //dont  actually know if i need to include profile or just sender handle name
                 .Include(x => x.IncomingFriendRequests).ThenInclude(e => e.SenderRequest).ThenInclude(e => e.Sender).ThenInclude(e => e.ActivityStatus) //dont  actually know if i need to include profile or just sender handle name
@@ -1121,7 +1122,10 @@ namespace DomainCoreApi.Services
                 .AsSplitQuery()
                 //.AsNoTrackingWithIdentityResolution()
                 .FirstOrDefaultAsync(e => e.Id == senderId);
-
+                if (senderAcc == null)
+                {
+                    return null;
+                }
                 var chatsToLoad = new List<ulong>(senderAcc.Chats.Select(e => e.SubjectId));
                 //var friendshipsToLoad = new List<ulong>(senderAcc.Chats.Select(e => e.SubjectId)); //not needed
                 var serversToLoad = new List<ulong>(senderAcc.Servers.Select(e => e.ServerId));
