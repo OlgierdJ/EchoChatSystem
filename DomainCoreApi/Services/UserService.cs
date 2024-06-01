@@ -3,6 +3,7 @@ using Azure.Core;
 using CoreLib.DTO.EchoCore.ServerCore;
 using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.DTO.RequestCore.FriendCore;
+using CoreLib.DTO.RequestCore.MessageCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.AccountCore;
@@ -66,8 +67,8 @@ namespace DomainCoreApi.Services
                     .Where(e => e.ParticipantId == senderId || e.ParticipantId == request.SenderRequest.SenderId) //filter rows by participantid part of key.
                     .GroupBy(r => r.SubjectId) // find rows where friendship is same id and group them
                  .ToListAsync();
-                 var existingFriendship = participancies.Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
-                 .SelectMany(g => g); //flatten result into list
+                var existingFriendship = participancies.Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
+                .SelectMany(g => g); //flatten result into list
                 if (existingFriendship.Any()) //list will be empty if no matches
                 {
                     return false;
@@ -141,11 +142,34 @@ namespace DomainCoreApi.Services
                 {
                     return false;
                 }
-                Account senderAccount = new()
+                var accs = await dbContext.Set<Account>()
+                    .Include(e=>e.Friendships)
+                    .Include(e=>e.IncomingFriendRequests.Where(e=>e.ReceiverId==senderId||e.ReceiverId==userId)).ThenInclude(e=>e.SenderRequest) // find incoming requests from sender side
+                    .Include(e=>e.OutgoingFriendRequests.Take(0))
+                    .Where(e => e.Id == senderId || e.Id == userId)
+                    .AsSplitQuery()
+                    .ToListAsync();
+                var relatedFriendship = dbContext.Set<FriendshipParticipancy>().Local
+                    .GroupBy(e => e.SubjectId)
+                    .FirstOrDefault(e => e.Count() > 1);
+                    //.Select(e=>e); // find matched friendparticipancy if any then flatten
+                var user = accs?.FirstOrDefault(e => e.Id == userId);
+                var sender = accs?.FirstOrDefault(e => e.Id == senderId);
+                var shouldRemoveFriend = relatedFriendship != null && relatedFriendship.Any();
+                if (shouldRemoveFriend)
                 {
-                    Id = senderId,
-                    BlockedAccounts = new List<AccountBlock>()
-                };
+                    dbContext.Set<Friendship>().Remove(relatedFriendship.First().Subject); //blocking someone will remove them from friendslist
+                }
+                var shouldRemoveRequests = user.OutgoingFriendRequests.Any() || sender.OutgoingFriendRequests.Any();
+                if (shouldRemoveRequests)
+                {
+                    var request = new List<OutgoingFriendRequest>(user.OutgoingFriendRequests).Concat(sender.OutgoingFriendRequests); // expensive way to result in one request xd
+                    //blocking someone will remove friendsrequests as it is impossible to request or receive requests of friendship from blocked users
+                    //afaik you can only have one request relation between accounts present at once so just removing first is fine. // we dont know which side sent request (*facepalm*)
+                    var relatedRequest = request.FirstOrDefault(); //only outgoing requests linked to the sender acc will be present here
+                    dbContext.Set<OutgoingFriendRequest>().Remove(relatedRequest);
+                    dbContext.Set<IncomingFriendRequest>().Remove(relatedRequest.ReceiverRequest); 
+                }
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
                 AccountBlock blockrelation = new()
                 {
@@ -153,8 +177,8 @@ namespace DomainCoreApi.Services
                     BlockerId = senderId,
                 };
 
-                dbContext.Set<Account>().Attach(senderAccount); //throws error if already blocked fyi
-                senderAccount.BlockedAccounts.Add(blockrelation);
+                await dbContext.Set<AccountBlock>().AddAsync(blockrelation); //throws error if already blocked fyi
+                
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -467,11 +491,16 @@ namespace DomainCoreApi.Services
                 {
                     SubjectId = userId,
                     MuterId = senderId,
+                    ExpirationTime = requestDTO.TimeExpires,
                 };
 
-                dbContext.Set<Account>().Attach(senderAccount); //throws error if already blocked fyi
-                senderAccount.MutedVoices.Add(muterelation);
-                var res = await dbContext.SaveChangesAsync();
+                //dbContext.Set<Account>().Attach(senderAccount); //throws error if already blocked fyi
+                //senderAccount.MutedVoices.Add(muterelation);
+                //var res = await dbContext.SaveChangesAsync();
+                await dbContext.Set<AccountMute>().AddAsync(muterelation);
+
+                await dbContext.SaveChangesAsync();
+
             }
             catch (Exception e)
             {
@@ -487,9 +516,16 @@ namespace DomainCoreApi.Services
             //bad way to have friendships with this data or maybe make alternate key in friendship etc..
             try
             {
-                var acc = await dbContext.Set<Account>().Include(e => e.Friendships).ThenInclude(e => e.Participant).AsQueryable().FirstOrDefaultAsync(e => e.Id == senderId);
-                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
-                var removed = acc.Friendships.FirstOrDefault(e => e.Subject.Participants.Any(e => e.ParticipantId == friendId)).Subject;
+                if (senderId == friendId)
+                {
+                    return false;
+                }
+                var participancies = await dbContext.Set<FriendshipParticipancy>().Include(e => e.Participant).Include(e => e.Subject).AsQueryable().Where(e => e.ParticipantId == senderId || e.ParticipantId == friendId).ToListAsync();
+                if (participancies==null)
+                {
+                    return false;
+                }
+                var removed = participancies.GroupBy(e => e.SubjectId).FirstOrDefault(e => e.Count() > 1)?.Select(e=>e).First().Subject;
                 if (removed == null)
                 {
                     return false;
@@ -607,13 +643,8 @@ namespace DomainCoreApi.Services
         {
             try
             {
-                //Account acc = new()
-                //{
-                //    Id = senderId,
-                //    //something different than potential change //0 is always different than null and no id can have id 0 so its gucci
-                //};
-                var acc = await dbContext.Set<Account>().Include(e => e.CustomStatus).FirstOrDefaultAsync(e => e.Id == senderId);
-                if (acc == null)
+                var senderAcc = await dbContext.Set<Account>().Include(e => e.CustomStatus).AsSingleQuery().AsNoTracking().FirstOrDefaultAsync(e => e.Id == senderId);
+                if (senderAcc == null)
                 {
                     return false;
                 }
@@ -625,25 +656,34 @@ namespace DomainCoreApi.Services
                 //    .SetProperty(b=>b.ExpirationTime, requestDTO.TimeExpires)
                 //    );
 
-                if (requestDTO.Content.IsNullOrEmpty() && acc.CustomStatus == null) //if request is null ignore by now
+                var relation = new AccountCustomStatus()
+                {
+                    CustomMessage = requestDTO.Content,
+                    ExpirationTime = requestDTO.TimeExpires,
+                    Id = senderId,
+                };
+
+                var relationExists = senderAcc.CustomStatus != null;
+
+                if (requestDTO.Content.IsNullOrEmpty() && !relationExists) //if request is null ignore by now
                 {
                     return false;
                 }
 
-                if (!requestDTO.Content.IsNullOrEmpty() && acc.CustomStatus != null) //update if not null and content not null
+                if (requestDTO.Content.IsNullOrEmpty() && relationExists) //if status exists and request is null then remove it
                 {
-                    acc.CustomStatus.CustomMessage = requestDTO.Content;
-                    acc.CustomStatus.ExpirationTime = requestDTO.TimeExpires;
+                    dbContext.Set<AccountCustomStatus>().Remove(relation);
                 }
 
-                if (!requestDTO.Content.IsNullOrEmpty() && acc.CustomStatus == null)//if request is not null insert and save.
+                if (!requestDTO.Content.IsNullOrEmpty() && relationExists) //if note is already loaded into context just update it.
                 {
-                    acc.CustomStatus = new() { Id = senderId, CustomMessage = requestDTO.Content, ExpirationTime = requestDTO.TimeExpires };
+                    dbContext.Set<AccountCustomStatus>().Update(relation);
                 }
 
-                if (requestDTO.Content.IsNullOrEmpty() && acc.CustomStatus != null) //if status exists and request is null then remove it
+                if (!requestDTO.Content.IsNullOrEmpty() && !relationExists) //add if not null and content not null
                 {
-                    dbContext.Set<AccountCustomStatus>().Remove(acc.CustomStatus);
+                    await dbContext.Set<AccountCustomStatus>().AddAsync(relation);
+                    //senderAcc.NotedAccounts.Add(relation); // cant use changetracker cause acc is not attached.
                 }
 
                 var res = await dbContext.SaveChangesAsync();
@@ -664,7 +704,7 @@ namespace DomainCoreApi.Services
                     return false;
                 }
 
-                var senderAcc = await dbContext.Set<Account>().Include(e => e.NicknamedAccounts.Where(e => e.SubjectId == userId)).FirstOrDefaultAsync(e => e.Id == senderId);
+                var senderAcc = await dbContext.Set<Account>().Include(e => e.NicknamedAccounts.Where(e => e.SubjectId == userId)).AsNoTracking().FirstOrDefaultAsync(e => e.Id == senderId);
                 if (senderAcc == null)
                 {
                     return false;
@@ -675,7 +715,7 @@ namespace DomainCoreApi.Services
                 {
                     SubjectId = userId,
                     AuthorId = senderId,
-                    Nickname = requestDTO.Nickname,
+                    Nickname = requestDTO.Nickname
                 };
 
                 var relationExists = senderAcc.NicknamedAccounts.Any();
@@ -690,9 +730,15 @@ namespace DomainCoreApi.Services
                     dbContext.Set<AccountNickname>().Remove(relation);
                 }
 
+                if (!requestDTO.Nickname.IsNullOrEmpty() && relationExists) //if note is already loaded into context just update it.
+                {
+                    dbContext.Set<AccountNickname>().Update(relation);
+                }
+
                 if (!requestDTO.Nickname.IsNullOrEmpty() && !relationExists) //add if not null and content not null
                 {
-                    senderAcc.NicknamedAccounts.Add(relation);
+                    await dbContext.Set<AccountNickname>().AddAsync(relation);
+                    //senderAcc.NotedAccounts.Add(relation); // cant use changetracker cause acc is not attached.
                 }
 
                 var res = await dbContext.SaveChangesAsync();
@@ -713,7 +759,7 @@ namespace DomainCoreApi.Services
                     return false;
                 }
 
-                var senderAcc = await dbContext.Set<Account>().Include(e => e.NotedAccounts.Where(e => e.SubjectId == userId)).FirstOrDefaultAsync(e => e.Id == senderId);
+                var senderAcc = await dbContext.Set<Account>().Include(e => e.NotedAccounts.Where(e => e.SubjectId == userId)).AsNoTracking().FirstOrDefaultAsync(e => e.Id == senderId);
                 if (senderAcc == null)
                 {
                     return false;
@@ -724,13 +770,10 @@ namespace DomainCoreApi.Services
                 {
                     SubjectId = userId,
                     AuthorId = senderId,
-                    Note = requestDTO.Note,
+                    Note = requestDTO.Note, 
                 };
 
-
-
-
-                var relationExists = senderAcc.NotedAccounts.Any();
+                var relationExists = senderAcc.NicknamedAccounts.Any();
 
                 if (requestDTO.Note.IsNullOrEmpty() && !relationExists) //if request is null ignore by now
                 {
@@ -742,9 +785,15 @@ namespace DomainCoreApi.Services
                     dbContext.Set<AccountNote>().Remove(relation);
                 }
 
+                if (!requestDTO.Note.IsNullOrEmpty() && relationExists) //if note is already loaded into context just update it.
+                {
+                    dbContext.Set<AccountNote>().Update(relation);
+                }
+
                 if (!requestDTO.Note.IsNullOrEmpty() && !relationExists) //add if not null and content not null
                 {
-                    senderAcc.NotedAccounts.Add(relation);
+                    await dbContext.Set<AccountNote>().AddAsync(relation);
+                    //senderAcc.NotedAccounts.Add(relation); // cant use changetracker cause acc is not attached.
                 }
 
 
@@ -923,9 +972,12 @@ namespace DomainCoreApi.Services
         {
             try
             {
+                //perhaps in the future change security credentials to link to user through primary key since it wont be changed and we wont enforce "not previous password" policy
+                var acc = await dbContext.Set<Account>().Include(e=>e.User).ThenInclude(e=>e.SecurityCredentials).FirstOrDefaultAsync(e=>e.Id == id);
                 var userCred = await _pwdHandler.CreatePassword(password);
-                userCred.UserId = id;
-                dbContext.Set<SecurityCredentials>().Update(userCred);
+                acc.User.SecurityCredentials.PasswordHash = userCred.PasswordHash;
+                acc.User.SecurityCredentials.Salt = userCred.Salt;
+                //dbContext.Set<SecurityCredentials>().Update(userCred);
                 await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -1119,6 +1171,7 @@ namespace DomainCoreApi.Services
                 .Include(x => x.Roles).ThenInclude(e => e.Role).ThenInclude(e => e.Permissions)
                 .Include(x => x.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.ActivityStatus)
                 .Include(x => x.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.CustomStatus)
+                .Include(x => x.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.Profile)
 
                 .Include(x => x.IncomingFriendRequests).ThenInclude(e => e.SenderRequest).ThenInclude(e => e.Sender).ThenInclude(e => e.Profile) //dont  actually know if i need to include profile or just sender handle name
                 .Include(x => x.IncomingFriendRequests).ThenInclude(e => e.SenderRequest).ThenInclude(e => e.Sender).ThenInclude(e => e.ActivityStatus) //dont  actually know if i need to include profile or just sender handle name
@@ -1173,7 +1226,10 @@ namespace DomainCoreApi.Services
                 .AsSplitQuery()
                 //.AsNoTrackingWithIdentityResolution()
                 .FirstOrDefaultAsync(e => e.Id == senderId);
-
+                if (senderAcc == null)
+                {
+                    return null;
+                }
                 var chatsToLoad = new List<ulong>(senderAcc.Chats.Select(e => e.SubjectId));
                 //var friendshipsToLoad = new List<ulong>(senderAcc.Chats.Select(e => e.SubjectId)); //not needed
                 var serversToLoad = new List<ulong>(senderAcc.Servers.Select(e => e.ServerId));
@@ -1182,7 +1238,7 @@ namespace DomainCoreApi.Services
                 if (chatsToLoad.Count > 0)
                 {
                     senderChats = await LoadChatsFromIdsAsync(chatsToLoad); //actually doesnt need to assign chats cause dbcontext handles lifetime scope
-                    
+
                 }
                 if (serversToLoad.Count > 0)
                 {
@@ -1205,7 +1261,7 @@ namespace DomainCoreApi.Services
         /// </summary>
         /// <param name="accountWithContext"></param>
         /// <returns>lookup list containing the external accounts participancies link to a mutual friend.</returns>
-        private List<IGrouping<ulong,FriendshipParticipancy>> GetMutualFriendLookup(Account accountWithContext)
+        private List<IGrouping<ulong, FriendshipParticipancy>> GetMutualFriendLookup(Account accountWithContext)
         {
             //mutual friendship calculation.
             ////get lists to crosscheck with
@@ -1258,7 +1314,7 @@ namespace DomainCoreApi.Services
                 mutualServersLookup = GetMutualServerServerProfileLookup(accountWithContext);
 
             }
-            
+
             //to keep references to minimize data throughput keep mapped references where possible
             //make converter factory to get same converter instances essentially keeping context for mapped objects allowing us to make a dictionary lookup within them to look for existing maps
             var ConverterFactory = new EchoMappingConverterFactory();
@@ -1282,15 +1338,15 @@ namespace DomainCoreApi.Services
                         var mutualFriends = mutualFriendsLookup?.FirstOrDefault(e => e.Key == memberProfile.Id)? //find member relevant list from lookup
                         .Select(e => e.Subject.Participants.FirstOrDefault(e => e.ParticipantId != memberProfile.Id)); //select the other end of the participancy.
                                                                                                                        //.ToList(); //need to tolist in case no friends were loaded
-                    if (mutualFriends != null && mutualFriends.Any())
-                    {
-                        memberProfile.MutualFriends = mapper.Map<List<UserDTO>>(mutualFriends.ToList(), opts => 
+                        if (mutualFriends != null && mutualFriends.Any())
                         {
-                            if (minimizeDuplicatesUsingCacheLookup)
+                            memberProfile.MutualFriends = mapper.Map<List<UserDTO>>(mutualFriends.ToList(), opts =>
                             {
-                                opts.ConstructServicesUsing(ConverterFactory.Resolve);
-                            }
-                        });
+                                if (minimizeDuplicatesUsingCacheLookup)
+                                {
+                                    opts.ConstructServicesUsing(ConverterFactory.Resolve);
+                                }
+                            });
 
                         }
 
@@ -1379,9 +1435,7 @@ namespace DomainCoreApi.Services
                     BlockerId = senderId,
                 };
 
-                senderAccount.BlockedAccounts.Add(blockrelation);
-                dbContext.Set<Account>().Attach(senderAccount); //throws error if already blocked fyi
-                senderAccount.BlockedAccounts.Remove(blockrelation);
+                dbContext.Set<AccountBlock>().Remove(blockrelation); //throws error if not already blocked fyi
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -1410,10 +1464,160 @@ namespace DomainCoreApi.Services
                     SubjectId = userId,
                     MuterId = senderId,
                 };
-                senderAccount.MutedVoices.Add(muterelation);
+                //senderAccount.MutedVoices.Add(muterelation);
 
-                dbContext.Set<Account>().Attach(senderAccount); //throws error if already blocked fyi
-                senderAccount.MutedVoices.Remove(muterelation);
+                //dbContext.Set<Account>().Attach(senderAccount); //throws error if already blocked fyi
+                //senderAccount.MutedVoices.Remove(muterelation);
+                dbContext.Set<AccountMute>().Remove(muterelation);
+
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> StartDirectMessages(ulong senderId, ulong receiverId)
+        {
+            try
+            {
+                if (senderId == receiverId)
+                {
+                    return false;
+                }
+               
+                var participancies = await dbContext.Set<AccountDirectMessageRelation>().AsQueryable()
+                    .Where(e => e.OwnerId == senderId || e.OwnerId == receiverId) //filter rows by participantid part of key.
+                 .ToListAsync();
+                var existingFriendship = participancies
+                    .GroupBy(r => r.RelationId) // find rows where dm is same id and group them
+                    .Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
+                .SelectMany(g => g); //flatten result into list
+                if (existingFriendship.Any()) //list will be empty if no matches
+                {
+                    return false;
+                }
+
+                DirectMessageRelation directMessageRelation = new()
+                {
+                    AccountsInRelation = new List<AccountDirectMessageRelation>()
+                        {
+                            new AccountDirectMessageRelation()
+                            {
+                                    OwnerId = senderId,
+                            },
+                            new AccountDirectMessageRelation()
+                            {
+                                    OwnerId = receiverId,
+                            }
+                        },
+                     Chat = new Chat()
+                     {
+                           Name = Guid.NewGuid().ToString(), //name doesnt matter since it will display as the other person for the viewer. //just put guid for now since cant be null and i want to see the chats easily in db
+                           Participants = new List<ChatParticipancy>()
+                           {
+                               new()
+                               {
+                                    ParticipantId = senderId,
+                                     IsOwner = true, //dont know if i should make them owner or if i should just make both nonowner
+                                    Hidden = false,
+                               },
+                               new()
+                               {
+                                    ParticipantId= receiverId,
+                                    IsOwner = true, //dont know if i should make them owner or if i should just make both nonowner
+                                    Hidden = true, //starts hidden, will remove dm relation if no messages are sent within a certain timeframe probably
+                               },
+                           },
+                     }
+                };
+
+                
+                await dbContext.Set<DirectMessageRelation>().AddAsync(directMessageRelation);
+                var res = await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> StartDirectMessages(ulong senderId, ulong receiverId, SendMessageRequestDTO requestDTO)
+        {
+            try
+            {
+                if (senderId == receiverId)
+                {
+                    return false;
+                }
+
+                var participancies = await dbContext.Set<AccountDirectMessageRelation>().AsQueryable()
+                    .Where(e => e.OwnerId == senderId || e.OwnerId == receiverId) //filter rows by participantid part of key.
+                 .ToListAsync();
+                var existingFriendship = participancies
+                    .GroupBy(r => r.RelationId) // find rows where dm is same id and group them
+                    .Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
+                .SelectMany(g => g); //flatten result into list
+                if (existingFriendship.Any()) //list will be empty if no matches
+                {
+                    return false;
+                }
+
+                DirectMessageRelation directMessageRelation = new()
+                {
+                    AccountsInRelation = new List<AccountDirectMessageRelation>()
+                        {
+                            new AccountDirectMessageRelation()
+                            {
+                                    OwnerId = senderId,
+                            },
+                            new AccountDirectMessageRelation()
+                            {
+                                    OwnerId = receiverId,
+                            }
+                        },
+                    Chat = new Chat()
+                    {
+                        Name = Guid.NewGuid().ToString(), //name doesnt matter since it will display as the other person for the viewer. //just put guid for now since cant be null and i want to see the chats easily in db
+                        Participants = new List<ChatParticipancy>()
+                           {
+                               new()
+                               {
+                                    ParticipantId = senderId,
+                                     IsOwner = true, //dont know if i should make them owner or if i should just make both nonowner
+                                    Hidden = false,
+                               },
+                               new()
+                               {
+                                    ParticipantId= receiverId,
+                                    IsOwner = true, //dont know if i should make them owner or if i should just make both nonowner
+                                    Hidden = false, //starts hidden, will remove dm relation if no messages are sent within a certain timeframe probably
+                               },
+                           },
+                         Messages= new List<ChatMessage>()
+                         {
+                             new()
+                             { 
+                                 AuthorId= senderId,
+                                  Content = requestDTO.Content,
+                                     ParentId = null,
+                                      
+                                  Attachments=requestDTO.Attachments.Select(e=>new ChatMessageAttachment()
+                                  {
+                                       Description=e.Description,
+                                        FileLocationURL=e.FileLocationURL,
+                                       FileName   =e.FileName
+                                  }).ToList(),
+                             }
+                         }
+                    }
+                };
+
+
+                await dbContext.Set<DirectMessageRelation>().AddAsync(directMessageRelation);
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)

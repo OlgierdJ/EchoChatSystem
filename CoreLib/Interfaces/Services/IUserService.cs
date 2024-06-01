@@ -1,5 +1,6 @@
 ﻿using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.DTO.RequestCore.FriendCore;
+using CoreLib.DTO.RequestCore.MessageCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore.UserCore;
@@ -13,6 +14,8 @@ namespace CoreLib.Interfaces.Services
         Task<bool> AcceptFriendRequestAsync(ulong senderId, ulong requestId);
         Task<bool> SendFriendRequestAsync(ulong senderId, AddFriendRequestDTO requestDTO);
         Task<bool> SendFriendRequestAsync(ulong senderId, ulong receiverId);
+        Task<bool> StartDirectMessages(ulong senderId, ulong receiverId);
+        Task<bool> StartDirectMessages(ulong senderId, ulong receiverId, SendMessageRequestDTO requestDTO); //starts a dm by sending a message directly
         Task<bool> CancelFriendRequestAsync(ulong senderId, ulong requestId); //yes they are different appearently
         Task<bool> DeclineFriendRequestAsync(ulong senderId, ulong requestId); 
         Task<bool> RemoveFriendAsync(ulong senderId, ulong friendId);

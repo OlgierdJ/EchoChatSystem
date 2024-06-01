@@ -13,7 +13,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ChatCore
                 .HasKey(b => b.Id);
             builder
                 .Property(b => b.Name)
-                .IsRequired();
+                .IsRequired(); // maybe make non required=?
             builder
                .Property(b => b.IconUrl)
                .IsRequired(false);
