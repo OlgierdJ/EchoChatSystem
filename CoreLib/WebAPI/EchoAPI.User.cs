@@ -178,7 +178,7 @@ namespace CoreLib.WebAPI
 
         public async Task<bool> SendFriendRequestAsync(string Token, AddFriendRequestDTO requestDTO)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, $"user/friend/request/send");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"user/friend/request/send");
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var load = JsonSerializer.Serialize(requestDTO, SerializerOptions);
@@ -194,7 +194,7 @@ namespace CoreLib.WebAPI
 
         public async Task<bool> SendFriendRequestAsync(string Token, ulong receiverId)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, $"user/friend/request/send/{receiverId}");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"user/friend/request/send/{receiverId}");
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
