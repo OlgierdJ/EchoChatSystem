@@ -758,7 +758,7 @@ namespace DomainCoreApi.Controllers
 
         [Authorize]
         [HttpPut("{userId}/StartDirectMessages")]
-        public async Task<IActionResult> SetStatusAsync(ulong userId)
+        public async Task<IActionResult> StartDirectMessagesAsync(ulong userId)
         {
             try
             {
@@ -783,7 +783,7 @@ namespace DomainCoreApi.Controllers
 
         [Authorize]
         [HttpPost("{userId}/StartDirectMessages")]
-        public async Task<IActionResult> SetStatusAsync(ulong userId, SendMessageRequestDTO requestDTO)
+        public async Task<IActionResult> StartDirectMessagesAsync(ulong userId, SendMessageRequestDTO requestDTO)
         {
             try
             {

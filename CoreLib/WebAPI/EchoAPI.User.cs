@@ -1,5 +1,6 @@
 ﻿using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.DTO.RequestCore.FriendCore;
+using CoreLib.DTO.RequestCore.MessageCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore;
@@ -545,6 +546,28 @@ namespace CoreLib.WebAPI
             }
 
             return false;
+        }
+        
+        public async Task<bool> StartDirectMessagesAsync(string Token, ulong userId)
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Put, $"user/{userId}/StartDirectMessages");
+                request.Headers.Authorization = authenticationHeaderValue(Token);
+
+                //var load = JsonSerializer.Serialize(requestDTO, SerializerOptions);
+                //request.Content = new StringContent(load, Encoding.UTF8, "application/json");
+
+                var response = await client.SendAsync(request).ConfigureAwait(false);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception e)
+            {
+                //_notificationPipeline?.SetCurrentMessage(e.Message, Models.Stores.MessageType.Error);
+                await Console.Out.WriteLineAsync(e.Message);
+                throw;
+            }
         }
     }
 }
