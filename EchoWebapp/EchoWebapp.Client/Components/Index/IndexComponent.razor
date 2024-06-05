@@ -21,7 +21,7 @@
 @if (loggedIn)
 {
     <div class="d-flex">
-        <ServerListComponent OnItemSelected=@HandelOnChanged/>
+        <ServerListComponent OnItemSelected=@HandleOnChanged/>
         <DirectMessagesViewComponent self=self DisplayFriends=display />
     </div>
 }
@@ -66,7 +66,7 @@ else
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    public void HandelOnChanged(bool selected)
+    public void HandleOnChanged(bool selected)
     {
         display = selected;
         StateHasChanged();

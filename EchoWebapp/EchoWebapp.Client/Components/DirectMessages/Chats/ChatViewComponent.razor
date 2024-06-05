@@ -40,9 +40,9 @@
                     else
                     {
                         <MudAvatar>
-                            <MudImage Src="@other.ImageIconURL" />
+                            <MudImage Src="@Content?.Participants?.Where(e => e.Id != self.Id).First().ImageIconURL" />
                         </MudAvatar>
-                        <MudText Class="ml-2">@other.DisplayName</MudText>
+                        <MudText Class="ml-2">@Content?.Participants?.Where(e => e.Id != self.Id).First().DisplayName</MudText>
                     }
                     <MudSpacer />
                     <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
@@ -58,7 +58,7 @@
                     else
                     {
                         <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Color="@(ToggleSidePanel ? Color.Primary : Color.Default)" OnClick="(()=> ToggleSidePanel = !ToggleSidePanel)" />
-                        TextPlaceholder = "Message @" + Content.Participants.Where(e => e.Id != 112).First().DisplayName;
+                        TextPlaceholder = "Message @" + Content?.Participants?.Where(e => e.Id != self.Id).First().DisplayName;
                     }
                 </MudToolBar>
             </MudPaper>
