@@ -1,12 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.UserCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.UserCore
 {
-    public interface IMembershipBadge
-    {
-        string IconName { get; set; }
-        string IconURL { get; set; }
-        int OrderingWeight { get; set; }
-        DateTime TimeJoined { get; set; }
-    }
 
     public class MembershipBadgeDTO : IMembershipBadge //probably instead of generating it each time via mapping one should probably generate it once in database
     {

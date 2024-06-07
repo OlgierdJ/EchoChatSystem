@@ -4,6 +4,7 @@ using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
 {

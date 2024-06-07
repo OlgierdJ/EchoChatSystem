@@ -1,13 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
 {
-    public interface IPaymentMethod
-    {
-        string Description { get; set; }
-        ulong Id { get; set; }
-        bool IsDefaultMethod { get; set; }
-        DateTime TimeAdded { get; set; }
-        PaymentTypeDTO Type { get; set; }
-    }
 
     public class PaymentMethodDTO : IPaymentMethod
     {

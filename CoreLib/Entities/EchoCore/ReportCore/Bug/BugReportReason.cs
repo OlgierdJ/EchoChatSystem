@@ -1,4 +1,5 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ReportCore.Bug
 {

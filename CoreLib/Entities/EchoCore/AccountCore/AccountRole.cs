@@ -1,7 +1,7 @@
 ﻿using CoreLib.Abstractions;
 using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ApplicationCore;
-using CoreLib.Interfaces;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {

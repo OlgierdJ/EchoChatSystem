@@ -1,19 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.ChatCore.VoiceCore
-{
-    public interface ISoundboardSound
-    {
-        ulong Id { get; set; }
-        string Name { get; set; }
-        string SoundFileUrl { get; set; }
-    }
+﻿using CoreLib.DTO.Contracts;
 
-    public interface ISoundboardSoundWithEmote<TEmote> : ISoundboardSound
-    {
-        ulong Id { get; set; }
-        string Name { get; set; }
-        string SoundFileUrl { get; set; }
-        TEmote? AssociatedEmote { get; set; }
-    }
+namespace CoreLib.DTO.EchoCore.ChatCore.VoiceCore
+{
 
     public class SoundboardSoundDTO : ISoundboardSoundWithEmote<EmoteDTO>
     {

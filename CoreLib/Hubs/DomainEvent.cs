@@ -1,5 +1,5 @@
 ﻿using CoreLib.Entities.Enums;
-using CoreLib.Interfaces;
+using CoreLib.Interfaces.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

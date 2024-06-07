@@ -1,16 +1,8 @@
-﻿using CoreLib.DTO.EchoCore.MiscCore;
+﻿using CoreLib.DTO.Contracts;
+using CoreLib.DTO.EchoCore.MiscCore;
 
 namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
 {
-    public interface ISubscription
-    {
-        CurrencyDTO Currency { get; set; }
-        ulong Id { get; set; }
-        bool IsRecurring { get; set; }
-        double MyCostEUR { get; set; }
-        SubscriptionPlanDTO SubscriptionPlan { get; set; }
-        DateTime? TimeDeadline { get; set; }
-    }
 
     /*
      * ******************************************* 

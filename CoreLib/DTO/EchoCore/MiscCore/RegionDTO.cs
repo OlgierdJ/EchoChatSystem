@@ -1,12 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.MiscCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.MiscCore
 {
-    public interface IRegion
-    {
-        uint Id { get; set; }
-        string Name { get; set; }
-        public string Icon { get; set; }
-        string RegionServerURL { get; set; }
-    }
 
     public class RegionDTO : IRegion
     //displayed alphabetically sorted

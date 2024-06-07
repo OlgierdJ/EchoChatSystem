@@ -1,6 +1,5 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Interfaces;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.FriendCore
 {

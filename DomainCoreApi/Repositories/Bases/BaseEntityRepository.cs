@@ -1,5 +1,5 @@
-﻿using CoreLib.Interfaces;
-using CoreLib.Interfaces.Bases;
+﻿using CoreLib.Interfaces.Bases;
+using CoreLib.Interfaces.Contracts;
 using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;

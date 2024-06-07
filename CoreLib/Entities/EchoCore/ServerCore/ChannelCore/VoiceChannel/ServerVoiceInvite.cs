@@ -1,7 +1,6 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
-using CoreLib.Interfaces;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel
 {

@@ -1,4 +1,4 @@
-﻿using CoreLib.Interfaces;
+﻿using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {

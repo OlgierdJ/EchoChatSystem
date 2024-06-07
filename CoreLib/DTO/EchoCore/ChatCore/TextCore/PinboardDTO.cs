@@ -1,10 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
 {
-    public interface IPinboard<TPinnedMessage>
-    {
-        ulong Id { get; set; }
-        ICollection<TPinnedMessage>? PinnedMessages { get; set; }
-    }
 
     public class PinboardDTO : IPinboard<MessageDTO>
     {

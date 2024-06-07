@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ReportCore.Feedback
 {

@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using CoreLib.Entities.Base;
-using CoreLib.Interfaces;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using CoreLib.Hubs;
 using CoreLib.Entities.Enums;
 using DomainCoreApi.Services;
+using CoreLib.Interfaces.Contracts;
 
 namespace DomainCoreApi.EFCORE.Interceptors
 {

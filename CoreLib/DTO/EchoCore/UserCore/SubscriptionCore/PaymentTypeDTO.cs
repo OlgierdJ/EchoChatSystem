@@ -1,11 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
 {
-    public interface IPaymentType
-    {
-        string Icon { get; set; }
-        uint Id { get; set; }
-        string Name { get; set; }
-    }
 
     public class PaymentTypeDTO : IPaymentType
     {

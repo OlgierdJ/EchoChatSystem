@@ -3,7 +3,7 @@ using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using CoreLib.Entities.EchoCore.ServerCore.Management;
-using CoreLib.Interfaces;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore
 {

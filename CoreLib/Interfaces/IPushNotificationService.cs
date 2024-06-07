@@ -1,4 +1,5 @@
 ﻿using CoreLib.Entities.Enums;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Interfaces
 {

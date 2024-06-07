@@ -1,12 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
 {
-    public interface IMessageAttachment
-    {
-        string? Description { get; set; }
-        string FileLocationURL { get; set; }
-        string FileName { get; set; }
-        ulong Id { get; set; }
-    }
 
     public class MessageAttachmentDTO : IMessageAttachment
     {

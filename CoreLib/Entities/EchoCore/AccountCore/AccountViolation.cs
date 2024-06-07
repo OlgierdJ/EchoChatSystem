@@ -2,6 +2,7 @@
 using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
 using CoreLib.Entities.EchoCore.ReportCore.Message;
 using CoreLib.Entities.EchoCore.ReportCore.Profile;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {

@@ -1,13 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
 {
-    public interface ISubscriptionPlan
-    {
-        double CostEUR { get; set; }
-        ulong Id { get; set; }
-        string Name { get; set; }
-        string PaymentPlan { get; set; }
-        string Type { get; set; }
-    }
 
     public class SubscriptionPlanDTO : ISubscriptionPlan
     {

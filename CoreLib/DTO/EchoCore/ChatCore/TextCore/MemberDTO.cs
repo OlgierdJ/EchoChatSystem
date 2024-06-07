@@ -1,15 +1,8 @@
-﻿using CoreLib.DTO.EchoCore.UserCore;
+﻿using CoreLib.DTO.Contracts;
+using CoreLib.DTO.EchoCore.UserCore;
 
 namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
 {
-    public interface IMember
-    {
-        ActiveActivityStatusDTO? ActiveStatus { get; set; }
-        string GroupingName { get; set; }
-        bool IsOwner { get; set; }
-        string NameColour { get; set; }
-        ExternalUserProfileDTO? Profile { get; set; }
-    }
 
     public class MemberDTO : IUserMinimal, IMember
     {

@@ -1,17 +1,8 @@
-﻿using CoreLib.DTO.EchoCore.MiscCore;
+﻿using CoreLib.DTO.Contracts;
+using CoreLib.DTO.EchoCore.MiscCore;
 
 namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
 {
-    public interface ISubscriptionTransaction
-    {
-        double ChargedAmount { get; set; }
-        CurrencyDTO Currency { get; set; }
-        //string Description { get; set; } //dont think this is needed is it?????
-        string ExternalTransactionId { get; set; }
-        ulong Id { get; set; }
-        DateTime TimePaid { get; set; }
-        PaymentTypeDTO TransactionType { get; set; }
-    }
 
     public class SubscriptionTransactionDTO : ISubscriptionTransaction
     {

@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.Enums;
 using CoreLib.Interfaces;
+using CoreLib.Interfaces.Contracts;
 
 namespace DomainCoreApi.Services
 {
