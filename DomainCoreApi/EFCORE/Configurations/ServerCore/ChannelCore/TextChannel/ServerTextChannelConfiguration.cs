@@ -23,7 +23,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
             builder.HasMany(b => b.Messages).WithOne(b => b.MessageHolder).HasForeignKey(b => b.MessageHolderId).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(b => b.PinnedMessages).WithOne(b => b.Pinboard).HasForeignKey(b => b.PinboardId).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(b => b.MessageTrackers).WithOne(b => b.CoOwner).HasForeignKey(b => b.CoOwnerId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(b => b.Invites).WithOne(b => b.Channel).HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(b => b.Invites).WithOne(b => b.TextChannel).HasForeignKey(b => b.TextChannelId).OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(b => b.Muters).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade);
 

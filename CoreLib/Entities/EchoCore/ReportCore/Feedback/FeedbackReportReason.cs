@@ -2,7 +2,10 @@
 
 namespace CoreLib.Entities.EchoCore.ReportCore.Feedback
 {
-    public class FeedbackReportReason : BaseReportReason<byte, FeedbackReport>
+    public class FeedbackReportReason : BaseEntity<byte>, IReportReason<FeedbackReport>
     {
+        public ICollection<FeedbackReport>? Reports { get; set; }
+        public string Reason { get; set; }
+        public string Description { get; set; }
     }
 }

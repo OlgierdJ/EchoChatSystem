@@ -5,7 +5,8 @@ namespace CoreLib.Entities.EchoCore.AccountCore
     public class AccountSession : BaseEntity<ulong>
     {
         public ulong AccountId { get; set; }
-        public string SessionToken { get; set; } //Token used for verifying calls to the api on the accounts behalf
+        public string AccessToken { get; set; } //Token used for verifying calls to the api on the accounts behalf (short lifetime)
+        public string RefreshToken { get; set; } //Token used for getting new access tokens for a session.
         public string DeviceId { get; set; } //PC, Windows, Desktop-JHLDPH1235, etc
         public string Location { get; set; } //Denmark, Ballerup, maybe ip, etc
         public DateTime TimeStarted { get; set; } //when session is created

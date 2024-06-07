@@ -28,7 +28,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore
             builder.HasOne(b => b.Region).WithMany(b => b.VoiceChannels).HasForeignKey(b => b.RegionId).OnDelete(DeleteBehavior.Restrict).IsRequired();
             builder.HasOne(b => b.ServerSettings).WithOne(b => b.InactiveChannel).HasForeignKey<ServerSettings>(b => b.InactiveChannelId).OnDelete(DeleteBehavior.Restrict).IsRequired(false);
             builder.HasMany(b => b.Muters).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired(false);
-            builder.HasMany(b => b.VoiceInvites).WithOne(b => b.Channel).HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.ClientCascade).IsRequired(false);
+            builder.HasMany(b => b.Invites).WithOne(b => b.VoiceChannel).HasForeignKey(b => b.VoiceChannelId).OnDelete(DeleteBehavior.ClientCascade).IsRequired(false);
             builder.HasMany(b => b.AllowedPermissions).WithOne(b => b.Channel).HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasMany(b => b.AllowedRoles).WithOne(b => b.Channel).HasForeignKey(b => new { b.ChannelCategoryId, b.RoleId }).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasMany(b => b.RolePermissions).WithOne(b => b.Channel).HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.ClientCascade);

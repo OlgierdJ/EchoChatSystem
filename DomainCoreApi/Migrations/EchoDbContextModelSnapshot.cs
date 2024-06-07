@@ -391,34 +391,6 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("AccountServerMute");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountServerVoiceChannelMute", b =>
-                {
-                    b.Property<decimal>("SubjectId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal>("MuterId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<decimal?>("AccountId")
-                        .HasColumnType("decimal(20,0)");
-
-                    b.Property<DateTime?>("ExpirationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TimeMuted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.HasKey("SubjectId", "MuterId");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("MuterId");
-
-                    b.ToTable("AccountServerVoiceChannelMute");
-                });
-
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountSession", b =>
                 {
                     b.Property<decimal>("Id")
@@ -2334,12 +2306,12 @@ namespace DomainCoreApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"));
 
+                    b.Property<decimal>("AuthorId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("ReporterId")
-                        .HasColumnType("decimal(20,0)");
 
                     b.Property<DateTime>("TimeSent")
                         .ValueGeneratedOnAdd()
@@ -2348,7 +2320,7 @@ namespace DomainCoreApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReporterId");
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("BugReport");
                 });
@@ -3169,7 +3141,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ServerVoiceChannelRolePermission");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelAccountMessageTracker", b =>
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.AccountServerTextChannelMessageTracker", b =>
                 {
                     b.Property<decimal>("OwnerId")
                         .HasColumnType("decimal(20,0)");
@@ -3177,7 +3149,7 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("CoOwnerId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("SubjectId")
+                    b.Property<decimal?>("SubjectId")
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("OwnerId", "CoOwnerId");
@@ -3186,7 +3158,30 @@ namespace DomainCoreApi.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("ServerTextChannelAccountMessageTracker");
+                    b.ToTable("AccountServerTextChannelMessageTracker");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.AccountServerTextChannelMute", b =>
+                {
+                    b.Property<decimal>("MuterId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("SubjectId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime?>("ExpirationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TimeMuted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.HasKey("MuterId", "SubjectId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("AccountServerTextChannelMute");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelMessage", b =>
@@ -3274,12 +3269,15 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ServerTextChannelMessagePin");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelMute", b =>
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel.AccountServerVoiceChannelMute", b =>
                 {
+                    b.Property<decimal>("SubjectId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<decimal>("MuterId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal>("SubjectId")
+                    b.Property<decimal?>("AccountId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<DateTime?>("ExpirationTime")
@@ -3290,11 +3288,13 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.HasKey("MuterId", "SubjectId");
+                    b.HasKey("SubjectId", "MuterId");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("AccountId");
 
-                    b.ToTable("ServerTextChannelMute");
+                    b.HasIndex("MuterId");
+
+                    b.ToTable("AccountServerVoiceChannelMute");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel.ServerVoiceInvite", b =>
@@ -3380,6 +3380,31 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ServerEvent");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerEventParticipancy", b =>
+                {
+                    b.Property<decimal>("ServerId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("EventId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<decimal>("AccountId")
+                        .HasColumnType("decimal(20,0)");
+
+                    b.Property<DateTime>("TimeJoined")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.HasKey("ServerId", "EventId", "AccountId");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("AccountId", "ServerId");
+
+                    b.ToTable("ServerEventParticipancy");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerInvite", b =>
                 {
                     b.Property<decimal>("SubjectId")
@@ -3391,15 +3416,18 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal?>("AccountId")
                         .HasColumnType("decimal(20,0)");
 
-                    b.Property<decimal?>("ChannelId")
-                        .HasColumnType("decimal(20,0)");
-
                     b.Property<DateTime?>("ExpirationTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("GuestInvite")
+                        .HasColumnType("bit");
 
                     b.Property<string>("InviteCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("TextChannelId")
+                        .HasColumnType("decimal(20,0)");
 
                     b.Property<int>("TimesUsed")
                         .HasColumnType("int");
@@ -3407,13 +3435,18 @@ namespace DomainCoreApi.Migrations
                     b.Property<int>("TotalUses")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("VoiceChannelId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.HasKey("SubjectId", "InviterId");
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("ChannelId");
-
                     b.HasIndex("InviterId");
+
+                    b.HasIndex("TextChannelId");
+
+                    b.HasIndex("VoiceChannelId");
 
                     b.ToTable("ServerInvite");
                 });
@@ -4105,6 +4138,9 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("UploaderId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<byte>("Volume")
+                        .HasColumnType("tinyint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AssociatedEmoteId");
@@ -4520,28 +4556,6 @@ namespace DomainCoreApi.Migrations
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
-
-                    b.Navigation("Muter");
-
-                    b.Navigation("Subject");
-                });
-
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.AccountServerVoiceChannelMute", b =>
-                {
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
-                        .WithMany("MutedVoiceChannels")
-                        .HasForeignKey("AccountId");
-
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Muter")
-                        .WithMany()
-                        .HasForeignKey("MuterId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerVoiceChannel", "Subject")
-                        .WithMany("Muters")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("Muter");
 
@@ -5125,7 +5139,7 @@ namespace DomainCoreApi.Migrations
                         .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Subject")
-                        .WithMany("Mutes")
+                        .WithMany("Muters")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -5251,13 +5265,13 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ReportCore.Bug.BugReport", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Reporter")
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Author")
                         .WithMany()
-                        .HasForeignKey("ReporterId")
+                        .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.Navigation("Reporter");
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ReportCore.CustomStatus.CustomStatusReport", b =>
@@ -5911,7 +5925,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelAccountMessageTracker", b =>
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.AccountServerTextChannelMessageTracker", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "CoOwner")
                         .WithMany("MessageTrackers")
@@ -5933,6 +5947,25 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("CoOwner");
 
                     b.Navigation("Owner");
+
+                    b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.AccountServerTextChannelMute", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Muter")
+                        .WithMany("MutedTextChannels")
+                        .HasForeignKey("MuterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "Subject")
+                        .WithMany("Muters")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Muter");
 
                     b.Navigation("Subject");
                 });
@@ -5992,19 +6025,22 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Pinboard");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel.ServerTextChannelMute", b =>
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel.AccountServerVoiceChannelMute", b =>
                 {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
+                        .WithMany("MutedVoiceChannels")
+                        .HasForeignKey("AccountId");
+
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Muter")
-                        .WithMany("MutedTextChannels")
+                        .WithMany()
                         .HasForeignKey("MuterId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "Subject")
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerVoiceChannel", "Subject")
                         .WithMany("Muters")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("Muter");
 
@@ -6014,9 +6050,10 @@ namespace DomainCoreApi.Migrations
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel.ServerVoiceInvite", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerVoiceChannel", "Channel")
-                        .WithMany("VoiceInvites")
+                        .WithMany()
                         .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Inviter")
                         .WithMany()
@@ -6027,7 +6064,7 @@ namespace DomainCoreApi.Migrations
                     b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Subject")
                         .WithMany()
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Channel");
@@ -6056,16 +6093,46 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Server");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerEventParticipancy", b =>
+                {
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Account")
+                        .WithMany("EventParticipancies")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerEvent", "Event")
+                        .WithMany("Participants")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.Server", "Server")
+                        .WithMany("EventParticipancies")
+                        .HasForeignKey("ServerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerProfile", "ServerProfile")
+                        .WithMany("EventParticipancies")
+                        .HasForeignKey("AccountId", "ServerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Event");
+
+                    b.Navigation("Server");
+
+                    b.Navigation("ServerProfile");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerInvite", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
                         .WithMany("ServerInvites")
                         .HasForeignKey("AccountId");
-
-                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "Channel")
-                        .WithMany("Invites")
-                        .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Inviter")
                         .WithMany()
@@ -6079,11 +6146,23 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.Navigation("Channel");
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerTextChannel", "TextChannel")
+                        .WithMany("Invites")
+                        .HasForeignKey("TextChannelId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerVoiceChannel", "VoiceChannel")
+                        .WithMany("Invites")
+                        .HasForeignKey("VoiceChannelId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Inviter");
 
                     b.Navigation("Subject");
+
+                    b.Navigation("TextChannel");
+
+                    b.Navigation("VoiceChannel");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerProfile", b =>
@@ -6409,6 +6488,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("DirectMessageRelations");
 
+                    b.Navigation("EventParticipancies");
+
                     b.Navigation("Folders");
 
                     b.Navigation("FriendSuggestions");
@@ -6635,7 +6716,7 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("Messages");
 
-                    b.Navigation("Mutes");
+                    b.Navigation("Muters");
 
                     b.Navigation("Participants");
 
@@ -6759,6 +6840,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Navigation("AllowedRoles");
 
+                    b.Navigation("Invites");
+
                     b.Navigation("MemberPermissions");
 
                     b.Navigation("MemberSettings");
@@ -6768,8 +6851,6 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("RolePermissions");
 
                     b.Navigation("ServerSettings");
-
-                    b.Navigation("VoiceInvites");
                 });
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.ChannelCore.ServerVoiceChannelMemberSettings", b =>
@@ -6793,11 +6874,18 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("MessageTrackers");
                 });
 
+            modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerEvent", b =>
+                {
+                    b.Navigation("Participants");
+                });
+
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerProfile", b =>
                 {
                     b.Navigation("CategoryMemberPermissions");
 
                     b.Navigation("CategoryMemberSettings");
+
+                    b.Navigation("EventParticipancies");
 
                     b.Navigation("Roles");
 
@@ -6870,6 +6958,8 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("ChannelCategoryMemberSettings");
 
                     b.Navigation("Emotes");
+
+                    b.Navigation("EventParticipancies");
 
                     b.Navigation("Events");
 

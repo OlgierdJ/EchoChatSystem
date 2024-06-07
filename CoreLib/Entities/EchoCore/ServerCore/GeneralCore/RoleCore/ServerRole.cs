@@ -1,10 +1,11 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
 {
-    public class ServerRole : BaseRole<ulong, ServerProfileServerRole, ServerRolePermission>
+    public class ServerRole : BaseEntity<ulong>, IRole<ServerProfileServerRole, ServerRolePermission>, IOwned<Server, ulong>
     {
         public ulong OwnerId { get; set; } //perhaps not needed?
         public int Importance { get; set; } //perhaps not needed?
@@ -13,6 +14,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
         public bool DisplaySeperatelyFromOnlineMembers { get; set; } //perhaps not needed?
         public bool AllowAnyoneToMention { get; set; } //perhaps not needed?
         public bool IsAdmin { get; set; } //perhaps not needed?
+        public string Name { get; set; }
 
 
         public Server Owner { get; set; } //perhaps not needed?
@@ -24,6 +26,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
         public ICollection<ServerChannelCategoryRolePermission>? ChannelCategoryRolePermissions { get; set; } //permissions allowed within channelcategories, for the role.
         public ICollection<ServerTextChannelRolePermission>? TextChannelRolePermissions { get; set; } //permissions allowed within textchannel, for the role.
         public ICollection<ServerVoiceChannelRolePermission>? VoiceChannelRolePermissions { get; set; } //permissions allowed within voicechannel, for the role.
-
+        public ICollection<ServerProfileServerRole>? Recipients { get; set; }
+        public ICollection<ServerRolePermission>? Permissions { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace CoreLib.DTO.EchoCore.ChatCore.VoiceCore
         public RegionDTO Region { get; set; }
 
         public ICollection<UserMinimalDTO>? ActiveParticipants { get; set; } //null from api, filled by client rtc relation, used for displaying participants
-        public ICollection<ServerInviteDTO>? VoiceInvites { get; set; } //null from api, filled by client rtc relation, used for displaying participants
+        public ICollection<ServerInviteDTO>? Invites { get; set; } //null from api, filled by client rtc relation, used for displaying participants
 
         public ICollection<UserMinimalWithPermissionsDTO>? MemberSettings { get; set; } //displays specific permission settings for a specific user enforced within this chat.
         public ICollection<HierarchalRoleMinimalWithPermissionsDTO>? RoleSettings { get; set; } //displays specific permission settings for a specific role enforced within this chat. ????mayb hierarchalrole?

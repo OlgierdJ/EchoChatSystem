@@ -17,14 +17,14 @@ namespace CoreLib.Interfaces.Services
     public interface IServerService
     {
         //server
-        Task<bool> CreateServer(ulong userid, CreateServerRequestDTO requestDTO); //create new server with name and public flag and ownerid as serverowner, relay domainchanges to notificationhub.
-        Task<bool> DeleteServer(ulong userid, ulong serverId); //verify user by userid is owner, delete server and related entities, relay domainchanges to notificationhub.
-        Task<bool> EditServer(ulong userid, ulong serverid, EditServerRequestDTO requestDTO); //verify user has permission to update server (either owner or has explicit permission), update server, relay domainchanges to notificationhub.
-        Task<bool> MarkAsRead(ulong userid, ulong serverId); //marks everything in server as read.
-        Task<bool> MuteServer(ulong userid, MuteRequestDTO requestDTO); //mutes server (doesnt join signalr group)
-        Task<bool> UnmuteServer(ulong userid, ulong serverId); //unmutes server (allows join signalr group)
-        Task<bool> SetServerImage(ulong userid, ulong serverid, SetImageRequestDTO requestDTO); //uploads and uses only serverimage
-        Task<bool> LeaveServer(ulong userid, ulong serverId);
+        Task<bool> CreateServer(ulong senderId, CreateServerRequestDTO requestDTO); //create new server with name and public flag and ownerid as serverowner, relay domainchanges to notificationhub.
+        Task<bool> DeleteServer(ulong senderId, ulong serverId); //verify user by senderId is owner, delete server and related entities, relay domainchanges to notificationhub.
+        Task<bool> EditServer(ulong senderId, ulong serverid, EditServerRequestDTO requestDTO); //verify user has permission to update server (either owner or has explicit permission), update server, relay domainchanges to notificationhub.
+        Task<bool> MarkAsRead(ulong senderId, ulong serverId); //marks everything in server as read.
+        Task<bool> MuteServer(ulong senderId, ulong serverId, MuteRequestDTO requestDTO); //mutes server (doesnt join signalr group)
+        Task<bool> UnmuteServer(ulong senderId, ulong serverId); //unmutes server (allows join signalr group)
+        Task<bool> SetServerImage(ulong senderId, ulong serverid, SetImageRequestDTO requestDTO); //uploads and uses only serverimage
+        Task<bool> LeaveServer(ulong senderId, ulong serverId);
         
         //invite
         /// <summary>
@@ -32,10 +32,10 @@ namespace CoreLib.Interfaces.Services
         /// create invite,
         /// relay domainchanges to notificationhub
         /// </summary>
-        /// <param name="userid"></param>
+        /// <param name="senderId"></param>
         /// <param name="requestDTO"></param>
         /// <returns></returns>
-        Task<bool> CreateInvite(ulong userid, ulong serverid, InviteType type, CreateInviteRequestDTO requestDTO);
+        Task<bool> CreateInvite(ulong senderId, ulong serverid, CreateInviteRequestDTO requestDTO);
         /// <summary>
         /// verify invite still exists and user is allowed to join (if they are not a part of the thing already and are not banned),
         /// consume invite updating its usecount, 
@@ -43,19 +43,19 @@ namespace CoreLib.Interfaces.Services
         /// default roles (everyone), 
         /// relay domainchanges to notificationhub
         /// </summary>
-        /// <param name="userid"></param>
+        /// <param name="senderId"></param>
         /// <param name="requestDTO"></param>
         /// <returns></returns>
-        Task<bool> ConsumeInvite(ulong userid, ulong serverid, InviteType type, string inviteCode);
+        Task<bool> ConsumeInvite(ulong senderId, ulong serverid, string inviteCode);
         /// <summary>
         /// verify user permission to delete / edit invites, 
         /// softdelete invite, 
         /// relay domainchanges to notificationhub
         /// </summary>
-        /// <param name="userid"></param>
+        /// <param name="senderId"></param>
         /// <param name="requestDTO"></param>
         /// <returns></returns>
-        Task<bool> RemoveInvite(ulong userid, ulong serverid, InviteType type, string inviteCode);
+        Task<bool> RemoveInvite(ulong senderId, ulong serverid, string inviteCode);
 
         //event
         /// <summary>
@@ -64,32 +64,32 @@ namespace CoreLib.Interfaces.Services
         /// auto join user as interested, 
         /// relay domainchanges to notificationhub
         /// </summary>
-        /// <param name="userid"></param>
+        /// <param name="senderId"></param>
         /// <param name="requestDTO"></param>
         /// <returns></returns>
-        Task<bool> CreateEvent(ulong userid, ulong serverid, CreateEventRequestDTO requestDTO);
-        Task<bool> StartEvent(ulong userid, ulong serverid, ulong eventId);
-        Task<bool> EditEvent(ulong userid, ulong serverid, EditEventRequestDTO requestDTO);
-        Task<bool> JoinEvent(ulong userid, ulong serverid, ulong eventId);
-        Task<bool> LeaveEvent(ulong userid, ulong serverid, ulong eventId);
-        Task<bool> DeleteEvent(ulong userid, ulong serverid, ulong eventId);
+        Task<bool> CreateEvent(ulong senderId, ulong serverid, CreateEventRequestDTO requestDTO);
+        Task<bool> StartEvent(ulong senderId, ulong serverid, ulong eventId);
+        Task<bool> EditEvent(ulong senderId, ulong serverid, ulong eventId, EditEventRequestDTO requestDTO);
+        Task<bool> JoinEvent(ulong senderId, ulong serverid, ulong eventId);
+        Task<bool> LeaveEvent(ulong senderId, ulong serverid, ulong eventId);
+        Task<bool> DeleteEvent(ulong senderId, ulong serverid, ulong eventId);
 
         //emote
-        Task<bool> CreateEmote(ulong userid, ulong serverid, CreateEmoteRequestDTO requestDTO);
-        Task<bool> EditEmote(ulong userid, ulong serverid, EditEmoteRequestDTO requestDTO);
-        Task<bool> DeleteEmote(ulong userid, ulong serverid, ulong emoteId);
+        Task<bool> CreateEmote(ulong senderId, ulong serverid, CreateEmoteRequestDTO requestDTO);
+        Task<bool> EditEmote(ulong senderId, ulong serverid, ulong emoteId, EditEmoteRequestDTO requestDTO);
+        Task<bool> DeleteEmote(ulong senderId, ulong serverid, ulong emoteId);
 
         //soundboard
-        Task<bool> CreateSoundboardSound(ulong userid, ulong serverid, CreateSoundboardSoundRequestDTO requestDTO);
-        Task<bool> EditSoundboardSound(ulong userid, ulong serverid, EditSoundboardSoundRequestDTO requestDTO);
-        Task<bool> DeleteSoundboardSound(ulong userid, ulong serverid, ulong soundId);
+        Task<bool> CreateSoundboardSound(ulong senderId, ulong serverid, CreateSoundboardSoundRequestDTO requestDTO);
+        Task<bool> EditSoundboardSound(ulong senderId, ulong serverid, ulong soundId, EditSoundboardSoundRequestDTO requestDTO);
+        Task<bool> DeleteSoundboardSound(ulong senderId, ulong serverid, ulong soundId);
 
         //role
-        Task<bool> CreateRole(ulong userid, ulong serverid, CreateRoleRequestDTO requestDTO);
-        Task<bool> EditRole(ulong userid, ulong serverid, EditRoleRequestDTO requestDTO);
-        Task<bool> SetRolePermission(ulong userid, ulong serverid, SetPermissionStateRequestDTO requestDTO);
-        Task<bool> SetRolePermissions(ulong userid, ulong serverid, SetMultiplePermissionStateRequestDTO requestDTO);
-        Task<bool> DeleteRole(ulong userid, ulong serverid, ulong roleId);
+        Task<bool> CreateRole(ulong senderId, ulong serverid, CreateRoleRequestDTO requestDTO);
+        Task<bool> EditRole(ulong senderId, ulong serverid, ulong roleId, EditRoleRequestDTO requestDTO);
+        Task<bool> SetRolePermission(ulong senderId, ulong serverid, ulong roleId, SetPermissionStateRequestDTO requestDTO);
+        Task<bool> SetRolePermissions(ulong senderId, ulong serverid, ulong roleId, SetMultiplePermissionStateRequestDTO requestDTO);
+        Task<bool> DeleteRole(ulong senderId, ulong serverid, ulong roleId);
     }
 
 }

@@ -40,15 +40,13 @@ namespace DomainCoreApi.Services
         private readonly EchoDbContext dbContext;
         private readonly IMapper mapper;
         private readonly IPasswordHandler _pwdHandler;
-        private readonly IAccountService _accountService;
         private readonly IPushNotificationService notificationService;
         private readonly CreateUserHandler _createUserHandler = new();
-        public UserService(EchoDbContext dbContext, IMapper mapper, IPushNotificationService notificationService, IUserRepository repository, IPasswordHandler pwdHandler, IAccountService accountService) : base(repository)
+        public UserService(EchoDbContext dbContext, IMapper mapper, IPushNotificationService notificationService, IUserRepository repository, IPasswordHandler pwdHandler) : base(repository)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
             _pwdHandler = pwdHandler;
-            _accountService = accountService;
             this.notificationService = notificationService;
         }
 
@@ -1086,7 +1084,7 @@ namespace DomainCoreApi.Services
                     .Include(e => e.TextChannelMemberPermissions)
                     .Include(e => e.TextChannelMemberSettings)
                     //voicechannel
-                    .Include(e => e.VoiceChannels).ThenInclude(e => e.VoiceInvites)
+                    .Include(e => e.VoiceChannels).ThenInclude(e => e.Invites)
                     .Include(e => e.VoiceChannels).ThenInclude(e => e.Region)
                     .Include(e => e.VoiceChannelMemberPermissions)
                     .Include(e => e.VoiceChannelMemberSettings)
@@ -1314,7 +1312,8 @@ namespace DomainCoreApi.Services
 
                         }
                     }
-
+                    //remember to implement chat orderweight by newest activity.
+                    //remember to implement dm chat name by other person thats not the loaded user.
                 });
             });
         }
@@ -1436,7 +1435,8 @@ namespace DomainCoreApi.Services
                     return false;
                 }
                
-                var participancies = await dbContext.Set<AccountDirectMessageRelation>().AsQueryable()
+                var participancies = await dbContext.Set<AccountDirectMessageRelation>()
+                    .AsSplitQuery()
                     .Where(e => e.OwnerId == senderId || e.OwnerId == receiverId) //filter rows by participantid part of key.
                  .ToListAsync();
                 var existingFriendship = participancies
@@ -1445,6 +1445,7 @@ namespace DomainCoreApi.Services
                 .SelectMany(g => g); //flatten result into list
                 if (existingFriendship.Any()) //list will be empty if no matches
                 {
+                    //here you would normally return the existing chats id via controller or publish a domain event via signalr or masstransit to tell the specific client of the chat and to navigate to it.
                     return false;
                 }
 
@@ -1495,6 +1496,9 @@ namespace DomainCoreApi.Services
 
         public async Task<bool> StartDirectMessages(ulong senderId, ulong receiverId, SendMessageRequestDTO requestDTO)
         {
+            //the client should check existing chats to see if they are present in memory before calling this function
+            //if they are then they should call chatcontroller sendmessage
+            //if they are not then they should call this function which creates relation and then message.
             try
             {
                 if (senderId == receiverId)
@@ -1502,15 +1506,38 @@ namespace DomainCoreApi.Services
                     return false;
                 }
 
-                var participancies = await dbContext.Set<AccountDirectMessageRelation>().AsQueryable()
+                var participancies = await dbContext.Set<AccountDirectMessageRelation>()
+                    .Include(x => x.Relation)
+                    .ThenInclude(x=>x.Chat)
                     .Where(e => e.OwnerId == senderId || e.OwnerId == receiverId) //filter rows by participantid part of key.
+                    .AsSplitQuery()
                  .ToListAsync();
                 var existingFriendship = participancies
                     .GroupBy(r => r.RelationId) // find rows where dm is same id and group them
                     .Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
                 .SelectMany(g => g); //flatten result into list
+
+                var message = new ChatMessage()
+                {
+                    AuthorId = senderId,
+                    Content = requestDTO.Content,
+                    ParentId = null,
+
+                    Attachments = requestDTO.Attachments.Select(e => new ChatMessageAttachment()
+                    {
+                        Description = e.Description,
+                        FileLocationURL = e.FileLocationURL,
+                        FileName = e.FileName
+                    }).ToList(),
+                };
+
                 if (existingFriendship.Any()) //list will be empty if no matches
                 {
+                    ////send message if dm exists //nah then you wouldnt be able to use this function since you've already got the data.
+                    //message.MessageHolderId = existingFriendship.First().Relation.ChatId;
+                    //await dbContext.Set<ChatMessage>().AddAsync(message);
+                    //await dbContext.SaveChangesAsync();
+                    //here you would normally return the existing chats id via controller or publish a domain event via signalr or masstransit to tell the specific client of the chat and to navigate to it.
                     return false;
                 }
 

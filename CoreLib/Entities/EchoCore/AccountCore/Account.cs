@@ -6,6 +6,7 @@ using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
 using CoreLib.Entities.EchoCore.ReportCore.Message;
 using CoreLib.Entities.EchoCore.ReportCore.Profile;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
+using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.Management;
 using CoreLib.Entities.EchoCore.UserCore;
@@ -46,12 +47,8 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<AccountNote>? NotedAccounts { get; set; } //This account adds notes about other accounts
         public ICollection<AccountMute>? MutedVoices { get; set; } //This account adds mutes for other accounts voice
         public ICollection<ChatMute>? MutedChats { get; set; } //This account adds mutes for other accounts voice
-        public ICollection<AccountServerMute>? MutedServers { get; set; } //This account adds mutes for other Servers
-        public ICollection<ServerTextChannelMute>? MutedTextChannels { get; set; } //This account adds mutes for other ServerChannel
-        public ICollection<AccountServerVoiceChannelMute>? MutedVoiceChannels { get; set; } //This account adds mutes for other ServerChannel
         public ICollection<AccountSoundboardMute>? MutedSoundboards { get; set; } //This account adds mutes for other accounts soundboard
         public ICollection<ChatAccountMessageTracker>? ChatMessageTrackers { get; set; }
-        public ICollection<ServerTextChannelAccountMessageTracker>? TextChannelMessageTrackers { get; set; }
 
         //report stuff - also private settings and information about this account only used by the user and the application / api
         public ICollection<ReportedCustomStatus>? ReportedCustomStatuses { get; set; } //reported customstatuses that are owned by this account
@@ -76,8 +73,13 @@ namespace CoreLib.Entities.EchoCore.AccountCore
         public ICollection<ServerProfile>? Servers { get; set; } //mapped through serverprofile //NOTE COMMENTED OUT TEMPORARILY
         public ICollection<ServerInvite>? ServerInvites { get; set; }
         public ICollection<ServerEvent>? ServerEvents { get; set; }
+        public ICollection<ServerEventParticipancy>? EventParticipancies { get; set; } //noaction
         public ICollection<AccountServerFolder>? Folders { get; set; }
         public ICollection<ServerTextChannelMessage>? ChannelMessages { get; set; }
+        public ICollection<AccountServerTextChannelMessageTracker>? TextChannelMessageTrackers { get; set; }
+        public ICollection<AccountServerMute>? MutedServers { get; set; } //This account adds mutes for other Servers
+        public ICollection<AccountServerTextChannelMute>? MutedTextChannels { get; set; } //This account adds mutes for other ServerChannel
+        public ICollection<AccountServerVoiceChannelMute>? MutedVoiceChannels { get; set; } //This account adds mutes for other ServerChannel
 
     }
 }

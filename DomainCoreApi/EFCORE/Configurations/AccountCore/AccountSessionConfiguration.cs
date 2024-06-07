@@ -9,7 +9,8 @@ namespace DomainCoreApi.EFCORE.Configurations.AccountCore
         public void Configure(EntityTypeBuilder<AccountSession> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(b => b.SessionToken).HasMaxLength(255).IsRequired();
+            builder.Property(b => b.AccessToken).HasMaxLength(255).IsRequired();
+            builder.Property(b => b.RefreshToken).HasMaxLength(255).IsRequired();
             builder.Property(b => b.Location).HasMaxLength(100).IsRequired();
             builder.Property(b => b.DeviceId).HasMaxLength(255).IsRequired();
             builder.Property(b => b.TimeStarted).ValueGeneratedOnAdd().IsRequired();

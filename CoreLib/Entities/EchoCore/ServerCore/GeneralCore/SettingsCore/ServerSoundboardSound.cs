@@ -10,6 +10,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore
         public ulong? AssociatedEmoteId { get; set; }
         public string Name { get; set; }
         public string SoundFileUrl { get; set; }
+        public byte Volume { get; set; } //max 200 ? maybe 100?
 
         public ServerEmote? AssociatedEmote { get; set; }
         public Server Server { get; set; }

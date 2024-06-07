@@ -4,11 +4,11 @@ using CoreLib.Entities.EchoCore.ChatCore;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel
 {
-    public class ServerTextChannelMessage : BaseEntity<ulong>, IBaseMessage, IAuthoredEntity<Account, ulong?>, IHeldMessageEntity<ServerTextChannel, ulong>, IRepliableMessageEntity<ServerTextChannelMessage, ulong?>
+    public class ServerTextChannelMessage : BaseEntity<ulong>, IAuditableMessage, IAuthoredEntity<Account, ulong?>, IRepliableMessageEntity<ServerTextChannelMessage, ulong?>
     {
         public ICollection<ServerTextChannelMessageAttachment>? Attachments { get; set; }
         public ServerTextChannelMessagePin? MessagePin { get; set; }
-        public ICollection<ServerTextChannelAccountMessageTracker>? MessageTrackers { get; set; }
+        public ICollection<AccountServerTextChannelMessageTracker>? MessageTrackers { get; set; }
         public ulong MessageHolderId { get; set; }
         public ServerTextChannel? MessageHolder { get; set; }
         public ulong? AuthorId { get; set; }

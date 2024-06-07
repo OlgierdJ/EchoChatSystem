@@ -17,9 +17,10 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore.ManagementC
             builder.Property(b => b.TimesUsed).IsRequired();
             builder.Property(b => b.TotalUses).IsRequired();
 
-            builder.HasOne(b => b.Subject).WithMany().HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(b => b.Inviter).WithMany().HasForeignKey(b => b.InviterId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(b => b.Channel).WithMany(b => b.Invites).HasForeignKey(b => b.ChannelId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Subject).WithMany(e=>e.Invites).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.Inviter).WithMany(e=>e.ServerInvites).HasForeignKey(b => b.InviterId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.TextChannel).WithMany(b => b.Invites).HasForeignKey(b => b.TextChannelId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(b => b.VoiceChannel).WithMany(b => b.Invites).HasForeignKey(b => b.VoiceChannelId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

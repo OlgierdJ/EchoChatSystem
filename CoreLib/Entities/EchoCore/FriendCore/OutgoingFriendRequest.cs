@@ -3,7 +3,10 @@ using CoreLib.Entities.EchoCore.AccountCore;
 
 namespace CoreLib.Entities.EchoCore.FriendCore
 {
-    public class OutgoingFriendRequest : BaseOutgoingRequest<ulong, Account, ulong, IncomingFriendRequest>
+    public class OutgoingFriendRequest : BaseEntity<ulong>, IOutgoingRequest<Account, ulong, IncomingFriendRequest>
     {
+        public ulong SenderId { get; set; }
+        public Account Sender { get; set; }
+        public IncomingFriendRequest ReceiverRequest { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 
 namespace CoreLib.Entities.EchoCore.ReportCore.Message
 {
-    public class ReportedMessage : BaseEntity<ulong>, IBaseMessage, IAuthoredEntity<Account, ulong>
+    public class ReportedMessage : BaseEntity<ulong>, IAuditableMessage, IAuthoredEntity<Account, ulong>
     //when a message is reported the unencrypted content of the message, timestamp, and the attachments are to be duplicated into one of these.
     //and saved with their own encryption that support-people has access to.
     {

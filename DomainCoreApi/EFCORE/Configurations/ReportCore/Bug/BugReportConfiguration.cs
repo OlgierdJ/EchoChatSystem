@@ -14,7 +14,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ReportCore.Bug
                 .Property(b => b.Message);
             builder
               .Property(b => b.TimeSent).HasDefaultValueSql("getdate()").IsRequired();
-            builder.HasOne(e => e.Reporter).WithMany().HasForeignKey(e => e.ReporterId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne(e => e.Author).WithMany().HasForeignKey(e => e.AuthorId).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasMany(e => e.Reasons).WithMany(e => e.Reports);
             //builder.HasMany(b => b.Participants).WithMany(e => e.Friendships).UsingEntity<FriendshipParticipancy>(j =>
             //{

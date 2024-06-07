@@ -66,7 +66,6 @@ builder.Services.AddTransient(typeof(ILanguageRepository), typeof(LanguageReposi
 //Add services to the container.
 builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
 builder.Services.AddTransient(typeof(IChatService), typeof(ChatService));
-builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
 
 builder.Services.AddSignalR();
 

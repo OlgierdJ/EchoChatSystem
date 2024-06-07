@@ -2,7 +2,10 @@
 
 namespace CoreLib.Entities.EchoCore.ReportCore.Bug
 {
-    public class BugReportReason : BaseReportReason<byte, BugReport>
+    public class BugReportReason :BaseEntity<byte>, IReportReason<BugReport>
     {
+        public ICollection<BugReport>? Reports { get; set; }
+        public string Reason { get; set; }
+        public string Description { get; set; }
     }
 }

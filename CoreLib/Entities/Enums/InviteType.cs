@@ -2,6 +2,6 @@
 {
     public enum InviteType
     {
-        Server = 0, Chat = 1
+        Server = 0, VoiceChat = 1
     }
 }

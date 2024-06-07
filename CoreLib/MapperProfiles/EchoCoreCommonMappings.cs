@@ -38,19 +38,95 @@ namespace CoreLib.MapperProfiles
     {
         public EchoCoreCommonMappings()
         {
-            //need chat voicechat and member not done serverstuff too //i hate mapping aftermap i fk hate it why does it not reuse innersrc for innerdest???
+            CreateMap<ChatParticipancy, MemberDTO>()
+                .ForMember(dest => dest.ActiveStatus, 
+                opts => opts.Ignore())
+               .ForMember(dest => dest.ImageIconURL, 
+               opts => opts.MapFrom(src => src.Participant.Profile.AvatarFileURL))
+               .ForMember(dest => dest.IsOwner, 
+               opts => opts.MapFrom(src => src.IsOwner)) // map aftermap based on chat owner id.
+               .ForMember(dest => dest.Id, 
+               opts => opts.MapFrom(src => src.ParticipantId))
+               .ForMember(dest => dest.NameColour, 
+               opts => opts.MapFrom(src => src.Participant.ActivityStatus.Name.ToLower() != "offline" ? "#ffffff" : "#000000"))
+               .ForMember(dest => dest.GroupingName, 
+               opts => opts.MapFrom(src => src.Participant.ActivityStatus.Name.ToLower() != "offline" ? "ONLINE" : "OFFLINE"))
+               .ForMember(dest => dest.DisplayName, 
+               opts => opts.MapFrom(src => src.Participant.Profile.DisplayName))
+               .ForMember(dest => dest.Profile, 
+               opts => opts.MapFrom(src => src.Participant))
+               .AfterMap((src, dest, context) =>
+               {
+                   dest.ActiveStatus = context.Mapper.Map<ActiveActivityStatusDTO>(src.Participant);
+               }); //map badges, mutual servers, mutualfriends aftermap in servicelayer
+            CreateMap<Account, ActiveActivityStatusDTO>()
+               .ForMember(dest => dest.Id, 
+               opts => opts.MapFrom(src => src.ActivityStatus.Id))
+               .ForMember(dest => dest.Icon, 
+               opts => opts.MapFrom(src => src.ActivityStatus.Icon))
+               .ForMember(dest => dest.IconColor, 
+               opts => opts.MapFrom(src => src.ActivityStatus.IconColor))
+               .ForMember(dest => dest.Name, 
+               opts => opts.MapFrom(src => src.ActivityStatus.Name))
+               .ForMember(dest => dest.DisplayedContent, 
+               opts => opts.MapFrom(src => src.CustomStatus.CustomMessage))
+               .PreserveReferences();
+            CreateMap<FriendshipParticipancy, UserDTO>()
+                .ForMember(dest => dest.Name, 
+                opts => opts.MapFrom(src => src.Participant.Name))
+                .ForMember(dest => dest.ActiveStatus, 
+                opts => opts.Ignore())
+                .ForMember(dest => dest.DisplayName, 
+                opts => opts.MapFrom(src => src.Participant.Profile.DisplayName))
+                .ForMember(dest => dest.ImageIconURL, 
+                opts => opts.MapFrom(src => src.Participant.Profile.AvatarFileURL))
+                .ForMember(dest => dest.Id, 
+                opts => opts.MapFrom(src => src.ParticipantId))
+                .AfterMap((src, dest, context) =>
+                {
+                    dest.ActiveStatus = context.Mapper.Map<ActiveActivityStatusDTO>(src.Participant);
+                });
+            CreateMap<FriendSuggestion, UserDTO>()
+                .ForMember(dest => dest.ActiveStatus, 
+                opts => opts.Ignore())
+                .ForMember(dest => dest.ImageIconURL, 
+                opts => opts.MapFrom(e => e.Suggestion.Profile.AvatarFileURL))
+                .ForMember(dest => dest.Id, 
+                opts => opts.MapFrom(e => e.Suggestion.Id))
+                .ForMember(dest => dest.Name, 
+                opts => opts.MapFrom(e => e.Suggestion.Name))
+                .ForMember(dest => dest.DisplayName, 
+                opts => opts.MapFrom(e => e.Suggestion.Profile.DisplayName))
+                .AfterMap((src, dest, context) =>
+                {
+                    dest.ActiveStatus = context.Mapper.Map<ActiveActivityStatusDTO>(src.Suggestion);
+                })
+                .PreserveReferences();
 
-            //CreateMap<Account, UserMinimalDTO>().ForMember(dest => dest.DisplayName, opts => opts.MapFrom(val => val.Profile.DisplayName)); //output members are same name so no need to map
-            //chatcore
+
+            CreateMap<IList<FriendshipParticipancy>, IList<UserDTO>>()
+            .ConvertUsing<IFriendshipParticipancyListUserDTOListConverter>();
+            /*.PreserveReferences()*/
+            ;
+
+           
             CreateMap<Account, MemberDTO>()
-               .ForMember(dest => dest.ActiveStatus, opts => opts.Ignore())
-               .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(e => e.Profile.AvatarFileURL))
-               .ForMember(dest => dest.IsOwner, opts => opts.Ignore()) // map aftermap based on chat owner id.
-               .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.Id))
-               .ForMember(dest => dest.NameColour, opts => opts.MapFrom(e => e.ActivityStatus.Name.ToLower() != "offline" ? "#ffffff" : "#000000"))
-               .ForMember(dest => dest.GroupingName, opts => opts.MapFrom(e => e.ActivityStatus.Name.ToLower() != "offline" ? "ONLINE" : "OFFLINE"))
-               .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(e => e.Profile.DisplayName))
-               .ForMember(dest => dest.Profile, opts => opts.Ignore())
+               .ForMember(dest => dest.ActiveStatus, 
+               opts => opts.Ignore())
+               .ForMember(dest => dest.ImageIconURL, 
+               opts => opts.MapFrom(e => e.Profile.AvatarFileURL))
+               .ForMember(dest => dest.IsOwner, 
+               opts => opts.Ignore()) // map aftermap based on chat owner id.
+               .ForMember(dest => dest.Id, 
+               opts => opts.MapFrom(e => e.Id))
+               .ForMember(dest => dest.NameColour, 
+               opts => opts.MapFrom(e => e.ActivityStatus.Name.ToLower() != "offline" ? "#ffffff" : "#000000"))
+               .ForMember(dest => dest.GroupingName, 
+               opts => opts.MapFrom(e => e.ActivityStatus.Name.ToLower() != "offline" ? "ONLINE" : "OFFLINE"))
+               .ForMember(dest => dest.DisplayName, 
+               opts => opts.MapFrom(e => e.Profile.DisplayName))
+               .ForMember(dest => dest.Profile, 
+               opts => opts.Ignore())
                .AfterMap((src, dest, ctx) =>
                {
                    dest.Profile = ctx.Mapper.Map<ExternalUserProfileDTO>(src.Profile);
@@ -60,7 +136,12 @@ namespace CoreLib.MapperProfiles
                .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(src => src.Profile.AvatarFileURL))
                .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(src => src.Profile.DisplayName))
                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id)).PreserveReferences();
+            CreateMap<ServerTextChannel, PinboardDTO>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.PinnedMessages, opts => opts.MapFrom(src => src.PinnedMessages));
+
             CreateMap<ServerTextChannel, ChatDTO>()
+                .ForMember(dest => dest.Pinboard, opts => opts.MapFrom(src => src))
                 .ForMember(dest => dest.RoleSettings, opts => opts.MapFrom(src => src.RoleSettings)) //output members are same name so no need to map
                 .ForMember(dest => dest.MemberSettings, opts => opts.MapFrom(src => src.MemberSettings))
                 .ForMember(dest => dest.Participants, opts => opts.Ignore())
@@ -85,7 +166,11 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.LastReadMessageId, opts => opts.Ignore())
                 .ForMember(dest => dest.CategoryName, opts => opts.Ignore())
                 .ForMember(dest => dest.OrderWeight, opts => opts.Ignore());  //map muted, lastreadmessageid, participants, permissions, permissions, membersettings, roles aftermap //map this in aftermap from service layer.
+            CreateMap<Chat, PinboardDTO>()
+                .ForMember(dest => dest.Id, opts=>opts.MapFrom(src=>src.Id))
+                .ForMember(dest => dest.PinnedMessages, opts=>opts.MapFrom(src=>src.PinnedMessages));
             CreateMap<Chat, ChatDTO>()
+                .ForMember(dest => dest.Pinboard, opts => opts.MapFrom(src=>src))
                 .ForMember(dest => dest.RoleSettings, opts => opts.Ignore())
                 .ForMember(dest => dest.MemberSettings, opts => opts.Ignore())
                 .ForMember(dest => dest.Participants, opts => opts.Ignore())
@@ -143,15 +228,15 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.Title, opts => opts.MapFrom(e => e.Subject.Name)) //map Title (chat name)
                 .ForMember(dest => dest.Description, opts => opts.MapFrom(e => e.Subject.Participants.Count())) //map Description (for chat how many members.)
                 .ForMember(dest => dest.InviteLink, opts => opts.MapFrom(e => "https://localhost:7269/Chat/ConsumeInvite/" + e.InviteCode)) //map InviteLink (httpslink to Chat/consumeInvite/code), 
-                .ForMember(dest => dest.Type, opts => opts.MapFrom(e => InviteType.Chat)); //map InviteType (chat) // aftermap
+                .ForMember(dest => dest.Type, opts => opts.MapFrom(e => InviteType.VoiceChat)); //map InviteType (chat) // aftermap
             CreateMap<ChatInvite, InviteMinimalDTO>()
                 .ForMember(dest => dest.InviteLink, opts => opts.MapFrom(e => "https://localhost:7269/Chat/ConsumeInvite/" + e.InviteCode)) //map InviteLink (httpslink to Chat/consumeInvite/code), 
-                .ForMember(dest => dest.Type, opts => opts.MapFrom(e => InviteType.Chat)); //map InviteType (chat) // aftermap
+                .ForMember(dest => dest.Type, opts => opts.MapFrom(e => InviteType.VoiceChat)); //map InviteType (chat) // aftermap
 
             CreateMap<ServerInvite, InviteDTO>()
                 .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(e => e.Subject.Settings.ServerImageUrl)) //map ImageIconURL (server icon)
                 .ForMember(dest => dest.Title, opts => opts.MapFrom(e => e.Subject.Name)) //map Title (server name)
-                .ForMember(dest => dest.Description, opts => opts.MapFrom(e => e.Channel.Name)) //map Description (for server where to)
+                .ForMember(dest => dest.Description, opts => opts.MapFrom(e => e.TextChannel.Name)) //map Description (for server where to)
                 .ForMember(dest => dest.InviteLink, opts => opts.MapFrom(e => "https://localhost:7269/Server/textchannel/ConsumeInvite/" + e.InviteCode)) //map InviteLink (httpslink to Server/textchannel/consumeInvite/code), 
                 .ForMember(dest => dest.Type, opts => opts.MapFrom(e => InviteType.Server)); //map InviteType (server) // aftermap
             CreateMap<ServerInvite, InviteMinimalDTO>()
@@ -585,40 +670,7 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.User, opts => opts.MapFrom(src => src.Account))
                 .PreserveReferences();
 
-            CreateMap<FriendSuggestion, UserDTO>()
-                .ForMember(dest => dest.ActiveStatus, opts => opts.Ignore())
-                .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(e => e.Suggestion.Profile.AvatarFileURL))
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.Suggestion.Id))
-                .ForMember(dest => dest.Name, opts => opts.MapFrom(e => e.Suggestion.Name))
-                .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(e => e.Suggestion.Profile.DisplayName))
-                .AfterMap((src, dest, context) =>
-                {
-                    dest.ActiveStatus = context.Mapper.Map<ActiveActivityStatusDTO>(src.Suggestion);
-                })
-                .PreserveReferences();
-
-            CreateMap<FriendshipParticipancy, UserDTO>()
-                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Participant.Name))
-                .ForMember(dest => dest.ActiveStatus, opts => opts.Ignore())
-                .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(src => src.Participant.Profile.DisplayName))
-                .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(src => src.Participant.Profile.AvatarFileURL))
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ParticipantId))
-                .AfterMap((src, dest, context) =>
-                {
-                    dest.ActiveStatus = context.Mapper.Map<ActiveActivityStatusDTO>(src.Participant);
-                });
-
-                CreateMap<IList<FriendshipParticipancy>, IList<UserDTO>>()
-                .ConvertUsing<IFriendshipParticipancyListUserDTOListConverter>();
-                /*.PreserveReferences()*/;
-
-            CreateMap<Account, ActiveActivityStatusDTO>()
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ActivityStatus.Id))
-                .ForMember(dest => dest.Icon, opts => opts.MapFrom(src => src.ActivityStatus.Icon))
-                .ForMember(dest => dest.IconColor, opts => opts.MapFrom(src => src.ActivityStatus.IconColor))
-                .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.ActivityStatus.Name))
-                .ForMember(dest => dest.DisplayedContent, opts => opts.MapFrom(src => src.CustomStatus.CustomMessage))
-                .PreserveReferences();
+            
 
 
             CreateMap<Account, UserFullDTO>()
@@ -712,7 +764,7 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.Location, opts => opts.MapFrom(e => e.Channel.Name))
                 .ForMember(dest => dest.User, opts => opts.MapFrom(e => e.Inviter));
             CreateMap<ServerInvite, ServerInviteDTO>()
-                .ForMember(dest => dest.Location, opts => opts.MapFrom(e => e.Channel.Name))
+                .ForMember(dest => dest.Location, opts => opts.MapFrom(e => e.TextChannel.Name))
                 .ForMember(dest => dest.User, opts => opts.MapFrom(e => e.Inviter));
 
 
@@ -722,19 +774,7 @@ namespace CoreLib.MapperProfiles
 
 
 
-            CreateMap<ChatParticipancy, MemberDTO>()
-                .ForMember(dest => dest.ActiveStatus, opts => opts.Ignore())
-               .ForMember(dest => dest.ImageIconURL, opts => opts.MapFrom(src => src.Participant.Profile.AvatarFileURL))
-               .ForMember(dest => dest.IsOwner, opts => opts.MapFrom(src => src.IsOwner)) // map aftermap based on chat owner id.
-               .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.ParticipantId))
-               .ForMember(dest => dest.NameColour, opts => opts.MapFrom(src => src.Participant.ActivityStatus.Name.ToLower() != "offline" ? "#ffffff" : "#000000"))
-               .ForMember(dest => dest.GroupingName, opts => opts.MapFrom(src => src.Participant.ActivityStatus.Name.ToLower() != "offline" ? "ONLINE" : "OFFLINE"))
-               .ForMember(dest => dest.DisplayName, opts => opts.MapFrom(src => src.Participant.Profile.DisplayName))
-               .ForMember(dest => dest.Profile, opts => opts.MapFrom(src => src.Participant))
-               .AfterMap((src, dest, context) =>
-               {
-                   dest.ActiveStatus = context.Mapper.Map<ActiveActivityStatusDTO>(src.Participant);
-               }); //map badges, mutual servers, mutualfriends //maybe works maybe ignore at first and load from client.//output members are same name so no need to map
+            
 
             //CreateMap<ServerProfileServerRole, HierarchalRoleMinimalDTO>().ForAllMembers(dest=>dest.MapFrom(e=>e.Role)); //maybe works? finds inner role and uses that map to get hierarchalrole
 

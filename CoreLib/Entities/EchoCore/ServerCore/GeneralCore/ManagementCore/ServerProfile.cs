@@ -25,6 +25,7 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore
         public Server Server { get; set; }
         public AccountServerFolder? Folder { get; set; }
         public ICollection<ServerProfileServerRole>? Roles { get; set; } //all serverroles granted to this serverprofile through ServerProfileServerRole
+        public ICollection<ServerEventParticipancy>? EventParticipancies { get; set; } 
         public ICollection<ServerChannelCategoryMemberSettings>? CategoryMemberSettings { get; set; } //grouped permissions for this account in a specific channelcategory (used for managing the collection)
         public ICollection<ServerChannelCategoryMemberPermission>? CategoryMemberPermissions { get; set; } //specific permissions for this account in a specific channelcategory
         public ICollection<ServerTextChannelMemberSettings>? TextChannelMemberSettings { get; set; } //grouped permissions for this account in a specific textchannel (used for managing the collection)

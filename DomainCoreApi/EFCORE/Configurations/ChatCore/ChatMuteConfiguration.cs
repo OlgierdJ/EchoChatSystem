@@ -11,7 +11,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ChatCore
             builder.HasKey(b => new { b.MuterId, b.SubjectId });
             builder.Property(b => b.TimeMuted).HasDefaultValueSql("getdate()").IsRequired();
             builder.Property(b => b.ExpirationTime).IsRequired(false);
-            builder.HasOne(b => b.Subject).WithMany(e=>e.Mutes).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+            builder.HasOne(b => b.Subject).WithMany(e=>e.Muters).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
             builder.HasOne(b => b.Muter).WithMany(b => b.MutedChats).HasForeignKey(b => b.MuterId).OnDelete(DeleteBehavior.Restrict).IsRequired();
         }
     }

@@ -2,7 +2,9 @@
 
 namespace CoreLib.Entities.EchoCore.ApplicationCore
 {
-    public class Permission : BasePermission<ulong, Role>
+    public class Permission : BaseEntity<ulong>, IRolePermission<Role>
     {
+        public ICollection<Role>? Roles { get; set; }
+        public string Name { get; set; }
     }
 }

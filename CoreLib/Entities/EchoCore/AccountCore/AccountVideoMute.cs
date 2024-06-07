@@ -2,7 +2,13 @@
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountVideoMute : BaseMute<Account, ulong, Account, ulong> //mutes the video stream of the other account thus ignoring it
+    public class AccountVideoMute : ITargetedMute<Account, ulong, Account, ulong> //mutes the video stream of the other account thus ignoring it
     {
+        public ulong SubjectId { get; set; }
+        public ulong MuterId { get; set; }
+        public DateTime TimeMuted { get; set; }
+        public DateTime? ExpirationTime { get; set; }
+        public Account Muter { get; set; }
+        public Account Subject { get; set; }
     }
 }

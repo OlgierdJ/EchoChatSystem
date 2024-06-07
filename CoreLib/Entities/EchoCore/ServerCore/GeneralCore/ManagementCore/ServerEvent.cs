@@ -19,8 +19,8 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore
         public string? Location { get; set; } //text or link to event site.
 
         //public ServerVoiceChannel? VoiceChannelLocation { get; set; } //if it has location then it shouldnt have voicechannellocation
+        public ICollection<ServerEventParticipancy> Participants { get; set; }
         public Server Server { get; set; }
         public Account Creator { get; set; } //maybe change owner type and id, cause dont know where to point ownership, directly to account or to the accounts serverprofile.
     }
-
 }

@@ -2,6 +2,7 @@
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
+using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
@@ -16,8 +17,12 @@ namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore
         public DateTime TimeCreated { get; set; }
         public ICollection<ServerRole>? Roles { get; set; }
         public ICollection<ServerEvent>? Events { get; set; }
+        public ICollection<ServerEventParticipancy>? EventParticipancies { get; set; } // no action
         public ICollection<ServerInvite>? Invites { get; set; } //maybe put this into settings
+        //public ICollection<ServerVoiceInvite>? VoiceInvites { get; set; } //maybe put this into settings
         public ICollection<AccountServerMute>? Muters { get; set; } //maybe put this into settings
+        //public ICollection<ServerVoiceMute>? MutedVoices { get; set; } //maybe put bool flag in serverprofile?
+        //public ICollection<ServerDeafen>? DeafenedMembers { get; set; } //maybe put bool flag in serverprofile?
         public ServerSettings? Settings { get; set; }
         //public ServerProfile Owner { get; set; } //restrict user from leaving server
 

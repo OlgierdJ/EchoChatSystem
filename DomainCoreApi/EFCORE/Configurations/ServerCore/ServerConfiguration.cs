@@ -24,6 +24,7 @@ namespace DomainCoreApi.EFCORE.Configurations.ServerCore.GeneralCore
 
             builder.HasMany(b => b.Events).WithOne(b => b.Server).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasMany(b => b.Invites).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
+            //builder.HasMany(b => b.VoiceInvites).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
             builder.HasMany(b => b.Muters).WithOne(b => b.Subject).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
 
             builder.HasMany(b => b.AuditLogs).WithOne(b => b.Server).HasForeignKey(b => b.ServerId).OnDelete(DeleteBehavior.ClientCascade).IsRequired();

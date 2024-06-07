@@ -4,7 +4,7 @@ using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatMessage : BaseEntity<ulong>, IBaseMessage, IAuthoredEntity<Account, ulong?>, IHeldMessageEntity<Chat, ulong>, IRepliableMessageEntity<ChatMessage, ulong?>
+    public class ChatMessage : BaseEntity<ulong>, IAuditableMessage, IAuthoredEntity<Account, ulong?>, IRepliableMessageEntity<ChatMessage, ulong?>
     {
         public ICollection<ChatMessageAttachment>? Attachments { get; set; }
         //public ICollection<ChatMessageReport> Reports { get; set; }

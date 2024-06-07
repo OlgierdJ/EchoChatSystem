@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomainCoreApi.EFCORE.Configurations.ServerCore.ChannelCore.TextChannel
 {
-    public class ServerTextChannelAccountMessageTrackerConfiguration : IEntityTypeConfiguration<ServerTextChannelAccountMessageTracker>
+    public class ServerTextChannelAccountMessageTrackerConfiguration : IEntityTypeConfiguration<AccountServerTextChannelMessageTracker>
     {
-        public void Configure(EntityTypeBuilder<ServerTextChannelAccountMessageTracker> builder)
+        public void Configure(EntityTypeBuilder<AccountServerTextChannelMessageTracker> builder)
         {
             builder.HasKey(b => new { b.OwnerId, b.CoOwnerId });
 
