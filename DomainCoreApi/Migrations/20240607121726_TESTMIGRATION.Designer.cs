@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-<<<<<<<< HEAD:DomainCoreApi/Migrations/20240607113141_totallynewinit.Designer.cs
-    [Migration("20240607113141_totallynewinit")]
-    partial class totallynewinit
-========
-    [Migration("20240607111501_init")]
-    partial class init
->>>>>>>> 3a3aec1f766dda02fcbba5792b397c67a3962f64:DomainCoreApi/Migrations/20240607111501_init.Designer.cs
+    [Migration("20240607121726_TESTMIGRATION")]
+    partial class TESTMIGRATION
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

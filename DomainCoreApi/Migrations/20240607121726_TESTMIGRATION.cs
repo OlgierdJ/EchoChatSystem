@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DomainCoreApi.Migrations
 {
     /// <inheritdoc />
-    public partial class totallynewinit : Migration
+    public partial class TESTMIGRATION : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
