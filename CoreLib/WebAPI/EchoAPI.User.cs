@@ -170,11 +170,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); 
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> SendFriendRequestAsync(string Token, AddFriendRequestDTO requestDTO)
@@ -186,11 +182,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); 
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> SendFriendRequestAsync(string Token, ulong receiverId)
@@ -199,11 +191,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); 
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> CancelFriendRequestAsync(string Token, ulong outgoingrequestId)
@@ -212,11 +200,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); 
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeclineFriendRequestAsync(string Token, ulong incomingrequestId)
@@ -225,11 +209,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> RemoveFriendAsync(string Token, ulong friendId)
@@ -238,11 +218,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> BlockUserAsync(string Token, ulong userId)
@@ -251,11 +227,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> MuteUserAsync(string Token, ulong userId, MuteRequestDTO requestDTO)
@@ -268,11 +240,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> SetNicknameAsync(string Token, ulong userId, SetNicknameUserRequestDTO requestDTO)
@@ -284,11 +252,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> SetNoteAsync(string Token, ulong userId, SetNoteUserRequestDTO requestDTO)
@@ -300,11 +264,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> SetUserVolumeAsync(string Token, ulong userId, SetUserVolumeRequestDTO requestDTO)
@@ -316,11 +276,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> AddUserConnectionAsync(string Token, AddUserConnectionRequestDTO requestDTO)
@@ -332,11 +288,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeafenSelfAsync(string Token)
@@ -345,11 +297,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeleteAccountAsync(string Token, DeleteAccountRequestDTO requestDTO)
@@ -361,11 +309,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DisableAccountAsync(string Token, DisableAccountRequestDTO requestDTO)
@@ -377,11 +321,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> SetPhoneNumberAsync(string Token, EditPhoneNumberRequestDTO requestDTO)
@@ -393,11 +333,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<UserFullDTO> LoadUserSessionDataAsync(string Token)
@@ -428,11 +364,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> RegisterAsync(RegisterRequestDTO requestDTO)
@@ -442,10 +374,7 @@ namespace CoreLib.WebAPI
             try
             {
                 var response = await client.PostAsync("user/register", content).ConfigureAwait(false);
-                if (response.IsSuccessStatusCode)
-                {
-                    return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-                }
+                return response.IsSuccessStatusCode;
             }
             catch (Exception e)
             {
@@ -462,11 +391,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> SetCustomStatusAsync(string Token, SetCustomStatusRequestDTO requestDTO)
@@ -478,11 +403,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> SetStatusAsync(string Token, SetStatusRequestDTO requestDTO)
@@ -494,11 +415,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<List<ActivityStatusDTO>> GetListOfStatusAsync()
@@ -534,10 +451,7 @@ namespace CoreLib.WebAPI
 
                 var response = await client.SendAsync(request).ConfigureAwait(false);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
+                return response.IsSuccessStatusCode;
             }
             catch (Exception e)
             {
