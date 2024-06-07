@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    [Migration("20240607105121_tokentrunc2")]
-    partial class tokentrunc2
+    [Migration("20240607113141_totallynewinit")]
+    partial class totallynewinit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
