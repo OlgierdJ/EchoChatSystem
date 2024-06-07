@@ -168,7 +168,7 @@
                  </MudToolBar>
              </MudPaper>
 
-            @if (Content?.Participants?.Count() > 2)
+             @if (Content?.Participants?.Count() > 2)
             {
                 <MemberListComponent Visible="ToggleSidePanel" Members="@Content?.Participants?.ToList()" />
             }
@@ -194,11 +194,14 @@
     public UserFullDTO self { get; set; }
 
     private MemberDTO _other;
-    public MemberDTO other { get { return _other; } set
+    public MemberDTO other
+    {
+        get { return _other; }
+        set
         {
             _other = value;
             OnChanged?.Invoke();
-        } 
+        }
     }
 
     private string? token { get; set; }
@@ -261,30 +264,23 @@
             // {
             if (!string.IsNullOrWhiteSpace(TextValue))
             {
-                // skal det ik være en SendMessageRequestDTO?
-                MessageDTO newmsg = new();
-                newmsg.Content = TextValue.Trim();
-                newmsg.TimeSent = DateTime.Now;
-                newmsg.Sender = new UserMinimalDTO()
+                SendMessageRequestDTO msg = new();
+                msg.Content = TextValue.Trim();
+
+                var token = await LocalStorage.GetItemAsStringAsync("Token");
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    var result = await _echoAPI.SendChatMessage(token, Content.Id, msg);
+                    if (result)
                     {
-                        Id = self.Id,
-                        ImageIconURL = self.UserProfile.User.ImageIconURL,
-                        DisplayName = self.UserProfile.User.DisplayName,
-                    };
-                //code to reflect your id
-
-                Content.Messages.Add(newmsg);
-                //skal lige snakke om hvordan vi vil gøre det 
-                //await _echoAPI.CreateAsync<ChatDTO>(newmsg, (new AuthenticationHeaderValue("Bearer", token));
-                _js.InvokeVoidAsync("console.log", newmsg.Content);
-
-                await Task.Delay(50);
-                TextValue = string.Empty;
-                await InvokeAsync(StateHasChanged);
+                        await Task.Delay(50);
+                        TextValue = string.Empty;
+                        await InvokeAsync(StateHasChanged);
+                    }
+                }
             }
+            prevKey = e.Key;
         }
-        prevKey = e.Key;
-        _js.InvokeVoidAsync("console.log", e.Key);
     }
 
     /*public async void JoinGroup(string GroupName)
@@ -300,7 +296,7 @@
     //don't know if thats all it takes
     public async void ReceiveChatMessageUpdateMessageDTO(MessageDTO entity)
     {
-        var updatevalue = Content.Messages.FirstOrDefault(o =>o.Id == entity.Id);
+        var updatevalue = Content.Messages.FirstOrDefault(o => o.Id == entity.Id);
         updatevalue.Content = entity.Content;
         await InvokeAsync(StateHasChanged);
     }
@@ -315,4 +311,5 @@
 
     private DateTime prevDate = DateTime.MinValue;
     private UserMinimalDTO prevSender = new();
+
 }
