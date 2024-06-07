@@ -1,7 +1,7 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Interfaces.Services;
 using CoreLib.Interfaces;
-using DomainCoreApi.Controllers.Bases;
+//using DomainCoreApi.Controllers.Bases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DomainCoreApi.Controllers

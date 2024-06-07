@@ -55,15 +55,15 @@ namespace CoreLib.Handlers
             //Map events
 
             connection.ServerTimeout = TimeSpan.FromSeconds(2);
-            connection.On<string>(nameof(IDomainNotificationHub.ReceiveUpdateMessage), (message) => UpdateMessageReceived?.Invoke(message));
-            connection.On<string>(nameof(IDomainNotificationHub.ReceiveNotification), (message) => ReceiveNotification?.Invoke(message));
-            connection.On<string>(nameof(IDomainNotificationHub.JoinGroup), (groupName) => JoinGroup?.Invoke(groupName));
-            connection.On<string[]>(nameof(IDomainNotificationHub.JoinGroups), (groupNames) => JoinGroups?.Invoke(groupNames));
-            connection.On<string>(nameof(IDomainNotificationHub.LeaveGroup), (groupNames) => LeaveGroup?.Invoke(groupNames));
-            connection.On<string[]>(nameof(IDomainNotificationHub.LeaveGroups), (groupNames) => LeaveGroups?.Invoke(groupNames));
-            connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageCreateMessageDTO), (message) => ReceiveChatMessageCreateMessageDTO?.Invoke(message));
-            connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageUpdateMessageDTO), (message) => ReceiveChatMessageUpdateMessageDTO?.Invoke(message));
-            connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageDeleteMessageDTO), (message) => ReceiveChatMessageDeleteMessageDTO?.Invoke(message));
+            //connection.On<string>(nameof(IDomainNotificationHub.ReceiveUpdateMessage), (message) => UpdateMessageReceived?.Invoke(message));
+            //connection.On<string>(nameof(IDomainNotificationHub.ReceiveNotification), (message) => ReceiveNotification?.Invoke(message));
+            //connection.On<string>(nameof(IDomainNotificationHub.JoinGroup), (groupName) => JoinGroup?.Invoke(groupName));
+            //connection.On<string[]>(nameof(IDomainNotificationHub.JoinGroups), (groupNames) => JoinGroups?.Invoke(groupNames));
+            //connection.On<string>(nameof(IDomainNotificationHub.LeaveGroup), (groupNames) => LeaveGroup?.Invoke(groupNames));
+            //connection.On<string[]>(nameof(IDomainNotificationHub.LeaveGroups), (groupNames) => LeaveGroups?.Invoke(groupNames));
+            //connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageCreateMessageDTO), (message) => ReceiveChatMessageCreateMessageDTO?.Invoke(message));
+            //connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageUpdateMessageDTO), (message) => ReceiveChatMessageUpdateMessageDTO?.Invoke(message));
+            //connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageDeleteMessageDTO), (message) => ReceiveChatMessageDeleteMessageDTO?.Invoke(message));
             //Forward invocation of inner event to service event.
             Func<Exception, Task> connectionClosed = async (e) =>
             {

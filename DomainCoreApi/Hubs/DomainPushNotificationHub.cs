@@ -13,27 +13,27 @@ namespace DomainCoreApi.Hubs
     {
         public override async Task OnConnectedAsync()
         {
-           await Clients.Client(Context.ConnectionId).ReceiveNotification($"you are Connected with {Context.User?.Identity?.Name}");
+           //await Clients.Client(Context.ConnectionId).ReceiveNotification($"you are Connected with {Context.User?.Identity?.Name}");
             
            await base.OnConnectedAsync();
         }
 
         public async Task JoinGroup(string groupName)
         {
-            await Clients.Caller.JoinGroup(groupName);
+            //await Clients.Caller.JoinGroup(groupName);
         }
 
         public async Task JoinGroups(string[] groupNames)
         {
-            await Clients.Caller.JoinGroups(groupNames);
+            //await Clients.Caller.JoinGroups(groupNames);
         }
         public async Task LeaveGroup(string groupName)
         {
-            await Clients.Caller.LeaveGroup(groupName);
+            //await Clients.Caller.LeaveGroup(groupName);
         }
         public async Task LeaveGroups(string[] groupNames)
         {
-            await Clients.Caller.LeaveGroups(groupNames);
+            //await Clients.Caller.LeaveGroups(groupNames);
         }
 
 
