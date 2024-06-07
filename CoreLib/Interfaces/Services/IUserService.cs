@@ -39,9 +39,9 @@ namespace CoreLib.Interfaces.Services
         Task<bool> DisableAccountAsync(ulong senderId, DisableAccountRequestDTO requestDTO);
         Task<bool> SetPhoneNumberAsync(ulong senderId, EditPhoneNumberRequestDTO requestDTO);
         //validate credentials, create accesstoken && refresh token, store tokens in accountsession with device information, return tokens to client
-        Task<string> LoginAsync(LoginRequestDTO requestDTO); 
+        Task<TokenDTO> LoginAsync(LoginRequestDTO requestDTO); 
         //find sender, include sessions, validate refreshtoken against existing session with sender device details, create new access token & refresh token, store in same session, return new tokens to client
-        Task<TokenDTO> AuthenticateAsync(ulong senderId, string refreshToken); 
+        Task<TokenDTO> RefreshAuthenticationAsync(ulong senderId, string refreshToken); 
         //find sender, include sessions, deactivate session or remove, tell signalr client logged out of sessionid
         Task<bool> LogoutAsync(ulong senderId, string token); 
         Task<UserFullDTO> LoadUserSessionDataAsync(ulong senderId);

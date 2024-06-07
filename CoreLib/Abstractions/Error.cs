@@ -37,4 +37,45 @@ namespace CoreLib.Abstractions
 
         public static Result Failure(Error error) => new(false, error);
     }
+
+    public class Result<TValue>
+    {
+        public Result()
+        { }
+
+        private TValue _value;
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public TValue ValueOrDefault => _value;
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public TValue Value
+        {
+            get
+            {
+                //ThrowIfFailed();
+
+                return _value;
+            }
+            private set
+            {
+                //ThrowIfFailed();
+
+                _value = value;
+            }
+        }
+
+        /// <summary>
+        /// Set value
+        /// </summary>
+        public Result<TValue> WithValue(TValue value)
+        {
+            Value = value;
+            return this;
+        }
+    }
 }

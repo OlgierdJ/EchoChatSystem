@@ -4,6 +4,7 @@ using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DomainCoreApi.Migrations
 {
     [DbContext(typeof(EchoDbContext))]
-    partial class EchoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240605112655_fixedfriendreqsett")]
+    partial class fixedfriendreqsett
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -401,8 +404,8 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<string>("AccessToken")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<decimal>("AccountId")
                         .HasColumnType("decimal(20,0)");
@@ -422,8 +425,7 @@ namespace DomainCoreApi.Migrations
 
                     b.Property<string>("RefreshToken")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TimeStarted")
                         .ValueGeneratedOnAdd()
@@ -3415,6 +3417,9 @@ namespace DomainCoreApi.Migrations
                     b.Property<decimal>("InviterId")
                         .HasColumnType("decimal(20,0)");
 
+                    b.Property<decimal?>("AccountId")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<DateTime?>("ExpirationTime")
                         .HasColumnType("datetime2");
 
@@ -3438,6 +3443,8 @@ namespace DomainCoreApi.Migrations
                         .HasColumnType("decimal(20,0)");
 
                     b.HasKey("SubjectId", "InviterId");
+
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("InviterId");
 
@@ -6127,8 +6134,12 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore.ServerInvite", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Inviter")
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", null)
                         .WithMany("ServerInvites")
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Inviter")
+                        .WithMany()
                         .HasForeignKey("InviterId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

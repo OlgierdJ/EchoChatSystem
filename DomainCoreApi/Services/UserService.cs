@@ -38,16 +38,24 @@ namespace DomainCoreApi.Services
     public class UserService : BaseEntityService<User, ulong>, IUserService
     {
         private readonly EchoDbContext dbContext;
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
         private readonly IPasswordHandler _pwdHandler;
-        private readonly IPushNotificationService notificationService;
+        private readonly Handlers.TokenHandler _tokenHandler;
+        private readonly IPushNotificationService _notificationService;
         private readonly CreateUserHandler _createUserHandler = new();
-        public UserService(EchoDbContext dbContext, IMapper mapper, IPushNotificationService notificationService, IUserRepository repository, IPasswordHandler pwdHandler) : base(repository)
+        public UserService(EchoDbContext dbContext, 
+            IMapper mapper,
+            IPushNotificationService notificationService, 
+            IUserRepository repository, 
+            IPasswordHandler pwdHandler, 
+            Handlers.TokenHandler tokenHandler) 
+            : base(repository)
         {
             this.dbContext = dbContext;
-            this.mapper = mapper;
-            _pwdHandler = pwdHandler;
-            this.notificationService = notificationService;
+            this._mapper = mapper;
+            this._pwdHandler = pwdHandler;
+            this._tokenHandler = tokenHandler;
+            this._notificationService = notificationService;
         }
 
         public async Task<bool> AcceptFriendRequestAsync(ulong senderId, ulong requestId)
@@ -55,17 +63,23 @@ namespace DomainCoreApi.Services
             try
             {
 
-                var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                var request = await dbContext.Set<IncomingFriendRequest>()
+                    .AsQueryable()
+                    .Include(e => e.SenderRequest)
+                    .FirstOrDefaultAsync(e => e.Id == requestId);
                 //verify acceptingacc is part of inc request.
                 if (request == null || request.ReceiverId != senderId)
                 {
                     return false;
                 }
-                var participancies = await dbContext.Set<FriendshipParticipancy>().AsQueryable()
-                    .Where(e => e.ParticipantId == senderId || e.ParticipantId == request.SenderRequest.SenderId) //filter rows by participantid part of key.
+                var participancies = await dbContext.Set<FriendshipParticipancy>()
+                    .AsQueryable()
+                    //filter rows by participantid part of key.
+                    .Where(e => e.ParticipantId == senderId || e.ParticipantId == request.SenderRequest.SenderId) 
                     .GroupBy(r => r.SubjectId) // find rows where friendship is same id and group them
                  .ToListAsync();
-                var existingFriendship = participancies.Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
+                var existingFriendship = participancies.Where(x => 
+                x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
                 .SelectMany(g => g); //flatten result into list
                 if (existingFriendship.Any()) //list will be empty if no matches
                 {
@@ -88,7 +102,7 @@ namespace DomainCoreApi.Services
                 };
 
                 dbContext.Set<OutgoingFriendRequest>().Remove(request.SenderRequest);
-                dbContext.Set<IncomingFriendRequest>().Remove(request); //cleanup cause appearently clientcascade doesnt work????
+                dbContext.Set<IncomingFriendRequest>().Remove(request);
                 await dbContext.Set<Friendship>().AddAsync(friendship);
                 var res = await dbContext.SaveChangesAsync();
             }
@@ -363,7 +377,12 @@ namespace DomainCoreApi.Services
             try
             {
                 var userPwd = await _pwdHandler.CreatePassword(input.Password);
-                Account account = GetNewDefaultAccount(input.Username, input.Email, input.DateOfBirth, input.DisplayName, input.AllowEchoMails);
+                Account account = GetNewDefaultAccount(
+                    input.Username, 
+                    input.Email, 
+                    input.DateOfBirth, 
+                    input.DisplayName, 
+                    input.AllowEchoMails);
                 account.User.SecurityCredentials = userPwd;
                 await dbContext.Set<Account>().AddAsync(account);
 
@@ -434,20 +453,46 @@ namespace DomainCoreApi.Services
             throw new NotImplementedException(); //not gonna implement maybe just enable some flag of a sort to show login is not enabled
         }
 
-        public async Task<string> LoginAsync(LoginRequestDTO attempt)
+        public async Task<TokenDTO> LoginAsync(LoginRequestDTO attempt)
         {
-            var user = await dbContext.Set<User>()
-                .Include(e => e.SecurityCredentials)
-                .Include(e => e.Account)
-                .FirstOrDefaultAsync(e => e.Email == attempt.Email);
-            if (user is not null && await _pwdHandler.CheckPassword(attempt.Password, user.SecurityCredentials))
+            try
             {
-                //send a jwt back to the website
-                DomainCoreApi.Handlers.TokenHandler tokenHandler = new();
-                return tokenHandler.CreateToken<Account>(user.Account);
+                var user = await dbContext.Set<User>()
+                    .Include(e => e.SecurityCredentials)
+                    .Include(e => e.Account).ThenInclude(e=>e.Sessions)
+                    .FirstOrDefaultAsync(e => e.Email == attempt.Email);
+                if (user is not null && await _pwdHandler.CheckPassword(attempt.Password, user.SecurityCredentials))
+                {
+                    //get access and refresh token back to caller.
+                    var accessToken = _tokenHandler.GetAccessToken(user.Account);
+                    var refreshToken = _tokenHandler.GetRefreshToken(user.Account);
+                    AccountSession session = new()
+                    {
+                         AccountId = user.Account.Id,
+                          ExpirationTime = null, //this is for echo to set expiration time if necessary
+                           Location = "", // not yet supported
+                           DeviceId = "", // not yet supported
+                        TimeStarted = DateTime.Now,
+                            TimeStopped = null,
+                             AccessToken = accessToken,
+                             RefreshToken = refreshToken,
+                    };
+                    await dbContext.Set<AccountSession>().AddAsync(session);
+                    var tokens = new TokenDTO()
+                    {
+                         RefreshToken = refreshToken,
+                         Token =  accessToken,
+                    };
+                    await dbContext.SaveChangesAsync();
+                    return tokens;
+                }
+                throw new Exception("You suck at hacking bruv");
             }
-
-            throw new Exception("You suck at hacking bruv");
+            catch (Exception e)
+            {
+                //errors
+                throw;
+            }
         }
 
         public async Task<bool> MuteSelfAsync(ulong senderId)
@@ -1265,7 +1310,7 @@ namespace DomainCoreApi.Services
             //make converter factory to get same converter instances essentially keeping context for mapped objects allowing us to make a dictionary lookup within them to look for existing maps
             var ConverterFactory = new EchoMappingConverterFactory();
 
-            return mapper.Map<UserFullDTO>(accountWithContext, opts =>
+            return _mapper.Map<UserFullDTO>(accountWithContext, opts =>
             {
                 if (minimizeDuplicatesUsingCacheLookup)
                 {
@@ -1286,7 +1331,7 @@ namespace DomainCoreApi.Services
                                                                                                                        //.ToList(); //need to tolist in case no friends were loaded
                         if (mutualFriends != null && mutualFriends.Any())
                         {
-                            memberProfile.MutualFriends = mapper.Map<List<UserDTO>>(mutualFriends.ToList(), opts =>
+                            memberProfile.MutualFriends = _mapper.Map<List<UserDTO>>(mutualFriends.ToList(), opts =>
                             {
                                 if (minimizeDuplicatesUsingCacheLookup)
                                 {
@@ -1301,7 +1346,7 @@ namespace DomainCoreApi.Services
                                                 //.ToList(); //need to tolist in case servers werent loaded
                         if (mutualServers != null && mutualServers.Any())
                         {
-                            memberProfile.MutualServers = mapper.Map<List<ServerMinimalDTO>>(mutualServers, opts =>
+                            memberProfile.MutualServers = _mapper.Map<List<ServerMinimalDTO>>(mutualServers, opts =>
                             {
                                 if (minimizeDuplicatesUsingCacheLookup)
                                 {
@@ -1600,6 +1645,91 @@ namespace DomainCoreApi.Services
                 return false;
             }
             return true;
+        }
+
+        public async Task<TokenDTO> RefreshAuthenticationAsync(ulong senderId, string refreshToken)
+        {
+            try
+            {
+               
+                var acc = await dbContext.Set<Account>()
+                    .Include(e => e.Sessions
+                    .Where(e => //device is not supported yet.
+                    e.RefreshToken == refreshToken))
+                    .FirstOrDefaultAsync(e => e.Id == senderId);
+                   
+                if (acc == null)
+                {
+                    throw new Exception("account not present");
+                }
+                var session = acc.Sessions.FirstOrDefault();
+                if (session == null)
+                {
+                    throw new Exception("session doesnt exist");
+                }
+                //token session has to be ongoing,
+                //expiration time has to be null for perma
+                //or above time now else it has expired.
+                var isValid = session.TimeStopped == null &&
+                    session.ExpirationTime == null 
+                    || session.ExpirationTime > DateTime.UtcNow;
+                if (!isValid)
+                {
+                    throw new Exception("token expired or logged out");
+                }
+                //rotate both tokens.
+                var newToken = _tokenHandler.GetAccessToken(acc);
+                var newRefreshToken = _tokenHandler.GetRefreshToken(acc);
+                session.RefreshToken = newRefreshToken;
+                session.AccessToken = newToken;
+                var tokens = new TokenDTO()
+                {
+                     RefreshToken = newRefreshToken,
+                     Token = newToken,
+                };
+                await dbContext.SaveChangesAsync();
+                return tokens;
+              
+            }
+            catch (Exception e)
+            {
+                //errors
+                throw;
+            }
+        }
+
+        public async Task<bool> LogoutAsync(ulong senderId, string refreshToken)
+        {
+            try
+            {
+                var acc = await dbContext.Set<Account>()
+                    .Include(e => e.Sessions
+                    .Where(e => //device is not supported yet.
+                    e.TimeStopped == null && //only find logged out sessions
+                    e.RefreshToken == refreshToken))
+                    .FirstOrDefaultAsync(e => e.Id == senderId);
+
+                if (acc == null)
+                {
+                    return false;
+                    //throw new Exception("account not present");
+                }
+                var session = acc.Sessions.FirstOrDefault();
+                if (session == null)
+                {
+                    return false;
+                    //throw new Exception("session doesnt exist");
+                }
+                session.TimeStopped = DateTime.UtcNow;
+                await dbContext.SaveChangesAsync();
+
+            }
+            catch (Exception e)
+            {
+                //errors
+                throw;
+            }
+             return true;
         }
     }
 }

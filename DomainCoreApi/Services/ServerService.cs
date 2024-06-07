@@ -49,7 +49,7 @@ namespace DomainCoreApi.Services
             this.textChannelService = textChannelService;
         }
 
-        public async Task<bool> ConsumeInvite(ulong senderId, ulong serverid, InviteType type, string inviteCode)
+        public async Task<bool> ConsumeInvite(ulong senderId, ulong serverid, string inviteCode)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace DomainCoreApi.Services
                 var server = await context.Set<Server>()
                     .Include(e => e.Members.Where(t => t.AccountId == senderId).Take(1))
                     .Include(e => e.Invites.Where(e => e.InviteCode == inviteCode).Take(1))
-                    .Include(e => e.VoiceInvites.Where(e => e.InviteCode == inviteCode).Take(1))
+                    //.Include(e => e.VoiceInvites.Where(e => e.InviteCode == inviteCode).Take(1))
                     .Include(e => e.Settings).ThenInclude(e=>e.SystemMessagesChannel).ThenInclude(e=>e.Messages.OrderByDescending(e => e.TimeSent).Take(1))
                     .Include(e => e.TextChannels).ThenInclude(e=>e.Messages.OrderByDescending(e => e.TimeSent).Take(1))
                     .Include(e => e.VoiceChannels)
@@ -70,7 +70,7 @@ namespace DomainCoreApi.Services
                     .Include(e=>e.Profile)
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == senderId);
-                if (sender == null || server == null || !server.Invites.Any() && !server.VoiceInvites.Any())
+                if (sender == null || server == null || !server.Invites.Any())
                 {
                     //cant process nonexistant sender, server or nonexistant invite within server. therefore go away plebian
                     return false;
@@ -102,30 +102,27 @@ namespace DomainCoreApi.Services
                     //temp membership is not supported yet
                 };
 
-                if (type == InviteType.Chat)
+                //the invite has to be not expired, and the inviter cant use their own invite.
+                //also if the totaluses is not 0 which means unlimited then the validation should also take times used in regard.
+                var invite = server.Invites.FirstOrDefault(); //already filtered from loading
+                var notExpired = invite.ExpirationTime > DateTime.Now;
+                var notIssuedBySender = invite.InviterId != senderId;
+                var canBeUsedStill = invite.TotalUses == 0 ? true : invite.TotalUses > invite.TimesUsed;
+                var inviteValid = notExpired && notIssuedBySender && canBeUsedStill;
+
+                if (!inviteValid) //dont allow people to use invalid invite to join
                 {
-                    var invite = server.VoiceInvites.FirstOrDefault(); //already filtered from loading
-                    //the invite has to be not expired, and the inviter cant use their own invite.
-                    //also if the totaluses is not 0 which means unlimited then the validation should also take times used in regard.
-                    var notExpired = invite.ExpirationTime > DateTime.Now;
-                    var notIssuedBySender = invite.InviterId != senderId;
-                    var canBeUsedStill = invite.TotalUses == 0 ? true : invite.TotalUses > invite.TimesUsed;
-                    var inviteValid = notExpired && notIssuedBySender && canBeUsedStill;
+                    return false;
+                }
+
+                if (invite.VoiceChannelId != null)
+                {
                     participancy.KickFromServerOnVoiceLeave = invite.GuestInvite;
                     participancy.JoinMethod = invite.GuestInvite ? "Temporary_VoiceInvite":"VoiceInvite";
-                    invite.TimesUsed += 1;
                     //prompt client join voice here from publisher
                 }
-                else
+                else if (invite.TextChannelId != null)
                 {
-                    var invite = server.Invites.FirstOrDefault(); //already filtered from loading
-                    //the invite has to be not expired, and the inviter cant use their own invite.
-                    //also if the totaluses is not 0 which means unlimited then the validation should also take times used in regard.
-                    var notExpired = invite.ExpirationTime > DateTime.Now;
-                    var notIssuedBySender = invite.InviterId != senderId;
-                    var canBeUsedStill = invite.TotalUses == 0 ? true : invite.TotalUses > invite.TimesUsed;
-                    var inviteValid = notExpired && notIssuedBySender && canBeUsedStill;
-                    invite.TimesUsed += 1;
                     participancy.JoinMethod = "Invite";
                     ChatAccountMessageTracker tracker = new()
                     {
@@ -136,6 +133,13 @@ namespace DomainCoreApi.Services
                     context.Set<ChatAccountMessageTracker>().Add(tracker);
                     //prompt client navigate textchannel here from publisher
                 }
+                else
+                {
+                    //if here that means no channel is specified and there probably isnt any channel in the server so just allow passage
+                    participancy.JoinMethod = "Invite";
+                }
+
+                invite.TimesUsed += 1; //maybe make seperate account invite use entity table and once in a while empty and add count to invite such that no concurrency issues will arise
 
                 context.Set<ServerProfile>().Add(participancy);
                 //publish inviteused event here maybe
@@ -263,7 +267,7 @@ namespace DomainCoreApi.Services
             return true;
         }
 
-        public async Task<bool> CreateInvite(ulong senderId, ulong serverid, InviteType type, CreateInviteRequestDTO requestDTO)
+        public async Task<bool> CreateInvite(ulong senderId, ulong serverid, CreateInviteRequestDTO requestDTO)
         {
             try
             {
@@ -296,37 +300,40 @@ namespace DomainCoreApi.Services
                 {
                     return false;
                 }
-
-                if (type == InviteType.Chat)
+                var invite = new ServerInvite()
                 {
-                    var ChannelId = requestDTO.ChannelId.GetValueOrDefault();
-                    if (ChannelId == 0)
-                    {
-                        return false; //invalid invite channel for voice invite
-                    }
-                    var invite = new ServerVoiceInvite()
-                    {
-                        ExpirationTime = requestDTO.TimeExpires,
-                        InviterId = senderId,
-                        SubjectId = serverid,
-                        TotalUses = requestDTO.TotalUses,
-                        GuestInvite = requestDTO.TemporaryMembership,
-                        ChannelId = ChannelId,
-                    };
-                    await context.Set<ServerVoiceInvite>().AddAsync(invite);
+                    ExpirationTime = requestDTO.TimeExpires,
+                    InviterId = senderId,
+                    SubjectId = serverid,
+                    TotalUses = requestDTO.TotalUses,
+                };
+
+                if (requestDTO.Type == InviteType.VoiceChat)
+                {
+                    //var ChannelId = requestDTO.ChannelId.GetValueOrDefault();
+                    //if (ChannelId == 0)
+                    //{
+                    //    return false; //invalid invite channel for voice invite
+                    //}
+                    //var invite = new ServerVoiceInvite()
+                    //{
+                    //    ExpirationTime = requestDTO.TimeExpires,
+                    //    InviterId = senderId,
+                    //    SubjectId = serverid,
+                    //    TotalUses = requestDTO.TotalUses,
+                    //    GuestInvite = requestDTO.TemporaryMembership,
+                    //    ChannelId = ChannelId,
+                    //};
+                    //await context.Set<ServerVoiceInvite>().AddAsync(invite);
+                    invite.GuestInvite = requestDTO.TemporaryMembership;
+                    invite.VoiceChannelId = requestDTO.ChannelId;
                 }
                 else
                 {
-                    var invite = new ServerInvite()
-                    {
-                        ExpirationTime = requestDTO.TimeExpires,
-                        InviterId = senderId,
-                        SubjectId = serverid,
-                        TotalUses = requestDTO.TotalUses,
-                        TextChannelId = requestDTO.ChannelId,
-                    };
-                    await context.Set<ServerInvite>().AddAsync(invite);
+                    invite.GuestInvite = requestDTO.TemporaryMembership;
+                    invite.TextChannelId = requestDTO.ChannelId;
                 }
+                    await context.Set<ServerInvite>().AddAsync(invite);
 
                 await context.SaveChangesAsync();
 
@@ -782,17 +789,23 @@ namespace DomainCoreApi.Services
                     return false;
                 }
 
-                var senderTopRole = sender.Roles.Select(e => e.Role).OrderBy(e => e.Importance).First(); //sender will have a role of some sorts probably
+                //sender will have a role of some sorts probably
+                var senderTopRole = sender.Roles.Select(e => e.Role).OrderBy(e => e.Importance).First(); 
                 var editedRole = server.Roles.FirstOrDefault(e => e.Id == roleId);
-                if (!sender.IsOwner && editedRole.Importance >= senderTopRole.Importance) //if sender is not owner then they are never allowed to process a role that has higher or equal status to their own toprole.
+                if (!sender.IsOwner && editedRole.Importance >= senderTopRole.Importance) 
+                    //if sender is not owner then they are never allowed to process
+                    //a role that has higher or equal status to their own toprole.
                 {
                     return false;
                 }
 
                 //do permission check if has permission.
                 var allowedPermissions = new string[] { "manage roles", "administrator" };
-                var HasPermission = sender.IsOwner; //if the account is serverowner then allow and skip role permission processing
-                HasPermission = HasPermission || FindHierarchalPermissionFromRoles(sender, allowedPermissions); //keep true if true else assign from role permission state
+                //if the account is serverowner then allow
+                //and skip role permission processing
+                var HasPermission = sender.IsOwner; 
+                //keep true if true else assign from role permission state
+                HasPermission = HasPermission || FindHierarchalPermissionFromRoles(sender, allowedPermissions); 
                 if (!HasPermission) //if they still dont have permission
                 {
                     return false;
@@ -924,12 +937,94 @@ namespace DomainCoreApi.Services
 
         public async Task<bool> JoinEvent(ulong senderId, ulong serverid, ulong eventId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //verify sender is member
+                var server = await context.Set<Server>()
+                    //annoys the fk out of me that you cant just include members.firstordefault where some condition on thenincludes
+                    .Include(e => e.Members.Where(e => e.AccountId == senderId).Take(1)) // filter members from db 
+                    .ThenInclude(e => e.Roles) //include sender role grants and the role as well as their permissions to see if they have permission to change server image
+                    .ThenInclude(e => e.Role)
+                    .ThenInclude(e => e.Permissions)//you dont actually need to pull all permissions if you know the ids of the reused serverpermissions.
+                    .ThenInclude(e => e.Permission)
+                    .Include(e => e.Events.Where(e => e.Id == eventId)).ThenInclude(e=>e.Participants.Where(e=>e.AccountId==senderId))
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(e => e.Id == serverid);
+                if (server == null || !server.Events.Any())
+                {
+                    //cant process nonexistant server or event
+                    return false;
+                }
+                var sender = server.Members.FirstOrDefault(); //if any then sender is here since already filtered // else null
+                var isMember = sender != null;
+                if (!isMember)
+                {
+                    return false;
+                }
+
+                var participancy = new ServerEventParticipancy()
+                {
+                     AccountId=senderId,
+                     ServerId=serverid,
+                      EventId=eventId,
+                };
+
+                await context.Set<ServerEventParticipancy>().AddAsync(participancy);
+
+                await context.SaveChangesAsync();
+
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<bool> LeaveEvent(ulong senderId, ulong serverid, ulong eventId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //verify sender is member
+                var server = await context.Set<Server>()
+                    //annoys the fk out of me that you cant just include members.firstordefault where some condition on thenincludes
+                    .Include(e => e.Members.Where(e => e.AccountId == senderId).Take(1)) // filter members from db 
+                    .ThenInclude(e => e.Roles) //include sender role grants and the role as well as their permissions to see if they have permission to change server image
+                    .ThenInclude(e => e.Role)
+                    .ThenInclude(e => e.Permissions)//you dont actually need to pull all permissions if you know the ids of the reused serverpermissions.
+                    .ThenInclude(e => e.Permission)
+                    .Include(e => e.Events.Where(e => e.Id == eventId)).ThenInclude(e => e.Participants.Where(e => e.AccountId == senderId))
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(e => e.Id == serverid);
+                if (server == null || !server.Events.Any())
+                {
+                    //cant process nonexistant server or event
+                    return false;
+                }
+                var sender = server.Members.FirstOrDefault(); //if any then sender is here since already filtered // else null
+                var isMember = sender != null;
+                if (!isMember)
+                {
+                    return false;
+                }
+
+                var participancy = new ServerEventParticipancy()
+                {
+                    AccountId = senderId,
+                    ServerId = serverid,
+                    EventId = eventId,
+                };
+
+                context.Set<ServerEventParticipancy>().Remove(participancy);
+
+                await context.SaveChangesAsync();
+
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<bool> LeaveServer(ulong senderId, ulong serverId)
@@ -977,10 +1072,10 @@ namespace DomainCoreApi.Services
                 context.Set<ServerVoiceChannelMemberSettings>().RemoveRange(serverProfile.VoiceChannelMemberSettings); //only senders member settings will be included in context here.
 
                 //channel stuff
-                context.Set<ServerTextChannelAccountMessageTracker>().RemoveRange(serverProfile.Account.TextChannelMessageTrackers); //only senders message trackers will be included in context here.
+                context.Set<AccountServerTextChannelMessageTracker>().RemoveRange(serverProfile.Account.TextChannelMessageTrackers); //only senders message trackers will be included in context here.
                 context.Set<AccountServerVoiceChannelMute>().RemoveRange(serverProfile.Server.VoiceChannels.SelectMany(e => e.Muters)); //only senders mutes will be included in context
                 context.Set<AccountServerVoiceChannelMute>().RemoveRange(serverProfile.Server.VoiceChannels.SelectMany(e => e.Muters)); //only senders mutes will be included in context
-                context.Set<ServerTextChannelMute>().RemoveRange(serverProfile.Server.TextChannels.SelectMany(e => e.Muters)); //only senders mutes will be included in context
+                context.Set<AccountServerTextChannelMute>().RemoveRange(serverProfile.Server.TextChannels.SelectMany(e => e.Muters)); //only senders mutes will be included in context
 
                 //global stuff
                 context.Set<AccountServerMute>().Remove(serverProfile.Server.Muters.FirstOrDefault()); //only senders mutes will be included in context 
@@ -1033,7 +1128,7 @@ namespace DomainCoreApi.Services
                             CoOwnerId = channel.Id,
                             OwnerId = senderId,
                         };
-                        await context.Set<ServerTextChannelAccountMessageTracker>().AddAsync(tracker);
+                        await context.Set<AccountServerTextChannelMessageTracker>().AddAsync(tracker);
                     }
                     var newestMsgId = channel.Messages.FirstOrDefault()?.Id; //if no messages assign null or if messages assign id
                     tracker.SubjectId = newestMsgId;
@@ -1075,7 +1170,7 @@ namespace DomainCoreApi.Services
             return true;
         }
 
-        public async Task<bool> RemoveInvite(ulong senderId, ulong serverid, InviteType type, string inviteCode)
+        public async Task<bool> RemoveInvite(ulong senderId, ulong serverid, string inviteCode)
         {
             try
             {
@@ -1088,10 +1183,10 @@ namespace DomainCoreApi.Services
                     .ThenInclude(e => e.Permissions)//you dont actually need to pull all permissions if you know the ids of the reused serverpermissions.
                     .ThenInclude(e => e.Permission)
                     .Include(e => e.Invites.Where(e => e.InviteCode == inviteCode).Take(1))
-                    .Include(e => e.VoiceInvites.Where(e => e.InviteCode == inviteCode).Take(1))
+                    //.Include(e => e.VoiceInvites.Where(e => e.InviteCode == inviteCode).Take(1))
                     .AsSplitQuery()
                     .FirstOrDefaultAsync(e => e.Id == serverid);
-                if (server == null || !server.Invites.Any() && !server.VoiceInvites.Any())
+                if (server == null || !server.Invites.Any())
                 {
                     //cant process nonexistant server or invites
                     return false;
@@ -1111,16 +1206,16 @@ namespace DomainCoreApi.Services
                     return false;
                 }
 
-                if (type==InviteType.Server)
-                {
                     var specifiedInvite = server.Invites.First(); //if any then sender is here since already filtered // else null
                     context.Set<ServerInvite>().Remove(specifiedInvite);
-                }
-                else
-                {
-                    var specifiedInvite = server.VoiceInvites.First(); //if any then sender is here since already filtered // else null
-                    context.Set<ServerVoiceInvite>().Remove(specifiedInvite);
-                }
+                //if (type==InviteType.Server)
+                //{
+                //}
+                //else
+                //{
+                //    var specifiedInvite = server.VoiceInvites.First(); //if any then sender is here since already filtered // else null
+                //    context.Set<ServerVoiceInvite>().Remove(specifiedInvite);
+                //}
 
                 await context.SaveChangesAsync();
 
@@ -1309,26 +1404,86 @@ namespace DomainCoreApi.Services
         private bool FindHierarchalPermissionFromRoles(ServerProfile sender, IEnumerable<string> permissionNames)
         {
             //find set of permissions from scope
-            var Roles = sender.Roles.Select(e => e.Role).OrderBy(e => e.Importance); //find roles order by importance
-            //order doesnt really matter does it? since if you get permission through admin or some other permission does not affect that you got the permission and the result is the same
-            var formattedPermissionNames = permissionNames.Select(name => name.ToLower()); //.OrderBy(name=>name); 
-            //since permission scope can only be serverglobal we can just bruteforce
+            //find roles order by hierarchy
+            var Roles = sender.Roles.Select(e => e.Role)
+                .OrderBy(e => e.Importance); 
+            
+            var formattedPermissionNames = permissionNames.Select(
+                name => name.ToLower()); 
 
-            ServerRolePermission serverPermission = null;
-            foreach (var role in Roles) //loop through roles with highest importance (meaning their set permissions overrides lower importance role grants)
+            //since permission scope can only be serverglobal we can just bruteforce
+            ServerRolePermission serverPermission = new() { State = false };
+            foreach (var role in Roles) //loop through roles with highest importance
+                                        //(meaning their set permissions overrides lower importance role grants)
             {
                 //find specific permission that would allow this action
-                var permission = role.Permissions.FirstOrDefault(e => formattedPermissionNames.Contains(e.Permission.Name.ToLower()) && e.State != null);
+                var permission = role.Permissions
+                    .FirstOrDefault(e => formattedPermissionNames
+                    .Contains(e.Permission.Name
+                    .ToLower()) && e.State != null);
                 if (permission == null)
                 {
-                    //if permission is null that means the current role does not have allow or disallow set meaning we should check the next role
+                    //if permission is null that means the current role does not have allow
+                    //or disallow set meaning we should check the next role
                     continue;
                 }
                 //if a role has been found then assign the role and return.
                 serverPermission = permission;
                 break;
             }
-            return serverPermission.State.GetValueOrDefault(); //if the state of the permission which has been found is true 
+            return serverPermission.State.GetValueOrDefault(); 
+        }
+
+        /// <summary>
+        /// finds global hierarchal permission from permission name string enumerable
+        /// </summary>
+        /// <param name="sender">must contain roles and their permissions mapped via navigation</param>
+        /// <param name="permissionNames">example: ["manage server", "administrator"] (casing doesnt matter as it will be formatted in method)</param>
+        /// <returns>authorative state. (top role permission state which is not null)</returns>
+        private bool FindScopedPermissionFromMember(ServerProfile sender, IEnumerable<string> permissionNames)
+        {
+            var formattedPermissionNames = permissionNames.Select(
+                name => name.ToLower());
+            //find set permissions for all scopes for the specific user
+            //concat list and find relevant unique instances
+            var setMemberPermissions = sender.CategoryMemberPermissions.Select(e => e.Permission)
+                .Concat(sender.VoiceChannelMemberPermissions.Select(e => e.Permission))
+                .Concat(sender.TextChannelMemberPermissions.Select(e => e.Permission))
+                .DistinctBy(perm=>perm.Id) //filter duplicates
+                .Where(perm=> formattedPermissionNames
+                .Contains(perm.Name //find relevant
+                .ToLower() //normalize
+                ));
+
+            if (!setMemberPermissions.Any())
+            {
+                return false;
+            }
+            //check if any relevant permissions are set to true
+            var result = setMemberPermissions.Any(setPermission =>
+            {
+                bool? res = null;
+                //check voicechat, or textchannelscope
+                var textChanScope = setPermission.TextChannelMemberPermissions.FirstOrDefault();
+                var voicChanScope = setPermission.VoiceChannelMemberPermissions.FirstOrDefault();
+                //if permission is set assign value to result and break
+                if (textChanScope != null && textChanScope.State != null 
+                || voicChanScope != null && voicChanScope.State != null)
+                {
+                    //only overrides result if null
+                    res = res ?? textChanScope.State;
+                    res = res ?? voicChanScope.State;
+                }
+                //else check categoryscope
+                var catScope = setPermission.CategoryMemberPermissions.FirstOrDefault();
+                //if permission is set assign value to result and break
+                if (catScope != null && catScope.State != null)
+                {
+                    res = res ?? catScope.State;
+                }
+                return res.GetValueOrDefault();
+            });
+            return result;
         }
 
         public async Task<bool> SetServerImage(ulong senderId, ulong serverid, SetImageRequestDTO requestDTO)

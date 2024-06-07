@@ -36,8 +36,83 @@ namespace DomainCoreApi.Controllers
             try
             {
 
-                var result =new TokenDTO { Token =await _userService.LoginAsync(login) };
+                var result = await _userService.LoginAsync(login);
                 if (result == null)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                //await _notificationService.NotifyClients(result, EntityAction.Create);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshAuthenticationAsync(TokenDTO prevTokens)
+        {
+            try
+            {
+                var token = prevTokens.RefreshToken;
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(token);
+                var rawId = jwtSecurityToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Sub)?.Value;
+                if (rawId==null || rawId == "")
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                var id = Convert.ToUInt64(rawId);
+                var result = await _userService.RefreshAuthenticationAsync(id, prevTokens.RefreshToken);
+                if (result == null)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                //await _notificationService.NotifyClients(result, EntityAction.Create);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
+        //[Authorize]
+        //[HttpPost("logout")]
+        //public async Task<IActionResult> LogoutAsync()
+        //{
+        //    try
+        //    {
+        //        var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+        //        var token = HttpContext.Request.Headers["Authorization"][0].Substring("Bearer ".Length);
+        //        var result = await _userService.LogoutAsync(id, prevTokens.RefreshToken);
+        //        if (result == false)
+        //        {
+        //            return Problem("Something went wrong. Contact an Admin / Server representative");
+        //        }
+        //        //await _notificationService.NotifyClients(result, EntityAction.Create);
+
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Problem(ex.Message);
+        //    }
+        //}
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> LogoutAsync(TokenDTO prevTokens)
+        {
+            try
+            {
+                var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                var result = await _userService.LogoutAsync(id, prevTokens.RefreshToken);
+                if (result == false)
                 {
                     return Problem("Something went wrong. Contact an Admin / Server representative");
                 }

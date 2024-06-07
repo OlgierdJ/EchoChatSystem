@@ -4,6 +4,7 @@ using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
 using CoreLib.MapperProfiles;
 using DomainCoreApi.EFCORE;
+using DomainCoreApi.Handlers;
 using DomainCoreApi.Hubs;
 using DomainCoreApi.Repositories;
 using DomainCoreApi.Services;
@@ -26,8 +27,13 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
 {
     opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
+
+builder.Services.Configure<JWTOptions>(
+    builder.Configuration.GetSection(JWTOptions.Position));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-var connectionString = builder.Configuration.GetConnectionString("EchoDBConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("EchoDBConnection") 
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<EchoDbContext>(options => options.UseSqlServer(connectionString));
 // Add services to the container.
 builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
@@ -64,6 +70,7 @@ builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountReposito
 builder.Services.AddTransient(typeof(ISecurityCredentialsRepository), typeof(SecurityCredentialsRepository));
 builder.Services.AddTransient(typeof(ILanguageRepository), typeof(LanguageRepository));
 //Add services to the container.
+builder.Services.AddTransient<DomainCoreApi.Handlers.TokenHandler>();
 builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
 builder.Services.AddTransient(typeof(IChatService), typeof(ChatService));
 
