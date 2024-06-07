@@ -857,7 +857,7 @@ namespace DomainCoreApi.Services
                     Content = requestDTO.Content,
                     //MessageHolderId = chatId,
                     ParentId = requestDTO.ReplyId,
-                    Attachments = requestDTO.Attachments.Select(e => new ChatMessageAttachment
+                    Attachments = requestDTO.Attachments?.Select(e => new ChatMessageAttachment
                     {
                         Description = e.Description,
                         FileLocationURL = e.FileLocationURL,
