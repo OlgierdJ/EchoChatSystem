@@ -19,8 +19,21 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Hubs
 {
+    
     public interface IPushNotificationHub
     {
+        Task ReceiveChatMinimalDTOCreateMessage(ChatMinimalDTO entity);
+        Task ReceiveChatMinimalDTOUpdateMessage(ChatMinimalDTO entity);
+        Task ReceiveChatMinimalDTODeleteMessage(ChatMinimalDTO entity);
+
+        Task ReceiveMessageDTOCreateMessage(MessageDTO entity);
+        Task ReceiveMessageDTOUpdateMessage(MessageDTO entity);
+        Task ReceiveMessageDTODeleteMessage(MessageDTO entity);
+
+        Task ReceiveChatDTOCreateMessage(ChatDTO entity);
+        Task ReceiveChatDTOUpdateMessage(ChatDTO entity);
+        Task ReceiveChatDTODeleteMessage(ChatDTO entity);
+
         Task ReceiveMemberDTOCreateMessage(MemberDTO entity);
         Task ReceiveMemberDTOUpdateMessage(MemberDTO entity);
         Task ReceiveMemberDTODeleteMessage(MemberDTO entity);
@@ -40,5 +53,7 @@ namespace CoreLib.Hubs
         Task ReceiveUserDTOCreateMessage(UserDTO entity);
         Task ReceiveUserDTOUpdateMessage(UserDTO entity);
         Task ReceiveUserDTODeleteMessage(UserDTO entity);
+        Task NewFriend(UserDTO userDTO);
+        Task RemoveFriend(UserDTO userDTO);
     }
 }
