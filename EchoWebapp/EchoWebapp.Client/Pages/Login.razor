@@ -86,18 +86,9 @@
         var result = await _echoAPI.LoginAsync(User);
         if (!string.IsNullOrEmpty(result))
         {
-            AccountContainer.SetValue(result);
-            await LocalStorage.SetItemAsync("AccountId", AccountContainer.Value);
             await LocalStorage.SetItemAsStringAsync("Token", result);
-            
-            /* this is how we can call the api */
-            //var test = await _echoAPI.GetEntityAsync<Account>(AccountContainer.Value , new AuthenticationHeaderValue("Bearer", await LocalStorage.GetItemAsStringAsync("Token")));
-            
             await authstate.GetAuthenticationStateAsync();
             nav.NavigateTo("/");
-        }
-        else{
-            
         }
       
     }
