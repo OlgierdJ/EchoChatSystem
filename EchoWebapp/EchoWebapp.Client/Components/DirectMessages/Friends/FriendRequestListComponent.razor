@@ -7,7 +7,7 @@
 
     Clicking a request should open the profile of the other user.
 *@
-@if (filtered != null)
+@if (filtered != null && filtered?.Count > 0)
 {
     <MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
          <MudTextField Placeholder=" Search" @bind-Value="searchTerm"

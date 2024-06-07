@@ -10,7 +10,7 @@
     The user can also unblock the blocked user by clicking the unblock button relative to the user.
 *@
 
-@if (filtered != null)
+@if (filtered != null && filtered?.Count > 0)
 {
     <MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
          <MudTextField Placeholder=" Search" @bind-Value="searchTerm"

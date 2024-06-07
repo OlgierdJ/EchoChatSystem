@@ -14,7 +14,7 @@
 *@
 @* <h3>FriendListComponent</h3> *@
 
-@if (filtered != null || filtered?.Count>0)
+@if (filtered != null && filtered?.Count>0)
 {
 
     @if (displayAll)
@@ -40,9 +40,9 @@
              <MudTextField Placeholder=" Search" @bind-Value="searchTerm"
                            @onkeyup="(()=>SearchChanged())" Immediate />
          </MudPaper>
-        <MudText Class="px-5 py-2" Typo="Typo.button">Online - @(List.Where(e => e.ActiveStatus.Name != "Offline").Count())</MudText>
+        <MudText Class="px-5 py-2" Typo="Typo.button">Online - @(List.Where(e => e.ActiveStatus.Id != 4 && e.ActiveStatus.Id != 5).Count())</MudText>
         <MudList Clickable="true">
-            @foreach (var u in filtered?.Where(e => e.ActiveStatus.Name != "Offline").OrderBy(x => x.Name))
+            @foreach (var u in filtered?.Where(e => e.ActiveStatus.Id != 4 && e.ActiveStatus.Id != 5).OrderBy(x => x.Name))
             {
                 <MudDivider />
                 <MudListItem Dense="true" Class="mb-3 mt-2">
