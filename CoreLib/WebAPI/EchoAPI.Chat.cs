@@ -25,11 +25,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> AddChatParticipants(string Token, ulong chatId, ICollection<ulong> participantIds)
@@ -41,11 +37,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false; ;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> ConsumeChatInvite(string Token, ulong chatId, string inviteCode)
@@ -57,11 +49,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> CreateChat(string Token, ICollection<ulong> startParticipants)
@@ -73,11 +61,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> CreateChatInvite(string Token, ulong chatId, CreateInviteRequestDTO requestDTO)
@@ -89,11 +73,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeleteChat(string Token, ulong chatId)
@@ -102,11 +82,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> HideChat(string Token, ulong chatId)
@@ -115,11 +91,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> LeaveChat(string Token, ulong chatId)
@@ -128,11 +100,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> MarkChatAsRead(string Token, ulong chatId)
@@ -141,11 +109,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> MuteChat(string Token, ulong chatId, MuteRequestDTO requestDTO)
@@ -154,11 +118,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> PinChatMessage(string Token, ulong chatId, ulong messageId)
@@ -167,11 +127,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> RemoveChatMessage(string Token, ulong chatId, ulong messageId)
@@ -180,11 +136,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> RemoveChatParticipant(string Token, ulong chatId, ulong participantId)
@@ -193,11 +145,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> SendChatMessage(string Token, ulong chatId, SendMessageRequestDTO requestDTO)
@@ -209,11 +157,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            if (response.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions); ;
-            }
-            return false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> SetChatImage(string Token, ulong chatId, SetImageRequestDTO requestDTO)
@@ -225,7 +169,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+            return response.IsSuccessStatusCode; ;
         }
 
         public async Task<bool> UnmuteChat(string Token, ulong chatId)
@@ -234,7 +178,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> UnpinChatMessage(string Token, ulong chatId, ulong messageId)
@@ -243,7 +187,7 @@ namespace CoreLib.WebAPI
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> UpdateChat(string Token, ulong chatId, UpdateChatRequestDTO requestDTO)
@@ -255,7 +199,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> UpdateChatMessage(string Token, ulong chatId, ulong messageId, EditMessageRequestDTO requestDTO)
@@ -267,7 +211,7 @@ namespace CoreLib.WebAPI
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
-            return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
+            return response.IsSuccessStatusCode;
         }
     }
 }
