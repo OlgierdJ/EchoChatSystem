@@ -261,7 +261,7 @@ namespace DomainCoreApi.Services
                 {
                     DisplayName = !String.IsNullOrEmpty(displayName) ? displayName : name,
                     AvatarFileURL = GetIconFromList(),
-                    BannerColor = "Success",
+                    BannerColor = "#5C23D9",
                 },
                 Settings = new()
                 {
@@ -904,6 +904,58 @@ namespace DomainCoreApi.Services
                 return false;
             }
             return true;
+        }
+
+        public async Task<bool> SetDisplayNameAsync(ulong senderId, UserMinimalDTO user)
+        {
+            try
+            {
+                if (senderId == 0)
+                {
+                    return false;
+                }
+                Account acc = new()
+                {
+                    Id = senderId,
+                };
+                var sender = await dbContext.Set<Account>().AsQueryable().Include(e => e.Profile).FirstOrDefaultAsync(x => x.Id == senderId);
+                if (sender != null)
+                {
+                    sender.Profile.DisplayName = user.DisplayName;
+                    dbContext.Set<AccountProfile>().Attach(sender.Profile);
+                    var res = await dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<List<ActivityStatusDTO>> GetListOfStatusAsync()
+        {
+            try
+            {
+                List<ActivityStatusDTO> list = new();
+                var result = await dbContext.Set<AccountActivityStatus>().ToListAsync();
+                foreach (var r in result)
+                {
+                    list.Add(
+                        new ActivityStatusDTO{
+                            Id = r.Id,
+                            Name = r.Name,
+                            Description = r.Description,
+                            Icon = r.Icon,
+                            IconColor = r.IconColor,
+                        });
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<bool> SetUserVolumeAsync(ulong senderId, ulong userId, SetUserVolumeRequestDTO requestDTO)

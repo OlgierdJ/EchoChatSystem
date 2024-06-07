@@ -1,9 +1,11 @@
 ﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
 @using CoreLib.DTO.EchoCore.UserCore
+@using CoreLib.DTO.RequestCore.RelationCore
 @using EchoWebapp.Client.Pages
 @inject NavigationManager nav
 @inject ILocalStorageService LocalStorage
 @inject Provider.AccountIdContainer AccountContainer
+@inject EchoAPI _echoAPI
 
 @*
     Layout for a UserConnectionUIcomponent that exists within the indexcomponent.
@@ -12,30 +14,30 @@
     as well as mute self, deafen self, change activity status, custom status and navigate to user settings.
 *@
 <div class="d-flex">
-    @if(self != null)
+    @if (self != null)
     {
         <MudPaper Width="12vw" Height="10vh" Square Style="background: var(--mud-palette-dark);">
              <MudListItem Dense="true">
                  <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
                      <Popup self=self @ref=popup OnItemSelected=@HandelOnChatChanged />
-                     <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile">
+                     <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile" @onmouseover="MouseOver" @onmouseout="MouseOut">
 
                          <MudBadge Color="@stringToColor.ConvertStringToColor(self.UserProfile.User.ActiveStatus.IconColor)" Bordered Overlap="true" Origin="Origin.BottomRight">
                              <MudImage Src="@self.UserProfile.User.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
                          </MudBadge>
 
                          <MudPaper Class="d-flex flex-column flex-gap-0 flex-1 ml-1" Elevation="0" Style="@($"background:{Colors.Shades.Transparent};")" Square>
-                            <MudText Typo="Typo.caption">@self.UserProfile.User.DisplayName</MudText>
-                            <MudText Typo="Typo.caption">@self.UserProfile.User.ActiveStatus.DisplayedContent</MudText>
-                        </MudPaper>
-                        </div>
-                        <style>
-                            .hoverable:hover {
-                                background: rgba(255,255,255,0.1)
-                            }
-                        </style>
+                         <MudText Typo="Typo.caption">@((MarkupString)("<b>" + self.UserProfile.User.DisplayName + "</b> "))</MudText>
+                         <MudText Typo="Typo.caption">@((MarkupString)(handleVisible ? self.UserProfile.User.Name : self.UserProfile.User.ActiveStatus.DisplayedContent))</MudText>
+                     </MudPaper>
+                 </div>
+                 <style>
+                     .hoverable:hover {
+                         background: rgba(255,255,255,0.1)
+                     }
+                 </style>
 
-                        <MudPaper Class="d-flex flex-grow-1 gap-2 flex-1" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
+                 <MudPaper Class="d-flex flex-grow-1 gap-2 flex-1" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
                          <MudIconButton Size="Size.Small" Icon=@($"{(!mute ? @Icons.Material.Filled.Mic : @Icons.Material.Filled.MicOff)}") Color=@(!mute ? Color.Default : Color.Error) OnClick="ToggleMute" />
                          <MudIconButton Size="Size.Small" Icon=@($"{(!deaf ? @Icons.Material.Filled.Headset : @Icons.Material.Filled.HeadsetOff)}") Color=@(!deaf ? Color.Default : Color.Error) OnClick=" ToggleDeaf" />
                          <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Settings" OnClick="ToggleSettings" />
@@ -44,24 +46,42 @@
              </MudListItem>
          </MudPaper>
     }
- </div>
+</div>
 
- <!-- Move to Component at some point -->
- <MudOverlay Visible="openSettings" DarkBackground="true" ZIndex="9999">
-     <MudPaper Width="95vw" Height="95vh" Style="background: var(--mud-palette-dark);" Class="d-flex align-content-center justify-center flex-column  flex-grow-1 gap-12" Elevation="2">
-         <MudButton Style="position: absolute; top: 25px; right: 25px;" Color="Color.Error" Variant="Variant.Filled" OnClick="ToggleSettings">x</MudButton>
-         <MudText Typo="Typo.h3" Align="Align.Center" Style="padding-top: 25px;">SETTINGS</MudText>
-         <MudButton Class="align-self-center justify-center" Color="Color.Error" Variant="Variant.Filled" OnClick="logout">Logout</MudButton>
-         <MudButton Class="align-self-center justify-center" Color="Color.Warning" Variant="Variant.Filled" OnClick="updatepopup">Update</MudButton>
-     </MudPaper>
- </MudOverlay>
+<!-- Move to Component at some point -->
+<MudOverlay Visible="openSettings" DarkBackground="true" ZIndex="9999">
+    <MudPaper Width="95vw" Height="95vh" Style="background: var(--mud-palette-dark);" Class="d-flex align-content-center justify-center flex-column  flex-grow-1 gap-12" Elevation="2">
+        <MudButton Style="position: absolute; top: 25px; right: 25px;" Color="Color.Error" Variant="Variant.Filled" OnClick="ToggleSettings">x</MudButton>
+        <MudText Typo="Typo.h3" Align="Align.Center" Style="padding-top: 25px;">SETTINGS</MudText>
 
- @code {
+        <MudTextField @bind-Value="displayName" Margin="Margin.Dense" Variant="Variant.Outlined" Label="DISPLAY NAME" Placeholder="@self.UserProfile.User.DisplayName"
+                      Class="align-self-center justify-center px-5 py-2" MaxLength="32" MaxLines="1"
+                      Immediate="true" TextUpdateSuppression="false" Style="background: var(--mud-palette-darken);opacity:1;width: 500px;" TextChanged="checkValue" />
+
+        @if (valueHasChanged)
+        {
+            <MudButton Class="align-self-center justify-center" Color="Color.Dark" Variant="Variant.Filled" OnClick="reset">Cancel</MudButton>
+            <MudButton Class="align-self-center justify-center" Color="Color.Warning" Variant="Variant.Filled" OnClick="update">Update</MudButton>
+        }
+
+        <MudButton Class="align-self-center justify-center" Color="Color.Error" Variant="Variant.Filled" OnClick="logout">Logout</MudButton>
+    </MudPaper>
+</MudOverlay>
+
+@code {
     Popup popup = new();
 
     bool mute = false;
     bool deaf = false;
     bool openSettings = false;
+    bool openUpdate = false;
+    bool valueHasChanged = false;
+
+    public string displayName { get; set; }
+
+    bool handleVisible = false;
+    void MouseOver(MouseEventArgs e) { handleVisible = true; }
+    void MouseOut(MouseEventArgs e) { handleVisible = false; }
 
     public readonly StringToColor stringToColor = new();
 
@@ -98,14 +118,50 @@
         nav.NavigateTo("/login");
     }
 
-    private async void updatepopup()
+    private async void update()
     {
+        var token = await LocalStorage.GetItemAsStringAsync("Token");
 
+        var result = await _echoAPI.SetDisplayNameAsync(token,
+            new UserMinimalDTO()
+                {
+                    Id = self.Id,
+                    DisplayName = displayName,
+                    ImageIconURL = self.UserProfile.User.ImageIconURL
+                });
+
+        if (result)
+        {
+            self.UserProfile.User.DisplayName = displayName;
+            StateHasChanged();
+        }
     }
 
-    public void HandelOnChatChanged(ActiveActivityStatusDTO s)
+    private async void reset()
     {
-        self.UserProfile.User.ActiveStatus = s;
+        displayName = self.UserProfile.User.DisplayName;
+    }
+
+    private async void checkValue()
+    {
+        if (self.UserProfile.User.DisplayName != displayName)
+        {
+            valueHasChanged = true;
+        }
+    }
+
+
+    public void HandelOnChatChanged(ActivityStatusDTO s)
+    {
+        ActiveActivityStatusDTO status = new()
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Icon = s.Icon,
+                IconColor = s.IconColor,
+                DisplayedContent = s.Name
+            };
+        self.UserProfile.User.ActiveStatus = status;
         StateHasChanged();
     }
 }

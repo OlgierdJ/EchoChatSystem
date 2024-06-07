@@ -762,6 +762,7 @@ namespace DomainCoreApi.Controllers
                 return Problem(ex.Message);
             }
         }
+
         [Authorize]
         [HttpPut("status/set")]
         public async Task<IActionResult> SetStatusAsync(SetStatusRequestDTO requestDTO)
@@ -787,9 +788,52 @@ namespace DomainCoreApi.Controllers
             }
         }
 
+        [HttpGet("status/getall")]
+        public async Task<IActionResult> GetListOfStatusAsync()
+        {
+            try
+            {
+                var result = await _userService.GetListOfStatusAsync();
+                if (result == null)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("displayname/set")]
+        public async Task<IActionResult> SetDisplayNameAsync(UserMinimalDTO user)
+        {
+            try
+            {
+                var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                var result = await _userService.SetDisplayNameAsync(id, user);
+
+
+                if (!result)
+                {
+                    return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+
+
         [Authorize]
         [HttpPut("{userId}/StartDirectMessages")]
-        public async Task<IActionResult> SetStatusAsync(ulong userId)
+        public async Task<IActionResult> StartDirectMessagesAsync(ulong userId)
         {
             try
             {
@@ -814,7 +858,7 @@ namespace DomainCoreApi.Controllers
 
         [Authorize]
         [HttpPost("{userId}/StartDirectMessages")]
-        public async Task<IActionResult> SetStatusAsync(ulong userId, SendMessageRequestDTO requestDTO)
+        public async Task<IActionResult> StartDirectMessagesAsync(ulong userId, SendMessageRequestDTO requestDTO)
         {
             try
             {

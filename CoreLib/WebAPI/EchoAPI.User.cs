@@ -1,11 +1,13 @@
 ﻿using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.DTO.RequestCore.FriendCore;
+using CoreLib.DTO.RequestCore.MessageCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore;
 using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces.Services;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
@@ -177,7 +179,7 @@ namespace CoreLib.WebAPI
 
         public async Task<bool> SendFriendRequestAsync(string Token, AddFriendRequestDTO requestDTO)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, $"user/friend/request/send");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"user/friend/request/send");
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var load = JsonSerializer.Serialize(requestDTO, SerializerOptions);
@@ -193,7 +195,7 @@ namespace CoreLib.WebAPI
 
         public async Task<bool> SendFriendRequestAsync(string Token, ulong receiverId)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, $"user/friend/request/send/{receiverId}");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"user/friend/request/send/{receiverId}");
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
@@ -497,6 +499,75 @@ namespace CoreLib.WebAPI
                 return JsonSerializer.Deserialize<bool>(await response.Content.ReadAsStringAsync(), SerializerOptions);
             }
             return false;
+        }
+
+        public async Task<List<ActivityStatusDTO>> GetListOfStatusAsync()
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, $"user/status/getall");
+                var response = await client.SendAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return JsonSerializer.Deserialize<List<ActivityStatusDTO>> (await response.Content.ReadAsStringAsync(), SerializerOptions);
+                }
+            }
+            catch (Exception e)
+            {
+                //_notificationPipeline?.SetCurrentMessage(e.Message, Models.Stores.MessageType.Error);
+                await Console.Out.WriteLineAsync(e.Message);
+            }
+
+            return null;
+        }
+
+        public async Task<bool> SetDisplayNameAsync(string Token, UserMinimalDTO user)
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Put, $"user/displayname/set");
+                request.Headers.Authorization = authenticationHeaderValue(Token);
+
+                var load = JsonSerializer.Serialize(user, SerializerOptions);
+                request.Content = new StringContent(load, Encoding.UTF8, "application/json");
+
+                var response = await client.SendAsync(request).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                //_notificationPipeline?.SetCurrentMessage(e.Message, Models.Stores.MessageType.Error);
+                await Console.Out.WriteLineAsync(e.Message);
+            }
+
+            return false;
+        }
+        
+        public async Task<bool> StartDirectMessagesAsync(string Token, ulong userId)
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Put, $"user/{userId}/StartDirectMessages");
+                request.Headers.Authorization = authenticationHeaderValue(Token);
+
+                //var load = JsonSerializer.Serialize(requestDTO, SerializerOptions);
+                //request.Content = new StringContent(load, Encoding.UTF8, "application/json");
+
+                var response = await client.SendAsync(request).ConfigureAwait(false);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception e)
+            {
+                //_notificationPipeline?.SetCurrentMessage(e.Message, Models.Stores.MessageType.Error);
+                await Console.Out.WriteLineAsync(e.Message);
+                throw;
+            }
         }
     }
 }

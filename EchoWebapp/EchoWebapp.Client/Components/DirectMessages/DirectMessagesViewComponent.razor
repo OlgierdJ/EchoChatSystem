@@ -16,41 +16,54 @@
 @* <h3>DirectMessageViewComponent</h3> *@
 
 <div>
-    <ChatListComponent OnItemSelected=@HandelOnChatChanged />
-    <UserConnectionUIComponent self=self/>
+    <ChatListComponent self=self OnItemSelected=@HandelOnChatChanged />
+    <UserConnectionUIComponent self=self />
 </div>
+@if (!isLoading)
+{
 
-@if (DisplayFriends)
-{
-    <FriendsViewComponent self=self />
-}
-else
-{
-    <ChatViewComponent self=self Content="chat" />
+    @if (DisplayFriends)
+    {
+        <FriendsViewComponent self=self />
+    }
+    else
+    {
+        <ChatViewComponent self=self Content="@chat" />
+    }
 }
 
 @code {
     [Parameter]
     public bool DisplayFriends { get; set; }
 
+    public bool isLoading { get; set; }
+
     [Parameter]
     public UserFullDTO self { get; set; }
 
-    [Parameter]
     public ChatDTO chat { get; set; }
     //set as latest chat pr default
 
-
-    public void HandelOnChatChanged(ChatDTO c)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            chat = self.DirectMessages.FirstOrDefault();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    public async void HandelOnChatChanged(ChatDTO c)
+    {
+        isLoading = true;
         DisplayFriends = false;
+        chat = null;
         chat = c;
-        if(c == null)
+        if (c == null)
         {
             DisplayFriends = true;
         }
-        Console.Clear();
-        Console.WriteLine(DisplayFriends+" "+c.Messages.First().Content);
-        StateHasChanged();
+        isLoading = false;
+        await InvokeAsync(StateHasChanged);
     }
 }

@@ -51,6 +51,8 @@ namespace CoreLib.Interfaces.Services
         Task<bool> RemoveUserConnectionAsync(ulong senderId, ulong connectionId);
         Task<bool> SetCustomStatusAsync(ulong senderId, SetCustomStatusRequestDTO requestDTO);
         Task<bool> SetStatusAsync(ulong senderId, SetStatusRequestDTO requestDTO);
+        Task<List<ActivityStatusDTO>> GetListOfStatusAsync();
+        Task<bool> SetDisplayNameAsync(ulong senderId, UserMinimalDTO user);
         Task<bool> UpdatePasswordAsync(ulong senderId, string password);
         Task<bool> ForgotPasswordAsync(string email, string username);
     }

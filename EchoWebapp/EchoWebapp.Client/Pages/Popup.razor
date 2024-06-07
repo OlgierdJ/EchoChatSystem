@@ -1,4 +1,5 @@
 ﻿@using CoreLib.DTO.EchoCore.UserCore
+@using CoreLib.DTO.RequestCore.UserCore
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.WebAPI
 @using MudBlazor
@@ -11,11 +12,20 @@
 <div style="display: @(Visible ? "block" : "none"); bottom: 0px;  left: 25px; width: 300px; position:fixed; z-index: 2; ">
     <div class="modal-dialog" style="background: var(--mud-palette-surface);">
         <div class="modal-content" style="background: var(--mud-palette-transparent);">
-            <div class="modal-header justify-start">
-                <MudAvatar>
-                    <MudImage Src="https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg" />
-                </MudAvatar>
-                <h5 class="modal-title pl-3">@Name</h5>
+            <div class="modal-header row pa-1 ma-0" style="height: 250px; width: 300px;">
+                <MudPaper Style="@($"background: {(self.UserProfile.BannerColour != null ? self.UserProfile.BannerColour : "#5C23D9")};")" Height="125px" Width="300px">
+                    <div>
+                        <MudAvatar Style="height:64px; width:64px; position:relative; top:90px; left:15px; border:solid 2px var(--mud-palette-dark);">
+                            <MudImage Src="@self.UserProfile.User.ImageIconURL" />
+                        </MudAvatar>
+                    </div>
+                </MudPaper>
+                <MudPaper Height="75px" Elevation="0">
+                    <div class="row pl-3 mt-4">
+                        <h5>@self.UserProfile.User.DisplayName</h5>
+                        <p>@self.UserProfile.User.Name</p>
+                    </div>
+                </MudPaper>
             </div>
             <div class="modal-body">
                 @if (Message != null)
@@ -23,22 +33,19 @@
                     <MudText Typo="Typo.button">@((MarkupString)Message.Replace(Environment.NewLine, "<br />"))</MudText>
                     <MudText Typo="Typo.body1">@((MarkupString)Date.Replace(Environment.NewLine, "<br />"))</MudText>
                 }
-
-                <!-- Menu doesnt seem to work in our solution. Might be due to rendermode -->
-                <!-- Button and div menu does work tho LUL -->
             </div>
             <div class="modal-footer justify-start">
                 <MudButton Color="stringToColor.ConvertStringToColor(currentStatus?.IconColor)" @onclick="@(()=>Hover=!Hover)">Status: @currentStatus?.Name</MudButton>
-                <div class="modal-content pa-3" style="display: @(Hover ? "block" : "none"); bottom: 126px;  left: 327px; width: 125px; position:fixed; background: var(--mud-palette-surface);">
-                    <div class="d-flex flex-column my-2">
-                        @foreach (var s in status)
+                    <div class="modal-content pa-3" style="display: @(Hover ? "block" : "none"); bottom: 126px;  left: 327px; width: 125px; position:fixed; background: var(--mud-palette-surface);">
+                        <div class="d-flex flex-column my-2">
+                            @foreach (var s in status)
                         {
                             <MudItem>
                                 <MudButton @onclick="@(()=>{OnItemSelected.InvokeAsync(s);SwtichStatus(s);})">
                                     <MudIcon Icon="@s.Icon" Color="@stringToColor.ConvertStringToColor(s.IconColor)" />
                                     <MudText Class="ml-2">@s.Name</MudText>
-                                </MudButton>
-                            </MudItem>
+                                    </MudButton>
+                                </MudItem>
                         }
                     </div>
                 </div>
@@ -63,15 +70,12 @@
     [Parameter]
     public UserFullDTO self { get; set; }
 
-    ActiveActivityStatusDTO? currentStatus;
+    ActivityStatusDTO? currentStatus;
 
     /** Get ActiveActivityStatusDTO from DB and populate status **/
-    public static List<ActiveActivityStatusDTO> status = new() {
-        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.Circle, IconColor = "Success", Name = "Online", Id = 0, DisplayedContent = "Online" },
-        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.Brightness2, IconColor = "Warning", Name = "Away", Id = 1, DisplayedContent = "Away"},
-        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.RemoveCircle, IconColor = "Error", Name = "Busy", Id = 2, DisplayedContent = "Busy"},
-        new ActiveActivityStatusDTO { Icon = Icons.Material.Filled.StopCircle, IconColor = "Dark", Name = "Offline", Id = 3, DisplayedContent = "Offline"},
-    };
+
+
+    public static List<ActivityStatusDTO> status = new();
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -80,18 +84,24 @@
         {
             if (firstRender)
             {
-                currentStatus = self.UserProfile.User.ActiveStatus;
+                currentStatus = new()
+                    {
+                        Id = self.UserProfile.User.ActiveStatus.Id,
+                        Name = self.UserProfile.User.ActiveStatus.Name,
+                        Icon = self.UserProfile.User.ActiveStatus.Icon,
+                        IconColor = self.UserProfile.User.ActiveStatus.IconColor,
+                    };
+
+                status = await _echoAPI.GetListOfStatusAsync();
             }
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-
-    /** change to provider **/
     public readonly StringToColor stringToColor = new();
 
-    public async void SwtichStatus(ActiveActivityStatusDTO s)
+    public async void SwtichStatus(ActivityStatusDTO s)
     {
         currentStatus = s;
 
@@ -99,6 +109,10 @@
         // var data = await _echoAPI.UpdateAsync<Account>(acc, new AuthenticationHeaderValue("Bearer", await LocalStorage.GetItemAsStringAsync("Token")));
 
         Hover = false;
+
+        var token = await LocalStorage.GetItemAsStringAsync("Token");
+        var result = await _echoAPI.SetStatusAsync(token, new SetStatusRequestDTO { Id = s.Id });
+
         StateHasChanged();
     }
 
@@ -124,5 +138,5 @@
 
 
     [Parameter]
-    public EventCallback<ActiveActivityStatusDTO> OnItemSelected { get; set; }
+    public EventCallback<ActivityStatusDTO> OnItemSelected { get; set; }
 }

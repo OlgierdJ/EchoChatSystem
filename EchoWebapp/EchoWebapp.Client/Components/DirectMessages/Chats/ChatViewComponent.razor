@@ -8,6 +8,7 @@
 @inject SignalRClientService _client
 @inject ILocalStorageService LocalStorage
 @inject IJSRuntime _js
+
 @*
     Layout for the chatviewcomponent that exists within the directmessagesviewcomponent.
 
@@ -23,7 +24,7 @@
     otherwise the members will be added to the chat.
 *@
 @* <h3>ChatViewComponent</h3> *@
-@if (Content != null)
+@if (Content != null && other != null)
 {
     <div>
         <div class="ma-0" style="width: 83vw; height: 5vh;">
@@ -39,9 +40,9 @@
                     else
                     {
                         <MudAvatar>
-                            <MudImage Src="@Content.Participants.Where(e => e.Id != 112).First().ImageIconURL" />
+                            <MudImage Src="@Content?.Participants?.Where(e => e.Id != self.Id).First().ImageIconURL" />
                         </MudAvatar>
-                        <MudText>@Content.Name</MudText>
+                        <MudText Class="ml-2">@Content?.Participants?.Where(e => e.Id != self.Id).First().DisplayName</MudText>
                     }
                     <MudSpacer />
                     <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
@@ -57,7 +58,7 @@
                     else
                     {
                         <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Color="@(ToggleSidePanel ? Color.Primary : Color.Default)" OnClick="(()=> ToggleSidePanel = !ToggleSidePanel)" />
-                        TextPlaceholder = "Message @" + Content.Participants.Where(e => e.Id != 112).First().DisplayName;
+                        TextPlaceholder = "Message @" + Content?.Participants?.Where(e => e.Id != self.Id).First().DisplayName;
                     }
                 </MudToolBar>
             </MudPaper>
@@ -167,14 +168,13 @@
                  </MudToolBar>
              </MudPaper>
 
-             @if (Content?.Participants?.Count() > 2)
+            @if (Content?.Participants?.Count() > 2)
             {
-                <!-- remove logic of removing yourself to before sending content -->
                 <MemberListComponent Visible="ToggleSidePanel" Members="@Content?.Participants?.ToList()" />
             }
             else
             {
-                <ChatUserProfileComponent Visible="ToggleSidePanel" Member="@Content?.Participants?.Where(e => e.Id != 112).First()" />
+                <ChatUserProfileComponent Visible="ToggleSidePanel" Member="@Content?.Participants?.Where(e => e.Id != self.Id).First()" />
             }
 
         </div>
@@ -186,12 +186,20 @@
 
 
 @code {
-    
+
     [Parameter]
-    // public Chat? Content { get; set; }
     public ChatDTO? Content { get; set; }
+
     [Parameter]
     public UserFullDTO self { get; set; }
+
+    private MemberDTO _other;
+    public MemberDTO other { get { return _other; } set
+        {
+            _other = value;
+            OnChanged?.Invoke();
+        } 
+    }
 
     private string? token { get; set; }
     public bool ToggleSidePanel = false;
@@ -203,18 +211,33 @@
     {
         if (firstRender)
         {
-            token = await LocalStorage.GetItemAsStringAsync("Token");
-            await _client.Connect(token);
-            _client.ReceiveChatMessageCreateMessageDTO += ReceiveChatMessageCreateMessageDTO;
-            _client.ReceiveChatMessageUpdateMessageDTO += ReceiveChatMessageUpdateMessageDTO;
-            _client.ReceiveChatMessageDeleteMessageDTO += ReceiveChatMessageDeleteMessageDTO;
-            //Content = await _echoAPI.GetEntityWithIncludeAsync<Chat>(self.Id, (new AuthenticationHeaderValue("Bearer", token)));
+            var token = await LocalStorage.GetItemAsStringAsync("Token");
+            // await _client.Connect(token);
+            // Console.WriteLine(token);
+            // _client.ReceiveChatMessageCreateMessageDTO += ReceiveChatMessageCreateMessageDTO;
+            // _client.ReceiveChatMessageUpdateMessageDTO += ReceiveChatMessageUpdateMessageDTO;
+            // _client.ReceiveChatMessageDeleteMessageDTO += ReceiveChatMessageDeleteMessageDTO;
+            // //Content = await _echoAPI.GetEntityWithIncludeAsync<Chat>(self.Id, (new AuthenticationHeaderValue("Bearer", token)));
             //eller skal det være Id'en for chat'en? + er det ik sådan man skal gære det
-            await _client.SendAJoinRequestForGroup(nameof(Chat) +"/"+ Content.Id);
+            // await _client.SendAJoinRequestForGroup(nameof(Chat) +"/"+ Content.Id);
         }
 
+        other ??= Content.Participants.Where(e => e.Id != self.Id).First();
         await base.OnAfterRenderAsync(firstRender);
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        OnChanged += OnChangedHandler;
+        await _js.InvokeVoidAsync("console.log", other);
+        await base.OnInitializedAsync();
+    }
+
+    private async void OnChangedHandler()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+    public event Action OnChanged;
 
     bool checkTime(DateTime dt)
     {
@@ -244,9 +267,9 @@
                 newmsg.TimeSent = DateTime.Now;
                 newmsg.Sender = new UserMinimalDTO()
                     {
-                        Id = 112,
-                        ImageIconURL = "https://us.tonies.com/cdn/shop/products/Tonies-PDP-Assets-Nemo-Single.jpg",
-                        DisplayName = "John Doe",
+                        Id = self.Id,
+                        ImageIconURL = self.UserProfile.User.ImageIconURL,
+                        DisplayName = self.UserProfile.User.DisplayName,
                     };
                 //code to reflect your id
 

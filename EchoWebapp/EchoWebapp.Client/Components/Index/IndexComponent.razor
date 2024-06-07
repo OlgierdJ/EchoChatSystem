@@ -18,10 +18,10 @@
 @* <h3>IndexComponent</h3> *@
 
 @* so you dont see the UI befor you are logget in*@
-@if (AccountContainer.Value != 0)
+@if (loggedIn)
 {
     <div class="d-flex">
-        <ServerListComponent OnItemSelected=@HandelOnChanged/>
+        <ServerListComponent OnItemSelected=@HandleOnChanged/>
         <DirectMessagesViewComponent self=self DisplayFriends=display />
     </div>
 }
@@ -35,7 +35,7 @@ else
 @code {
 
     bool display = true;
-
+    bool loggedIn = false;
     public UserFullDTO self { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -51,26 +51,23 @@ else
             else
             {
                 var token = await LocalStorage.GetItemAsStringAsync("Token");
-                AccountContainer.SetValue(Convert.ToUInt64(id), token);
+                // AccountContainer.SetValue(Convert.ToUInt64(id), token);
 
                 var result = await _echoAPI.LoadUserSessionDataAsync(token);
                 if(result != null)
                 {
+                    loggedIn = true;
+                    result.ActiveStatus.DisplayedContent = result.ActiveStatus.Name;
                     self = result;
-                    self.UserProfile.User.DisplayName = self.UserProfile.User.Name;
                 }
-                Console.WriteLine(result.UserProfile.User.Name);
                 StateHasChanged();
-                Console.WriteLine(result.UserProfile.User.Name);
             }
         }
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    public void HandelOnChanged(bool selected)
+    public void HandleOnChanged(bool selected)
     {
-        Console.Clear();
-        Console.WriteLine(selected);
         display = selected;
         StateHasChanged();
     }

@@ -7,74 +7,52 @@
 
     Clicking a request should open the profile of the other user.
 *@
-<MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
-     <MudTextField Placeholder=" Search" @bind-Value="searchTerm"
-                   @onkeyup="(()=>SearchChanged())" Immediate/>
- </MudPaper>
- <MudText Class="px-5 py-2" Typo="Typo.button">Pending - @friendRequests.Count()</MudText>
+@if (filtered != null)
+{
+    <MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
+         <MudTextField Placeholder=" Search" @bind-Value="searchTerm"
+                       @onkeyup="(()=>SearchChanged())" Immediate />
+     </MudPaper>
+    <MudText Class="px-5 py-2" Typo="Typo.button">Pending - @List.Count()</MudText>
     <MudList Clickable="true">
         @foreach (var r in filtered.OrderBy(x => x.Person.DisplayName))
-    {
-        <MudDivider />
-        <MudListItem Dense="true" Class="mb-3 mt-2">
-            <FriendRequestComponent Request="r" />
-        </MudListItem>
-    }
-</MudList>
+        {
+            <MudDivider />
+            <MudListItem Dense="true" Class="mb-3 mt-2">
+                <FriendRequestComponent Request="r" />
+            </MudListItem>
+        }
+    </MudList>
+}
+else
+{
+    <MudPaper Square Class="px-3 mb-6" Elevation="0">
+         <MudText>There are no pending friend requests at the moment.</MudText>
+     </MudPaper>
+}
 @code {
     public string searchTerm { get; set; } = "";
 
-    public List<FriendRequestDTO> filtered;
+    [Parameter]
+    public List<FriendRequestDTO> List { get; set; }
 
+    public List<FriendRequestDTO> filtered { get; set; }
 
-    // DUMMY DATA
-    public List<FriendRequestDTO> friendRequests = new()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        new FriendRequestDTO()
+        if (firstRender)
         {
-            Person = new UserDTO
-            {
-                Id = 114,
-                DisplayName = "Benny 21",
-                Name = "benny21g",
-                ImageIconURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/3/35/IronMan-EndgameProfile.jpg"
-            },
-            Type = CoreLib.Entities.Enums.RequestType.Outgoing
-        }, //outgoing
-        new FriendRequestDTO()
-        {
-            Person = new UserDTO
-            {
-                Id = 115,
-                DisplayName = "Billie Jeans @ click-here.xyz",
-                Name = "clickhere123145856w",
-                ImageIconURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg"
-            },
-            Type = CoreLib.Entities.Enums.RequestType.Incoming
-        }, //incoming
-        new FriendRequestDTO()
-        {
-            Person = new UserDTO
-            {
-                Id = 116,
-                DisplayName = "Billie Jeans @ click-here.xyz",
-                Name = "clickhere123145857n",
-                ImageIconURL = "https://helios-i.mashable.com/imagery/articles/02R4UBVAJlHadovaNQfVpyG/images-1.fill.size_2000x1124.v1611703273.jpg"
-            },
-            Type = CoreLib.Entities.Enums.RequestType.Incoming
-        }, //incoming
-    };
+            filtered = List; 
+            StateHasChanged();
+        }
 
-   
-    public FriendRequestListComponent()
-    {
-        filtered = friendRequests;
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     void SearchChanged()
     {
         Console.WriteLine(searchTerm);
-        filtered = friendRequests.Where(e => e.Person.DisplayName.ToLower().Contains(searchTerm.ToLower())).ToList();
+        filtered = List.Where(e => e.Person.DisplayName.ToLower().Contains(searchTerm.ToLower())).ToList();
         StateHasChanged();
     }
 }
