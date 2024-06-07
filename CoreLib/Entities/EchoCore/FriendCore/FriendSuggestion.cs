@@ -1,9 +1,10 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.FriendCore
 {
-    public class FriendSuggestion : ISuggestion<Account, ulong, Account, ulong>
+    public class FriendSuggestion : ISuggestion<Account, ulong, Account, ulong>, IDomainEntity
     {
         /*
          * accepting the suggestion consumes the friend suggestion

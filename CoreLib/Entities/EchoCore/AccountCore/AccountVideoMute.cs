@@ -1,8 +1,9 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountVideoMute : ITargetedMute<Account, ulong, Account, ulong> //mutes the video stream of the other account thus ignoring it
+    public class AccountVideoMute : ITargetedMute<Account, ulong, Account, ulong>, IDomainEntity //mutes the video stream of the other account thus ignoring it
     {
         public ulong SubjectId { get; set; }
         public ulong MuterId { get; set; }

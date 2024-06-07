@@ -1,9 +1,10 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatAccountMessageTracker : IBaseEntityTracker<Account, ulong, Chat, ulong, ChatMessage, ulong?>
+    public class ChatAccountMessageTracker : IBaseEntityTracker<Account, ulong, Chat, ulong, ChatMessage, ulong?>, IDomainEntity
     {
         public ulong OwnerId { get; set; }
         public ulong CoOwnerId { get; set; }

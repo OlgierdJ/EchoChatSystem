@@ -3,11 +3,12 @@ using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using CoreLib.Entities.EchoCore.ServerCore.Management;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore
 {
-    public class ServerProfile //: BaseEntity<ulong>
-                               //Server variables for changing display.
+    public class ServerProfile : IDomainEntity //: BaseEntity<ulong>
+                                               //Server variables for changing display.
     {
         public ulong AccountId { get; set; }
         public ulong ServerId { get; set; }

@@ -1,9 +1,11 @@
-﻿using CoreLib.Entities.Base;
+﻿using CoreLib.Abstractions;
+using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.ApplicationCore;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountRole /*: BaseEntity<ulong>*/
+    public class AccountRole : IDomainEntity
     //thought is that an Account can be both guest, registereduser, applicationsupport, applicationmoderater, applicationadmin, applicationsuperadmin, etc
     {
         public ulong AccountId { get; set; }

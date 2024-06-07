@@ -1,8 +1,9 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountMute : ITargetedMute<Account, ulong, Account, ulong>
+    public class AccountMute : ITargetedMute<Account, ulong, Account, ulong>, IDomainEntity
     {
         public ulong SubjectId { get; set; }
         public ulong MuterId { get; set; }

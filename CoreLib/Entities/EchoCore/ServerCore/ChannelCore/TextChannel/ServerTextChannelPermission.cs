@@ -1,8 +1,9 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
 {
-    public class ServerTextChannelPermission
+    public class ServerTextChannelPermission : IDomainEntity
     //used for mapping displayed permissions within a channelcategory
     {
         //pk is combination of channel, and permission

@@ -5,8 +5,12 @@
         new TId Id { get; set; }
     }
 
-    public interface IEntity
+    public interface IEntity : IDomainEntity
     {
         object Id { get; set; }
+    }
+
+    public interface IDomainEntity //marker interface
+    {
     }
 }

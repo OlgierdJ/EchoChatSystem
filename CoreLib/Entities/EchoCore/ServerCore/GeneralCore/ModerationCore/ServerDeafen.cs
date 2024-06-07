@@ -1,9 +1,10 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore
 {
-    public class ServerDeafen : ITargetedMute<Server, ulong, Account, ulong> //serverwide deafen overrides user deafen setting.
+    public class ServerDeafen : ITargetedMute<Server, ulong, Account, ulong>, IDomainEntity //serverwide deafen overrides user deafen setting.
     {
         //maybe put bool flag in serverprofile?
         public ulong SubjectId { get; set; }

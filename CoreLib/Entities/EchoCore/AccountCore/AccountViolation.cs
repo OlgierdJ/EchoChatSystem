@@ -5,7 +5,7 @@ using CoreLib.Entities.EchoCore.ReportCore.Profile;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountViolation : BaseEntity<ulong>,IViolation<ulong, Account, ulong, Account, ulong, AccountViolationAppeal>
+    public class AccountViolation : BaseEntity<ulong>, IViolation<ulong, Account, ulong, Account, ulong, AccountViolationAppeal>
     {
         public ICollection<CustomStatusReport> ConsumedCustomStatusReports { get; set; }
         public ICollection<MessageReport> ConsumedMessageReports { get; set; }

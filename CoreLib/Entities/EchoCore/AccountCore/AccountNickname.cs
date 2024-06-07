@@ -1,8 +1,9 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountNickname : ITargetedNickname<Account, ulong, Account, ulong>
+    public class AccountNickname : ITargetedNickname<Account, ulong, Account, ulong>, IDomainEntity
     {
         public ulong AuthorId { get; set; }
         public ulong SubjectId { get; set; }

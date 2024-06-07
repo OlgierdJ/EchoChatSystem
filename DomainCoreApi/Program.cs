@@ -37,7 +37,8 @@ var connectionString = builder.Configuration.GetConnectionString("EchoDBConnecti
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<EchoDbContext>((sp, options) => 
 options.UseSqlServer(connectionString).AddInterceptors(
-            sp.GetRequiredService<PublishDomainEventsInterceptor>()
+            sp.GetRequiredService<PublishDomainEventsInterceptor>(),
+            sp.GetRequiredService<PublishTransactionDomainEventsInterceptor>()
             //sp.GetRequiredService<InsertOutboxMessagesInterceptor>() //dont need right now
 ));
 // Add services to the container.
@@ -69,7 +70,9 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddAuthorization();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddTransient<PublishDomainEventsInterceptor>();
+builder.Services.AddScoped<DomainEventService>();
+builder.Services.AddScoped<PublishDomainEventsInterceptor>();
+builder.Services.AddScoped<PublishTransactionDomainEventsInterceptor>();
 //Add Repository to the container.
 builder.Services.AddTransient(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));

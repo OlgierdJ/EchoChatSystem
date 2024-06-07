@@ -1,9 +1,10 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatInvite : IInvite<Account, ulong, Chat, ulong>
+    public class ChatInvite : IInvite<Account, ulong, Chat, ulong>, IDomainEntity
     {
         public string InviteCode { get; set; }
         public DateTime? ExpirationTime { get; set; }

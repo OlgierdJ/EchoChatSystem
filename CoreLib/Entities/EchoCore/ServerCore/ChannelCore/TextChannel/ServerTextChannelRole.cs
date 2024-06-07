@@ -1,8 +1,9 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
 {
-    public class ServerTextChannelRole
+    public class ServerTextChannelRole : IDomainEntity
     {
         //channelcategory owner
         public ulong ChannelCategoryId { get; set; }

@@ -1,10 +1,11 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore
 {
-    public class ServerInvite : IInvite<Account, ulong, Server, ulong>
+    public class ServerInvite : IInvite<Account, ulong, Server, ulong>, IDomainEntity
     {
         public bool GuestInvite { get; set; } //kick from server on voice leave or kick from server when disconnecting from discord??
         public ulong? TextChannelId { get; set; } //if no textchannel is specified the invite still works to the server

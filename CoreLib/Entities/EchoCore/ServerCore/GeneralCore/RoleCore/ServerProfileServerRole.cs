@@ -1,8 +1,9 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
+using CoreLib.Interfaces;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
 {
-    public class ServerProfileServerRole
+    public class ServerProfileServerRole : IDomainEntity
     {
         public ulong AccountId { get; set; }
         public ulong ServerId { get; set; }
