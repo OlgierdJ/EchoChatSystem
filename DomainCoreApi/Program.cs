@@ -4,6 +4,7 @@ using CoreLib.Interfaces.Repositorys;
 using CoreLib.Interfaces.Services;
 using CoreLib.MapperProfiles;
 using DomainCoreApi.EFCORE;
+using DomainCoreApi.EFCORE.Interceptors;
 using DomainCoreApi.Handlers;
 using DomainCoreApi.Hubs;
 using DomainCoreApi.Repositories;
@@ -34,7 +35,11 @@ builder.Services.Configure<JWTOptions>(
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 var connectionString = builder.Configuration.GetConnectionString("EchoDBConnection") 
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<EchoDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<EchoDbContext>((sp, options) => 
+options.UseSqlServer(connectionString).AddInterceptors(
+            sp.GetRequiredService<PublishDomainEventsInterceptor>()
+            //sp.GetRequiredService<InsertOutboxMessagesInterceptor>() //dont need right now
+));
 // Add services to the container.
 builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
 builder.Services.AddAutoMapper(opts =>
@@ -64,6 +69,7 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddAuthorization();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddTransient<PublishDomainEventsInterceptor>();
 //Add Repository to the container.
 builder.Services.AddTransient(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));

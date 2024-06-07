@@ -1,7 +1,7 @@
 ﻿using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
-using DomainCoreApi.Controllers.Bases;
+//using DomainCoreApi.Controllers.Bases;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
