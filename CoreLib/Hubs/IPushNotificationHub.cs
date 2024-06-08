@@ -54,5 +54,7 @@ namespace CoreLib.Hubs
         Task UserProfileChanged(ulong accountId, string displayName, string avatarFileURL, string? about, string bannerColor);
         Task UserUnmuted(ulong accountId);
         Task VoiceSettingsUpdated(VoiceSettingsDTO voiceSettingsDTO);
+        Task ChatMessagePinAdded(ulong pinboardId, ulong messageId);
+        Task ChatMessagePinRemoved(ulong pinboardId, ulong messageId);
     }
 }
