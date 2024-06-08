@@ -1,5 +1,6 @@
 ﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
 using CoreLib.DTO.RequestCore.MessageCore;
+using CoreLib.Hubs;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,24 +8,17 @@ namespace CoreLib.Handlers
 {
     public partial class SignalRClientService : IDisposable
     {
-        private string ServerIP = "https://localhost:7269/DomainPushNotificationHub"; //example "https://localhost:7269/DomainPushNotificationHub"
+        private string ServerIP = "https://localhost:7208/PushNotificationHub"; //example "https://localhost:7269/DomainPushNotificationHub"
 
         public HubConnection Connection { get; set; }
 
         public Action Disposing { get; set; }
 
+        //need to rework the list to match the list in IPushNotificationHub
         #region list of Action the hub can do
         public event Action<Exception> ConnectionClosed;
         public event Action<Exception> OnConnectedAsync;
-        public event Action<string> JoinGroup;
-        public event Action<string[]> JoinGroups;
-        public event Action<string> LeaveGroup;
-        public event Action<string[]> LeaveGroups;
-        public event Action<string> UpdateMessageReceived;
-        public event Action<string> ReceiveNotification;
-        public event Action<MessageDTO> ReceiveChatMessageCreateMessageDTO;
-        public event Action<MessageDTO> ReceiveChatMessageUpdateMessageDTO;
-        public event Action<MessageDTO> ReceiveChatMessageDeleteMessageDTO;
+        public event Action ConnectionOpened;
         #endregion
 
         public SignalRClientService(/*string serverip*/)
@@ -54,7 +48,7 @@ namespace CoreLib.Handlers
             //Map events
 
             connection.ServerTimeout = TimeSpan.FromSeconds(2);
-            //connection.On<string>(nameof(IDomainNotificationHub.ReceiveUpdateMessage), (message) => UpdateMessageReceived?.Invoke(message));
+            connection.On<string>(nameof(IPushNotificationHub.NewFriend), (message) => NewFriendReceived?.Invoke(message));
             //connection.On<string>(nameof(IDomainNotificationHub.ReceiveNotification), (message) => ReceiveNotification?.Invoke(message));
             //connection.On<string>(nameof(IDomainNotificationHub.JoinGroup), (groupName) => JoinGroup?.Invoke(groupName));
             //connection.On<string[]>(nameof(IDomainNotificationHub.JoinGroups), (groupNames) => JoinGroups?.Invoke(groupNames));
@@ -114,17 +108,18 @@ namespace CoreLib.Handlers
                     {
                         Connection = await CreateConnection(token);
                     }
-                    await Connection.StartAsync();
-                    //Connection.StartAsync().ContinueWith(task => {
-                    //    if (task.Exception != null)
-                    //    {
-                    //        ConnectionClosed?.DynamicInvoke(task.Exception);
-                    //    }
-                    //    else
-                    //    {
-                    //        ConnectionOpened?.DynamicInvoke();
-                    //    }
-                    //});
+                    //await Connection.StartAsync();
+                    Connection.StartAsync().ContinueWith(task =>
+                    {
+                        if (task.Exception != null)
+                        {
+                            ConnectionClosed?.DynamicInvoke(task.Exception);
+                        }
+                        else
+                        {
+                            ConnectionOpened?.DynamicInvoke();
+                        }
+                    });
                     break; // yay! connected
                 }
                 catch (Exception e)

@@ -159,7 +159,7 @@
             
             var token = await LocalStorage.GetItemAsync<string>("Token");
             await _client.Connect(token);
-            _client.ReceiveNotification += ReceiveNotification2;
+            //_client.ReceiveNotification += ReceiveNotification2;
         }
 
         
