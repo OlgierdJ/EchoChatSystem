@@ -13,7 +13,7 @@ namespace DomainCoreApi.Handlers
         public const string Position = "JwtSettings";
 
         public string Issuer { get; set; } = String.Empty;
-        public string Audience { get; set; } = String.Empty;
+        public List<string> Audiences { get; set; } = new();
         public int DefaultRefreshTokenLifeTimeDays { get; set; } = 0;
         public int DefaultAccessTokenLifeTimeHours { get; set; } = 0;
         public string Key { get; set; } = String.Empty;
@@ -39,17 +39,17 @@ namespace DomainCoreApi.Handlers
             this.options = options.Value;
         }
 
-        public string CreateToken(IEnumerable<Claim> claims, DateTime expires, string issuer, string audience, string secretKey)
+        public string CreateToken(IEnumerable<Claim> claims, DateTime expires, string issuer, IEnumerable<string> Audiences, string secretKey)
         {
             var tokenhandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(secretKey);
-
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = expires,
                 Issuer = issuer,
-                Audience = audience,
+                Audience = audience, //how the fk
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -66,7 +66,7 @@ namespace DomainCoreApi.Handlers
                     //new(ClaimTypes.NameIdentifier,obj.Id.ToString()), //nameid is used for access, whereas sub is used for refresh.
                 };
             var tokenLifeTime = DateTime.UtcNow.Add(TimeSpan.FromHours(options.DefaultRefreshTokenLifeTimeDays * 24));
-            var token = CreateToken(claims, tokenLifeTime, options.Issuer, options.Audience, options.Key);
+            var token = CreateToken(claims, tokenLifeTime, options.Issuer, options.Audiences, options.Key);
             //var tokenDescriptor = new SecurityTokenDescriptor
             //{
             //    Subject = new ClaimsIdentity(claims),

@@ -42,7 +42,7 @@ options.UseSqlServer(connectionString).AddInterceptors(
             //sp.GetRequiredService<InsertOutboxMessagesInterceptor>() //dont need right now
 ));
 // Add services to the container.
-builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
+//builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
 builder.Services.AddAutoMapper(opts =>
 {
     opts.AddProfile<EchoCoreCommonMappings>();
@@ -58,7 +58,7 @@ builder.Services.AddAuthentication(x =>
     {
         NameClaimType = ClaimTypes.NameIdentifier,
         ValidIssuer = config["JwtSettings:Issuer"],
-        ValidAudience = config["JwtSettings:Audience"],
+        ValidAudiences = config.GetSection("JwtSettings:Audiences").Get<List<string>>(),
         IssuerSigningKey = new SymmetricSecurityKey
         (Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
         ValidateIssuer = true,
