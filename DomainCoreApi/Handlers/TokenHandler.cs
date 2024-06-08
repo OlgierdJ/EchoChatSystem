@@ -14,6 +14,7 @@ namespace DomainCoreApi.Handlers
 
         public string Issuer { get; set; } = String.Empty;
         public string Audience { get; set; } = String.Empty;
+        public List<string> Audiences { get; set; } = new List<string>();
         public int DefaultRefreshTokenLifeTimeDays { get; set; } = 0;
         public int DefaultAccessTokenLifeTimeHours { get; set; } = 0;
         public string Key { get; set; } = String.Empty;
@@ -66,7 +67,7 @@ namespace DomainCoreApi.Handlers
                     //new(ClaimTypes.NameIdentifier,obj.Id.ToString()), //nameid is used for access, whereas sub is used for refresh.
                 };
             var tokenLifeTime = DateTime.UtcNow.Add(TimeSpan.FromHours(options.DefaultRefreshTokenLifeTimeDays * 24));
-            var token = CreateToken(claims, tokenLifeTime, options.Issuer, options.Audience, options.Key);
+            var token = CreateToken(claims, tokenLifeTime, options.Issuer, options.Audiences[0], options.Key);
             //var tokenDescriptor = new SecurityTokenDescriptor
             //{
             //    Subject = new ClaimsIdentity(claims),
@@ -88,11 +89,13 @@ namespace DomainCoreApi.Handlers
                     new(ClaimTypes.NameIdentifier,obj.Id.ToString()),
                 };
             var tokenLifeTime = DateTime.UtcNow.Add(TimeSpan.FromHours(options.DefaultAccessTokenLifeTimeHours));
-            var token = CreateToken(claims, tokenLifeTime, options.Issuer, options.Audience, options.Key);
+            var token = CreateToken(claims, tokenLifeTime, options.Issuer, options.Audiences[0], options.Key);
             return token;
         }
 
-
+        //Token fra User til Api done
+        // p til API maybe done
+        // User til p kommer fra Api
 
     }
 }
