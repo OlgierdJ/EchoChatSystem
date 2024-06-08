@@ -44,11 +44,11 @@ namespace DomainCoreApi.Services
         private readonly IMapper _mapper;
         private readonly IPasswordHandler _pwdHandler;
         private readonly Handlers.TokenHandler _tokenHandler;
-        private readonly IPushNotificationService _notificationService;
+        //private readonly IPushNotificationService _notificationService;
         private readonly CreateUserHandler _createUserHandler = new();
         public UserService(EchoDbContext dbContext, 
             IMapper mapper,
-            IPushNotificationService notificationService,
+            //IPushNotificationService notificationService,
             IPasswordHandler pwdHandler, 
             Handlers.TokenHandler tokenHandler) 
             //: base(repository)
@@ -57,7 +57,7 @@ namespace DomainCoreApi.Services
             this._mapper = mapper;
             this._pwdHandler = pwdHandler;
             this._tokenHandler = tokenHandler;
-            this._notificationService = notificationService;
+            //this._notificationService = notificationService;
         }
 
         public async Task<bool> AcceptFriendRequestAsync(ulong senderId, ulong requestId)

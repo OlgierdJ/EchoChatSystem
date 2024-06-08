@@ -59,6 +59,10 @@ else
                     result.ActiveStatus.DisplayedContent = result.ActiveStatus.Name;
                     self = result;
                 }
+                else
+                {
+                    nav.NavigateTo("/login");
+                }
                 StateHasChanged();
             }
         }

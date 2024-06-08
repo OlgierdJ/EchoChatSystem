@@ -49,6 +49,17 @@
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LocalStorage.ClearAsync();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
     void PasswordVisibility()
     {
         if (visible)

@@ -13,7 +13,7 @@ namespace DomainCoreApi.Handlers
         public const string Position = "JwtSettings";
 
         public string Issuer { get; set; } = String.Empty;
-        public List<string> Audiences { get; set; } = new();
+        public string Audience { get; set; } = String.Empty;
         public int DefaultRefreshTokenLifeTimeDays { get; set; } = 0;
         public int DefaultAccessTokenLifeTimeHours { get; set; } = 0;
         public string Key { get; set; } = String.Empty;
@@ -39,7 +39,7 @@ namespace DomainCoreApi.Handlers
             this.options = options.Value;
         }
 
-        public string CreateToken(IEnumerable<Claim> claims, DateTime expires, string issuer, IEnumerable<string> Audiences, string secretKey)
+        public string CreateToken(IEnumerable<Claim> claims, DateTime expires, string issuer, string Audience, string secretKey)
         {
             var tokenhandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(secretKey);
@@ -49,7 +49,7 @@ namespace DomainCoreApi.Handlers
                 Subject = new ClaimsIdentity(claims),
                 Expires = expires,
                 Issuer = issuer,
-                Audience = audience, //how the fk
+                Audience = Audience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -66,7 +66,7 @@ namespace DomainCoreApi.Handlers
                     //new(ClaimTypes.NameIdentifier,obj.Id.ToString()), //nameid is used for access, whereas sub is used for refresh.
                 };
             var tokenLifeTime = DateTime.UtcNow.Add(TimeSpan.FromHours(options.DefaultRefreshTokenLifeTimeDays * 24));
-            var token = CreateToken(claims, tokenLifeTime, options.Issuer, options.Audiences, options.Key);
+            var token = CreateToken(claims, tokenLifeTime, options.Issuer, options.Audience, options.Key);
             //var tokenDescriptor = new SecurityTokenDescriptor
             //{
             //    Subject = new ClaimsIdentity(claims),
@@ -78,6 +78,7 @@ namespace DomainCoreApi.Handlers
             return token;
         }
 
+        // Creat a Account Token for the user 
         public string GetAccessToken<T>(T obj) where T : IEntity
         {
             var claims = new List<Claim>
