@@ -26,6 +26,7 @@ namespace DomainPushNotificationApi.Services
     {
         protected readonly IHubContext<PushNotificationHub, IPushNotificationHub> _hubContext;
         private Dictionary<(string, EntityAction), Func<object, Task>> _hubManager = new();
+        private readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.Preserve };
         public PushNotificationService(IHubContext<PushNotificationHub, IPushNotificationHub> hubContext, IMapper mapper)
         {
             _hubContext = hubContext;
@@ -33,7 +34,9 @@ namespace DomainPushNotificationApi.Services
             _hubManager.Add((nameof(ChatInvite), EntityAction.Added), async (entity) =>
             {
                 ChatInvite invite = entity as ChatInvite;
-                await _hubContext.Clients.Group($"{typeof(Chat)}/{invite.SubjectId}").ChatInviteAdded(invite.SubjectId, mapper.Map<InviteDTO>(invite));
+                await _hubContext.Clients
+                .Group($"{typeof(Chat)}/{invite.SubjectId}")
+                .ChatInviteAdded(invite.SubjectId, mapper.Map<InviteMinimalDTO>(invite));
             });
 
             _hubManager.Add((nameof(ChatInvite), EntityAction.Deleted), async (entity) =>
@@ -47,7 +50,7 @@ namespace DomainPushNotificationApi.Services
             _hubManager.Add((nameof(OutgoingFriendRequest), EntityAction.Added), async (entity) =>
             {
                 OutgoingFriendRequest outgoingFriendRequest = entity as OutgoingFriendRequest;
-                //hopefully account and profile is included in context
+                //hopefully account, profile, activestatus and customstatus is included in context
                 await _hubContext.Clients
                 .User(outgoingFriendRequest.SenderId.ToString())
                 .FriendRequestAdded(mapper.Map<FriendRequestDTO>(outgoingFriendRequest));
@@ -64,7 +67,7 @@ namespace DomainPushNotificationApi.Services
             _hubManager.Add((nameof(IncomingFriendRequest), EntityAction.Added), async (entity) =>
             {
                 IncomingFriendRequest incomingFriendRequest = entity as IncomingFriendRequest;
-                //hopefully account and profile is included in context
+                //hopefully account, profile, activestatus and customstatus is included in context
                 await _hubContext.Clients
                 .User(incomingFriendRequest.ReceiverId.ToString())
                 .FriendRequestAdded(mapper.Map<FriendRequestDTO>(incomingFriendRequest));
@@ -81,7 +84,7 @@ namespace DomainPushNotificationApi.Services
             _hubManager.Add((nameof(Friendship), EntityAction.Added), async (entity) =>
             {
                 Friendship friendship = entity as Friendship;
-                //hopefully account, profile is included from context.
+                //hopefully account, profile, activestatus and customstatus is included from context.
                 foreach (var participant in friendship.Participants)
                 {
                     await _hubContext.Clients
@@ -104,7 +107,7 @@ namespace DomainPushNotificationApi.Services
             _hubManager.Add((nameof(AccountBlock), EntityAction.Added), async (entity) =>
             {
                 AccountBlock block = entity as AccountBlock;
-                //hopefully we got account here from context.
+                //hopefully we got account and profile here from context.
                 await _hubContext.Clients
                 .User(block.BlockerId.ToString())
                 .BlockedUserAdded(mapper.Map<UserMinimalDTO>(block));
@@ -212,17 +215,17 @@ namespace DomainPushNotificationApi.Services
             {
                 Account account = entity as Account;
                 
-                await _hubContext.Clients
-               .User(account.Id.ToString())
-               .ActivityStatusChanged(account.Id, account.ActivityStatusId);
+                await _hubContext.Clients.All
+               .UserActivityStatusChanged(account.Id, account.ActivityStatusId, account.CustomStatus?.CustomMessage);
             });
 
             //Note der er svær logik så lave senere hvis der tid
             _hubManager.Add((nameof(AccountProfile), EntityAction.Modified), async (entity) =>
             {
                 AccountProfile profile = entity as AccountProfile;
+                
                 await _hubContext.Clients.All
-               .ExternalProfileChanged(profile.AccountId, profile.DisplayName, profile.AvatarFileURL, profile.About, profile.BannerColor);
+               .UserProfileChanged(profile.AccountId, profile.DisplayName, profile.AvatarFileURL, profile.About, profile.BannerColor);
                //.User(profile.AccountId.ToString())
               //  await _hubContext.Clients.All
               ////.User(profile.AccountId.ToString())
@@ -235,7 +238,7 @@ namespace DomainPushNotificationApi.Services
 
                 await _hubContext.Clients
                 .User(nickname.AuthorId.ToString())
-                .ExternalNameChanged(nickname.SubjectId, nickname.Nickname);
+                .ExternalUserNameChanged(nickname.SubjectId, nickname.Nickname);
             });
 
             _hubManager.Add((nameof(AccountNickname), EntityAction.Modified), async (entity) =>
@@ -244,7 +247,7 @@ namespace DomainPushNotificationApi.Services
 
                 await _hubContext.Clients
                 .User(nickname.AuthorId.ToString())
-                .ExternalNameChanged(nickname.SubjectId, nickname.Nickname);
+                .ExternalUserNameChanged(nickname.SubjectId, nickname.Nickname);
             });
 
             _hubManager.Add((nameof(AccountNickname), EntityAction.Deleted), async (entity) =>
@@ -257,7 +260,7 @@ namespace DomainPushNotificationApi.Services
 
                 await _hubContext.Clients
                 .User(nickname.AuthorId.ToString())
-                .ExternalNameChanged(nickname.SubjectId, name);
+                .ExternalUserNameChanged(nickname.SubjectId, name);
             });
 
             _hubManager.Add((nameof(AccountNote), EntityAction.Added), async (entity) =>
@@ -284,7 +287,7 @@ namespace DomainPushNotificationApi.Services
 
                 await _hubContext.Clients
                 .User(note.AuthorId.ToString())
-                .ExternalUserNoteChanged(note.SubjectId, ""); //default note state
+                .ExternalUserNoteChanged(note.SubjectId, null); //default note state
             });
 
             _hubManager.Add((nameof(ChatMute), EntityAction.Added), async (entity) =>
@@ -337,7 +340,7 @@ namespace DomainPushNotificationApi.Services
 
                 await _hubContext.Clients
                 .Group($"{typeof(Chat)}/{participancy.SubjectId}")
-                .ChatMemberLeft(participancy.ParticipantId);
+                .ChatMemberLeft(participancy.SubjectId,participancy.ParticipantId);
 
             });
 
@@ -346,7 +349,7 @@ namespace DomainPushNotificationApi.Services
                 ChatAccountMessageTracker tracker = entity as ChatAccountMessageTracker;
                 await _hubContext.Clients
                 .User(tracker.OwnerId.ToString())
-                .LastReadMessageChanged(tracker.CoOwnerId, tracker.SubjectId);
+                .ChatLastReadMessageChanged(tracker.CoOwnerId, tracker.SubjectId);
 
             });
 
@@ -355,7 +358,7 @@ namespace DomainPushNotificationApi.Services
                 ChatAccountMessageTracker tracker = entity as ChatAccountMessageTracker;
                 await _hubContext.Clients
                 .User(tracker.OwnerId.ToString())
-                .LastReadMessageChanged(tracker.CoOwnerId, tracker.SubjectId);
+                .ChatLastReadMessageChanged(tracker.CoOwnerId, tracker.SubjectId);
 
             });
 
@@ -364,7 +367,7 @@ namespace DomainPushNotificationApi.Services
                 ChatAccountMessageTracker tracker = entity as ChatAccountMessageTracker;
                 await _hubContext.Clients
                 .User(tracker.OwnerId.ToString())
-                .LastReadMessageChanged(tracker.CoOwnerId, null);
+                .ChatLastReadMessageChanged(tracker.CoOwnerId, null);
 
             });
 
@@ -406,15 +409,10 @@ namespace DomainPushNotificationApi.Services
                 .UserMutedStateChanged(mute.SubjectId, false);
             });
         }
-
+        
         public async Task NotifyClients(DomainEvent domain)
         {
-            var entity = JsonSerializer.Deserialize(domain.Entity, Type.GetType(domain.Type), new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.Preserve } );
-            //var ename = entity.GetType().Name;
-            //if (_hubManager.TryGetValue((ename, domain.Action), out var task))
-            //{
-            //    await task(entity);
-            //}
+            var entity = JsonSerializer.Deserialize(domain.Entity, Type.GetType(domain.Type), serializerOptions);
             await Task.Run(async () =>
             {
                 if (_hubManager.TryGetValue((entity.GetType().Name, domain.Action), out var task))
