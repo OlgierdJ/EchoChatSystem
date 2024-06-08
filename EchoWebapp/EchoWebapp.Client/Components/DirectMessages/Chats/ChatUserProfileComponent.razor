@@ -41,8 +41,8 @@
                         <MudText Typo="Typo.button" style="margin-top: 10px;">Note</MudText>
                         @if (Editable)
                     {
-                        <MudTextField FullWidth T="string" Text="@Member.Profile.Note" @onfocusout="(()=> Editable = false)" Margin="Margin.Dense" Variant="Variant.Filled" 
-                            MaxLines="4" Placeholder="@(Member.Profile.Note != "" ? Member.Profile.Note : "Click to add a note")" TextChanged="NoteChangedAsync"
+                        <MudTextField FullWidth T="string" InputType="InputType.Text" @onfocusout="(()=> Editable = false)" Margin="Margin.Dense" Variant="Variant.Filled"
+                                       Placeholder="@(Member.Profile.Note != "" ? Member.Profile.Note : "Click to add a note")" @bind-Value="@noteText" Text="@noteText" TextChanged="NoteChangedAsync"
                             Class="px-5 py-2" Immediate="false" MaxLength="255" TextUpdateSuppression="false" Style="background: var(--mud-palette-dark);opacity:1;" />
                     }
                     else
@@ -61,19 +61,18 @@
     public bool Editable { get; set; } = false;
 
     [Parameter]
-    public ulong OwnId { get; set; }
-
-    [Parameter]
     public MemberDTO Member { get; set; }
+    public string noteText { get; set; } = "";
 
     public async void NoteChangedAsync()
     {
+        Console.WriteLine(noteText);
         var token = await LocalStorage.GetItemAsStringAsync("Token");
         if (!string.IsNullOrWhiteSpace(token))
         {
 
-            var note = new SetNoteUserRequestDTO() { Note = Member.Profile.Note };
-            var result = await _echoAPI.SetNoteAsync(token, OwnId, note);
+            var note = new SetNoteUserRequestDTO() { Note = noteText };
+            var result = await _echoAPI.SetNoteAsync(token, Member.Id, note);
             if (result)
             {
                 Console.WriteLine("Note changed");

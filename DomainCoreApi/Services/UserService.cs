@@ -827,7 +827,7 @@ namespace DomainCoreApi.Services
                     Note = requestDTO.Note, 
                 };
 
-                var relationExists = senderAcc.NicknamedAccounts.Any();
+                var relationExists = senderAcc.NotedAccounts.Any();
 
                 if (requestDTO.Note.IsNullOrEmpty() && !relationExists) //if request is null ignore by now
                 {
@@ -1423,6 +1423,13 @@ namespace DomainCoreApi.Services
 
                             });
 
+                        }
+
+
+                        var note = accountWithContext.NotedAccounts?.FirstOrDefault(e => e.SubjectId == memberProfile.Id);
+                        if (note != null)
+                        {
+                            memberProfile.Note = note.Note;
                         }
                     }
                     //remember to implement chat orderweight by newest activity.
