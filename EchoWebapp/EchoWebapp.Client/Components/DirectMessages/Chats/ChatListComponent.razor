@@ -16,14 +16,14 @@
 
 @if (chat != null)
 {
-    <MudPaper Width="12vw" Height="90vh"
+    <MudPaper Width="13vw" Height="90vh"
             Square Style="background: var(--mud-palette-surface);">
          <MudText Class="px-5 py-2">Direct Messages</MudText>
          <MudList Clickable="true">
             @foreach (var c in chat.OrderByDescending(e => e.Id))
             {
                 <MudListItem Dense="true" OnClick="@(() => OnItemSelected.InvokeAsync(c))">
-                    <ChatComponent Chat="SortChat(c)" />
+                    <ChatComponent OwnId=self.Id Chat="SortChat(c)" />
                 </MudListItem>
             }
         </MudList>
