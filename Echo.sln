@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoWebapp.Client", "EchoWe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAuthServer", "OAuthServer\OAuthServer.csproj", "{6AF31512-6B80-429D-87C7-86A67C340FF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainCoreApi.Tests", "DomainCoreApi.Tests\DomainCoreApi.Tests.csproj", "{ABAE5D24-64BF-4382-9346-8A355D8CDC55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainCoreApi.Tests", "DomainCoreApi.Tests\DomainCoreApi.Tests.csproj", "{ABAE5D24-64BF-4382-9346-8A355D8CDC55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

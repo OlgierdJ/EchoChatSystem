@@ -245,7 +245,7 @@ namespace CoreLib.WebAPI
 
         public async Task<bool> SetNicknameAsync(string Token, ulong userId, SetNicknameUserRequestDTO requestDTO)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, $"user/{userId}/mute");
+            var request = new HttpRequestMessage(HttpMethod.Put, $"user/{userId}/nickname");
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var load = JsonSerializer.Serialize(requestDTO, SerializerOptions);
