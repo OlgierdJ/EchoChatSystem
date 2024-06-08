@@ -2,9 +2,9 @@
 
 namespace Domain.Users;
 
-public sealed class User : Entity
+public sealed class Usera : Entity
 {
-    private User(Guid id, Email email, Name name, bool hasPublicProfile)
+    private Usera(Guid id, Email email, Name name, bool hasPublicProfile)
         : base(id)
     {
         Email = email;
@@ -12,7 +12,7 @@ public sealed class User : Entity
         HasPublicProfile = hasPublicProfile;
     }
 
-    private User()
+    private Usera()
     {
     }
 
@@ -21,9 +21,9 @@ public sealed class User : Entity
     public Name Name { get; private set; }
     public bool HasPublicProfile { get; set; }
 
-    public static User Create(Email email, Name name, bool hasPublicProfile)
+    public static Usera Create(Email email, Name name, bool hasPublicProfile)
     {
-        var user = new User(Guid.NewGuid(), email, name, hasPublicProfile);
+        var user = new Usera(Guid.NewGuid(), email, name, hasPublicProfile);
 
         user.Raise(new UserCreatedDomainEvent(user.Id));
 
