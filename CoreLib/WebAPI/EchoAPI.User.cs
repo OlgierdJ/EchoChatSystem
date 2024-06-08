@@ -47,7 +47,7 @@ namespace CoreLib.WebAPI
                 if (response.IsSuccessStatusCode)
                 {
                     var data = JsonSerializer.Deserialize<TokenDTO>(await response.Content.ReadAsStringAsync(), SerializerOptions);
-                    return data.Token;
+                    return data.RefreshToken;
                 }
             }
             catch (Exception e)

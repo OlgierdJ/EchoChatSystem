@@ -1,12 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
 {
-    public interface IChatMinimal
-    {
-        ulong Id { get; set; }
-        string Name { get; set; }
-        string? CategoryName { get; set; }
-        int OrderWeight { get; set; }
-    }
 
     public class ChatMinimalDTO : IChatMinimal
     {

@@ -1,9 +1,10 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
 {
-    public class ServerChannelCategoryMemberSettings
+    public class ServerChannelCategoryMemberSettings : IDomainEntity
     {
         public ulong ChannelCategoryId { get; set; } //where these settings belong
         

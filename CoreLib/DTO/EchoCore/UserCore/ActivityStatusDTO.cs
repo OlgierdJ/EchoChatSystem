@@ -1,9 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.UserCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.UserCore
 {
-    public interface IActivityStatus : IActivityStatusMinimal
-    {
-        string? Description { get; set; }
-    }
 
     public class ActivityStatusDTO : IActivityStatusMinimal, IActivityStatus
         //used for loading the actual possible status upon loading list for selection.

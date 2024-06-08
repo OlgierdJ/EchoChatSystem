@@ -1,9 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
 {
-    public interface INotificationMessage
-    {
-        ulong Id { get; set; }
-    }
 
     public class NotificationMessageDTO : INotificationMessage
     {

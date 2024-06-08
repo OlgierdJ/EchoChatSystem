@@ -1,11 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.UserCore.SubscriptionCore
 {
-    public interface ISubscriptionTransactionRefund
-    {
-        ulong Id { get; set; }
-        string Reason { get; set; }
-        DateTime TimeRefunded { get; set; }
-    }
 
     public class SubscriptionTransactionRefundDTO : ISubscriptionTransactionRefund
     {

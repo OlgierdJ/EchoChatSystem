@@ -2,6 +2,7 @@
 using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.FriendCore;
+using CoreLib.Interfaces.Contracts;
 using System.Threading;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
@@ -11,7 +12,7 @@ namespace CoreLib.Entities.EchoCore.ChatCore
         IParticipable<ChatParticipancy>,
         IInviteHolder<ChatInvite>,
         IMutable<ChatMute>, 
-        Base.IPinboard<ChatMessagePin>
+        Interfaces.Contracts.IPinboard<ChatMessagePin>
     {
         public string Name { get; set; }
         public DateTime TimeCreated { get; set; }

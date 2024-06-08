@@ -1,16 +1,10 @@
 ﻿using CoreLib.DTO.EchoCore.UserCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.DTO.EchoCore.ChatCore
 {
-    public interface IEmoteExtended
-    {
-        ulong Id { get; set; }
-        string ImageUrl { get; set; }
-        string Name { get; set; }
-        UserMinimalDTO Uploader { get; set; }
-    }
 
-    public class EmoteExtendedDTO : IEmote, IEmoteExtended
+    public class EmoteExtendedDTO : IEmote, IUploadedEmote<UserMinimalDTO>
     {
         //public ulong ServerId { get; set; }
         public UserMinimalDTO Uploader { get; set; }

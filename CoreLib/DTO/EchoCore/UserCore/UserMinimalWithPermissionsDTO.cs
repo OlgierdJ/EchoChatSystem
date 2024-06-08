@@ -1,11 +1,8 @@
-﻿using CoreLib.DTO.EchoCore.MiscCore.ModerationCore;
+﻿using CoreLib.DTO.Contracts;
+using CoreLib.DTO.EchoCore.MiscCore.ModerationCore;
 
 namespace CoreLib.DTO.EchoCore.UserCore
 {
-    public interface IUserMinimalWithPermissions<TPermission> : IUserMinimal
-    {
-        ICollection<TPermission> Permissions { get; set; }
-    }
 
     public class UserMinimalWithPermissionsDTO : IUserMinimal, IUserMinimalWithPermissions<StatefulPermissionExtendedDTO>
     {

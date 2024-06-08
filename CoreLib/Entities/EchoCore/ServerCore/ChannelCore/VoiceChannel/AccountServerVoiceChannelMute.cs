@@ -1,10 +1,10 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel
 {
-    public class AccountServerVoiceChannelMute : ITargetedMute<Account, ulong, ServerVoiceChannel, ulong>
+    public class AccountServerVoiceChannelMute : ITargetedMute<Account, ulong, ServerVoiceChannel, ulong>, IDomainEntity
     {
         public ulong SubjectId { get; set; }
         public ulong MuterId { get; set; }

@@ -1,11 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.MiscCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.MiscCore
 {
-    public interface IConnection
-    {
-        uint Id { get; set; }
-        string PlatformIcon { get; set; }
-        string PlatformName { get; set; }
-    }
 
     public class ConnectionDTO : IConnection
     {

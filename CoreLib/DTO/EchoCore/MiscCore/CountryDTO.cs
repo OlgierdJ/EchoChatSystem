@@ -1,10 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.MiscCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.MiscCore
 {
-    public interface ICountry
-    {
-        uint Id { get; set; }
-        string Name { get; set; }
-    }
 
     public class CountryDTO : ICountry
     {

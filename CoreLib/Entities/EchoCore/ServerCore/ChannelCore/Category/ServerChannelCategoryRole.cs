@@ -1,8 +1,9 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
 {
-    public class ServerChannelCategoryRole
+    public class ServerChannelCategoryRole : IDomainEntity
     {
         //combined pk
         //channelcategory owner

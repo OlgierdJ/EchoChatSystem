@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLib.DTO.Contracts;
 
 namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    public interface IStatefulPermission : IPermissionMinimal
-    {
-        ulong Id { get; set; }
-        string Name { get; set; }
-        bool? State { get; set; }
-    }
 
     public class StatefulPermissionDTO : IStatefulPermission
     {

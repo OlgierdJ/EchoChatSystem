@@ -1,4 +1,4 @@
-﻿using CoreLib.Interfaces;
+﻿using CoreLib.Interfaces.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -39,17 +39,17 @@ namespace DomainCoreApi.Handlers
             this.options = options.Value;
         }
 
-        public string CreateToken(IEnumerable<Claim> claims, DateTime expires, string issuer, string audience, string secretKey)
+        public string CreateToken(IEnumerable<Claim> claims, DateTime expires, string issuer, string Audience, string secretKey)
         {
             var tokenhandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(secretKey);
-
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = expires,
                 Issuer = issuer,
-                Audience = audience,
+                Audience = Audience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -78,6 +78,7 @@ namespace DomainCoreApi.Handlers
             return token;
         }
 
+        // Creat a Account Token for the user 
         public string GetAccessToken<T>(T obj) where T : IEntity
         {
             var claims = new List<Claim>

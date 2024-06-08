@@ -1,12 +1,8 @@
-﻿using CoreLib.Entities.Enums;
+﻿using CoreLib.DTO.Contracts;
+using CoreLib.Entities.Enums;
 
 namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
 {
-    public interface IInviteMinimal
-    {
-        string InviteLink { get; set; }
-        InviteType Type { get; set; }
-    }
 
     public class InviteMinimalDTO : IInviteMinimal
     {

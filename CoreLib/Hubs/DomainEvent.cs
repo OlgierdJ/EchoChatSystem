@@ -1,5 +1,5 @@
 ﻿using CoreLib.Entities.Enums;
-using CoreLib.Interfaces;
+using CoreLib.Interfaces.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace CoreLib.Hubs
     public class DomainEvent
     {
         public string Type { get; set; } //need this for conversion probably
-        public IEntity Entity { get; set; }
+        public IDomainEntity Entity { get; set; }
         public EntityAction Action { get; set; }
     }
     

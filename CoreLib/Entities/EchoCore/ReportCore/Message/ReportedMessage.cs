@@ -2,6 +2,7 @@
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ReportCore.Message
 {

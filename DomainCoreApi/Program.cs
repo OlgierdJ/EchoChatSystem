@@ -37,15 +37,17 @@ var connectionString = builder.Configuration.GetConnectionString("EchoDBConnecti
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<EchoDbContext>((sp, options) => 
 options.UseSqlServer(connectionString).AddInterceptors(
-            sp.GetRequiredService<PublishDomainEventsInterceptor>()
+            sp.GetRequiredService<PublishDomainEventsInterceptor>(),
+            sp.GetRequiredService<PublishTransactionDomainEventsInterceptor>()
             //sp.GetRequiredService<InsertOutboxMessagesInterceptor>() //dont need right now
 ));
 // Add services to the container.
-builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
+//builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
 builder.Services.AddAutoMapper(opts =>
 {
     opts.AddProfile<EchoCoreCommonMappings>();
 });
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -57,7 +59,8 @@ builder.Services.AddAuthentication(x =>
     {
         NameClaimType = ClaimTypes.NameIdentifier,
         ValidIssuer = config["JwtSettings:Issuer"],
-        ValidAudience = config["JwtSettings:Audience"],
+        ValidAudiences = config.GetSection("JwtSettings:Audiences").Get<List<string>>(),
+        //ValidAudience = config["JwtSettings:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey
         (Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
         ValidateIssuer = true,
@@ -69,7 +72,9 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddAuthorization();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddTransient<PublishDomainEventsInterceptor>();
+builder.Services.AddScoped<DomainEventService>();
+builder.Services.AddScoped<PublishDomainEventsInterceptor>();
+builder.Services.AddScoped<PublishTransactionDomainEventsInterceptor>();
 //Add Repository to the container.
 builder.Services.AddTransient(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));

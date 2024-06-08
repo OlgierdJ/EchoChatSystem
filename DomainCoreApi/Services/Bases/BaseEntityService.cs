@@ -1,5 +1,5 @@
-﻿using CoreLib.Interfaces;
-using CoreLib.Interfaces.Bases;
+﻿using CoreLib.Interfaces.Bases;
+using CoreLib.Interfaces.Contracts;
 
 namespace DomainCoreApi.Services.Bases
 {

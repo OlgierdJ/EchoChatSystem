@@ -1,8 +1,8 @@
-﻿using CoreLib.Entities.Base;
+﻿using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountBlock : IBlock<Account, ulong, Account, ulong>
+    public class AccountBlock : IBlock<Account, ulong, Account, ulong>, IDomainEntity
     {
         //You cease to be friends with them;
         //You are unable to send them a friend request;
