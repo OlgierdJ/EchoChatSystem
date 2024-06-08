@@ -48,7 +48,7 @@ namespace CoreLib.Handlers
             //Map events
 
             connection.ServerTimeout = TimeSpan.FromSeconds(2);
-            connection.On<string>(nameof(IPushNotificationHub.NewFriend), (message) => NewFriendReceived?.Invoke(message));
+            //connection.On<string>(nameof(IPushNotificationHub.NewFriend), (message) => NewFriendReceived?.Invoke(message));
             //connection.On<string>(nameof(IDomainNotificationHub.ReceiveNotification), (message) => ReceiveNotification?.Invoke(message));
             //connection.On<string>(nameof(IDomainNotificationHub.JoinGroup), (groupName) => JoinGroup?.Invoke(groupName));
             //connection.On<string[]>(nameof(IDomainNotificationHub.JoinGroups), (groupNames) => JoinGroups?.Invoke(groupNames));
