@@ -11,9 +11,12 @@ using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Entities.Enums;
 using CoreLib.Hubs;
 using CoreLib.Interfaces;
+using CoreLib.Interfaces.Contracts;
 using DomainPushNotificationApi.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Principal;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace DomainPushNotificationApi.Services
 {
@@ -316,11 +319,17 @@ namespace DomainPushNotificationApi.Services
 
         public async Task NotifyClients(DomainEvent domain)
         {
+            var entity = JsonSerializer.Deserialize(domain.Entity, Type.GetType(domain.Type), new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.Preserve } );
+            //var ename = entity.GetType().Name;
+            //if (_hubManager.TryGetValue((ename, domain.Action), out var task))
+            //{
+            //    await task(entity);
+            //}
             await Task.Run(async () =>
             {
-                if (_hubManager.TryGetValue((domain.Type, domain.Action), out var task))
+                if (_hubManager.TryGetValue((entity.GetType().Name, domain.Action), out var task))
                 {
-                    await task(domain.Entity);
+                    await task(entity);
                 }
             });
         }

@@ -2,6 +2,7 @@
 using DomainCoreApi.Hubs;
 using CoreLib;
 using CoreLib.Hubs;
+using CoreLib.Entities.EchoCore.AccountCore;
 
 namespace DomainCoreApi.Services
 {
@@ -15,7 +16,9 @@ namespace DomainCoreApi.Services
         }
         public async Task PublishDomainEventsAsync()
         {
+            //var testList = new List<DomainEvent>() { new() { Type = "test", Action = CoreLib.Entities.Enums.EntityAction.Unchanged, Entity = new Account() { Id = 29, ActivityStatus = new() { Id = 54, Name = "off" } } } };
             await _publisher.Clients.All.ReceiveDomainEvents(DomainEvents);
+            //await _publisher.Clients.All.ReceiveDomainEvents(testList);
             DomainEvents.Clear();
         }
 

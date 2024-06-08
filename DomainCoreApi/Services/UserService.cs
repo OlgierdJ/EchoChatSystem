@@ -632,6 +632,7 @@ namespace DomainCoreApi.Services
                 }
 
                 var senderAcc = await dbContext.Set<Account>().AsQueryable()
+                    .Include(e=>e.Profile)
                     .Include(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants.Where(e => e.ParticipantId != senderId))
                     .Include(e => e.OutgoingFriendRequests).ThenInclude(e => e.ReceiverRequest)
                     .Include(e => e.IncomingFriendRequests).ThenInclude(e => e.SenderRequest)
@@ -1062,6 +1063,7 @@ namespace DomainCoreApi.Services
                 }
 
                 var acc = await dbContext.Set<Account>().AsQueryable()
+                    .Include(e => e.Profile)
                     .Include(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants.Where(e => e.ParticipantId != senderId))
                     .Include(e => e.OutgoingFriendRequests).ThenInclude(e => e.ReceiverRequest)
                     .Include(e => e.IncomingFriendRequests).ThenInclude(e => e.SenderRequest)

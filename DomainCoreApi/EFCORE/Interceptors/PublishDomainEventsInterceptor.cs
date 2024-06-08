@@ -8,6 +8,8 @@ using CoreLib.Hubs;
 using CoreLib.Entities.Enums;
 using DomainCoreApi.Services;
 using CoreLib.Interfaces.Contracts;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace DomainCoreApi.EFCORE.Interceptors
 {
@@ -39,8 +41,11 @@ namespace DomainCoreApi.EFCORE.Interceptors
                 .Where(entry => entry.State != EntityState.Unchanged && entry.State != EntityState.Detached)
                 .Select(entry => new DomainEvent()
                 {
-                    Type = entry.Entity.GetType().Name,
-                    Entity = entry.Entity,
+                    Type = entry.Entity.GetType().AssemblyQualifiedName,
+                    Entity = JsonSerializer.Serialize(entry.Entity, entry.Entity.GetType(), new JsonSerializerOptions()
+                    {
+                         ReferenceHandler=ReferenceHandler.Preserve 
+                    }),
                     Action = (EntityAction)Enum.Parse(typeof(EntityAction), entry.State.ToString())
                 })
                 .ToList();
