@@ -216,9 +216,9 @@
     [Parameter]
     public UserFullDTO self { get; set; }
 
-    public List<UserDTO> friends { get; set; }
+    public ICollection<UserDTO> friends { get; set; }
 
-    private List<UserDTO> selectedFriends = new List<UserDTO>();
+    private ICollection<UserDTO> selectedFriends { get; set; }
     private UserDTO selected { get; set; }
 
     private string? token { get; set; }

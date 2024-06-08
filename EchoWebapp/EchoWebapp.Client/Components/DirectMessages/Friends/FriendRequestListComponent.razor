@@ -34,9 +34,9 @@ else
     public string searchTerm { get; set; } = "";
 
     [Parameter]
-    public List<FriendRequestDTO> List { get; set; }
+    public ICollection<FriendRequestDTO> List { get; set; }
 
-    public List<FriendRequestDTO> filtered { get; set; }
+    public ICollection<FriendRequestDTO> filtered { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

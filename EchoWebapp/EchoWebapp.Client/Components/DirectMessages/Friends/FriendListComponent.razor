@@ -67,9 +67,9 @@ else
     public bool displayAll { get; set; } = false;
 
     [Parameter]
-    public List<UserDTO> List { get; set; }
+    public ICollection<UserDTO> List { get; set; }
 
-    public List<UserDTO> filtered { get; set; }
+    public ICollection<UserDTO> filtered { get; set; }
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -56,11 +56,11 @@
 @code {
     [Parameter]
     public bool Visible { get; set; } = true;
-    public List<MemberDTO> Offline { get; set; }
-    public List<MemberDTO> Online { get; set; }
+    public ICollection<MemberDTO> Offline { get; set; }
+    public ICollection<MemberDTO> Online { get; set; }
 
     [Parameter]
-    public List<MemberDTO> Members { get; set; }
+    public ICollection<MemberDTO> Members { get; set; }
 
     protected override Task OnParametersSetAsync()
     {

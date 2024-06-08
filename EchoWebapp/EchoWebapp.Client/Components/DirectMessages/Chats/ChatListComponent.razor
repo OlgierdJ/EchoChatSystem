@@ -33,7 +33,7 @@
     [Parameter]
     public UserFullDTO self { get; set; }
 
-    public List<ChatDTO> chat { get; set; }
+    public ICollection<ChatDTO> chat { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

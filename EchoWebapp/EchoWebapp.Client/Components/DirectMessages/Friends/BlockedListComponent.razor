@@ -38,9 +38,9 @@ else
     public string searchTerm = "";
 
     [Parameter]
-    public List<UserMinimalDTO> List { get; set; }
+    public ICollection<UserMinimalDTO> List { get; set; }
 
-    public List<UserMinimalDTO> filtered { get; set; }
+    public ICollection<UserMinimalDTO> filtered { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
