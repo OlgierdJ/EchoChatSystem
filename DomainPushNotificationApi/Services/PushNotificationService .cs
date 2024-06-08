@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CoreLib.DTO.EchoCore.ChatCore.TextCore;
 using CoreLib.DTO.EchoCore.UserCore;
+using CoreLib.DTO.EchoCore.UserCore.SettingsCore;
 using CoreLib.Entities.Base;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
@@ -9,6 +10,7 @@ using CoreLib.Entities.EchoCore.FriendCore;
 using CoreLib.Entities.EchoCore.UserCore;
 using CoreLib.Entities.Enums;
 using CoreLib.Hubs;
+using CoreLib.Interfaces;
 using DomainPushNotificationApi.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Principal;
@@ -26,37 +28,37 @@ namespace DomainPushNotificationApi.Services
             _hubManager.Add((nameof(ChatInvite), EntityAction.Added), async (entity) =>
             {
                 ChatInvite invite = entity as ChatInvite;
-                await _hubContext.Clients.Client(invite.Inviter.ToString()).ReceiveChatMinimalDTOCreateMessage(mapper.Map<ChatMinimalDTO>(invite));
+                await _hubContext.Clients.Group($"{typeof(Chat)}/{invite.SubjectId}").ReceiveInviteDTOCreateMessage(mapper.Map<InviteDTO>(invite));
             });
 
             _hubManager.Add((nameof(ChatInvite), EntityAction.Deleted), async (entity) =>
             {
                 ChatInvite invite = entity as ChatInvite;
-                await _hubContext.Clients.Client(invite.Inviter.ToString()).ReceiveChatMinimalDTODeleteMessage(mapper.Map<ChatMinimalDTO>(invite));
+                await _hubContext.Clients.Group($"{typeof(Chat)}/{invite.SubjectId}").ReceiveInviteDTODeleteMessage(mapper.Map<InviteDTO>(invite));
             });
 
             _hubManager.Add((nameof(OutgoingFriendRequest), EntityAction.Added), async (entity) =>
             {
                 OutgoingFriendRequest outgoingFriendRequest = entity as OutgoingFriendRequest;
-                await _hubContext.Clients.Client(outgoingFriendRequest.SenderId.ToString()).ReceiveUserMinimalDTOCreateMessage(mapper.Map<UserMinimalDTO>(outgoingFriendRequest));
+                await _hubContext.Clients.Client(outgoingFriendRequest.SenderId.ToString()).ReceiveFriendRequestDTOCreateMessage(mapper.Map<FriendRequestDTO>(outgoingFriendRequest));
             });
 
             _hubManager.Add((nameof(OutgoingFriendRequest), EntityAction.Deleted), async (entity) =>
             {
                 OutgoingFriendRequest outgoingFriendRequest = entity as OutgoingFriendRequest;
-                await _hubContext.Clients.Client(outgoingFriendRequest.SenderId.ToString()).ReceiveUserMinimalDTODeleteMessage(mapper.Map<UserMinimalDTO>(outgoingFriendRequest));
+                await _hubContext.Clients.Client(outgoingFriendRequest.SenderId.ToString()).ReceiveFriendRequestDTODeleteMessage(mapper.Map<FriendRequestDTO>(outgoingFriendRequest));
             });
 
             _hubManager.Add((nameof(IncomingFriendRequest), EntityAction.Added), async (entity) =>
             {
                 IncomingFriendRequest incomingFriendRequest = entity as IncomingFriendRequest;
-                await _hubContext.Clients.Client(incomingFriendRequest.ReceiverId.ToString()).ReceiveUserMinimalDTOCreateMessage(mapper.Map<UserMinimalDTO>(incomingFriendRequest));
+                await _hubContext.Clients.Client(incomingFriendRequest.ReceiverId.ToString()).ReceiveFriendRequestDTOCreateMessage(mapper.Map<FriendRequestDTO>(incomingFriendRequest));
             });
 
             _hubManager.Add((nameof(IncomingFriendRequest), EntityAction.Deleted), async (entity) =>
             {
                 IncomingFriendRequest incomingFriendRequest = entity as IncomingFriendRequest;
-                await _hubContext.Clients.Client(incomingFriendRequest.ReceiverId.ToString()).ReceiveUserMinimalDTODeleteMessage(mapper.Map<UserMinimalDTO>(incomingFriendRequest));
+                await _hubContext.Clients.Client(incomingFriendRequest.ReceiverId.ToString()).ReceiveFriendRequestDTODeleteMessage(mapper.Map<FriendRequestDTO>(incomingFriendRequest));
             });
 
             _hubManager.Add((nameof(Friendship), EntityAction.Added), async (entity) =>
@@ -64,7 +66,7 @@ namespace DomainPushNotificationApi.Services
                 Friendship friendship = entity as Friendship;
                 foreach (var participant in friendship.Participants)
                 {
-                    await _hubContext.Clients.User(participant.ParticipantId.ToString()).NewFriend(mapper.Map<UserDTO>(friendship.Participants.First(e => e.ParticipantId != participant.SubjectId)));
+                    await _hubContext.Clients.User(participant.ParticipantId.ToString()).NewFriend(mapper.Map<UserDTO>(friendship.Participants.First(e => e.ParticipantId != participant.ParticipantId)));
                 }
             });
 
@@ -73,63 +75,41 @@ namespace DomainPushNotificationApi.Services
                 Friendship friendship = entity as Friendship;
                 foreach (var participant in friendship.Participants)
                 {
-                    await _hubContext.Clients.User(participant.ParticipantId.ToString()).RemoveFriend(mapper.Map<UserDTO>(friendship.Participants.First(e => e.ParticipantId != participant.SubjectId)));
+                    await _hubContext.Clients.User(participant.ParticipantId.ToString()).RemoveFriend(mapper.Map<UserDTO>(friendship.Participants.First(e => e.ParticipantId != participant.ParticipantId)));
                 }
             });
 
             _hubManager.Add((nameof(AccountBlock), EntityAction.Added), async (entity) =>
             {
-                AccountBlock nickname = entity as AccountBlock;
-                await _hubContext.Clients.Client(nickname.BlockerId.ToString()).ReceiveUserFullDTOCreateMessage(mapper.Map<UserFullDTO>(nickname));
-
-                //ved ikke helt hvad vi skal send til den som bliver block
-                await _hubContext.Clients.Client(nickname.BlockedId.ToString()).ReceiveUserFullDTOCreateMessage(mapper.Map<UserFullDTO>(nickname));
-            });
-
-            _hubManager.Add((nameof(AccountBlock), EntityAction.Modified), async (entity) =>
-            {
-                AccountBlock nickname = entity as AccountBlock;
-                await _hubContext.Clients.Client(nickname.BlockerId.ToString()).ReceiveUserFullDTOUpdateMessage(mapper.Map<UserFullDTO>(nickname));
-
-                //ved ikke helt hvad vi skal send til den som bliver block
-                await _hubContext.Clients.Client(nickname.BlockedId.ToString()).ReceiveUserFullDTOUpdateMessage(mapper.Map<UserFullDTO>(nickname));
+                AccountBlock block = entity as AccountBlock;
+                await _hubContext.Clients.Client(block.BlockerId.ToString()).ReceiveUserMinimalDTOCreateMessage(mapper.Map<UserMinimalDTO>(block));
             });
 
             _hubManager.Add((nameof(AccountBlock), EntityAction.Deleted), async (entity) =>
             {
-                AccountBlock nickname = entity as AccountBlock;
-                await _hubContext.Clients.Client(nickname.BlockerId.ToString()).ReceiveUserFullDTODeleteMessage(mapper.Map<UserFullDTO>(nickname));
-
-                //ved ikke helt hvad vi skal send til den som bliver block
-                await _hubContext.Clients.Client(nickname.BlockedId.ToString()).ReceiveUserFullDTODeleteMessage(mapper.Map<UserFullDTO>(nickname));
+                AccountBlock block = entity as AccountBlock;
+                await _hubContext.Clients.Client(block.BlockerId.ToString()).ReceiveUserMinimalDTODeleteMessage(mapper.Map<UserMinimalDTO>(block));
             });
 
             _hubManager.Add((nameof(VoiceSettings), EntityAction.Modified), async (entity) =>
             {
                 VoiceSettings voiceSettings = entity as VoiceSettings;
-                await _hubContext.Clients.Client(voiceSettings.AccountSettings.Account.Id.ToString()).ReceiveUserFullDTOUpdateMessage(mapper.Map<UserFullDTO>(voiceSettings));
+                await _hubContext.Clients.Client(voiceSettings.AccountSettings.Account.Id.ToString()).ReceiveVoiceSettingsDTOUpdateMessage(mapper.Map<VoiceSettingsDTO>(voiceSettings));
+                //Note: RTC skal også have dette at vide hvis vi når det
             });
 
             _hubManager.Add((nameof(User), EntityAction.Modified), async (entity) =>
             {
                 User user = entity as User;
-                await _hubContext.Clients.All.ReceiveUserDTOUpdateMessage(mapper.Map<UserDTO>(user));
-                await _hubContext.Clients.All.ReceiveUserFullDTOUpdateMessage(mapper.Map<UserFullDTO>(user));
-                await _hubContext.Clients.All.ReceiveUserMinimalDTOUpdateMessage(mapper.Map<UserMinimalDTO>(user));
-                await _hubContext.Clients.All.ReceiveUserProfileDTOUpdateMessage(mapper.Map<UserProfileDTO>(user));
-                await _hubContext.Clients.All.ReceiveUserMinimalDTOUpdateMessage(mapper.Map<UserMinimalDTO>(user));
-                await _hubContext.Clients.All.ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(user));
+                //Det kun Email og phone nr, så derfor lave DTO senere
+                await _hubContext.Clients.User(user.Account.Id.ToString()).ReceiveUserFullDTOUpdateMessage(mapper.Map<UserFullDTO>(user));
             });
 
             _hubManager.Add((nameof(User), EntityAction.Deleted), async (entity) =>
             {
                 User user = entity as User;
-                await _hubContext.Clients.All.ReceiveUserDTODeleteMessage(mapper.Map<UserDTO>(user));
-                await _hubContext.Clients.All.ReceiveUserFullDTODeleteMessage(mapper.Map<UserFullDTO>(user));
-                await _hubContext.Clients.All.ReceiveUserMinimalDTODeleteMessage(mapper.Map<UserMinimalDTO>(user));
-                await _hubContext.Clients.All.ReceiveUserProfileDTODeleteMessage(mapper.Map<UserProfileDTO>(user));
-                await _hubContext.Clients.All.ReceiveUserMinimalDTODeleteMessage(mapper.Map<UserMinimalDTO>(user));
-                await _hubContext.Clients.All.ReceiveMemberDTODeleteMessage(mapper.Map<MemberDTO>(user));
+                //note skal måske ikke være her for bruger skal bare logges ud efter de har slette deres bruger
+                await _hubContext.Clients.User(user.Account.Id.ToString()).ReceiveUserFullDTODeleteMessage(mapper.Map<UserFullDTO>(user));
             });
  
             _hubManager.Add((nameof(ChatMessage), EntityAction.Added), async (entity) =>
@@ -165,10 +145,10 @@ namespace DomainPushNotificationApi.Services
             {
                 Chat chat = entity as Chat;
 
-                await _hubContext.Clients.Users(chat.Participants.Select(e => e.ParticipantId.ToString())).ReceiveChatDTOUpdateMessage(mapper.Map<ChatDTO>(chat));
-
+                await _hubContext.Clients.Group($"{typeof(ChatMessage)}/{chat.Id}").ReceiveChatDTOUpdateMessage(mapper.Map<ChatDTO>(chat));
             });
 
+            //Note skal muligvis ikke bruges da vi skal finder ud af om vi sletter chat direkte
             _hubManager.Add((nameof(Chat), EntityAction.Deleted), async (entity) =>
             {
                 Chat chat = entity as Chat;
@@ -177,6 +157,7 @@ namespace DomainPushNotificationApi.Services
 
             });
 
+            //Note der er svær logik så lave senere hvis der tid
             _hubManager.Add((nameof(Account), EntityAction.Modified), async (entity) =>
             {
                 Account account = entity as Account;
@@ -187,6 +168,7 @@ namespace DomainPushNotificationApi.Services
                 await _hubContext.Clients.All.ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(account));
             });
 
+            //Note der er svær logik så lave senere hvis der tid
             _hubManager.Add((nameof(AccountProfile), EntityAction.Modified), async (entity) =>
             {
                 AccountProfile account = entity as AccountProfile;
@@ -194,87 +176,142 @@ namespace DomainPushNotificationApi.Services
                 await _hubContext.Clients.All.ReceiveUserFullDTOUpdateMessage(mapper.Map<UserFullDTO>(account));
                 await _hubContext.Clients.All.ReceiveUserMinimalDTOUpdateMessage(mapper.Map<UserMinimalDTO>(account));
                 await _hubContext.Clients.All.ReceiveUserProfileDTOUpdateMessage(mapper.Map<UserProfileDTO>(account));
-                await _hubContext.Clients.All.ReceiveUserMinimalDTOUpdateMessage(mapper.Map<UserMinimalDTO>(account));
                 await _hubContext.Clients.All.ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(account));
             });
-
-            #region snakke med Jas
 
             _hubManager.Add((nameof(AccountNickname), EntityAction.Added), async (entity) =>
             {
                 AccountNickname nickname = entity as AccountNickname;
-                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveUserFullDTOCreateMessage(mapper.Map<UserFullDTO>(nickname));
+                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveUserMinimalDTOUpdateMessage(mapper.Map<UserMinimalDTO>(nickname));
+                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveUserDTOUpdateMessage(mapper.Map<UserDTO>(nickname));
+                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(nickname));
             });
 
             _hubManager.Add((nameof(AccountNickname), EntityAction.Modified), async (entity) =>
             {
                 AccountNickname nickname = entity as AccountNickname;
-                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveUserFullDTOUpdateMessage(mapper.Map<UserFullDTO>(nickname));
+                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveUserMinimalDTOUpdateMessage(mapper.Map<UserMinimalDTO>(nickname));
+                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveUserDTOUpdateMessage(mapper.Map<UserDTO>(nickname));
+                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(nickname));
             });
 
             _hubManager.Add((nameof(AccountNickname), EntityAction.Deleted), async (entity) =>
             {
                 AccountNickname nickname = entity as AccountNickname;
-                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveUserFullDTODeleteMessage(mapper.Map<UserFullDTO>(nickname));
+                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveUserMinimalDTOUpdateMessage(mapper.Map<UserMinimalDTO>(nickname));
+                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveUserDTOUpdateMessage(mapper.Map<UserDTO>(nickname));
+                await _hubContext.Clients.Client(nickname.AuthorId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(nickname));
             });
 
             _hubManager.Add((nameof(AccountNote), EntityAction.Added), async (entity) =>
             {
                 AccountNote note = entity as AccountNote;
-                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveUserFullDTOCreateMessage(mapper.Map<UserFullDTO>(note));
+                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveUserMinimalDTOUpdateMessage(mapper.Map<UserMinimalDTO>(note));
+                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveUserDTOUpdateMessage(mapper.Map<UserDTO>(note));
+                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(note));
             });
 
             _hubManager.Add((nameof(AccountNote), EntityAction.Modified), async (entity) =>
             {
                 AccountNote note = entity as AccountNote;
-                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveUserFullDTOUpdateMessage(mapper.Map<UserFullDTO>(note));
+                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveUserMinimalDTOUpdateMessage(mapper.Map<UserMinimalDTO>(note));
+                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveUserDTOUpdateMessage(mapper.Map<UserDTO>(note));
+                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(note));
             });
 
             _hubManager.Add((nameof(AccountNote), EntityAction.Deleted), async (entity) =>
             {
                 AccountNote note = entity as AccountNote;
-                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveUserFullDTODeleteMessage(mapper.Map<UserFullDTO>(note));
+                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveUserMinimalDTOUpdateMessage(mapper.Map<UserMinimalDTO>(note));
+                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveUserDTOUpdateMessage(mapper.Map<UserDTO>(note));
+                await _hubContext.Clients.Client(note.AuthorId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(note));
             });
 
             _hubManager.Add((nameof(ChatMute), EntityAction.Added), async (entity) =>
             {
                 ChatMute chatMute = entity as ChatMute;
+                await _hubContext.Clients.User(chatMute.MuterId.ToString()).ReceiveChatDTOUpdateMessage(mapper.Map<ChatDTO>(chatMute.Subject));
             });
 
             _hubManager.Add((nameof(ChatMute), EntityAction.Deleted), async (entity) =>
             {
                 ChatMute chatMute = entity as ChatMute;
+                await _hubContext.Clients.User(chatMute.MuterId.ToString()).ReceiveChatDTOUpdateMessage(mapper.Map<ChatDTO>(chatMute.Subject));
             });
 
             _hubManager.Add((nameof(ChatParticipancy), EntityAction.Added), async (entity) =>
             {
-                ChatParticipancy message = entity as ChatParticipancy;
-                await _hubContext.Clients.User(message.ParticipantId.ToString()).ReceiveMemberDTOCreateMessage(mapper.Map<MemberDTO>(message));
-
-                await _hubContext.Clients.Users(message.Subject.Participants.Select(e => e.ParticipantId.ToString())).ReceiveMemberDTOCreateMessage(mapper.Map<MemberDTO>(message));
-
-                //await _hubContext.Clients.Group($"{typeof(ChatMessage)}/{message.Id}").ReceiveMessageDTOCreateMessage(mapper.Map<MessageDTO>(message));
+                ChatParticipancy participancy = entity as ChatParticipancy;
+                await _hubContext.Clients.Group($"{typeof(Chat)}/{participancy.SubjectId}").ReceiveMemberDTOCreateMessage(mapper.Map<MemberDTO>(participancy));
+                await _hubContext.Clients.User(participancy.ParticipantId.ToString()).ReceiveChatDTOCreateMessage(mapper.Map<ChatDTO>(participancy));
 
             });
 
             _hubManager.Add((nameof(ChatParticipancy), EntityAction.Modified), async (entity) =>
             {
-                ChatParticipancy message = entity as ChatParticipancy;
-                await _hubContext.Clients.User(message.ParticipantId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(message));
-
-                await _hubContext.Clients.Users(message.Subject.Participants.Select(e => e.ParticipantId.ToString())).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(message));
+                ChatParticipancy participancy = entity as ChatParticipancy;
+                await _hubContext.Clients.Group($"{typeof(Chat)}/{participancy.SubjectId}").ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(participancy));
             });
 
             _hubManager.Add((nameof(ChatParticipancy), EntityAction.Deleted), async (entity) =>
             {
-                ChatParticipancy message = entity as ChatParticipancy;
-                await _hubContext.Clients.User(message.ParticipantId.ToString()).ReceiveMemberDTODeleteMessage(mapper.Map<MemberDTO>(message));
+                ChatParticipancy participancy = entity as ChatParticipancy;
+                await _hubContext.Clients.User(participancy.ParticipantId.ToString()).LeaveChat(mapper.Map<ChatDTO>(participancy));
 
-                await _hubContext.Clients.Users(message.Subject.Participants.Select(e => e.ParticipantId.ToString())).ReceiveMemberDTODeleteMessage(mapper.Map<MemberDTO>(message));
+                await _hubContext.Clients.Group($"{typeof(Chat)}/{participancy.SubjectId}").ReceiveMemberDTODeleteMessage(mapper.Map<MemberDTO>(participancy));
+
             });
-            #endregion
 
+            _hubManager.Add((nameof(ChatAccountMessageTracker), EntityAction.Added), async (entity) =>
+            {
+                ChatAccountMessageTracker tracker = entity as ChatAccountMessageTracker;
+                await _hubContext.Clients.User(tracker.OwnerId.ToString()).ReceiveChatDTOUpdateMessage(mapper.Map<ChatDTO>(tracker));
 
+            });
+
+            _hubManager.Add((nameof(ChatAccountMessageTracker), EntityAction.Modified), async (entity) =>
+            {
+                ChatAccountMessageTracker tracker = entity as ChatAccountMessageTracker;
+                await _hubContext.Clients.User(tracker.OwnerId.ToString()).ReceiveChatDTOUpdateMessage(mapper.Map<ChatDTO>(tracker));
+
+            });
+
+            _hubManager.Add((nameof(ChatAccountMessageTracker), EntityAction.Deleted), async (entity) =>
+            {
+                ChatAccountMessageTracker tracker = entity as ChatAccountMessageTracker;
+                await _hubContext.Clients.User(tracker.OwnerId.ToString()).ReceiveChatDTOUpdateMessage(mapper.Map<ChatDTO>(tracker));
+
+            });
+
+            _hubManager.Add((nameof(AccountAccountVolume), EntityAction.Added), async (entity) =>
+            {
+                AccountAccountVolume volume = entity as AccountAccountVolume;
+                await _hubContext.Clients.Client(volume.OwnerId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(volume));
+            });
+
+            _hubManager.Add((nameof(AccountNote), EntityAction.Modified), async (entity) =>
+            {
+                AccountAccountVolume volume = entity as AccountAccountVolume;
+                await _hubContext.Clients.Client(volume.OwnerId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(volume));
+            });
+
+            _hubManager.Add((nameof(AccountNote), EntityAction.Deleted), async (entity) =>
+            {
+                AccountAccountVolume volume = entity as AccountAccountVolume;
+                await _hubContext.Clients.Client(volume.OwnerId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(volume));
+            });
+
+            _hubManager.Add((nameof(AccountMute), EntityAction.Added), async (entity) =>
+            {
+                AccountMute mute = entity as AccountMute;
+                await _hubContext.Clients.Client(mute.MuterId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(mute.Subject));
+            });
+
+            _hubManager.Add((nameof(AccountMute), EntityAction.Deleted), async (entity) =>
+            {
+                AccountMute mute = entity as AccountMute;
+                await _hubContext.Clients.Client(mute.MuterId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(mute.Subject));
+            });
         }
 
         public async Task NotifyClients(DomainEvent domain)
@@ -289,70 +326,3 @@ namespace DomainPushNotificationApi.Services
         }
     }
 }
-
-//chat
-/* chatdto */
-
-//chatmessage
-/* messagedto
- * chat */
-
-//chatparticipancy
-/* memberdto
- * chatdto */
-
-// accountvolume
-/* memberDto */
-
-//accountmute
-/* memberDto */
-
-//user
-/* UserDTO
- * UserFullDTO
- * UserMinimalDTO
- * UserProfileDTO
- * MemberDTO */
-
-//voicesettings
-/* UserFullDTO
- * VoiceSettingsDTO igennem userfull */
-
-//accountnote
-/* UserFullDTO
- * MemberDTO */
-
-//accountnickname
-/* UserFullDTO
- * MemberDTO
- * UserProfileDTO */
-
-//accountblock
-/* UserFullDTO
- * UserMinimalDTO? */
-
-//friendship 
-/* UserFullDTO 
- * FriendRequestDTO*/
-
-//incomingrequest
-/* UserFullDTO 
- * FriendRequestDTO*/
-
-//outgoingrequest
-/* UserFullDTO 
- * FriendRequestDTO*/
-
-//chatmute
-/* UserFullDTO
- * chatdto */
-
-//chataccountmessagetracker
-/* UserFullDTO
- * chatdto*/
-
-//chatinvite
-/* cahtdto
- * InviteDTO
- * InviteMinimalDTO
- * UserFullDTO */
