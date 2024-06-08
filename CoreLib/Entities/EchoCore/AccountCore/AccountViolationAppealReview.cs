@@ -1,8 +1,9 @@
 ﻿using CoreLib.Entities.Base;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountViolationAppealReview : BaseEntity<ulong>,IViolationAppealReview<AccountViolationAppeal, ulong, Account, ulong>
+    public class AccountViolationAppealReview : BaseEntity<ulong>, IViolationAppealReview<AccountViolationAppeal, ulong, Account, ulong>
     {
         public ulong AppealId { get; set; }
         public ulong ReviewerId { get; set; }

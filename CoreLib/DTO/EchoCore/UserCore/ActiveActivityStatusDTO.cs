@@ -1,9 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.UserCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.UserCore
 {
-    public interface IActiveActivityStatus
-    {
-        string? DisplayedContent { get; set; }
-    }
 
     public class ActiveActivityStatusDTO : IActivityStatusMinimal, IActiveActivityStatus
         //the displayed status which is a combination of the actual status and the custom status id.

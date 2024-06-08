@@ -1,10 +1,11 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore
 {
-    public class ServerTextChannelMemberPermission
+    public class ServerTextChannelMemberPermission : IDomainEntity
     //Used for displaying state of serverpermission for a specific channel for a specific member
     {
         //combine foreign key profile and role.

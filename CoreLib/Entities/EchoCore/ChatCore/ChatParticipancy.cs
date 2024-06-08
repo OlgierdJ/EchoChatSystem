@@ -1,9 +1,9 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ChatCore
 {
-    public class ChatParticipancy : IParticipancy<Account, ulong, Chat, ulong>
+    public class ChatParticipancy : IParticipancy<Account, ulong, Chat, ulong>, IDomainEntity
     {
         public bool Hidden { get; set; }
         public bool IsOwner { get; set; }

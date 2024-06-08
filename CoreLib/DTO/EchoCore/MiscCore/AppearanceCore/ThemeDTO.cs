@@ -1,10 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.MiscCore.AppearanceCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.MiscCore.AppearanceCore
 {
-    public interface ITheme
-    {
-        uint Id { get; set; }
-        string Name { get; set; }
-    }
 
     public class ThemeDTO : ITheme
     {

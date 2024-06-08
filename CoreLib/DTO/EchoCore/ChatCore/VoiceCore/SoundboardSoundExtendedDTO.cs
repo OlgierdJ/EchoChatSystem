@@ -1,13 +1,11 @@
-﻿using CoreLib.DTO.EchoCore.UserCore;
+﻿using CoreLib.DTO.Contracts;
+using CoreLib.DTO.EchoCore.UserCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.DTO.EchoCore.ChatCore.VoiceCore
 {
-    public interface ISoundboardSoundWithUploader<TUploader> : ISoundboardSound
-    {
-        public TUploader? Uploader { get; set; }
-    }
 
-    public class SoundboardSoundExtendedDTO : ISoundboardSound, ISoundboardSoundWithUploader<UserMinimalDTO>, ISoundboardSoundWithEmote<EmoteDTO>
+    public class SoundboardSoundExtendedDTO : ISoundboardSound, IUploadedSoundboardSound<UserMinimalDTO>, ISoundboardSoundWithEmote<EmoteDTO>
     {
         public UserMinimalDTO? Uploader { get; set; }
         public EmoteDTO? AssociatedEmote { get; set; }

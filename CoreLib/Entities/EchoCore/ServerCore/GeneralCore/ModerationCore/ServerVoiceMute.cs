@@ -1,9 +1,9 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.AccountCore;
+﻿using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore
 {
-    public class ServerVoiceMute : ITargetedMute<Server, ulong, Account, ulong> //serverwide mute overrides accountmute relation
+    public class ServerVoiceMute : ITargetedMute<Server, ulong, Account, ulong>,IDomainEntity //serverwide mute overrides accountmute relation
     {
         //maybe put bool flag in serverprofile?
         public ulong SubjectId { get; set; }

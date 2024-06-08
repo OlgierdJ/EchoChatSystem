@@ -1,13 +1,8 @@
-﻿using CoreLib.Entities.Enums;
+﻿using CoreLib.DTO.Contracts;
+using CoreLib.Entities.Enums;
 
 namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
 {
-    public interface IInvite : IInviteMinimal
-    {
-        string Description { get; set; }
-        string ImageIconURL { get; set; }
-        string Title { get; set; }
-    }
 
     public class InviteDTO : IInviteMinimal, IInvite //used for displaying invite to a chat or server when echo scans the chat and finds an invite link.
 

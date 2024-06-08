@@ -3,31 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoreLib.DTO.Contracts;
 
 namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    public interface IHierarchalRoleMinimalWithPermissions<TPermission> : IHierarchalRole
-    {
-        //ulong Id { get; set; }
-        //int Importance { get; set; }
-        //string Name { get; set; }
-        ICollection<TPermission> Permissions { get; set; }
-    }
-    public interface IMentionableRole : IRoleMinimal
-    {
-        bool AllowAnyoneToMention { get; set; }
-    }
-    public interface ISeggregatableRole : IRoleMinimal
-    {
-        public bool DisplaySeperatelyFromOnlineMembers { get; set; }
-    }
-    public interface ICustomizableRole : IRoleMinimal, IMentionableRole, ISeggregatableRole
-    {
-       
-        public string Colour { get; set; }
-        public string IconURL { get; set; }
-        
-    }
 
     public class HierarchalRoleMinimalWithPermissionsDTO : IHierarchalRole, IHierarchalRoleMinimalWithPermissions<StatefulPermissionExtendedDTO>, ICustomizableRole
     {

@@ -1,8 +1,9 @@
 ﻿using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category
 {
-    public class ServerChannelCategoryRolePermission
+    public class ServerChannelCategoryRolePermission : IDomainEntity
     //Used for displaying state of serverpermission for a specific channelcategory for a specific role
     {
         //combine foreign key category and role.

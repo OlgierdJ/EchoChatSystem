@@ -1,8 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    public interface IStatefulPermissionExtended : IStatefulPermission, IPermission
-    {
-    }
 
     public class StatefulPermissionExtendedDTO : IStatefulPermissionExtended
     {

@@ -1,10 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    public interface IPermission : IPermissionMinimal
-    {
-        string? Description { get; set; }
-        string? GroupingName { get; set; }
-    }
 
     public class PermissionDTO : IPermission
     {

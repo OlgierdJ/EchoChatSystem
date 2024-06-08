@@ -1,11 +1,8 @@
-﻿namespace CoreLib.DTO.EchoCore.ChatCore
+﻿using CoreLib.Interfaces;
+using CoreLib.Interfaces.Contracts;
+
+namespace CoreLib.DTO.EchoCore.ChatCore
 {
-    public interface IEmote
-    {
-        ulong Id { get; set; }
-        string ImageUrl { get; set; }
-        string Name { get; set; }
-    }
 
     public class EmoteDTO : IEmote
     {

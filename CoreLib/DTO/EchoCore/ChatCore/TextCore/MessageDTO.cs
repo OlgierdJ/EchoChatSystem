@@ -1,33 +1,11 @@
-﻿using CoreLib.DTO.EchoCore.UserCore;
+﻿using CoreLib.DTO.Contracts;
+using CoreLib.DTO.EchoCore.UserCore;
 
 namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
 {
-    public interface IMessage
-    {
-        
-        string Content { get; set; }
-        ulong Id { get; set; }
-        DateTime? TimeEdited { get; set; }
-        DateTime TimeSent { get; set; }
-    }
-
-    public interface IRepliableMessage<TReply> : IMessage
-    {
-        public TReply? Replied { get; set; } //message parent if present.
-    }
-
-    public interface IMessageWithAttachments<TMessageAttachment> : IMessage
-    {
-        ICollection<TMessageAttachment>? Attachments { get; set; }
-    }
-
-    public interface IMessageWithSender<TSender> : IMessage
-    {
-        TSender? Sender { get; set; }
-    }
 
     public class MessageDTO : IMessage, 
-        IMessageWithSender<UserMinimalDTO>,
+        ISentMessage<UserMinimalDTO>,
         IMessageWithAttachments<MessageAttachmentDTO>, 
         IRepliableMessage<MessageMinimalDTO>
     {

@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using CoreLib;
+using CoreLib.DTO.EchoCore.ChatCore.TextCore;
+using CoreLib.Hubs;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace DomainPushNotificationApi.Services
 {
     public class DomainNotificationClientService : IDisposable
     {
-        private string ServerIP = "https://localhost:7269/ClienPushNotificationtHub"; //example "https://localhost:7269/DomainPushNotificationHub"
+        private string ServerIP = "https://localhost:7269/DomainPushNotificationHub"; //example "https://localhost:7269/DomainPushNotificationHub"
+        private readonly PushNotificationService pushNotificationService;
 
         public HubConnection Connection { get; set; }
 
@@ -13,14 +17,17 @@ namespace DomainPushNotificationApi.Services
         #region list of Action the hub can do
         public event Action<Exception> ConnectionClosed;
         public event Action<Exception> OnConnectedAsync;
+        public event Action ConnectionOpened;
+        public event Action<List<DomainEvent>> OnDomainEventsReceived;
         #endregion
 
-        public DomainNotificationClientService()
+        public DomainNotificationClientService(PushNotificationService pushNotificationService)
         {
             Disposing = () =>
             {
                 Connection?.DisposeAsync();
             };
+            this.pushNotificationService = pushNotificationService;
         }
 
         public async Task<HubConnection> CreateConnection(string token)
@@ -41,6 +48,7 @@ namespace DomainPushNotificationApi.Services
 
             //Map events
 
+            connection.On<List<DomainEvent>>(nameof(IDomainNotificationHub.ReceiveDomainEvents), (events) => OnDomainEventsReceived?.Invoke(events));
             connection.ServerTimeout = TimeSpan.FromSeconds(2);
             
 
@@ -95,17 +103,17 @@ namespace DomainPushNotificationApi.Services
                     {
                         Connection = await CreateConnection(token);
                     }
-                    await Connection.StartAsync();
-                    //Connection.StartAsync().ContinueWith(task => {
-                    //    if (task.Exception != null)
-                    //    {
-                    //        ConnectionClosed?.DynamicInvoke(task.Exception);
-                    //    }
-                    //    else
-                    //    {
-                    //        ConnectionOpened?.DynamicInvoke();
-                    //    }
-                    //});
+                    Connection.StartAsync().ContinueWith(task =>
+                    {
+                        if (task.Exception != null)
+                        {
+                            ConnectionClosed?.DynamicInvoke(task.Exception);
+                        }
+                        else
+                        {
+                            ConnectionOpened?.DynamicInvoke();
+                        }
+                    });
                     break; // yay! connected
                 }
                 catch (Exception e)

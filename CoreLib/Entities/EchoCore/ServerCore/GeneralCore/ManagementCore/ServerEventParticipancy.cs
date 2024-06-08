@@ -1,8 +1,9 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore
 {
-    public class ServerEventParticipancy
+    public class ServerEventParticipancy : IDomainEntity
     {
         public ulong ServerId { get; set; }
         public ulong EventId { get; set; }

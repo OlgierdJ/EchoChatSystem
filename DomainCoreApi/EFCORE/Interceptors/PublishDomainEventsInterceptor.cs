@@ -2,25 +2,24 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using CoreLib.Entities.Base;
-using CoreLib.Interfaces;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
-using Microsoft.AspNetCore.SignalR;
-using DomainCoreApi.Hubs;
-using CoreLib;
 using CoreLib.Hubs;
 using CoreLib.Entities.Enums;
+using DomainCoreApi.Services;
+using CoreLib.Interfaces.Contracts;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace DomainCoreApi.EFCORE.Interceptors
 {
+
     internal sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
     {
-        private readonly IHubContext<DomainPushNotificationHub, IDomainNotificationHub> _publisher;
-        private List<DomainEvent> DomainEvents { get; set; }
-
-        public PublishDomainEventsInterceptor(IHubContext<DomainPushNotificationHub, IDomainNotificationHub> publisher)
+        private readonly DomainEventService _domainEventService;
+        public PublishDomainEventsInterceptor(DomainEventService domainEventService)
         {
-            _publisher = publisher;
+            this._domainEventService = domainEventService;
         }
 
         //before
@@ -30,23 +29,27 @@ namespace DomainCoreApi.EFCORE.Interceptors
             {
                 await LoadDomainEventsAsync(eventData.Context);
             }
-            return await base.SavingChangesAsync(eventData, result, cancellationToken); //maybe works
+            return await base.SavingChangesAsync(eventData, result, cancellationToken);
         }
 
         private async Task LoadDomainEventsAsync(DbContext context)
         {
-            DomainEvents = context
+            var domainEvents = context
                 .ChangeTracker
-                .Entries<IEntity>()
+                .Entries<IDomainEntity>()
                 //find entries that are added, updated or deleted
                 .Where(entry => entry.State != EntityState.Unchanged && entry.State != EntityState.Detached)
                 .Select(entry => new DomainEvent()
                 {
-                    Type = entry.Entity.GetType().Name,
-                    Entity = entry.Entity,
+                    Type = entry.Entity.GetType().AssemblyQualifiedName,
+                    Entity = JsonSerializer.Serialize(entry.Entity, entry.Entity.GetType(), new JsonSerializerOptions()
+                    {
+                         ReferenceHandler=ReferenceHandler.Preserve 
+                    }),
                     Action = (EntityAction)Enum.Parse(typeof(EntityAction), entry.State.ToString())
                 })
                 .ToList();
+            await _domainEventService.LoadDomainEventsAsync(domainEvents);
         }
 
         //after
@@ -55,17 +58,15 @@ namespace DomainCoreApi.EFCORE.Interceptors
             int result,
             CancellationToken cancellationToken = default)
         {
-            if (eventData.Context is not null)
+            if (eventData.Context.Database.CurrentTransaction==null && //publish after savechanges in case of no "global transaction"
+                eventData.Context is not null)
             {
-                await PublishDomainEventsAsync();
+                await _domainEventService.PublishDomainEventsAsync();
             }
 
             return result;
         }
-        private async Task PublishDomainEventsAsync()
-        {
-            await _publisher.Clients.All.ReceiveDomainEvents(DomainEvents);
-        }
+        
     }
     
 }

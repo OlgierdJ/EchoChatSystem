@@ -1,8 +1,8 @@
-﻿using CoreLib.Entities.Base;
+﻿using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountNote : ITargetedNote<Account, ulong, Account, ulong>
+    public class AccountNote : ITargetedNote<Account, ulong, Account, ulong>, IDomainEntity
     {
         public ulong AuthorId { get; set; }
         public ulong SubjectId { get; set; }

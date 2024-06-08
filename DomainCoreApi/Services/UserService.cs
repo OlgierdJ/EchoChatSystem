@@ -6,6 +6,7 @@ using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.MessageCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.UserCore;
+using CoreLib.Entities.EchoCore;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
@@ -35,27 +36,28 @@ using System.Runtime.CompilerServices;
 
 namespace DomainCoreApi.Services
 {
-    public class UserService : BaseEntityService<User, ulong>, IUserService
+    public class UserService 
+        : /*BaseEntityService<User, ulong>, */
+        IUserService
     {
         private readonly EchoDbContext dbContext;
         private readonly IMapper _mapper;
         private readonly IPasswordHandler _pwdHandler;
         private readonly Handlers.TokenHandler _tokenHandler;
-        private readonly IPushNotificationService _notificationService;
+        //private readonly IPushNotificationService _notificationService;
         private readonly CreateUserHandler _createUserHandler = new();
         public UserService(EchoDbContext dbContext, 
             IMapper mapper,
-            IPushNotificationService notificationService, 
-            IUserRepository repository, 
+            //IPushNotificationService notificationService,
             IPasswordHandler pwdHandler, 
             Handlers.TokenHandler tokenHandler) 
-            : base(repository)
+            //: base(repository)
         {
             this.dbContext = dbContext;
             this._mapper = mapper;
             this._pwdHandler = pwdHandler;
             this._tokenHandler = tokenHandler;
-            this._notificationService = notificationService;
+            //this._notificationService = notificationService;
         }
 
         public async Task<bool> AcceptFriendRequestAsync(ulong senderId, ulong requestId)
@@ -121,12 +123,22 @@ namespace DomainCoreApi.Services
                 {
                     return false;
                 }
-                Account senderAccount = new()
+
+                var senderAcc = await dbContext.Set<Account>()
+                    .Include(e => e.Connections)
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(e => e.Id == senderId);
+                if (senderAcc == null)
                 {
-                    Id = senderId,
-                    Connections = new List<AccountConnection>()
-                };
-                //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                    return false;
+                }
+                var type = await dbContext.Set<ConnectionType>().FirstOrDefaultAsync(e=>e.Id == requestDTO.TypeId);
+                if (type==null)
+                {
+                    return false;
+                }
+                senderAcc.Connections ??= new List<AccountConnection>();
+
                 AccountConnection connection = new()
                 {
                     Name = requestDTO.Name,
@@ -135,8 +147,7 @@ namespace DomainCoreApi.Services
                     ConnectionId = requestDTO.TypeId,
                 };
 
-                dbContext.Set<Account>().Attach(senderAccount);
-                senderAccount.Connections.Add(connection);
+                senderAcc.Connections.Add(connection);
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -387,9 +398,10 @@ namespace DomainCoreApi.Services
                 await dbContext.Set<Account>().AddAsync(account);
 
                 await dbContext.SaveChangesAsync();
-                var role = new AccountRole() { RoleId = 1 };
-                dbContext.Attach<Account>(account);
-                account.Roles.Add(role);
+                //dbContext.Attach<Account>(account);
+                var role = new AccountRole() { RoleId = 1, AccountId=account.Id };
+                await dbContext.Set<AccountRole>().AddAsync(role);
+                //account.Roles.Add(role);
                 await dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
@@ -405,14 +417,14 @@ namespace DomainCoreApi.Services
         {
             try
             {
-                VoiceSettings voiceSettings = new()
-                {
-                    Id = senderId,
-                };
+                Account acc = await dbContext.Set<Account>().AsQueryable()
+                    .Include(e => e.Settings)
+                    .ThenInclude(e => e.VoiceSettings)
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(e => e.Id == senderId);
 
+                acc.Settings.VoiceSettings.DeafenSelf = true;
 
-                dbContext.Set<VoiceSettings>().Attach(voiceSettings);
-                voiceSettings.DeafenSelf = true;
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -499,14 +511,13 @@ namespace DomainCoreApi.Services
         {
             try
             {
-                VoiceSettings voiceSettings = new()
-                {
-                    Id = senderId,
-                };
-
-
-                dbContext.Set<VoiceSettings>().Attach(voiceSettings);
-                voiceSettings.MuteSelf = true;
+                Account acc = await dbContext.Set<Account>().AsQueryable()
+                    .Include(e => e.Settings)
+                    .ThenInclude(e=>e.VoiceSettings)
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(e => e.Id == senderId);
+               
+                acc.Settings.VoiceSettings.MuteSelf = true;
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -621,6 +632,7 @@ namespace DomainCoreApi.Services
                 }
 
                 var senderAcc = await dbContext.Set<Account>().AsQueryable()
+                    .Include(e=>e.Profile)
                     .Include(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants.Where(e => e.ParticipantId != senderId))
                     .Include(e => e.OutgoingFriendRequests).ThenInclude(e => e.ReceiverRequest)
                     .Include(e => e.IncomingFriendRequests).ThenInclude(e => e.SenderRequest)
@@ -868,7 +880,6 @@ namespace DomainCoreApi.Services
                 {
                     return false;
                 }
-                //dbContext.Set<User>().Attach(senderAcc.User); //dont need to attach
                 senderAcc.User.PhoneNumber = formattedPhone;
                 var res = await dbContext.SaveChangesAsync();
             }
@@ -883,21 +894,27 @@ namespace DomainCoreApi.Services
         {
             try
             {
-                if (requestDTO.Id == 0)
+                if (senderId == 0)
                 {
                     return false;
                 }
-                Account senderAccount = new()
+                var senderAcc = await dbContext.Set<Account>()
+                    .Include(e => e.ActivityStatus)
+                    .Include(e => e.CustomStatus)
+                    .FirstOrDefaultAsync(e => e.Id == senderId);
+                if (senderAcc == null)
                 {
-                    Id = senderId,
-                };
-                //var senderAcc = await dbContext.Set<Account>().AsQueryable().Include(e => e.User).FirstOrDefaultAsync(x => x.Id == senderId);
-                //if (senderAcc != null)
-                //{
-                dbContext.Set<Account>().Attach(senderAccount);
-                senderAccount.ActivityStatusId = requestDTO.Id;
+                    return false;
+                }
+                var status = await dbContext.Set<AccountActivityStatus>()
+                    .FirstOrDefaultAsync(e => e.Id == requestDTO.Id);
+                if (status == null)
+                {
+                    return false;
+                }
+                
+                senderAcc.ActivityStatusId = requestDTO.Id;
                 var res = await dbContext.SaveChangesAsync();
-                //}
             }
             catch (Exception e)
             {
@@ -1046,6 +1063,7 @@ namespace DomainCoreApi.Services
                 }
 
                 var acc = await dbContext.Set<Account>().AsQueryable()
+                    .Include(e => e.Profile)
                     .Include(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants.Where(e => e.ParticipantId != senderId))
                     .Include(e => e.OutgoingFriendRequests).ThenInclude(e => e.ReceiverRequest)
                     .Include(e => e.IncomingFriendRequests).ThenInclude(e => e.SenderRequest)
@@ -1419,15 +1437,14 @@ namespace DomainCoreApi.Services
         {
             try
             {
-                VoiceSettings voiceSettings = new()
-                {
-                    Id = senderId,
-                    DeafenSelf = true, //must be different value than new value
-                };
+                Account acc = await dbContext.Set<Account>().AsQueryable()
+                    .Include(e => e.Settings)
+                    .ThenInclude(e => e.VoiceSettings)
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(e => e.Id == senderId);
 
+                acc.Settings.VoiceSettings.DeafenSelf = false;
 
-                dbContext.Set<VoiceSettings>().Attach(voiceSettings);
-                voiceSettings.DeafenSelf = false;
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -1441,15 +1458,14 @@ namespace DomainCoreApi.Services
         {
             try
             {
-                VoiceSettings voiceSettings = new()
-                {
-                    Id = senderId,
-                    MuteSelf = true,
-                };
+                Account acc = await dbContext.Set<Account>().AsQueryable()
+                    .Include(e => e.Settings)
+                    .ThenInclude(e => e.VoiceSettings)
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(e => e.Id == senderId);
 
+                acc.Settings.VoiceSettings.MuteSelf = false;
 
-                dbContext.Set<VoiceSettings>().Attach(voiceSettings);
-                voiceSettings.MuteSelf = false;
                 var res = await dbContext.SaveChangesAsync();
             }
             catch (Exception e)

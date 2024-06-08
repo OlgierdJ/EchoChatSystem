@@ -1,4 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
+﻿using CoreLib.DTO.Contracts;
 using CoreLib.DTO.EchoCore.MiscCore;
 using CoreLib.DTO.EchoCore.MiscCore.ModerationCore;
 using CoreLib.DTO.EchoCore.ServerCore;

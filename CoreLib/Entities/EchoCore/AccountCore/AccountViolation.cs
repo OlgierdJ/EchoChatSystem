@@ -2,10 +2,11 @@
 using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
 using CoreLib.Entities.EchoCore.ReportCore.Message;
 using CoreLib.Entities.EchoCore.ReportCore.Profile;
+using CoreLib.Interfaces.Contracts;
 
 namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountViolation : BaseEntity<ulong>,IViolation<ulong, Account, ulong, Account, ulong, AccountViolationAppeal>
+    public class AccountViolation : BaseEntity<ulong>, IViolation<ulong, Account, ulong, Account, ulong, AccountViolationAppeal>
     {
         public ICollection<CustomStatusReport> ConsumedCustomStatusReports { get; set; }
         public ICollection<MessageReport> ConsumedMessageReports { get; set; }

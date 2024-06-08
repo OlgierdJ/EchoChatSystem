@@ -1,20 +1,8 @@
-﻿using CoreLib.DTO.EchoCore.UserCore;
+﻿using CoreLib.DTO.Contracts;
+using CoreLib.DTO.EchoCore.UserCore;
 
 namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    public interface IBan
-    {
-        DateTime? ExpirationTime { get; set; }
-        ulong Id { get; set; }
-        string? Reason { get; set; }
-        
-    }
-
-    public interface IBan<TUser> : IBan
-    {
-        TUser User { get; set; }
-    }
-
     public class BanDTO : IBan, IBan<UserMinimalDTO>
     //: BaseEntity<ulong>
     {

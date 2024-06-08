@@ -1,11 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
 {
-    
-    public interface IHierarchalRole : IRoleMinimal
-    {
-        int Importance { get; set; }
-        bool IsAdmin { get; set; }
-    }
 
     public class HierarchalRoleMinimalDTO : IRoleMinimal, IHierarchalRole, ICustomizableRole
     {

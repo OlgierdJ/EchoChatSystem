@@ -25,13 +25,13 @@ namespace DomainCoreApi.Services
     {
         private readonly EchoDbContext context;
         private readonly IMapper mapper;
-        private readonly IPushNotificationService notificationService;
+        //private readonly IPushNotificationService notificationService;
 
-        public ChatService(EchoDbContext context, IMapper mapper, IPushNotificationService notificationService)
+        public ChatService(EchoDbContext context, IMapper mapper /*IPushNotificationService notificationService*/)
         {
             this.context = context;
             this.mapper = mapper;
-            this.notificationService = notificationService;
+            //this.notificationService = notificationService;
         }
         /// <summary>
         /// attempts to add a user as a participant to a chat (must be friends)

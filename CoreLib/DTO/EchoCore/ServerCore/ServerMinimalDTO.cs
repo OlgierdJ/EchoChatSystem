@@ -1,11 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.ServerCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.ServerCore
 {
-    public interface IServerMinimal
-    {
-        ulong Id { get; set; }
-        string ImageIconURL { get; set; }
-        string Name { get; set; }
-    }
 
     public class ServerMinimalDTO : IServerMinimal
     {

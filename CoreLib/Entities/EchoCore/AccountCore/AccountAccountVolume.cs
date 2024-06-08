@@ -1,6 +1,8 @@
-﻿namespace CoreLib.Entities.EchoCore.AccountCore
+﻿using CoreLib.Interfaces.Contracts;
+
+namespace CoreLib.Entities.EchoCore.AccountCore
 {
-    public class AccountAccountVolume
+    public class AccountAccountVolume : IDomainEntity
     {
         public ulong OwnerId { get; set; }
         public ulong SubjectId { get; set; }

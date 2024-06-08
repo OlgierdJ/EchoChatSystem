@@ -1,6 +1,8 @@
-﻿namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
+﻿using CoreLib.Interfaces.Contracts;
+
+namespace CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore
 {
-    public class ServerRolePermission
+    public class ServerRolePermission : IDomainEntity
     //used for mapping global permissions to a role.
     {
         //pk is combination of role and permission

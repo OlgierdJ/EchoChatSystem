@@ -1,10 +1,7 @@
-﻿namespace CoreLib.DTO.EchoCore.UserCore
+﻿using CoreLib.DTO.Contracts;
+
+namespace CoreLib.DTO.EchoCore.UserCore
 {
-    public interface IUser
-    {
-        ActiveActivityStatusDTO ActiveStatus { get; set; }
-        string Name { get; set; }
-    }
 
     public class UserDTO : IUserMinimal, IUser
         //this is when a friend is displayed in the friendlist or when you are displayed beside mute and deafen
