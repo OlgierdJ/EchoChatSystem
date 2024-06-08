@@ -45,6 +45,8 @@ namespace CoreLib.MapperProfiles
                opts => opts.MapFrom(src => src.Participant.Profile.AvatarFileURL))
                .ForMember(dest => dest.IsOwner, 
                opts => opts.MapFrom(src => src.IsOwner)) // map aftermap based on chat owner id.
+               //.ForMember(dest => dest.IsMuted,
+               //opts => opts.MapFrom(src => src.Participant.MutedVoices)) 
                .ForMember(dest => dest.Id, 
                opts => opts.MapFrom(src => src.ParticipantId))
                .ForMember(dest => dest.NameColour, 

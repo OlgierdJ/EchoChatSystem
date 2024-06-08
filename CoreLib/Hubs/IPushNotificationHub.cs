@@ -1,5 +1,6 @@
 ﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
 using CoreLib.DTO.EchoCore.UserCore;
+using CoreLib.DTO.EchoCore.UserCore.SettingsCore;
 using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
@@ -22,6 +23,9 @@ namespace CoreLib.Hubs
     
     public interface IPushNotificationHub
     {
+        Task ReceiveInviteDTOCreateMessage(InviteDTO entity);
+        Task ReceiveInviteDTODeleteMessage(InviteDTO entity);
+
         Task ReceiveChatMinimalDTOCreateMessage(ChatMinimalDTO entity);
         Task ReceiveChatMinimalDTOUpdateMessage(ChatMinimalDTO entity);
         Task ReceiveChatMinimalDTODeleteMessage(ChatMinimalDTO entity);
@@ -42,6 +46,9 @@ namespace CoreLib.Hubs
         Task ReceiveUserMinimalDTOUpdateMessage(UserMinimalDTO entity);
         Task ReceiveUserMinimalDTODeleteMessage(UserMinimalDTO entity);
 
+        Task ReceiveFriendRequestDTOCreateMessage(FriendRequestDTO entity);
+        Task ReceiveFriendRequestDTODeleteMessage(FriendRequestDTO entity);
+
         Task ReceiveUserProfileDTOCreateMessage(UserProfileDTO entity);
         Task ReceiveUserProfileDTOUpdateMessage(UserProfileDTO entity);
         Task ReceiveUserProfileDTODeleteMessage(UserProfileDTO entity);
@@ -53,7 +60,13 @@ namespace CoreLib.Hubs
         Task ReceiveUserDTOCreateMessage(UserDTO entity);
         Task ReceiveUserDTOUpdateMessage(UserDTO entity);
         Task ReceiveUserDTODeleteMessage(UserDTO entity);
-        Task NewFriend(UserDTO userDTO);
-        Task RemoveFriend(UserDTO userDTO);
+
+        Task ReceiveVoiceSettingsDTOUpdateMessage(VoiceSettingsDTO entity);
+
+        Task NewFriend(UserDTO entity);
+        Task RemoveFriend(UserDTO entity);
+
+        Task JoinChat(ChatDTO entity);
+        Task LeaveChat(ChatDTO entity);
     }
 }
