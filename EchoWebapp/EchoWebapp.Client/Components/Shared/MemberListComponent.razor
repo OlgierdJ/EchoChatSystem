@@ -60,16 +60,27 @@
     [Parameter]
     public List<MemberDTO> Members { get; set; }
 
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override Task OnParametersSetAsync()
     {
-        if (firstRender)
-        {
-            Online = Members.Where(e => e.ActiveStatus.Id != 4 && e.ActiveStatus.Id != 5).ToList();
-            Offline = Members.Where(e => e.ActiveStatus.Id == 4 || e.ActiveStatus.Id == 5).ToList();
-            StateHasChanged();
-        }
-
-        await base.OnAfterRenderAsync(firstRender);
+        Online = Members.Where(e => e.ActiveStatus.Id != 4 && e.ActiveStatus.Id != 5).ToList();
+        Offline = Members.Where(e => e.ActiveStatus.Id == 4 || e.ActiveStatus.Id == 5).ToList();
+        Console.WriteLine("TEEST");
+        StateHasChanged();
+        return base.OnParametersSetAsync();
     }
+
+    // protected override Task OnInitializedAsync()
+    // {
+
+    //     return base.OnInitializedAsync();
+    // }
+
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //     }
+
+    //     await base.OnAfterRenderAsync(firstRender);
+    // }
 }
