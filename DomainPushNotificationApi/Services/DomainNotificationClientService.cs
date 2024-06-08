@@ -17,6 +17,7 @@ namespace DomainPushNotificationApi.Services
         #region list of Action the hub can do
         public event Action<Exception> ConnectionClosed;
         public event Action<Exception> OnConnectedAsync;
+        public event Action ConnectionOpened;
         public event Action<List<DomainEvent>> OnDomainEventsReceived;
         #endregion
 
@@ -102,17 +103,17 @@ namespace DomainPushNotificationApi.Services
                     {
                         Connection = await CreateConnection(token);
                     }
-                    await Connection.StartAsync();
-                    //Connection.StartAsync().ContinueWith(task => {
-                    //    if (task.Exception != null)
-                    //    {
-                    //        ConnectionClosed?.DynamicInvoke(task.Exception);
-                    //    }
-                    //    else
-                    //    {
-                    //        ConnectionOpened?.DynamicInvoke();
-                    //    }
-                    //});
+                    Connection.StartAsync().ContinueWith(task =>
+                    {
+                        if (task.Exception != null)
+                        {
+                            ConnectionClosed?.DynamicInvoke(task.Exception);
+                        }
+                        else
+                        {
+                            ConnectionOpened?.DynamicInvoke();
+                        }
+                    });
                     break; // yay! connected
                 }
                 catch (Exception e)

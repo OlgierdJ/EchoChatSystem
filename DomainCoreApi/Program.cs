@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,7 +85,11 @@ builder.Services.AddTransient<DomainCoreApi.Handlers.TokenHandler>();
 builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
 builder.Services.AddTransient(typeof(IChatService), typeof(ChatService));
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR().AddJsonProtocol(opts => opts.PayloadSerializerOptions = new JsonSerializerOptions() 
+{
+    ReferenceHandler = ReferenceHandler.Preserve,
+    
+});
 
 builder.Services.AddTransient(typeof(IPasswordHandler), typeof(Passwordhandler));
 

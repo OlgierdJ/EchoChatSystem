@@ -289,13 +289,13 @@ namespace DomainPushNotificationApi.Services
                 await _hubContext.Clients.Client(volume.OwnerId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(volume));
             });
 
-            _hubManager.Add((nameof(AccountNote), EntityAction.Modified), async (entity) =>
+            _hubManager.Add((nameof(AccountAccountVolume), EntityAction.Modified), async (entity) =>
             {
                 AccountAccountVolume volume = entity as AccountAccountVolume;
                 await _hubContext.Clients.Client(volume.OwnerId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(volume));
             });
 
-            _hubManager.Add((nameof(AccountNote), EntityAction.Deleted), async (entity) =>
+            _hubManager.Add((nameof(AccountAccountVolume), EntityAction.Deleted), async (entity) =>
             {
                 AccountAccountVolume volume = entity as AccountAccountVolume;
                 await _hubContext.Clients.Client(volume.OwnerId.ToString()).ReceiveMemberDTOUpdateMessage(mapper.Map<MemberDTO>(volume));

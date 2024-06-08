@@ -4,6 +4,7 @@ using DomainPushNotificationApi.Hubs;
 using DomainPushNotificationApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 
@@ -19,8 +20,15 @@ builder.Services.AddAutoMapper(opts =>
 {
     opts.AddProfile<EchoCoreCommonMappings>();
 });
-builder.Services.AddScoped<PushNotificationService>();
-builder.Services.AddScoped<DomainNotificationClientService>();
+builder.Services.AddSingleton<PushNotificationService>();
+builder.Services.AddSingleton<DomainNotificationClientService>();
+builder.Services.AddHttpClient("DomainClient", e => 
+{
+    e.BaseAddress = new Uri("https://localhost:7269/api");
+    e.DefaultRequestHeaders.Accept.Clear();
+    e.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+});
+builder.Services.AddHostedService<StartupBackgroundService>();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(x =>
 {
@@ -61,8 +69,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
 }
 
 app.UseCors("CorsPolicy");

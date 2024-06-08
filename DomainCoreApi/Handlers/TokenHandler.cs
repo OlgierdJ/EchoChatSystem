@@ -92,10 +92,5 @@ namespace DomainCoreApi.Handlers
             var token = CreateToken(claims, tokenLifeTime, options.Issuer, options.Audiences[0], options.Key);
             return token;
         }
-
-        //Token fra User til Api done
-        // p til API maybe done
-        // User til p kommer fra Api
-
     }
 }
