@@ -177,7 +177,7 @@
             }
             else
             {
-                <ChatUserProfileComponent Visible="DisplaySidePanel" Member="@Content?.Participants?.Where(e => e.Id != self.Id).First()" />
+                <ChatUserProfileComponent Visible="DisplaySidePanel" OwnId="self.Id" Member="@Content?.Participants?.Where(e => e.Id != self.Id).First()" />
             }
 
         </div>

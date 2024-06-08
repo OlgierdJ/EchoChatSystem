@@ -1,6 +1,10 @@
 ﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
+@using CoreLib.DTO.RequestCore.RelationCore
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.UserCore
+@inject EchoAPI _echoAPI
+@inject SignalRClientService _client
+@inject ILocalStorageService LocalStorage
 @*
     Layout for the user profile section that exists within the chatviewcomponent if it is a private chat between two users.
 
@@ -12,13 +16,13 @@
 
 <div style="display: @(Visible ? "block" : "none");">
     <MudPaper Width="20vw" Height="92vh" Class="ma-0 pa-0" Square Style="background: var(--mud-palette-dark);" Elevation="0">
-        @if (Member != null)
+         @if (Member != null)
         {
             <MudPaper Style="@($"background: {(Member.Profile.BannerColour != null ? Member.Profile.BannerColour : "#5C23D9")};")" Height="150px">
                 <div>
                     <MudAvatar Style="height:80px; width:80px; position:relative; top:110px; left:15px; border:solid 2px var(--mud-palette-dark);">
-                    <MudImage Src="@Member.ImageIconURL" />
-                </MudAvatar>
+                        <MudImage Src="@Member.ImageIconURL" />
+                    </MudAvatar>
                 </div>
             </MudPaper>
             <MudPaper Style="background: var(--mud-palette-dark);" Height="50px" />
@@ -31,17 +35,19 @@
                 <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
                     <MudText Typo="Typo.button" style="margin-top: 10px;">Echo Member since</MudText>
                     <MudText Typo="Typo.body1">@DateTime.Now.AddDays(-13).AddMinutes(23).ToString("dd MMMM yyyy")</MudText>  <!-- CreationDate is missing? -->
-                </MudPaper>
-                <MudDivider />
-                <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
-                    <MudText Typo="Typo.button" style="margin-top: 10px;">Note</MudText>
-                    @if (Editable)
+                    </MudPaper>
+                    <MudDivider />
+                    <MudPaper Class="my-2" Elevation=0 Style="@($"background:{Colors.Shades.Transparent}")">
+                        <MudText Typo="Typo.button" style="margin-top: 10px;">Note</MudText>
+                        @if (Editable)
                     {
-                        <MudTextField FullWidth @bind-Value="Member.Profile.Note" @onfocusout="(()=> Editable = false)" Margin="Margin.Dense" Variant="Variant.Filled" MaxLines="4" Placeholder="@(Member.Profile.Note != "" ? Member.Profile.Note : "Click to add a note")" Class="px-5 py-2" Immediate="true" MaxLength="255" TextUpdateSuppression="false" Style="background: var(--mud-palette-dark);opacity:1;" />
+                        <MudTextField FullWidth T="string" Text="@Member.Profile.Note" @onfocusout="(()=> Editable = false)" Margin="Margin.Dense" Variant="Variant.Filled" 
+                            MaxLines="4" Placeholder="@(Member.Profile.Note != "" ? Member.Profile.Note : "Click to add a note")" TextChanged="NoteChangedAsync"
+                            Class="px-5 py-2" Immediate="false" MaxLength="255" TextUpdateSuppression="false" Style="background: var(--mud-palette-dark);opacity:1;" />
                     }
                     else
                     {
-                        <MudText Typo="Typo.body1" @onclick="(()=> Editable = true)">@Member.Profile.Note</MudText>
+                        <MudText Typo="Typo.body1" @onclick="(()=> Editable = true)">@(String.IsNullOrEmpty(Member.Profile.Note) ? "Click here to add note" : Member.Profile.Note)</MudText>
                     }
                 </MudPaper>
             </div>
@@ -55,5 +61,25 @@
     public bool Editable { get; set; } = false;
 
     [Parameter]
+    public ulong OwnId { get; set; }
+
+    [Parameter]
     public MemberDTO Member { get; set; }
+
+    public async void NoteChangedAsync()
+    {
+        var token = await LocalStorage.GetItemAsStringAsync("Token");
+        if (!string.IsNullOrWhiteSpace(token))
+        {
+
+            var note = new SetNoteUserRequestDTO() { Note = Member.Profile.Note };
+            var result = await _echoAPI.SetNoteAsync(token, OwnId, note);
+            if (result)
+            {
+                Console.WriteLine("Note changed");
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+    }
 }
+
