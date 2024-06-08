@@ -11,7 +11,7 @@
 *@
 
 <div style="display: @(Visible ? "block" : "none");">
-    <MudPaper Width="20vw" Height="90vh" Class="ma-0 pa-0" Square Style="background: var(--mud-palette-dark);" Elevation="0">
+    <MudPaper Width="20vw" Height="92vh" Class="ma-0 pa-0" Square Style="background: var(--mud-palette-dark);" Elevation="0">
         @if (Member != null)
         {
             <MudPaper Style="@($"background: {(Member.Profile.BannerColour != null ? Member.Profile.BannerColour : "#5C23D9")};")" Height="150px">

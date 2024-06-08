@@ -11,17 +11,24 @@
 *@
 @if (Member != null)
 {
-    <MudPaper Width="20vw" Square Style="background: var(--mud-palette-dark);">
-         <h2>@Member.DisplayName</h2>
-        <h4>@Member.Profile.User.Name.ToLower()</h4>
-        <MudDivider />
-        Echo Member since
-        @* <h2>@Member.TimeCreated</h2> *@ <!-- Removed? -->
-        Note?
-    </MudPaper>
+    <MudPaper Class="pl-2" Width="20vw" Elevation="0" Square Style=@($"background:{Colors.Shades.Transparent}")>
+
+        @if (Member.ActiveStatus.Id != 4 && Member.ActiveStatus.Id != 5)
+        {
+            <MudBadge Color="@stringToColor.ConvertStringToColor(Member.ActiveStatus.IconColor)" Bordered Overlap="true" Origin="Origin.BottomRight">
+                 <MudImage Src="@Member.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+             </MudBadge>
+        }
+        else
+        {
+            <MudImage Src="@Member.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />
+        }
+        <MudText Class="pl-3" Typo="Typo.caption">@Member.DisplayName</MudText>
+        </MudPaper>
 }
 
 @code {
+    public readonly StringToColor stringToColor = new();
 
     [Parameter]
     public MemberDTO Member { get; set; }

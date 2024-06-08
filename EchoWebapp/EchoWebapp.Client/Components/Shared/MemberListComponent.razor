@@ -8,12 +8,43 @@
     It should group members according to their role.
 *@
 <div style="display: @(Visible ? "block" : "none");">
-    @if (Members.Count != 0){
-        <MudPaper Class="overflow-auto" Elevation="0" Style=@($"background:{Colors.Shades.Transparent}") >
-            @foreach(MemberDTO m in Members)
+    @if (Members.Count != 0)
+    {
+        <MudPaper Class="overflow-auto d-flex align-content-start flex-wrap flex-grow-1 gap-4" Width="20vw" Height="92vh" Elevation="0" Square Style="background: var(--mud-palette-dark);">
+             @if (Members.Where(e => e.ActiveStatus.Id != 4 && e.ActiveStatus.Id != 5).Count() > 0)
             {
-                <h2>MEMBER TEST</h2>
-                <MemberComponent Member="m"/>
+                <MudPaper Elevation="0" Style=@($"background:{Colors.Shades.Transparent}")>
+                    <MudText Class="pl-2" Typo="Typo.button">ONLINE - @(Members.Where(e => e.ActiveStatus.Id != 4 && e.ActiveStatus.Id != 5).Count())</MudText>
+                    @if (Online != null)
+                    {
+                        @foreach (MemberDTO m in Online)
+                        {
+                            <MudList>
+                                <MudListItem Class="cursor-pointer hoverable ma-0 pa-0">
+                                    <MemberComponent Member="m"/>
+                                </MudListItem>
+                            </MudList>
+                        }
+                    }
+                </MudPaper>
+            }
+
+            @if (Members.Where(e => e.ActiveStatus.Id == 4 || e.ActiveStatus.Id == 5).Count() > 0)
+            {
+                <MudPaper Elevation="0" Style=@($"background:{Colors.Shades.Transparent}")>
+                    <MudText Class="pl-2" Typo="Typo.button">OFFLINE - @(Members.Where(e => e.ActiveStatus.Id == 4 || e.ActiveStatus.Id == 5).Count())</MudText>
+                    @if (Offline != null)
+                    {
+                        @foreach (MemberDTO m in Offline)
+                        {
+                            <MudList>
+                                <MudListItem Class="cursor-pointer hoverable ma-0 pa-0">
+                                    <MemberComponent Member="m" />
+                                </MudListItem>
+                            </MudList>
+                        }
+                    }
+                </MudPaper>
             }
         </MudPaper>
     }
@@ -23,7 +54,22 @@
 @code {
     [Parameter]
     public bool Visible { get; set; } = true;
+    public List<MemberDTO> Offline { get; set; }
+    public List<MemberDTO> Online { get; set; }
 
     [Parameter]
     public List<MemberDTO> Members { get; set; }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Online = Members.Where(e => e.ActiveStatus.Id != 4 && e.ActiveStatus.Id != 5).ToList();
+            Offline = Members.Where(e => e.ActiveStatus.Id == 4 || e.ActiveStatus.Id == 5).ToList();
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
 }
