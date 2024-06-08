@@ -13,8 +13,8 @@ public sealed class FollowerService
     }
 
     public async Task<Result> StartFollowingAsync(
-        User user,
-        User followed,
+        Usera user,
+        Usera followed,
         DateTime utcNow,
         CancellationToken cancellationToken)
     {

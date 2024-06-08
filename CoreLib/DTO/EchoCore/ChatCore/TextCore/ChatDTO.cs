@@ -12,6 +12,7 @@ namespace CoreLib.DTO.EchoCore.ChatCore.TextCore
         public int OrderWeight { get; set; }
         public ulong? LastReadMessageId { get; set; } //from messagetracker used to determine start point when entering chat, which messages to load by pagination. (update locally after first retrieval)
         public bool Muted { get; set; }
+        public bool Hidden { get; set; }
         public string? IconUrl { get; set; }
         //public int OrderWeight { get; set; }
         //public DateTime TimeLastInteracted { get; set; }

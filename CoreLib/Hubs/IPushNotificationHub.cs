@@ -12,6 +12,7 @@ using CoreLib.Entities.EchoCore.ReportCore.CustomStatus;
 using CoreLib.Entities.EchoCore.ReportCore.Feedback;
 using CoreLib.Entities.EchoCore.ReportCore.Message;
 using CoreLib.Entities.EchoCore.ReportCore.Profile;
+using CoreLib.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,53 +21,38 @@ using System.Threading.Tasks;
 
 namespace CoreLib.Hubs
 {
-    
+
     public interface IPushNotificationHub
     {
-        Task ReceiveInviteDTOCreateMessage(InviteDTO entity);
-        Task ReceiveInviteDTODeleteMessage(InviteDTO entity);
-
-        Task ReceiveChatMinimalDTOCreateMessage(ChatMinimalDTO entity);
-        Task ReceiveChatMinimalDTOUpdateMessage(ChatMinimalDTO entity);
-        Task ReceiveChatMinimalDTODeleteMessage(ChatMinimalDTO entity);
-
-        Task ReceiveMessageDTOCreateMessage(MessageDTO entity);
-        Task ReceiveMessageDTOUpdateMessage(MessageDTO entity);
-        Task ReceiveMessageDTODeleteMessage(MessageDTO entity);
-
-        Task ReceiveChatDTOCreateMessage(ChatDTO entity);
-        Task ReceiveChatDTOUpdateMessage(ChatDTO entity);
-        Task ReceiveChatDTODeleteMessage(ChatDTO entity);
-
-        Task ReceiveMemberDTOCreateMessage(MemberDTO entity);
-        Task ReceiveMemberDTOUpdateMessage(MemberDTO entity);
-        Task ReceiveMemberDTODeleteMessage(MemberDTO entity);
-
-        Task ReceiveUserMinimalDTOCreateMessage(UserMinimalDTO entity);
-        Task ReceiveUserMinimalDTOUpdateMessage(UserMinimalDTO entity);
-        Task ReceiveUserMinimalDTODeleteMessage(UserMinimalDTO entity);
-
-        Task ReceiveFriendRequestDTOCreateMessage(FriendRequestDTO entity);
-        Task ReceiveFriendRequestDTODeleteMessage(FriendRequestDTO entity);
-
-        Task ReceiveUserProfileDTOCreateMessage(UserProfileDTO entity);
-        Task ReceiveUserProfileDTOUpdateMessage(UserProfileDTO entity);
-        Task ReceiveUserProfileDTODeleteMessage(UserProfileDTO entity);
-
-        Task ReceiveUserFullDTOCreateMessage(UserFullDTO entity);
-        Task ReceiveUserFullDTOUpdateMessage(UserFullDTO entity);
-        Task ReceiveUserFullDTODeleteMessage(UserFullDTO entity);
-
-        Task ReceiveUserDTOCreateMessage(UserDTO entity);
-        Task ReceiveUserDTOUpdateMessage(UserDTO entity);
-        Task ReceiveUserDTODeleteMessage(UserDTO entity);
-
-        Task ReceiveVoiceSettingsDTOUpdateMessage(VoiceSettingsDTO entity);
-
-        Task NewFriend(UserDTO entity);
-        Task RemoveFriend(UserDTO entity);
-
-        Task JoinChat(ChatDTO entity);
-        Task LeaveChat(ChatDTO entity);
+        Task BlockedUserAdded(UserMinimalDTO userMinimalDTO);
+        Task BlockedUserRemoved(ulong accountId);
+        Task ChatHiddenStateChanged(ulong chatId, bool hidden);
+        Task ChatInviteAdded(ulong chatId, InviteMinimalDTO inviteDTO);
+        Task ChatInviteRemoved(ulong chatId, string inviteCode);
+        Task ChatJoined(ChatDTO chatDTO);
+        Task ChatMemberJoined(ulong chatId, MemberDTO memberDTO);
+        Task ChatMemberLeft(ulong chatId, ulong accountId);
+        Task ChatMemberOwnershipChanged(ulong accountId, bool isOwner);
+        Task ChatMessageAdded(ulong chatId, MessageDTO messageDTO);
+        Task ChatMessageRemoved(ulong chatId, ulong messageId);
+        Task ChatMessageUpdated(ulong chatId, ulong messageId, string content, DateTime? timeEdited);
+        Task ChatMutedStateChanged(ulong chatId, bool state);
+        Task ChatUpdated(ulong chatId, string name, string? iconUrl);
+        Task ExternalUserNameChanged(ulong accountId, string name);
+        Task ExternalUserNoteChanged(ulong accountId, string note);
+        Task ExternalUserVolumeChanged(ulong accountId, byte volume);
+        Task ForceLogout();
+        Task FriendAdded(UserDTO userDTO);
+        Task FriendRemoved(ulong accountId);
+        Task FriendRequestAdded(FriendRequestDTO friendRequestDTO);
+        Task FriendRequestRemoved(RequestType type, ulong requestId);
+        Task ChatLastReadMessageChanged(ulong chatId, ulong? messageId);
+        Task LeftChat(ulong chatId);
+        Task SensitiveDataUpdated(string email, string? phoneNumber);
+        Task UserActivityStatusChanged(ulong accountId, byte activityStatusId, string? customMessage);
+        Task UserMutedStateChanged(ulong accountId, bool state);
+        Task UserProfileChanged(ulong accountId, string displayName, string avatarFileURL, string? about, string bannerColor);
+        Task UserUnmuted(ulong accountId);
+        Task VoiceSettingsUpdated(VoiceSettingsDTO voiceSettingsDTO);
     }
 }
