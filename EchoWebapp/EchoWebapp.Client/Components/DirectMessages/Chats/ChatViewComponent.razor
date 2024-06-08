@@ -184,26 +184,11 @@
 
     </div>
 
-    <!-- Move to Component at some point -->
     <MudOverlay Visible="DisplayAddFriends" DarkBackground="true" ZIndex="2">
         <MudPaper Width="20vw" Height="30vh" Style="background: var(--mud-palette-dark);" Class="d-flex align-content-center justify-center flex-column  flex-grow-1 gap-12" Elevation="2">
             <MudButton Style="position: absolute; top: 15px; right: 15px; height: 25px;" Color="Color.Error" Variant="Variant.Filled" OnClick="ToggleAddFriends">x</MudButton>
             <MudText Typo="Typo.h5" Align="Align.Center" Style="padding-top: 15px;">SELECT FRIENDS</MudText>
 
-            @* <MudTextField @bind-Value="searchFriendText" Margin="Margin.Dense" Variant="Variant.Outlined" HelperText="Type the username of a friend"
-                          Class="align-self-center justify-center px-5 py-2" MaxLength="32" MaxLines="1"
-                          Immediate="true" TextUpdateSuppression="false" Style="background: var(--mud-palette-darken);opacity:1;" FullWidth TextChanged="FilterFriends" /> *@
-@*             <MudList>
-                @foreach (UserDTO f in friends)
-                {
-                    <MudListItem Class="cursor-pointer hoverable ma-0 pa-0">
-                        <MudAvatar>
-                            <MudImage Src="@f.ImageIconURL" />
-                        </MudAvatar>
-                        <MudText Class="pl-3" Typo="Typo.caption">@f.DisplayName</MudText>
-                    </MudListItem>
-                }
-            </MudList> *@
              <MudSelect T="UserDTO" Label="Friends" MultiSelection="true" SelectedValues="@selectedFriends" SelectedValuesChanged="SelectedValuesChanged"
                        AnchorOrigin="Origin.BottomCenter" PopoverClass="fixed">
                 

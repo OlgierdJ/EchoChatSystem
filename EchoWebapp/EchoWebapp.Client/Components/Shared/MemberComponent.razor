@@ -13,7 +13,7 @@
 {
     <MudPaper Class="pl-2" Width="20vw" Elevation="0" Square Style=@($"background:{Colors.Shades.Transparent}")>
 
-        @if (Member.ActiveStatus.Id != 4 && Member.ActiveStatus.Id != 5)
+        @if (Member.GroupingName == "ONLINE")
         {
             <MudBadge Color="@stringToColor.ConvertStringToColor(Member.ActiveStatus.IconColor)" Bordered Overlap="true" Origin="Origin.BottomRight">
                  <MudImage Src="@Member.ImageIconURL" Height="32" Width="32" ObjectFit="ObjectFit.Cover" Class="rounded-circle mt-1 ml-1" />

@@ -1,5 +1,7 @@
 ﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
 @using CoreLib.Entities.EchoCore.AccountCore
+@inject IJSRuntime _js
+
 @*
     Layout for a memberlist that exists within a chatviewcomponent and a textchannelviewcomponent.
 
@@ -14,14 +16,14 @@
              @if (Members.Where(e => e.ActiveStatus.Id != 4 && e.ActiveStatus.Id != 5).Count() > 0)
             {
                 <MudPaper Elevation="0" Style=@($"background:{Colors.Shades.Transparent}")>
-                    <MudText Class="pl-2" Typo="Typo.button">ONLINE - @(Members.Where(e => e.ActiveStatus.Id != 4 && e.ActiveStatus.Id != 5).Count())</MudText>
+                    <MudText Class="pl-2" Typo="Typo.button">ONLINE - @(Members.Where(e => e.GroupingName == "ONLINE").Count())</MudText>
                     @if (Online != null)
                     {
                         @foreach (MemberDTO m in Online)
                         {
                             <MudList>
                                 <MudListItem Class="cursor-pointer hoverable ma-0 pa-0">
-                                    <MemberComponent Member="m"/>
+                                    <MemberComponent Member="m" />
                                 </MudListItem>
                             </MudList>
                         }
@@ -32,7 +34,7 @@
             @if (Members.Where(e => e.ActiveStatus.Id == 4 || e.ActiveStatus.Id == 5).Count() > 0)
             {
                 <MudPaper Elevation="0" Style=@($"background:{Colors.Shades.Transparent}")>
-                    <MudText Class="pl-2" Typo="Typo.button">OFFLINE - @(Members.Where(e => e.ActiveStatus.Id == 4 || e.ActiveStatus.Id == 5).Count())</MudText>
+                    <MudText Class="pl-2" Typo="Typo.button">OFFLINE - @(Members.Where(e => e.GroupingName == "OFFLINE").Count())</MudText>
                     @if (Offline != null)
                     {
                         @foreach (MemberDTO m in Offline)
@@ -62,9 +64,10 @@
 
     protected override Task OnParametersSetAsync()
     {
-        Online = Members.Where(e => e.ActiveStatus.Id != 4 && e.ActiveStatus.Id != 5).ToList();
-        Offline = Members.Where(e => e.ActiveStatus.Id == 4 || e.ActiveStatus.Id == 5).ToList();
-        Console.WriteLine("TEEST");
+        Online = Members.Where(e => e.GroupingName == "ONLINE").ToList();
+        Offline = Members.Where(e => e.GroupingName == "OFFLINE").ToList();
+
+        _js.InvokeVoidAsync("console.log", Online);
         StateHasChanged();
         return base.OnParametersSetAsync();
     }
