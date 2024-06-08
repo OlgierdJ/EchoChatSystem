@@ -16,7 +16,7 @@
 <div class="d-flex">
     @if (self != null)
     {
-        <MudPaper Width="12vw" Height="10vh" Square Style="background: var(--mud-palette-dark);">
+        <MudPaper Width="13vw" Height="10vh" Square Style="background: var(--mud-palette-dark);">
              <MudListItem Dense="true">
                  <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
                      <Popup self=self @ref=popup OnItemSelected=@HandelOnChatChanged />
