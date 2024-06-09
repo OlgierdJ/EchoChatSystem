@@ -1,5 +1,6 @@
 ﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
 @using CoreLib.Entities.EchoCore.AccountCore
+@inject IUserContainer SessionRepository
 @inject IJSRuntime _js
 
 @*
@@ -68,10 +69,15 @@
         Offline = Members.Where(e => e.GroupingName == "OFFLINE").ToList();
 
         _js.InvokeVoidAsync("console.log", Online);
+        SessionRepository.SessionChangeOccured += Changed;
         StateHasChanged();
         return base.OnParametersSetAsync();
     }
 
+    private async void Changed()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
     // protected override Task OnInitializedAsync()
     // {
 

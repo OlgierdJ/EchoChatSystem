@@ -3,6 +3,7 @@
 @using CoreLib.Entities.EchoCore.AccountCore
 @using EchoWebapp.Client.Pages
 @inject ILocalStorageService LocalStorage
+@inject IUserContainer SessionRepository
 @inject EchoAPI _echoAPI
 @inject IDialogService Dialog
 
@@ -56,6 +57,23 @@
     //         Console.WriteLine("pressed the button");
     //     }
     // }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            SessionRepository.SessionChangeOccured += Changed;
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void Changed()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
 
     async void startChat()
     {

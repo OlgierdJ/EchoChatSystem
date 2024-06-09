@@ -1,5 +1,6 @@
 ﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
 @using CoreLib.Entities.EchoCore.AccountCore
+@inject IUserContainer SessionRepository
 @*
     membercomponent layout for when it exists within the scrollable list in the memberlistcomponent.
 
@@ -32,4 +33,20 @@
 
     [Parameter]
     public MemberDTO Member { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            SessionRepository.SessionChangeOccured += Changed;
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void Changed()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
 }

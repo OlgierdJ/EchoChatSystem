@@ -5,6 +5,7 @@
 @using MudBlazor
 @rendermode InteractiveAuto
 @inject ILocalStorageService LocalStorage
+@inject IUserContainer SessionRepository
 @inject NavigationManager nav
 @inject EchoAPI _echoAPI
 
@@ -80,10 +81,16 @@
     {
         if (firstRender)
         {
+            SessionRepository.SessionChangeOccured += Changed;
             StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void Changed()
+    {
+        await InvokeAsync(StateHasChanged);
     }
 
     @* 

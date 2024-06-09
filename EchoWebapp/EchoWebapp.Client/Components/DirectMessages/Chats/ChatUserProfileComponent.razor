@@ -5,6 +5,7 @@
 @inject EchoAPI _echoAPI
 @inject SignalRClientService _client
 @inject ILocalStorageService LocalStorage
+    @inject IUserContainer SessionRepository
 @*
     Layout for the user profile section that exists within the chatviewcomponent if it is a private chat between two users.
 
@@ -79,6 +80,22 @@
                 await InvokeAsync(StateHasChanged);
             }
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            SessionRepository.SessionChangeOccured += Changed;
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void Changed()
+    {
+        await InvokeAsync(StateHasChanged);
     }
 }
 

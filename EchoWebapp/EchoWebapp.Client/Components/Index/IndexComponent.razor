@@ -65,10 +65,16 @@ else
                 {
                     nav.NavigateTo("/login");
                 }
+                SessionRepository.SessionChangeOccured += Changed;
                 StateHasChanged();
             }
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void Changed()
+    {
+        await InvokeAsync(StateHasChanged);
     }
 
     public void HandleOnChanged(bool selected)
