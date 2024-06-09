@@ -155,7 +155,7 @@ namespace EchoWebapp.Services
             throw new NotImplementedException();
         }
 
-        private void SignalRClient_ChatMemberOwnershipChanged(ulong chatId, bool isOwner)
+        private void SignalRClient_ChatMemberOwnershipChanged(ulong chatId,ulong accountId ,bool isOwner)
         {
             throw new NotImplementedException();
         }

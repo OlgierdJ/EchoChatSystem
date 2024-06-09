@@ -49,6 +49,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddSingleton<EchoAPI>();
+builder.Services.AddScoped<AccountIdContainer>();
 builder.Services.AddScoped<SignalRClientService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomRevalidatingAuthenticationStateProvider>();
 builder.Services.AddScoped<IUserContainer, EchoWebapp.Services.UserContainer>();

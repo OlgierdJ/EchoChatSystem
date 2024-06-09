@@ -20,6 +20,16 @@ namespace EchoWebapp.Client.Provider
             this.Value = id;
             NotifyStateChanged();
         }
+        public bool checktime(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var parsedJwt = tokenHandler.ReadJwtToken(token);
+            if (parsedJwt.ValidFrom < DateTime.UtcNow)
+            {
+                return true;
+            }
+            return false;
+        }
         private void NotifyStateChanged() => OnStateChange?.Invoke();
     }
 }
