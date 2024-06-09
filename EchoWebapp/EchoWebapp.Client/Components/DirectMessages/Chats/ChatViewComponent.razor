@@ -71,7 +71,111 @@
                 <MudList id="MessageList" Class="my-4 py-0 overflow-auto" Style="@($"background:{Colors.Shades.Transparent}; width: 100%; height: 100%;")">
                     <MudListItem>
                         <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")" Class="overflow-auto">
-                            @foreach (MessageDTO m in Content.Messages.OrderBy(e => e.TimeSent))
+
+                            @foreach (var dateBundledMessageGrp in DateBundledMessageGroups)
+                            {
+                                //create group here
+                                if (dateBundledMessageGrp.Key.Date == DateTime.UtcNow.Date)
+                                {
+                                    <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                        <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                            <MudDivider FlexItem />
+                                         </MudPaper>
+                                         <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                             <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">Today</MudText>
+                                         </MudPaper>
+                                         <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                             <MudDivider FlexItem />
+                                         </MudPaper>
+                                     </MudPaper>
+                                }
+                                else if (dateBundledMessageGrp.Key.Date == DateTime.UtcNow.AddDays(-1).Date)
+                                {
+                                    <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                        <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                            <MudDivider FlexItem />
+                                         </MudPaper>
+                                         <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                             <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">Yesterday</MudText>
+                                         </MudPaper>
+                                         <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                             <MudDivider FlexItem />
+                                         </MudPaper>
+                                     </MudPaper>
+                                }
+                                else
+                                {
+                                    <MudPaper Class="d-flex mt-4 align-center" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                        <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                            <MudDivider FlexItem />
+                                         </MudPaper>
+                                         <MudPaper Width="8%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                             <MudText Align="Align.Center" Style="@($"color:{Colors.Grey.Default};")">@dateBundledMessageGrp.Key.Day @dateBundledMessageGrp.Key.ToString("MMMM") @dateBundledMessageGrp.Key.Year</MudText>
+                                            </MudPaper>
+                                            <MudPaper Width="42%" Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                                <MudDivider FlexItem />
+                                         </MudPaper>
+                                     </MudPaper>
+                                }
+
+                                var timeOrderedMessages = dateBundledMessageGrp
+                                .Select(e => e) //flatten bundle
+                                .OrderBy(e => e.TimeSent); //order bundle by specific time of day
+
+                                ulong prevSender = 0;
+                                DateTime prevTimeSent = DateTime.MinValue; //always reset on new bundle
+
+                                foreach (var message in timeOrderedMessages)
+                                {
+
+                                    //place authored message.
+                                    var placeAsFirstMessageInBundle = !checkIfBundleByTime(message.TimeSent, prevTimeSent);
+                                    @* Console.WriteLine(message.Content);
+                                    Console.WriteLine(prevSender);
+                                    Console.WriteLine(message.Sender.Id);
+                                    Console.WriteLine(placeAsFirstMessageInBundle); *@
+                                    prevTimeSent = message.TimeSent;
+                                    if (placeAsFirstMessageInBundle || prevSender != message.Sender.Id)
+                                    {
+                                        prevSender = message.Sender.Id;
+                                        //place message with image, name and such
+                                        <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 px-4 pt-4 mt-2" Style="@($"background:{Colors.Shades.Transparent}")">
+                                            <div class="d-flex flex-grow-1 gap-4">
+                                                <MudAvatar Color="Color.Secondary" Size="Size.Medium">
+                                                    @if (message.Sender != null)
+                                                    {
+                                                        <MudImage Src="@message.Sender.ImageIconURL"></MudImage>
+                                                    }
+                                                    else
+                                                    {
+                                                        @message.Sender?.DisplayName.First()
+                                                    }
+                                                </MudAvatar>
+
+                                                <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                                    <div class="d-flex flex-grow-1 gap-3">
+                                                        <MudText Color="Color.Primary">@message.Sender?.DisplayName </MudText>
+                                                            <MudText Style="@($"color:{Colors.Grey.Default};")">@message.TimeSent.ToString("HH:mm")</MudText>
+                                                        </div>
+                                                        <MudText Typo="Typo.body1">@((MarkupString)message.Content.Replace(Environment.NewLine, "<br />"))</MudText>
+                                                    </MudPaper>
+                                                </div>
+                                            </MudPaper>
+                                        continue; //skip to next message
+                                    }
+                                    //place message in bundle format (without sender name and image and only with hover effect for timesent)
+                                    <MudPaper Elevation="0" class="d-flex flex-grow-1 px-4 align-center" Style="@($"background:{Colors.Shades.Transparent}")">
+                                        <div class="d-flex flex-grow-1 gap-4 align-center">
+                                            <MudAvatar Style="background-color:unset" Size="Size.Medium"></MudAvatar>
+                                            <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                                <MudText Typo="Typo.body1">@((MarkupString)message.Content.Replace(Environment.NewLine, "<br />"))</MudText>
+                                            </MudPaper>
+                                        </div>
+                                    </MudPaper>
+                                }
+                            }
+
+                           @*  @foreach (MessageDTO m in Content.Messages.OrderBy(e => e.TimeSent))
                             {
                                 if (m.TimeSent.Date != prevDate.Date)
                                 {
@@ -159,7 +263,7 @@
 
                                 prevDate = m.TimeSent;
                                 prevSender = m.Sender;
-                            }
+                            } *@
                         </MudPaper>
                     </MudListItem>
                 </MudList>
@@ -219,7 +323,8 @@
     public ICollection<UserDTO> friends { get; set; }
 
     private ICollection<UserDTO> selectedFriends { get; set; }
-    private IEnumerable<IGrouping<DateTime, MessageDTO>> MessageGroups { get; set; } 
+    private IEnumerable<IGrouping<DateTime, MessageDTO>> MessageGroups { get; set; }
+    private IOrderedEnumerable<IGrouping<DateTime, MessageDTO>> DateBundledMessageGroups { get; set; }
     // .ToDictionary(
     //     e =>
     //     {
@@ -313,34 +418,17 @@
             }
         }
     }
+    protected override async Task OnParametersSetAsync()
+    {
+        DateBundledMessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date).OrderBy(e => e.Key);
 
+        await base.OnParametersSetAsync();
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            friends = self?.Friends.Where(e=>!Content.Participants.Select(e=>e.Id).Contains(e.Id)).ToList();//?.ToList();
-            MessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date);
-           // var selectedGrp = messages.FirstOrDefault(e=>e.Key==DateTime.UtcNow.Date).Select(e=>e); //today
-           // var selectedGrp = messages.FirstOrDefault(e=>e.Key==DateTime.UtcNow.AddDays(-1).Date).Select(e=>e); //yesterday
-           // var selectedGrp = messages.FirstOrDefault(e=>e.Key==DateTime.UtcNow.AddDays(-1).Date).Select(e=>e); //yesterday
-
-            var ordered = MessageGroups.OrderBy(e => e.Key); //yesterday
-
-            foreach (var group in ordered)
-            {
-                //create group here
-
-                foreach (var bundledgroups in group.Select(e=>e))
-                {
-                    //place messages here
-                    // Console.WriteLine(bundledgroups)
-                    //place bundling here
-                }
-            }
-
-           //alle groups => get date from group
-           //display chronologically
-           //bundlemessages
+            friends = self?.Friends.Where(e => !Content.Participants.Select(e => e.Id).Contains(e.Id)).ToList();//?.ToList();
 
             var token = await LocalStorage.GetItemAsStringAsync("Token");
         }
@@ -361,14 +449,18 @@
 
     // public event Action OnChanged;
 
-    bool checkTime(DateTime dt)
+    bool checkIfBundleByTime(DateTime dt, DateTime prevDt)
     {
-        return (dt.Date == prevDate.Date) && (dt.Hour == prevDate.Hour) && (dt.Minute < prevDate.AddMinutes(7).Minute);
+        //if dt is within 7 minutes of prevDt return false
+        var result = (dt < prevDt.AddMinutes(7));
+        return result;
     }
     private async Task SendMessage(KeyboardEventArgs e)
     {
+        Console.WriteLine(e.Key);
         if (e.Key is "Enter" && prevKey is not "Shift")
         {
+            Console.WriteLine("from if");
             //     TextValue += e.Key;
 
             //     _js.InvokeVoidAsync("console.log", e.Key);
@@ -398,8 +490,8 @@
                     }
                 }
             }
-            prevKey = e.Key;
         }
+            prevKey = e.Key;
     }
 
     private string prevKey = "";
