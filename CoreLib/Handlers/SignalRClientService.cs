@@ -1,8 +1,16 @@
 ﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
+using CoreLib.DTO.EchoCore.UserCore.SettingsCore;
+using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.DTO.RequestCore.MessageCore;
+using CoreLib.Entities.Enums;
 using CoreLib.Hubs;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
+using CoreLib.Entities.EchoCore.ChatCore;
+using Domain.Users;
+using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Interfaces.Contracts;
+using CoreLib.DTO.Contracts;
 
 namespace CoreLib.Handlers
 {
@@ -19,6 +27,36 @@ namespace CoreLib.Handlers
         public event Action<Exception> ConnectionClosed;
         public event Action<Exception> OnConnectedAsync;
         public event Action ConnectionOpened;
+        public event Action<UserMinimalDTO> BlockedUserAdded;
+        public event Action<ulong> BlockedUserRemoved;
+        public event Action<ulong,bool> ChatHiddenStateChanged;
+        public event Action<ulong, InviteMinimalDTO> ChatInviteAdded;
+        public event Action<ulong,string> ChatInviteRemoved;
+        public event Action<ChatDTO> ChatJoined;
+        public event Action<ulong, MemberDTO> ChatMemberJoined;
+        public event Action<ulong, ulong> ChatMemberLeft;
+        public event Action<ulong, bool> ChatMemberOwnershipChanged;
+        public event Action<ulong, MessageDTO> ChatMessageAdded;
+        public event Action<ulong, ulong > ChatMessageRemoved;
+        public event Action<ulong, ulong, string, DateTime?> ChatMessageUpdated;
+        public event Action<ulong, bool> ChatMutedStateChanged;
+        public event Action<ulong, string, string?> ChatUpdated;
+        public event Action<ulong, string> ExternalUserNameChanged;
+        public event Action<ulong, string> ExternalUserNoteChanged;
+        public event Action<ulong, byte> ExternalUserVolumeChanged;
+        public event Action ForceLogout;
+        public event Action<UserDTO> FriendAdded;
+        public event Action<ulong> FriendRemoved;
+        public event Action<FriendRequestDTO> FriendRequestAdded;
+        public event Action<RequestType, ulong> FriendRequestRemoved;
+        public event Action<ulong, ulong?> ChatLastReadMessageChanged;
+        public event Action<ulong> LeftChat;
+        public event Action<string, string?> SensitiveDataUpdated;
+        public event Action<ulong, byte, string?> UserActivityStatusChanged;
+        public event Action<ulong, bool> UserMutedStateChanged;
+        public event Action<ulong, string, string, string?, string> UserProfileChanged;
+        public event Action<ulong> UserUnmuted;
+        public event Action<VoiceSettingsDTO> VoiceSettingsUpdated;
         #endregion
 
         public SignalRClientService(/*string serverip*/)
@@ -46,17 +84,41 @@ namespace CoreLib.Handlers
 
 
             //Map events
-
+            
+            #region Map over the events
             connection.ServerTimeout = TimeSpan.FromSeconds(2);
-            //connection.On<string>(nameof(IPushNotificationHub.NewFriend), (message) => NewFriendReceived?.Invoke(message));
-            //connection.On<string>(nameof(IDomainNotificationHub.ReceiveNotification), (message) => ReceiveNotification?.Invoke(message));
-            //connection.On<string>(nameof(IDomainNotificationHub.JoinGroup), (groupName) => JoinGroup?.Invoke(groupName));
-            //connection.On<string[]>(nameof(IDomainNotificationHub.JoinGroups), (groupNames) => JoinGroups?.Invoke(groupNames));
-            //connection.On<string>(nameof(IDomainNotificationHub.LeaveGroup), (groupNames) => LeaveGroup?.Invoke(groupNames));
-            //connection.On<string[]>(nameof(IDomainNotificationHub.LeaveGroups), (groupNames) => LeaveGroups?.Invoke(groupNames));
-            //connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageCreateMessageDTO), (message) => ReceiveChatMessageCreateMessageDTO?.Invoke(message));
-            //connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageUpdateMessageDTO), (message) => ReceiveChatMessageUpdateMessageDTO?.Invoke(message));
-            //connection.On<MessageDTO>(nameof(IDomainNotificationHub.ReceiveChatMessageDeleteMessageDTO), (message) => ReceiveChatMessageDeleteMessageDTO?.Invoke(message));
+            connection.On<UserMinimalDTO>(nameof(IPushNotificationHub.BlockedUserAdded), minimaluser => BlockedUserAdded?.Invoke(minimaluser));
+            connection.On<ulong>(nameof(IPushNotificationHub.BlockedUserRemoved), accountId => BlockedUserRemoved?.Invoke(accountId));
+            connection.On<ulong, bool>(nameof(IPushNotificationHub.ChatHiddenStateChanged), (chatId, hIdd) => ChatHiddenStateChanged?.Invoke(chatId, hIdd));
+            connection.On<ulong, InviteMinimalDTO>(nameof(IPushNotificationHub.ChatInviteAdded), (chatId, minimalinvite) => ChatInviteAdded?.Invoke(chatId, minimalinvite));
+            connection.On<ulong, string>(nameof(IPushNotificationHub.ChatInviteRemoved), (chatId, invitecode) => ChatInviteRemoved?.Invoke(chatId, invitecode));
+            connection.On<ChatDTO>(nameof(IPushNotificationHub.ChatJoined), chatDTO => ChatJoined?.Invoke(chatDTO));
+            connection.On<ulong, MemberDTO>(nameof(IPushNotificationHub.ChatMemberJoined), (chatId, memberDTO) => ChatMemberJoined?.Invoke(chatId, memberDTO));
+            connection.On<ulong, ulong>(nameof(IPushNotificationHub.ChatMemberLeft), (chatId, accountId) => ChatMemberLeft?.Invoke(chatId, accountId));
+            connection.On<ulong, bool>(nameof(IPushNotificationHub.ChatMemberOwnershipChanged), (accountId, isOwer) => ChatMemberOwnershipChanged?.Invoke(accountId, isOwer));
+            connection.On<ulong, MessageDTO>(nameof(IPushNotificationHub.ChatMessageAdded), (chatId, messageDTO) => ChatMessageAdded?.Invoke(chatId, messageDTO));
+            connection.On<ulong, ulong>(nameof(IPushNotificationHub.ChatMessageRemoved), (chatId, messageId) => ChatMessageRemoved?.Invoke(chatId, messageId));
+            connection.On<ulong, ulong, string, DateTime?>(nameof(IPushNotificationHub.ChatMessageUpdated), (chatId, messageId, content, timeEdited) => ChatMessageUpdated?.Invoke(chatId, messageId, content, timeEdited));
+            connection.On<ulong, bool>(nameof(IPushNotificationHub.ChatMutedStateChanged), (chatId, state) => ChatMutedStateChanged?.Invoke(chatId, state));
+            connection.On<ulong, string, string?>(nameof(IPushNotificationHub.ChatUpdated), (chatId, name, iconUrl) => ChatUpdated?.Invoke(chatId, name, iconUrl));
+            connection.On<ulong, string>(nameof(IPushNotificationHub.ExternalUserNameChanged), (accountId, name) => ExternalUserNameChanged?.Invoke(accountId, name));
+            connection.On<ulong, string>(nameof(IPushNotificationHub.ExternalUserNoteChanged), (accountId, note) => ExternalUserNoteChanged?.Invoke(accountId, note));
+            connection.On<ulong, byte>(nameof(IPushNotificationHub.ExternalUserVolumeChanged), (accountId, volume) => ExternalUserVolumeChanged?.Invoke(accountId, volume));
+            connection.On(nameof(IPushNotificationHub.ForceLogout), () => ForceLogout?.Invoke());
+            connection.On<UserDTO>(nameof(IPushNotificationHub.FriendAdded), userDTO => FriendAdded?.Invoke(userDTO));
+            connection.On<ulong>(nameof(IPushNotificationHub.FriendRemoved), accountId => FriendRemoved?.Invoke(accountId));
+            connection.On<FriendRequestDTO>(nameof(IPushNotificationHub.FriendRequestAdded), friendRequestDTO => FriendRequestAdded?.Invoke(friendRequestDTO));
+            connection.On<RequestType, ulong>(nameof(IPushNotificationHub.FriendRequestRemoved), (type, requestId) => FriendRequestRemoved?.Invoke(type, requestId));
+            connection.On<ulong, ulong?>(nameof(IPushNotificationHub.ChatLastReadMessageChanged), (chatId, messageId) => ChatLastReadMessageChanged?.Invoke(chatId, messageId));
+            connection.On<ulong>(nameof(IPushNotificationHub.LeftChat), chatId => LeftChat?.Invoke(chatId));
+            connection.On<string, string?>(nameof(IPushNotificationHub.SensitiveDataUpdated), (email, phoneNumber) => SensitiveDataUpdated?.Invoke(email, phoneNumber));
+            connection.On<ulong, byte, string?>(nameof(IPushNotificationHub.UserActivityStatusChanged), (accountId, activityStatusId, customMessage) => UserActivityStatusChanged?.Invoke(accountId, activityStatusId, customMessage));
+            connection.On<ulong, bool>(nameof(IPushNotificationHub.UserMutedStateChanged), (accountId, state) => UserMutedStateChanged?.Invoke(accountId, state));
+            connection.On<ulong, string, string, string?, string>(nameof(IPushNotificationHub.UserProfileChanged), (accountId, displayName, avatarFileURL, about, bannerColor) => UserProfileChanged?.Invoke(accountId, displayName, avatarFileURL, about, bannerColor));
+            connection.On<ulong>(nameof(IPushNotificationHub.UserUnmuted), accountId => UserUnmuted?.Invoke(accountId));
+            connection.On<VoiceSettingsDTO>(nameof(IPushNotificationHub.VoiceSettingsUpdated), voiceSettingsDTO => VoiceSettingsUpdated?.Invoke(voiceSettingsDTO));
+            #endregion
+            
             //Forward invocation of inner event to service event.
             Func<Exception, Task> connectionClosed = async (e) =>
             {
