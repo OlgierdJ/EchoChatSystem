@@ -619,11 +619,13 @@ namespace DomainCoreApi.Services
         {
             try
             {
+
                 if (requestDTO.Name.IsNullOrEmpty()) //request validation
                 {
                     return false;
                 }
-                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(e => e.Name == requestDTO.Name);
+                var normalizedName = requestDTO.Name.ToLower(); //need to find user by normalized name sequence
+                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().Include(e=>e.Profile).FirstOrDefaultAsync(e => e.Name == normalizedName);
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
 
                 if (receiverAcc == null || senderId == receiverAcc.Id) //validate user is other than self
