@@ -52,7 +52,6 @@ else
         if (firstRender)
         {
             filtered = List.ToList();
-            Console.WriteLine("OnAfterRenderAsync");
             SessionRepository.SessionChangeOccured += Changed;
             StateHasChanged();
         }
@@ -63,7 +62,6 @@ else
     private async void Changed()
     {
         filtered = List.ToList();
-        Console.WriteLine("Changed");
         await InvokeAsync(StateHasChanged);
     }
 

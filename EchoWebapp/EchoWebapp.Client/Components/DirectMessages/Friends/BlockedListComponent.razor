@@ -1,5 +1,6 @@
 ﻿@using CoreLib.DTO.EchoCore.UserCore
 @using CoreLib.Entities.EchoCore.AccountCore
+@inject IUserContainer SessionRepository
 @*
     Layout for the blocked list that exists within the friendsviewcomponent.
 
@@ -46,11 +47,18 @@ else
     {
         if (firstRender)
         {
-            filtered = List;
+            filtered = List.ToList();
+            SessionRepository.SessionChangeOccured += Changed;
             StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void Changed()
+    {
+        filtered = List.ToList();
+        await InvokeAsync(StateHasChanged);
     }
 
     void SearchChanged()

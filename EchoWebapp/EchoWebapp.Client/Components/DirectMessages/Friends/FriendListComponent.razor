@@ -1,6 +1,8 @@
 ﻿@using CoreLib.DTO.EchoCore.UserCore
 @using CoreLib.Entities.EchoCore.AccountCore
 @using MudBlazor
+@inject IUserContainer SessionRepository
+
 @*
     Layout for the friend list that exists within the friendsviewcomponent.
 
@@ -76,11 +78,18 @@ else
     {
         if (firstRender)
         {
-            filtered = List;
+            filtered = List; 
+            SessionRepository.SessionChangeOccured += Changed;
             StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void Changed()
+    {
+        filtered = List.ToList();
+        await InvokeAsync(StateHasChanged);
     }
 
     void SearchChanged()
