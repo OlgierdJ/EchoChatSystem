@@ -617,6 +617,7 @@ namespace DomainCoreApi.Services
 
         public async Task<bool> SendFriendRequestAsync(ulong senderId, AddFriendRequestDTO requestDTO)
         {
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
             try
             {
 
@@ -671,6 +672,7 @@ namespace DomainCoreApi.Services
                     dbContext.Set<IncomingFriendRequest>().Remove(incomingFromReceiver); //cleanup cause appearently clientcascade doesnt work????
                     await dbContext.Set<Friendship>().AddAsync(friendship);
                     await dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
                     return true;
                 }
 
@@ -688,9 +690,11 @@ namespace DomainCoreApi.Services
                 await dbContext.Set<IncomingFriendRequest>().AddAsync(request); //throws error if already blocked fyi
 
                 var res = await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             catch (Exception e)
             {
+                await transaction.RollbackAsync();
                 return false;
             }
             return true;
