@@ -15,6 +15,8 @@ namespace EchoWebapp.Services
         private readonly SignalRClientService signalRClient;
         private readonly ProtectedSessionStorage sessionStorage;
 
+        public event Action SessionChangeOccured;
+
         public UserFullDTO self { get; set; }
 
         public UserContainer(SignalRClientService signalRClient, ProtectedSessionStorage sessionStorage)
@@ -118,7 +120,9 @@ namespace EchoWebapp.Services
 
         private void SignalRClient_FriendRequestAdded(FriendRequestDTO friendRequestDTO)
         {
-            throw new NotImplementedException();
+            self.Requests?.Add(friendRequestDTO);
+            Console.WriteLine("container");
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_FriendRemoved(ulong accountId)

@@ -15,13 +15,19 @@ namespace EchoWebapp.Client.Provider
         Task ConnectAsync(string token);
         ValueTask DisposeAsync();
         Task InitializeAsync();
+
+        event Action SessionChangeOccured;
     }
 
     public class UserContainer : IAsyncDisposable, IUserContainer
     {
+
+        public event Action SessionChangeOccured;
+        public UserFullDTO self { get; set; }
+
         private readonly SignalRClientService signalRClient;
         private readonly ILocalStorageService localStorage;
-        public UserFullDTO self { get; set; }
+       
 
         public UserContainer(SignalRClientService signalRClient, ILocalStorageService localStorage)
         {
@@ -40,7 +46,7 @@ namespace EchoWebapp.Client.Provider
 
         public async Task InitializeAsync()
         {
-            #region sus to event
+            #region sub to event
             signalRClient.ConnectionOpened += SignalRClient_ConnectionOpened; ;
             signalRClient.BlockedUserAdded += SignalRClient_BlockedUserAdded;
             signalRClient.BlockedUserRemoved += SignalRClient_BlockedUserRemoved;
@@ -84,6 +90,7 @@ namespace EchoWebapp.Client.Provider
             await ConnectAsync(Token);
         }
 
+
         private void SignalRClient_ConnectionOpened()
         {
 
@@ -93,6 +100,7 @@ namespace EchoWebapp.Client.Provider
         private void SignalRClient_VoiceSettingsUpdated(VoiceSettingsDTO voiceSettingsDTO)
         {
             self.VoiceSettings = voiceSettingsDTO;
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_UserUnmuted(ulong accountId)
@@ -132,7 +140,9 @@ namespace EchoWebapp.Client.Provider
 
         private void SignalRClient_FriendRequestAdded(FriendRequestDTO friendRequestDTO)
         {
-            throw new NotImplementedException();
+            self.Requests?.Add(friendRequestDTO);
+            Console.WriteLine(friendRequestDTO.Person.Name);
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_FriendRemoved(ulong accountId)
@@ -232,7 +242,9 @@ namespace EchoWebapp.Client.Provider
 
         private void SignalRClient_ChatMessageAdded(ulong chatId, MessageDTO messageDTO)
         {
-            throw new NotImplementedException();
+            self.DirectMessages.FirstOrDefault(e => e.Id == chatId)?.Messages?.Add(messageDTO);
+            Console.WriteLine(chatId);
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ChatMutedStateChanged(ulong chatId, bool state)

@@ -27,6 +27,7 @@ namespace CoreLib.Handlers
         public event Action<Exception> ConnectionClosed;
         public event Action<Exception> OnConnectedAsync;
         public event Action ConnectionOpened;
+
         public event Action<UserMinimalDTO> BlockedUserAdded;
         public event Action<ulong> BlockedUserRemoved;
         public event Action<ulong,bool> ChatHiddenStateChanged;

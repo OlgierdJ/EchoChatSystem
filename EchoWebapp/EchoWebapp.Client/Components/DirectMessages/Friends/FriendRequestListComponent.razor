@@ -1,5 +1,7 @@
 ﻿@using CoreLib.DTO.EchoCore.UserCore
 @using CoreLib.Entities.EchoCore.AccountCore
+@inject IUserContainer SessionRepository
+
 @*
     Layout for the Scrollable list that exists within the FriendsViewComponent in the pending section.
 
@@ -42,11 +44,25 @@ else
     {
         if (firstRender)
         {
-            filtered = List; 
+            filtered = List.ToList();
+            Console.WriteLine("OnAfterRenderAsync");
+            SessionRepository.SessionChangeOccured += Changed;
             StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void Changed()
+    {
+        filtered = List.ToList();
+        Console.WriteLine("Changed");
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
     }
 
     void SearchChanged()
