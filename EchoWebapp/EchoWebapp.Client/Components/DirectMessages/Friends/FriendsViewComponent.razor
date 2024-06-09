@@ -25,16 +25,16 @@
         </Header>
         <ChildContent>
             <MudTabPanel Text="Online" tabindex="0" >
-                <FriendListComponent displayAll=false List="@self.Friends.ToList()" />
+                <FriendListComponent displayAll=false List="@self.Friends" />
             </MudTabPanel>
             <MudTabPanel Text="All" tabindex="1" >
-                <FriendListComponent displayAll=true List="@self.Friends.ToList()"/>
+                <FriendListComponent displayAll=true List="@self.Friends"/>
             </MudTabPanel>
             <MudTabPanel Text="Pending" tabindex="2" >
-                <FriendRequestListComponent List="@self.Requests.ToList()"/>
+                <FriendRequestListComponent List="@self.Requests"/>
             </MudTabPanel>    
             <MudTabPanel Text="Blocked" tabindex="3" >
-                <BlockedListComponent List="@self.BlockedUsers.ToList()"/>
+                <BlockedListComponent List="@self.BlockedUsers"/>
             </MudTabPanel>
             <MudTabPanel Text="Add Friend" tabindex="4" >
 

@@ -232,7 +232,7 @@ namespace CoreLib.WebAPI
 
         public async Task<bool> MuteUserAsync(string Token, ulong userId, MuteRequestDTO requestDTO)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, $"user/{userId}/nickname");
+            var request = new HttpRequestMessage(HttpMethod.Put, $"user/{userId}/mute");
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
 
@@ -245,7 +245,7 @@ namespace CoreLib.WebAPI
 
         public async Task<bool> SetNicknameAsync(string Token, ulong userId, SetNicknameUserRequestDTO requestDTO)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, $"user/{userId}/mute");
+            var request = new HttpRequestMessage(HttpMethod.Put, $"user/{userId}/nickname");
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var load = JsonSerializer.Serialize(requestDTO, SerializerOptions);

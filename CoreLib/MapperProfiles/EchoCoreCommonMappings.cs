@@ -52,7 +52,7 @@ namespace CoreLib.MapperProfiles
                .ForMember(dest => dest.NameColour, 
                opts => opts.MapFrom(src => src.Participant.ActivityStatus.Name.ToLower() != "offline" ? "#ffffff" : "#000000"))
                .ForMember(dest => dest.GroupingName, 
-               opts => opts.MapFrom(src => src.Participant.ActivityStatus.Name.ToLower() != "offline" ? "ONLINE" : "OFFLINE"))
+               opts => opts.MapFrom(src => src.Participant.ActivityStatus.Name.ToLower() != "offline" && src.Participant.ActivityStatus.Name.ToLower() != "invisible" ? "ONLINE" : "OFFLINE"))
                .ForMember(dest => dest.DisplayName, 
                opts => opts.MapFrom(src => src.Participant.Profile.DisplayName))
                .ForMember(dest => dest.Profile, 

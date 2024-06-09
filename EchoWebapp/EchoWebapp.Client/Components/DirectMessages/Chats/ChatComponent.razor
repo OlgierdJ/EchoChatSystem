@@ -6,19 +6,34 @@
     This component should either reflect the other member than the user itself if there is only 2 members within the chat.
     Otherwise reflect the chat name and image.
 *@
-<MudAvatar>
-    @if (false) //Chat.IconUrl != ""
-    {
-        @* <MudImage Src="@Chat.IconUrl" /> *@ //Chats Image/Icon is missing?
-    }
-    else
-    {
-        @Chat.Name.First()
-    }
-</MudAvatar>
-<MudText Typo="Typo.caption">@Chat.Name</MudText>
+@if (Chat.Participants.Count() > 2)
+{
+    <MudAvatar>
+        @if (!string.IsNullOrWhiteSpace(Chat.IconUrl))
+        {
+            <MudImage Src="@Chat.IconUrl" />
+        }
+        else
+        {
+            @Chat.Name.First()
+        }
+    </MudAvatar>
+    <MudText Typo="Typo.caption">@Chat.Name</MudText>
+}
+else //chat between 2 users
+{
+    <MudAvatar>
+        <MudImage Src="@Chat.Participants.Where(e => e.Id != OwnId).First().ImageIconURL" />
+    </MudAvatar>
+    <MudText Typo="Typo.caption">@Chat.Participants.Where(e => e.Id != OwnId).First().DisplayName</MudText>
+}
+
+
 @code {
 
     [Parameter]
     public ChatDTO? Chat { get; set; }
+
+    [Parameter]
+    public ulong OwnId { get; set; }
 }
