@@ -219,6 +219,24 @@
     public ICollection<UserDTO> friends { get; set; }
 
     private ICollection<UserDTO> selectedFriends { get; set; }
+    private IEnumerable<IGrouping<DateTime, MessageDTO>> MessageGroups { get; set; } 
+    // .ToDictionary(
+    //     e =>
+    //     {
+    //         // if (e.TimeSent.Date == DateTime.UtcNow.Date)
+    //         // {
+    //         //     return "Today";
+    //         // }
+    //         // else if (e.TimeSent.Date == DateTime.UtcNow.Date.AddDays(-1))
+    //         // {
+    //         //     return "Yesterday";
+    //         // }
+    //         // else
+    //         // {
+    //         //     return $"{e.TimeSent.Day} {e.TimeSent.ToString("MMMM")} {e.TimeSent.Year}";
+    //         // }
+    //     }
+    // );
     private UserDTO selected { get; set; }
 
     private string? token { get; set; }
@@ -263,7 +281,7 @@
         if (selectedFriends.Count > 0)
         {
             var token = await LocalStorage.GetItemAsStringAsync("Token");
-            
+
             if (!string.IsNullOrWhiteSpace(token))
             {
                 if (Content.Participants.All(e => e.IsOwner))
@@ -301,6 +319,29 @@
         if (firstRender)
         {
             friends = self?.Friends.Where(e=>!Content.Participants.Select(e=>e.Id).Contains(e.Id)).ToList();//?.ToList();
+            MessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date);
+           // var selectedGrp = messages.FirstOrDefault(e=>e.Key==DateTime.UtcNow.Date).Select(e=>e); //today
+           // var selectedGrp = messages.FirstOrDefault(e=>e.Key==DateTime.UtcNow.AddDays(-1).Date).Select(e=>e); //yesterday
+           // var selectedGrp = messages.FirstOrDefault(e=>e.Key==DateTime.UtcNow.AddDays(-1).Date).Select(e=>e); //yesterday
+
+            var ordered = MessageGroups.OrderBy(e => e.Key); //yesterday
+
+            foreach (var group in ordered)
+            {
+                //create group here
+
+                foreach (var bundledgroups in group.Select(e=>e))
+                {
+                    //place messages here
+                    // Console.WriteLine(bundledgroups)
+                    //place bundling here
+                }
+            }
+
+           //alle groups => get date from group
+           //display chronologically
+           //bundlemessages
+
             var token = await LocalStorage.GetItemAsStringAsync("Token");
         }
         await base.OnAfterRenderAsync(firstRender);
