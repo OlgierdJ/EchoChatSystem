@@ -8,21 +8,26 @@ using CoreLib.Handlers;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
-
 builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddMudServices();
 
+builder.Services.AddBlazoredLocalStorage();
+
 builder.Services.AddSingleton<AccountIdContainer>();
+builder.Services.AddSingleton<IUserContainer, UserContainer>();
 builder.Services.AddSingleton<EchoAPI>();
 builder.Services.AddSingleton<SignalRClientService>();
 //builder.Services.AddScoped<AuthenticationService>();
 
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
-builder.Services.AddBlazoredLocalStorage();
 
-await builder.Build().RunAsync();
+
+var host = builder.Build();
+var connSingleton = host.Services.GetRequiredService<UserContainer>();
+await connSingleton.InitializeAsync();
+
+// Now we can call RunAsync to render the first page component
+await host.RunAsync();

@@ -3,12 +3,15 @@
 @using CoreLib.Entities.EchoCore.ChatCore
 @using EchoWebapp.Client.Components.DirectMessages
 @using EchoWebapp.Client.Components.Servers
+@rendermode InteractiveAuto
+@* @rendermode @(new InteractiveWebAssemblyRenderMode(prerender:false)) *@
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager nav
-@inject Provider.AccountIdContainer AccountContainer
+@inject IUserContainer SessionRepository
 @inject EchoAPI _echoAPI
+@* @inject IServiceProvider Services *@
 
-@rendermode InteractiveAuto
+
 @*
     Index layout that holds the general application layout navigation and content.
 
@@ -50,14 +53,19 @@ else
             else
             {
                 var token = await LocalStorage.GetItemAsStringAsync("Token");
-                // AccountContainer.SetValue(Convert.ToUInt64(id), token);
 
                 var result = await _echoAPI.LoadUserSessionDataAsync(token);
                 if(result != null)
                 {
+                    // if (Services.GetService<UserContainer>() is { } env)
+                    // {
+                    //     env.self = self;
+                    // }
+
                     loggedIn = true;
                     result.ActiveStatus.DisplayedContent = result.ActiveStatus.Name;
                     self = result;
+                    SessionRepository.self = self;
                 }
                 else
                 {
