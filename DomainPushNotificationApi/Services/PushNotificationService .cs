@@ -344,7 +344,7 @@ namespace DomainPushNotificationApi.Services
                 ChatParticipancy participancy = entity as ChatParticipancy;
                 await _hubContext.Clients
                 .Group($"{typeof(Chat)}/{participancy.SubjectId}")
-                .ChatMemberOwnershipChanged(participancy.ParticipantId, participancy.IsOwner);
+                .ChatMemberOwnershipChanged(participancy.SubjectId, participancy.ParticipantId, participancy.IsOwner);
 
                 await _hubContext.Clients
                 .User(participancy.ParticipantId.ToString())
