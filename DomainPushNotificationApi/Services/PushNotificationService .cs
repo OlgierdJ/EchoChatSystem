@@ -157,7 +157,7 @@ namespace DomainPushNotificationApi.Services
                 ChatMessage message = entity as ChatMessage;
                 //hopefully author is included else is systemmessage
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{message.MessageHolderId}")
+                .Group($"{nameof(Chat)}/{message.MessageHolderId}")
                 .ChatMessageAdded(message.MessageHolderId, mapper.Map<MessageDTO>(message));
 
             });

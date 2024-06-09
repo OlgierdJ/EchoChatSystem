@@ -152,14 +152,12 @@ namespace EchoWebapp.Client.Provider
         {
             var FriendRequestRemoved = self.Requests.FirstOrDefault(e => e.Id == requestId && e.Type == type);
             self.Requests?.Remove(FriendRequestRemoved);
-            Console.WriteLine("container");
             SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_FriendRequestAdded(FriendRequestDTO friendRequestDTO)
         {
             self.Requests?.Add(friendRequestDTO);
-            Console.WriteLine("container");
             SessionChangeOccured?.Invoke();
         }
 
@@ -287,7 +285,6 @@ namespace EchoWebapp.Client.Provider
         private void SignalRClient_ChatMessageAdded(ulong chatId, MessageDTO messageDTO)
         {
             self.DirectMessages.FirstOrDefault(e => e.Id == chatId)?.Messages?.Add(messageDTO);
-            Console.WriteLine(chatId);
             SessionChangeOccured?.Invoke();
         }
 

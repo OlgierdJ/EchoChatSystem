@@ -422,11 +422,15 @@
     protected override async Task OnParametersSetAsync()
     {
         DateBundledMessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date).OrderBy(e => e.Key);
-        SessionRepository.SessionChangeOccured += StateHasChanged;
+        SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
         await base.OnParametersSetAsync();
     }
 
-
+    private async void SessionRepository_SessionChangeOccured()
+    {
+        DateBundledMessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date).OrderBy(e => e.Key);
+        await InvokeAsync(StateHasChanged);
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

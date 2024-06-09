@@ -84,6 +84,7 @@ builder.Services.AddTransient(typeof(ILanguageRepository), typeof(LanguageReposi
 builder.Services.AddTransient<DomainCoreApi.Handlers.TokenHandler>();
 builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
 builder.Services.AddTransient(typeof(IChatService), typeof(ChatService));
+builder.Services.AddTransient(typeof(IUserGroupService), typeof(UserGroupService));
 
 builder.Services.AddSignalR().AddJsonProtocol(opts => opts.PayloadSerializerOptions = new JsonSerializerOptions() 
 {

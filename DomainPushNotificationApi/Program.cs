@@ -20,6 +20,8 @@ builder.Services.AddAutoMapper(opts =>
 {
     opts.AddProfile<EchoCoreCommonMappings>();
 });
+builder.Services.AddSingleton<ITokenStore, TokenStore>();
+builder.Services.AddSingleton<PushNotificationDomainApiService>();
 builder.Services.AddSingleton<PushNotificationService>();
 builder.Services.AddSingleton<DomainNotificationClientService>();
 builder.Services.AddHttpClient("DomainClient", e => 
