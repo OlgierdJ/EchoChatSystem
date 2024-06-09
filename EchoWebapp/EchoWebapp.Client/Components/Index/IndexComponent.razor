@@ -21,7 +21,7 @@
 @* so you dont see the UI befor you are logget in*@
 @if (loggedIn)
 {
-    <div class="d-flex">
+    <div class="d-flex" style="height: 97vh;">
         <ServerListComponent OnItemSelected=@HandleOnChanged/>
         <DirectMessagesViewComponent self=self DisplayFriends=display />
     </div>

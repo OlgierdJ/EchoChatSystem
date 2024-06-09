@@ -1,0 +1,18 @@
+﻿<MudDialog>
+    <DialogContent>
+        Find a friend faster with a personal nickname. It will only be visible to you in your direct messages.
+        <MudTextField Style="background: rgba(39,39,47,1);opacity:1;" @bind-Value="@nicknameText"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    public string nicknameText { get; set; } = "";
+    
+    void Submit() => MudDialog.Close<string>(nicknameText);
+    void Cancel() => MudDialog.Cancel();
+}

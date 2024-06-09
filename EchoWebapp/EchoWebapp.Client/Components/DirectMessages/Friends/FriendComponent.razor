@@ -1,7 +1,10 @@
 ﻿@using CoreLib.DTO.EchoCore.UserCore
+@using CoreLib.DTO.RequestCore.RelationCore
 @using CoreLib.Entities.EchoCore.AccountCore
+@using EchoWebapp.Client.Pages
 @inject ILocalStorageService LocalStorage
 @inject EchoAPI _echoAPI
+@inject IDialogService Dialog
 
 @*
     friendcomponent layout for when it exists within the scrollable list in the friendlistcomponent.
@@ -25,7 +28,12 @@
         <MudText Class="ml-3" Typo="Typo.caption">@((MarkupString)("<b>" + User.DisplayName + "</b> " + (handleVisible ? $"<i> {User.Name} </i>" : "") + "\r\n" + User.ActiveStatus.Name).Replace(Environment.NewLine, "<br />"))</MudText>
         <MudSpacer />
         <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.ChatBubble" Title="Message" OnClick="startChat" />
-        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Rounded.MoreVert" Title="More" />
+        <MudMenu Variant="Variant.Filled" Icon="@Icons.Material.Filled.MoreVert" Label="More">
+            <MudMenuItem Disabled>Start Video Call</MudMenuItem>
+         <MudMenuItem Disabled>Start Voice Call</MudMenuItem>
+         <MudMenuItem OnClick="removeFriend"><MudText Color="Color.Error">Remove Friend</MudText></MudMenuItem>
+         <MudMenuItem OnClick="setNickname">Add Nickname</MudMenuItem>
+     </MudMenu>
     }
 </div>
 @code {
@@ -37,6 +45,17 @@
     bool handleVisible = false;
     void MouseOver(MouseEventArgs e) { handleVisible = true; }
     void MouseOut(MouseEventArgs e) { handleVisible = false; }
+
+    // private async void OpenDialog()
+    // {
+    //     var options = new DialogOptions { CloseOnEscapeKey = true };
+    //     // var dia = await Dialog.Show<SetNicknameDialog>($"Remove {User.DisplayName}", options).Result;
+    //     var dia = await Dialog.Show<RemoveFriendDialog>($"Remove {User.DisplayName}", options).Result;
+    //     if (dia.Data != null && !dia.Canceled)
+    //     {
+    //         Console.WriteLine("pressed the button");
+    //     }
+    // }
 
     async void startChat()
     {
@@ -51,4 +70,49 @@
         }
     }
 
+    async void removeFriend()
+    {
+        var options = new DialogOptions { Position = DialogPosition.TopCenter, CloseOnEscapeKey = true };
+
+        var dia = await Dialog.Show<RemoveFriendDialog>($"Remove {User.DisplayName}", options).Result;
+        if (dia.Data != null && !dia.Canceled)
+        {
+            var token = await LocalStorage.GetItemAsStringAsync("Token");
+
+            var result = await _echoAPI.RemoveFriendAsync(token, User.Id);
+            Console.WriteLine(result);
+            if (result)
+            {
+                Console.WriteLine("Removed friend success!");
+                StateHasChanged();
+            }
+        }
+    }
+
+    async void setNickname()
+    {
+        var options = new DialogOptions { Position = DialogPosition.TopCenter, CloseOnEscapeKey = true };
+        var dia = await Dialog.ShowAsync<SetNicknameDialog>($"Add Nickname for {User.DisplayName}", options);
+        var diaResult = await dia.Result;
+        if (!diaResult.Canceled)
+        {
+            var token = await LocalStorage.GetItemAsStringAsync("Token");
+
+            var returnedData = await dia.GetReturnValueAsync<string>();
+
+            Console.WriteLine(returnedData);
+
+            var nickname = new SetNicknameUserRequestDTO()
+                {
+                    Nickname = returnedData.ToString()
+                };
+
+            var result = await _echoAPI.SetNicknameAsync(token, User.Id, nickname);
+            if (result)
+            {
+                Console.WriteLine($"Nickname set to {returnedData} on {User.DisplayName} success!");
+                StateHasChanged();
+            }
+        }
+    }
 }

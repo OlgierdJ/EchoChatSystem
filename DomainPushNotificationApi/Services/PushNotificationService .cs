@@ -179,6 +179,25 @@ namespace DomainPushNotificationApi.Services
 
             });
 
+            _hubManager.Add((nameof(ChatMessagePin), EntityAction.Added), async (entity) =>
+            {
+                ChatMessagePin pin = entity as ChatMessagePin;
+                //hopefully author is included else is systemmessage
+                await _hubContext.Clients
+                .Group($"{typeof(Chat)}/{pin.PinboardId}")
+                .ChatMessagePinAdded(pin.PinboardId, pin.MessageId);
+
+            });
+
+            _hubManager.Add((nameof(ChatMessagePin), EntityAction.Deleted), async (entity) =>
+            {
+                ChatMessagePin pin = entity as ChatMessagePin;
+                await _hubContext.Clients
+                .Group($"{typeof(Chat)}/{pin.PinboardId}")
+                .ChatMessagePinRemoved(pin.PinboardId, pin.MessageId);
+
+            });
+
             //dont think we need this one ??
             //_hubManager.Add((nameof(Chat), EntityAction.Added), async (entity) =>
             //{

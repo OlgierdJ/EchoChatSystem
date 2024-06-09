@@ -41,6 +41,7 @@ namespace EchoWebapp.Client.Provider
         public async Task InitializeAsync()
         {
             #region sus to event
+            signalRClient.ConnectionOpened += SignalRClient_ConnectionOpened; ;
             signalRClient.BlockedUserAdded += SignalRClient_BlockedUserAdded;
             signalRClient.BlockedUserRemoved += SignalRClient_BlockedUserRemoved;
             signalRClient.ChatHiddenStateChanged += SignalRClient_ChatHiddenStateChanged;
@@ -81,6 +82,12 @@ namespace EchoWebapp.Client.Provider
             }
 
             await ConnectAsync(Token);
+        }
+
+        private void SignalRClient_ConnectionOpened()
+        {
+
+            Console.WriteLine("Connected to client.");
         }
 
         private void SignalRClient_VoiceSettingsUpdated(VoiceSettingsDTO voiceSettingsDTO)

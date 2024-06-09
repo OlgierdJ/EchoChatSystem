@@ -389,7 +389,7 @@ namespace DomainCoreApi.Services
             {
                 var userPwd = await _pwdHandler.CreatePassword(input.Password);
                 Account account = GetNewDefaultAccount(
-                    input.Username, 
+                    input.Username.ToLower(), //usernames are normalized so that casing doesnt matter 
                     input.Email, 
                     input.DateOfBirth, 
                     input.DisplayName, 
@@ -623,10 +623,11 @@ namespace DomainCoreApi.Services
                 {
                     return false;
                 }
-                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(e => e.Name == requestDTO.Name);
+                var normalizedName = requestDTO.Name.ToLower(); //need to find user by normalized name sequence
+                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(e => e.Name == normalizedName);
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
-
-                if (senderId == receiverAcc.Id) //validate user is other than self
+               
+                if (receiverAcc == null || senderId == receiverAcc.Id) //validate user is other than self
                 {
                     return false;
                 }
@@ -828,7 +829,7 @@ namespace DomainCoreApi.Services
                     Note = requestDTO.Note, 
                 };
 
-                var relationExists = senderAcc.NicknamedAccounts.Any();
+                var relationExists = senderAcc.NotedAccounts.Any();
 
                 if (requestDTO.Note.IsNullOrEmpty() && !relationExists) //if request is null ignore by now
                 {
@@ -1425,6 +1426,13 @@ namespace DomainCoreApi.Services
 
                             });
 
+                        }
+
+
+                        var note = accountWithContext.NotedAccounts?.FirstOrDefault(e => e.SubjectId == memberProfile.Id);
+                        if (note != null)
+                        {
+                            memberProfile.Note = note.Note;
                         }
                     }
                     //remember to implement chat orderweight by newest activity.
