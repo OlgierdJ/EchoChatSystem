@@ -1,14 +1,14 @@
 global using Microsoft.AspNetCore.Components.Authorization;
 global using Blazored.LocalStorage;
 using CoreLib.WebAPI;
-using EchoWebapp.Client.Provider;
 using EchoWebapp.Components;
 using MudBlazor.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CoreLib.Handlers;
-using System.Security.Claims;
+using EchoWebapp.Services;
+using EchoWebapp.Client.Provider;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -48,10 +48,10 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
 
-builder.Services.AddSingleton<AccountIdContainer>();
 builder.Services.AddSingleton<EchoAPI>();
-builder.Services.AddSingleton<SignalRClientService>();
+builder.Services.AddScoped<SignalRClientService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<IUserContainer, EchoWebapp.Services.UserContainer>();
 //builder.Services.AddSingleton<AuthenticationStateProvider, CustomRevalidatingAuthenticationStateProvider>();
 //builder.Services.AddScoped<AuthenticationService>();
 //builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();

@@ -14,5 +14,5 @@ namespace CoreLib.Hubs
         public string Entity { get; set; }
         public EntityAction Action { get; set; }
     }
-    
+
 }

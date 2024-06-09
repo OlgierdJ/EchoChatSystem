@@ -9,6 +9,7 @@
 @inject ILocalStorageService LocalStorage
 @inject IJSRuntime _js
 @inject IScrollManager Scroll
+@inject IUserContainer SessionRepository
 
 @*
     Layout for the chatviewcomponent that exists within the directmessagesviewcomponent.
@@ -310,9 +311,12 @@
     protected override async Task OnParametersSetAsync()
     {
         DateBundledMessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date).OrderBy(e => e.Key);
-
+        SessionRepository.SessionChangeOccured += StateHasChanged;
         await base.OnParametersSetAsync();
     }
+
+
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

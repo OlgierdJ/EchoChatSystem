@@ -8,7 +8,7 @@
 @inject NavigationManager nav
 @inject EchoAPI _echoAPI
 @inject ILocalStorageService LocalStorage
-@inject Provider.AccountIdContainer AccountContainer
+@inject IUserContainer SessionRepository
 @inject AuthenticationStateProvider authstate
 @rendermode InteractiveAuto
 
@@ -99,6 +99,7 @@
         {
             await LocalStorage.SetItemAsStringAsync("Token", result);
             await authstate.GetAuthenticationStateAsync();
+            await SessionRepository.ConnectAsync(result);
             nav.NavigateTo("/");
         }
       

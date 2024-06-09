@@ -4,7 +4,6 @@
 @using EchoWebapp.Client.Pages
 @inject NavigationManager nav
 @inject ILocalStorageService LocalStorage
-@inject Provider.AccountIdContainer AccountContainer
 @inject EchoAPI _echoAPI
 
 @*
@@ -114,7 +113,6 @@
     {
         await LocalStorage.RemoveItemAsync("AccountId");
         await LocalStorage.RemoveItemAsync("Token");
-        AccountContainer.SetValue(0, string.Empty);
         nav.NavigateTo("/login");
     }
 

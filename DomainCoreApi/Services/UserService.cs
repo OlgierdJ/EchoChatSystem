@@ -389,7 +389,7 @@ namespace DomainCoreApi.Services
             {
                 var userPwd = await _pwdHandler.CreatePassword(input.Password);
                 Account account = GetNewDefaultAccount(
-                    input.Username.ToLower(), //usernames are normalized so that casing doesnt matter 
+                    input.Username, 
                     input.Email, 
                     input.DateOfBirth, 
                     input.DisplayName, 
@@ -617,16 +617,18 @@ namespace DomainCoreApi.Services
 
         public async Task<bool> SendFriendRequestAsync(ulong senderId, AddFriendRequestDTO requestDTO)
         {
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
             try
             {
+
                 if (requestDTO.Name.IsNullOrEmpty()) //request validation
                 {
                     return false;
                 }
                 var normalizedName = requestDTO.Name.ToLower(); //need to find user by normalized name sequence
-                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(e => e.Name == normalizedName);
+                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().Include(e=>e.Profile).FirstOrDefaultAsync(e => e.Name == normalizedName);
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
-               
+
                 if (receiverAcc == null || senderId == receiverAcc.Id) //validate user is other than self
                 {
                     return false;
@@ -670,6 +672,7 @@ namespace DomainCoreApi.Services
                     dbContext.Set<IncomingFriendRequest>().Remove(incomingFromReceiver); //cleanup cause appearently clientcascade doesnt work????
                     await dbContext.Set<Friendship>().AddAsync(friendship);
                     await dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
                     return true;
                 }
 
@@ -684,12 +687,14 @@ namespace DomainCoreApi.Services
                 };
 
 
-                dbContext.Set<IncomingFriendRequest>().Add(request); //throws error if already blocked fyi
+                await dbContext.Set<IncomingFriendRequest>().AddAsync(request); //throws error if already blocked fyi
 
                 var res = await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             catch (Exception e)
             {
+                await transaction.RollbackAsync();
                 return false;
             }
             return true;
@@ -1426,13 +1431,6 @@ namespace DomainCoreApi.Services
 
                             });
 
-                        }
-
-
-                        var note = accountWithContext.NotedAccounts?.FirstOrDefault(e => e.SubjectId == memberProfile.Id);
-                        if (note != null)
-                        {
-                            memberProfile.Note = note.Note;
                         }
                     }
                     //remember to implement chat orderweight by newest activity.
