@@ -57,7 +57,7 @@ namespace CoreLib.WebAPI
             var request = new HttpRequestMessage(HttpMethod.Post, $"Chat/create");
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
-            var load = JsonSerializer.Serialize(startParticipants, SerializerOptions);
+            var load = JsonSerializer.Serialize(new AddParticipantsRequestDTO() {   ParticipantIds=startParticipants.ToList() }, SerializerOptions);
             request.Content = new StringContent(load, Encoding.UTF8, "application/json");
 
             var response = await client.SendAsync(request).ConfigureAwait(false);

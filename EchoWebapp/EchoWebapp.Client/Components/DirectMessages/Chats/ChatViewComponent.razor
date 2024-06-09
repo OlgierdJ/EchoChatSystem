@@ -300,7 +300,7 @@
     {
         if (firstRender)
         {
-            friends = self?.Friends;//?.ToList();
+            friends = self?.Friends.Where(e=>!Content.Participants.Select(e=>e.Id).Contains(e.Id)).ToList();//?.ToList();
             var token = await LocalStorage.GetItemAsStringAsync("Token");
         }
         await base.OnAfterRenderAsync(firstRender);
