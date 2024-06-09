@@ -35,7 +35,7 @@ namespace DomainPushNotificationApi.Services
             {
                 ChatInvite invite = entity as ChatInvite;
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{invite.SubjectId}")
+                .Group($"{nameof(Chat)}/{invite.SubjectId}")
                 .ChatInviteAdded(invite.SubjectId, mapper.Map<InviteMinimalDTO>(invite));
             });
 
@@ -43,7 +43,7 @@ namespace DomainPushNotificationApi.Services
             {
                 ChatInvite invite = entity as ChatInvite;
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{invite.SubjectId}")
+                .Group($"{nameof(Chat)}/{invite.SubjectId}")
                 .ChatInviteRemoved(invite.SubjectId, invite.InviteCode);
             });
 
@@ -157,7 +157,7 @@ namespace DomainPushNotificationApi.Services
                 ChatMessage message = entity as ChatMessage;
                 //hopefully author is included else is systemmessage
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{message.MessageHolderId}")
+                .Group($"{nameof(Chat)}/{message.MessageHolderId}")
                 .ChatMessageAdded(message.MessageHolderId, mapper.Map<MessageDTO>(message));
 
             });
@@ -166,7 +166,7 @@ namespace DomainPushNotificationApi.Services
             {
                 ChatMessage message = entity as ChatMessage;
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{message.MessageHolderId}")
+                .Group($"{nameof(Chat)}/{message.MessageHolderId}")
                 .ChatMessageUpdated(message.MessageHolderId, message.Id, message.Content, message.TimeEdited);
 
             });
@@ -175,7 +175,7 @@ namespace DomainPushNotificationApi.Services
             {
                 ChatMessage message = entity as ChatMessage;
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{message.MessageHolderId}")
+                .Group($"{nameof(Chat)}/{message.MessageHolderId}")
                 .ChatMessageRemoved(message.MessageHolderId, message.Id);
 
             });
@@ -185,7 +185,7 @@ namespace DomainPushNotificationApi.Services
                 ChatMessagePin pin = entity as ChatMessagePin;
                 //hopefully author is included else is systemmessage
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{pin.PinboardId}")
+                .Group($"{nameof(Chat)}/{pin.PinboardId}")
                 .ChatMessagePinAdded(pin.PinboardId, pin.MessageId);
 
             });
@@ -194,7 +194,7 @@ namespace DomainPushNotificationApi.Services
             {
                 ChatMessagePin pin = entity as ChatMessagePin;
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{pin.PinboardId}")
+                .Group($"{nameof(Chat)}/{pin.PinboardId}")
                 .ChatMessagePinRemoved(pin.PinboardId, pin.MessageId);
 
             });
@@ -215,7 +215,7 @@ namespace DomainPushNotificationApi.Services
                 Chat chat = entity as Chat;
 
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{chat.Id}")
+                .Group($"{nameof(Chat)}/{chat.Id}")
                 .ChatUpdated(chat.Id, chat.Name, chat.IconUrl);
             });
 
@@ -225,7 +225,7 @@ namespace DomainPushNotificationApi.Services
             //    Chat chat = entity as Chat;
 
             //    await _hubContext.Clients
-            //    .Group($"{typeof(Chat)}/{chat.Id}")
+            //    .Group($"{nameof(Chat)}/{chat.Id}")
             //    .ChatRemoved(chat.Id);
 
             //});
@@ -331,7 +331,7 @@ namespace DomainPushNotificationApi.Services
                 ChatParticipancy participancy = entity as ChatParticipancy;
 
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{participancy.SubjectId}")
+                .Group($"{nameof(Chat)}/{participancy.SubjectId}")
                 .ChatMemberJoined(participancy.SubjectId, mapper.Map<MemberDTO>(participancy));
 
                 await _hubContext.Clients
@@ -343,8 +343,8 @@ namespace DomainPushNotificationApi.Services
             {
                 ChatParticipancy participancy = entity as ChatParticipancy;
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{participancy.SubjectId}")
-                .ChatMemberOwnershipChanged(participancy.ParticipantId, participancy.IsOwner);
+                .Group($"{nameof(Chat)}/{participancy.SubjectId}")
+                .ChatMemberOwnershipChanged(participancy.SubjectId, participancy.ParticipantId, participancy.IsOwner);
 
                 await _hubContext.Clients
                 .User(participancy.ParticipantId.ToString())
@@ -359,7 +359,7 @@ namespace DomainPushNotificationApi.Services
                 .LeftChat(participancy.SubjectId);
 
                 await _hubContext.Clients
-                .Group($"{typeof(Chat)}/{participancy.SubjectId}")
+                .Group($"{nameof(Chat)}/{participancy.SubjectId}")
                 .ChatMemberLeft(participancy.SubjectId,participancy.ParticipantId);
 
             });

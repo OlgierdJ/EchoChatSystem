@@ -36,7 +36,7 @@ namespace CoreLib.Handlers
         public event Action<ChatDTO> ChatJoined;
         public event Action<ulong, MemberDTO> ChatMemberJoined;
         public event Action<ulong, ulong> ChatMemberLeft;
-        public event Action<ulong, bool> ChatMemberOwnershipChanged;
+        public event Action<ulong,ulong, bool> ChatMemberOwnershipChanged;
         public event Action<ulong, MessageDTO> ChatMessageAdded;
         public event Action<ulong, ulong > ChatMessageRemoved;
         public event Action<ulong, ulong, string, DateTime?> ChatMessageUpdated;
@@ -96,7 +96,7 @@ namespace CoreLib.Handlers
             connection.On<ChatDTO>(nameof(IPushNotificationHub.ChatJoined), chatDTO => ChatJoined?.Invoke(chatDTO));
             connection.On<ulong, MemberDTO>(nameof(IPushNotificationHub.ChatMemberJoined), (chatId, memberDTO) => ChatMemberJoined?.Invoke(chatId, memberDTO));
             connection.On<ulong, ulong>(nameof(IPushNotificationHub.ChatMemberLeft), (chatId, accountId) => ChatMemberLeft?.Invoke(chatId, accountId));
-            connection.On<ulong, bool>(nameof(IPushNotificationHub.ChatMemberOwnershipChanged), (accountId, isOwner) => ChatMemberOwnershipChanged?.Invoke(accountId, isOwner));
+            connection.On<ulong, ulong, bool>(nameof(IPushNotificationHub.ChatMemberOwnershipChanged), (chatId, accountId, isOwner) => ChatMemberOwnershipChanged?.Invoke(chatId, accountId, isOwner));
             connection.On<ulong, MessageDTO>(nameof(IPushNotificationHub.ChatMessageAdded), (chatId, messageDTO) => ChatMessageAdded?.Invoke(chatId, messageDTO));
             connection.On<ulong, ulong>(nameof(IPushNotificationHub.ChatMessageRemoved), (chatId, messageId) => ChatMessageRemoved?.Invoke(chatId, messageId));
             connection.On<ulong, ulong, string, DateTime?>(nameof(IPushNotificationHub.ChatMessageUpdated), (chatId, messageId, content, timeEdited) => ChatMessageUpdated?.Invoke(chatId, messageId, content, timeEdited));
