@@ -39,14 +39,14 @@ namespace CoreLib.MapperProfiles
         public EchoCoreCommonMappings()
         {
             CreateMap<ChatParticipancy, MemberDTO>()
-                .ForMember(dest => dest.ActiveStatus, 
+                .ForMember(dest => dest.ActiveStatus,
                 opts => opts.Ignore())
-               .ForMember(dest => dest.ImageIconURL, 
+               .ForMember(dest => dest.ImageIconURL,
                opts => opts.MapFrom(src => src.Participant.Profile.AvatarFileURL))
-               .ForMember(dest => dest.IsOwner, 
+               .ForMember(dest => dest.IsOwner,
                opts => opts.MapFrom(src => src.IsOwner)) // map aftermap based on chat owner id.
-               //.ForMember(dest => dest.IsMuted,
-               //opts => opts.MapFrom(src => src.Participant.MutedVoices)) 
+               .ForMember(dest => dest.IsMuted,
+               opts => opts.Ignore())
                .ForMember(dest => dest.Id, 
                opts => opts.MapFrom(src => src.ParticipantId))
                .ForMember(dest => dest.NameColour, 
@@ -119,6 +119,8 @@ namespace CoreLib.MapperProfiles
                opts => opts.MapFrom(e => e.Profile.AvatarFileURL))
                .ForMember(dest => dest.IsOwner, 
                opts => opts.Ignore()) // map aftermap based on chat owner id.
+               .ForMember(dest => dest.IsMuted,
+               opts => opts.Ignore()) // map aftermap based on chat owner id.
                .ForMember(dest => dest.Id, 
                opts => opts.MapFrom(e => e.Id))
                .ForMember(dest => dest.NameColour, 
@@ -149,6 +151,7 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.Participants, opts => opts.Ignore())
                 .ForMember(dest => dest.UserPermissions, opts => opts.Ignore())
                 .ForMember(dest => dest.Muted, opts => opts.Ignore())
+                .ForMember(dest => dest.Hidden, opts => opts.Ignore())
                 .ForMember(dest => dest.LastReadMessageId, opts => opts.Ignore())
                 .ForMember(dest => dest.CategoryName, opts => opts.Ignore())
                 .ForMember(dest => dest.OrderWeight, opts => opts.Ignore())  //map muted, lastreadmessageid, participants, permissions, membersettings, roles aftermap //map this in aftermap from service layer.
@@ -178,6 +181,7 @@ namespace CoreLib.MapperProfiles
                 .ForMember(dest => dest.Participants, opts => opts.Ignore())
                 .ForMember(dest => dest.UserPermissions, opts => opts.Ignore())
                 .ForMember(dest => dest.Muted, opts => opts.Ignore())
+                .ForMember(dest => dest.Hidden, opts => opts.Ignore())
                 .ForMember(dest => dest.LastReadMessageId, opts => opts.Ignore())
                 .ForMember(dest => dest.CategoryName, opts => opts.Ignore())
                 .ForMember(dest => dest.OrderWeight, opts => opts.Ignore());  //map muted, lastreadmessageid, participants, permissions, permissions, membersettings, roles aftermap //map this in aftermap from service layer.
@@ -219,9 +223,11 @@ namespace CoreLib.MapperProfiles
             CreateMap<AccountActivityStatus, ActivityStatusMinimalDTO>(); //output members are same name so no need to map
 
             CreateMap<OutgoingFriendRequest, FriendRequestDTO>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.Id))
                 .ForMember(dest => dest.Person, opts => opts.MapFrom(e => e.ReceiverRequest.Receiver))
                 .ForMember(dest => dest.Type, opts => opts.MapFrom(e => RequestType.Outgoing));
             CreateMap<IncomingFriendRequest, FriendRequestDTO>()
+               .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.Id))
                .ForMember(dest => dest.Person, opts => opts.MapFrom(e => e.SenderRequest.Sender))
                .ForMember(dest => dest.Type, opts => opts.MapFrom(e => RequestType.Incoming));
 
@@ -811,6 +817,7 @@ namespace CoreLib.MapperProfiles
 
             CreateMap<ServerProfile, MemberDTO>()
                .ForMember(dest => dest.ActiveStatus, opts => opts.Ignore())
+               .ForMember(dest => dest.IsMuted, opts => opts.Ignore())
                .ForMember(dest => dest.Id, opts => opts.MapFrom(e => e.AccountId))
                .ForMember(dest => dest.NameColour, opts => opts.MapFrom(e => e.Roles.Select(g => g.Role).OrderByDescending(t => t.Importance).First().Colour))
                .ForMember(dest => dest.GroupingName, opts => opts.MapFrom((src, dest) =>
