@@ -1,10 +1,14 @@
 ﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
 using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.DTO.EchoCore.UserCore.SettingsCore;
+using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Entities.Enums;
 using CoreLib.Handlers;
+using CoreLib.Interfaces.Contracts;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 
 namespace EchoWebapp.Client.Provider
 {
@@ -27,12 +31,13 @@ namespace EchoWebapp.Client.Provider
 
         private readonly SignalRClientService signalRClient;
         private readonly ILocalStorageService localStorage;
-       
+        private readonly NavigationManager nav;
 
-        public UserContainer(SignalRClientService signalRClient, ILocalStorageService localStorage)
+        public UserContainer(SignalRClientService signalRClient, ILocalStorageService localStorage,NavigationManager nav)
         {
             this.signalRClient = signalRClient;
             this.localStorage = localStorage;
+            this.nav = nav;
         }
 
         public async Task ConnectAsync(string token)
@@ -103,39 +108,50 @@ namespace EchoWebapp.Client.Provider
             SessionChangeOccured?.Invoke();
         }
 
-        private void SignalRClient_UserUnmuted(ulong accountId)
-        {
-            throw new NotImplementedException();
-        }
+   
 
         private void SignalRClient_UserProfileChanged(ulong accountId, string displayName, string avatarFileURL, string? about, string bannerColor)
         {
-            throw new NotImplementedException();
+            self.UserProfile.User.ImageIconURL = avatarFileURL;
+            self.UserProfile.User.Name = displayName;
+            self.UserProfile.AboutMe = about;
+            self.UserProfile.BannerColour = bannerColor;
+
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_UserMutedStateChanged(ulong chatId, bool hidden)
         {
-            throw new NotImplementedException();
+            self.DirectMessages.FirstOrDefault(e=>e.Id == chatId).Hidden = hidden;
+
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_UserActivityStatusChanged(ulong accountId, byte activityStatusId, string? customMessage)
         {
-            throw new NotImplementedException();
+            self.ActiveStatus.DisplayedContent = customMessage;
+            self.ActiveStatus.Id = activityStatusId;
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_SensitiveDataUpdated(string email, string? phoneNumber)
         {
-            throw new NotImplementedException();
+           self.Email = email;
+           self.PhoneNumber = phoneNumber;
+           SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_LeftChat(ulong chatId)
         {
-            self.DirectMessages.Remove(self.DirectMessages.FirstOrDefault(e => e.Id == chatId));
+            var LeftChat = self.DirectMessages.FirstOrDefault(e => e.Id == chatId);
+            self.DirectMessages.Remove(LeftChat);
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_FriendRequestRemoved(RequestType type, ulong requestId)
         {
-            self.Requests?.Remove(self.Requests.FirstOrDefault(e=>e.Id == requestId && e.Type == type));
+            var FriendRequestRemoved = self.Requests.FirstOrDefault(e => e.Id == requestId && e.Type == type);
+            self.Requests?.Remove(FriendRequestRemoved);
             Console.WriteLine("container");
             SessionChangeOccured?.Invoke();
         }
@@ -149,17 +165,21 @@ namespace EchoWebapp.Client.Provider
 
         private void SignalRClient_FriendRemoved(ulong accountId)
         {
-            throw new NotImplementedException();
+            var FriendRemoved = self.Friends.FirstOrDefault(e => e.Id == accountId);
+            self.Friends?.Remove(FriendRemoved);
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_FriendAdded(UserDTO userDTO)
         {
-            throw new NotImplementedException();
+            self.Friends.Add(userDTO);
+            SessionChangeOccured?.Invoke();
         }
 
         private async void SignalRClient_ForceLogoutAsync()
         {
             await localStorage.ClearAsync();
+            nav.NavigateTo("https://localhost:7283/login");
         }
 
         private void SignalRClient_ExternalUserVolumeChanged(ulong accountId, byte volume)
@@ -169,77 +189,99 @@ namespace EchoWebapp.Client.Provider
 
         private void SignalRClient_ExternalUserNoteChanged(ulong accountId, string note)
         {
-            throw new NotImplementedException();
+            self.DirectMessages.Select(e =>
+            {
+                return e.Participants.FirstOrDefault(p => p.Id == accountId);
+            }).Select(e=>e.Profile.Note = note);
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ExternalUserNameChanged(ulong accountId, string name)
         {
-            throw new NotImplementedException();
+            var friend =  self.Friends.FirstOrDefault(e=>e.Id == accountId);
+            if (friend is not null)
+            {
+                friend.DisplayName = name;
+            }
+            self.DirectMessages.Select(e =>
+            {
+                return e.Participants.FirstOrDefault(p => p.Id == accountId);
+            }).Select(e => e.Profile.User.DisplayName = name);
+            SessionChangeOccured?.Invoke();
         }
 
-        private void SignalRClient_ChatMemberOwnershipChanged(ulong chatId, bool isOwner)
+        private void SignalRClient_ChatMemberOwnershipChanged(ulong chatId, ulong accountId, bool isOwner)
         {
-            throw new NotImplementedException();
+            self.DirectMessages.FirstOrDefault(e=>e.Id == chatId).Participants.FirstOrDefault(e => e.Id == accountId).IsOwner = isOwner;
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ChatMemberLeft(ulong chatId, ulong accountId)
         {
-            throw new NotImplementedException();
+            var chat = self.DirectMessages.FirstOrDefault(e => e.Id == chatId);
+            var removemember = chat.Participants.FirstOrDefault(e => e.Id == accountId);
+            chat.Participants.Remove(removemember);
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ChatMemberJoined(ulong chatId, MemberDTO memberDTO)
         {
-            throw new NotImplementedException();
+            self.DirectMessages.FirstOrDefault(e => e.Id == chatId).Participants.Add(memberDTO);
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ChatLastReadMessageChanged(ulong chatId, ulong? messageId)
         {
-            throw new NotImplementedException();
+            self.DirectMessages.FirstOrDefault(e => e.Id == chatId).LastReadMessageId = messageId;
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ChatJoined(ChatDTO chatDTO)
         {
-            throw new NotImplementedException();
-        }
-
-        private void SignalRClient_ChatInviteRemoved(ulong chatId, string invitecode)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SignalRClient_ChatInviteAdded(ulong chatId, InviteMinimalDTO inviteMinimal)
-        {
-            throw new NotImplementedException();
+            self.DirectMessages.Add(chatDTO);
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ChatHiddenStateChanged(ulong chatId, bool hidden)
         {
-            throw new NotImplementedException();
+            self.DirectMessages.FirstOrDefault(e => e.Id == chatId).Hidden = hidden;
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_BlockedUserRemoved(ulong accountId)
         {
-            throw new NotImplementedException();
+            var blockedremove = self.BlockedUsers.FirstOrDefault(e => e.Id == accountId);
+            self.BlockedUsers.Remove(blockedremove);
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_BlockedUserAdded(UserMinimalDTO userMinimal)
         {
-            throw new NotImplementedException();
+            self.BlockedUsers.Add(userMinimal); 
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ChatUpdated(ulong chatId, string chatName, string? iconUrl)
         {
-            throw new NotImplementedException();
+            var ChatUpdated = self.DirectMessages.FirstOrDefault(e => e.Id == chatId);
+            ChatUpdated.Name = chatName;
+            ChatUpdated.IconUrl = iconUrl;
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ChatMessageUpdated(ulong chatId, ulong messageId, string content, DateTime? timeEdited)
         {
-            throw new NotImplementedException();
+            var ChatMessageUpdated = self.DirectMessages.FirstOrDefault(e => e.Id == chatId).Messages.FirstOrDefault(e => e.Id == messageId);
+            ChatMessageUpdated.Content = content;
+            ChatMessageUpdated.TimeEdited = timeEdited;
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ChatMessageRemoved(ulong chatId, ulong messageId)
         {
-            throw new NotImplementedException();
+            var ChatMessageUpdated = self.DirectMessages.FirstOrDefault(e => e.Id == chatId).Messages.FirstOrDefault(e => e.Id == messageId);
+            self.DirectMessages.FirstOrDefault(e => e.Id == chatId).Messages.Remove(ChatMessageUpdated);
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_ChatMessageAdded(ulong chatId, MessageDTO messageDTO)
@@ -250,6 +292,27 @@ namespace EchoWebapp.Client.Provider
         }
 
         private void SignalRClient_ChatMutedStateChanged(ulong chatId, bool state)
+        {
+            self.DirectMessages.FirstOrDefault(e => e.Id == chatId).Muted = state;
+            SessionChangeOccured?.Invoke();
+        }
+
+        //vi skal jo ikke noget med den det mere backend som skal bruge det eller nå man sender en besker
+        private void SignalRClient_ChatInviteRemoved(ulong chatId, string invitecode)
+        {
+            throw new NotImplementedException();
+            self.DirectMessages.FirstOrDefault(e => e.Id == chatId);
+            SessionChangeOccured?.Invoke();
+        }
+        //vi skal jo ikke noget med den det mere backend som skal bruge det eller nå man sender en besker
+        private void SignalRClient_ChatInviteAdded(ulong chatId, InviteMinimalDTO inviteMinimal)
+        {
+            throw new NotImplementedException();
+            self.DirectMessages.FirstOrDefault(e => e.Id == chatId);
+            SessionChangeOccured?.Invoke();
+        }
+
+        private void SignalRClient_UserUnmuted(ulong accountId)
         {
             throw new NotImplementedException();
         }
