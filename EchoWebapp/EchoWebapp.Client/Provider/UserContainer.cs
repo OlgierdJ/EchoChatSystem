@@ -237,6 +237,8 @@ namespace EchoWebapp.Client.Provider
         private void SignalRClient_ChatJoined(ChatDTO chatDTO)
         {
             self.DirectMessages.Add(chatDTO);
+            Console.WriteLine(chatDTO.Name);
+            Console.WriteLine(chatDTO.Id);
             SessionChangeOccured?.Invoke();
         }
 
