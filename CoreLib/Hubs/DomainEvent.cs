@@ -14,5 +14,12 @@ namespace CoreLib.Hubs
         public string Entity { get; set; }
         public EntityAction Action { get; set; }
     }
-    
+
+    public class PreDomainEvent
+    {
+        public string Type { get; set; } //need this for conversion probably
+        public IDomainEntity Entity { get; set; }
+        public EntityAction Action { get; set; }
+    }
+
 }

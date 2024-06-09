@@ -135,13 +135,15 @@ namespace EchoWebapp.Client.Provider
 
         private void SignalRClient_FriendRequestRemoved(RequestType type, ulong requestId)
         {
-            throw new NotImplementedException();
+            self.Requests?.Remove(self.Requests.FirstOrDefault(e=>e.Id == requestId && e.Type == type));
+            Console.WriteLine("container");
+            SessionChangeOccured?.Invoke();
         }
 
         private void SignalRClient_FriendRequestAdded(FriendRequestDTO friendRequestDTO)
         {
             self.Requests?.Add(friendRequestDTO);
-            Console.WriteLine(friendRequestDTO.Person.Name);
+            Console.WriteLine("container");
             SessionChangeOccured?.Invoke();
         }
 

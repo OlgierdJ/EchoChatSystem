@@ -9,15 +9,16 @@
 
     Clicking a request should open the profile of the other user.
 *@
+<MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
+        <MudTextField Placeholder=" Search" @bind-Value="searchTerm"
+                    @onkeyup="(()=>SearchChanged())" Immediate />
+    </MudPaper>
+    <MudText Class="px-5 py-2" Typo="Typo.button">Pending - @List.Count()</MudText>
 @if (filtered != null && filtered?.Count > 0)
 {
-    <MudPaper Square Height="5vh" Class="px-3 mb-6" Elevation="0">
-         <MudTextField Placeholder=" Search" @bind-Value="searchTerm"
-                       @onkeyup="(()=>SearchChanged())" Immediate />
-     </MudPaper>
-    <MudText Class="px-5 py-2" Typo="Typo.button">Pending - @List.Count()</MudText>
     <MudList Clickable="true">
-        @foreach (var r in filtered.OrderBy(x => x.Person.DisplayName))
+        @foreach (var r in filtered
+        .OrderBy(x => x.Person.DisplayName))
         {
             <MudDivider />
             <MudListItem Dense="true" Class="mb-3 mt-2">
@@ -26,10 +27,16 @@
         }
     </MudList>
 }
-else
+else if (List.Count==0)
 {
     <MudPaper Square Class="px-3 mb-6" Elevation="0">
          <MudText>There are no pending friend requests at the moment.</MudText>
+     </MudPaper>
+}
+else
+{
+    <MudPaper Square Class="px-3 mb-6" Elevation="0">
+         <MudText>There are no matching results.</MudText>
      </MudPaper>
 }
 @code {
@@ -57,7 +64,7 @@ else
     {
         filtered = List.ToList();
         Console.WriteLine("Changed");
-        await InvokeAsync(StateHasChanged);
+        // await InvokeAsync(StateHasChanged);
     }
 
     protected override Task OnInitializedAsync()

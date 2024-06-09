@@ -389,7 +389,7 @@ namespace DomainCoreApi.Services
             {
                 var userPwd = await _pwdHandler.CreatePassword(input.Password);
                 Account account = GetNewDefaultAccount(
-                    input.Username.ToLower(), //usernames are normalized so that casing doesnt matter 
+                    input.Username, 
                     input.Email, 
                     input.DateOfBirth, 
                     input.DisplayName, 
@@ -623,10 +623,9 @@ namespace DomainCoreApi.Services
                 {
                     return false;
                 }
-                var normalizedName = requestDTO.Name.ToLower(); //need to find user by normalized name sequence
-                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(e => e.Name == normalizedName);
+                Account receiverAcc = await dbContext.Set<Account>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(e => e.Name == requestDTO.Name);
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
-               
+
                 if (receiverAcc == null || senderId == receiverAcc.Id) //validate user is other than self
                 {
                     return false;
@@ -684,7 +683,7 @@ namespace DomainCoreApi.Services
                 };
 
 
-                dbContext.Set<IncomingFriendRequest>().Add(request); //throws error if already blocked fyi
+                await dbContext.Set<IncomingFriendRequest>().AddAsync(request); //throws error if already blocked fyi
 
                 var res = await dbContext.SaveChangesAsync();
             }
@@ -1426,13 +1425,6 @@ namespace DomainCoreApi.Services
 
                             });
 
-                        }
-
-
-                        var note = accountWithContext.NotedAccounts?.FirstOrDefault(e => e.SubjectId == memberProfile.Id);
-                        if (note != null)
-                        {
-                            memberProfile.Note = note.Note;
                         }
                     }
                     //remember to implement chat orderweight by newest activity.

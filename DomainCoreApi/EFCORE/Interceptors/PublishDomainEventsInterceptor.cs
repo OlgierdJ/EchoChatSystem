@@ -39,13 +39,10 @@ namespace DomainCoreApi.EFCORE.Interceptors
                 .Entries<IDomainEntity>()
                 //find entries that are added, updated or deleted
                 .Where(entry => entry.State != EntityState.Unchanged && entry.State != EntityState.Detached)
-                .Select(entry => new DomainEvent()
+                .Select(entry => new PreDomainEvent()
                 {
                     Type = entry.Entity.GetType().AssemblyQualifiedName,
-                    Entity = JsonSerializer.Serialize(entry.Entity, entry.Entity.GetType(), new JsonSerializerOptions()
-                    {
-                         ReferenceHandler=ReferenceHandler.Preserve 
-                    }),
+                    Entity = entry.Entity,
                     Action = (EntityAction)Enum.Parse(typeof(EntityAction), entry.State.ToString())
                 })
                 .ToList();
