@@ -311,30 +311,26 @@
     protected override async Task OnParametersSetAsync()
     {
         DateBundledMessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date).OrderBy(e => e.Key);
+        SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
         await base.OnParametersSetAsync();
     }
 
-
-
+    private async void SessionRepository_SessionChangeOccured()
+    {
+        DateBundledMessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date).OrderBy(e => e.Key);
+        await InvokeAsync(StateHasChanged);
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            var token = await LocalStorage.GetItemAsStringAsync("Token");
             friends = self?.Friends.Where(e => !Content.Participants.Select(e => e.Id).Contains(e.Id)).ToList();
 
-            SessionRepository.SessionChangeOccured += Changed;
-            StateHasChanged();
+            var token = await LocalStorage.GetItemAsStringAsync("Token");
         }
         await base.OnAfterRenderAsync(firstRender);
         await Scroll.ScrollToBottomAsync("#MessageList", ScrollBehavior.Smooth);
-    }
-
-    private async void Changed()
-    {
-        DateBundledMessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date).OrderBy(e => e.Key);
-        await InvokeAsync(StateHasChanged);
     }
 
     // protected override async Task OnInitializedAsync()
