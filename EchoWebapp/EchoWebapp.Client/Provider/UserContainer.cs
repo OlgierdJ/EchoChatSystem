@@ -32,7 +32,7 @@ namespace EchoWebapp.Client.Provider
         public async Task ConnectAsync(string token)
         {
             var connection = signalRClient.Connection;
-            if (connection != null && connection.State == HubConnectionState.Disconnected)
+            if (connection == null || connection.State == HubConnectionState.Disconnected)
             {
                 await signalRClient.Connect(token);
             }

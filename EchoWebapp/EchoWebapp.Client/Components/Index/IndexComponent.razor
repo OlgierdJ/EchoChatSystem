@@ -4,12 +4,10 @@
 @using EchoWebapp.Client.Components.DirectMessages
 @using EchoWebapp.Client.Components.Servers
 @rendermode InteractiveAuto
-@* @rendermode @(new InteractiveWebAssemblyRenderMode(prerender:false)) *@
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager nav
 @inject IUserContainer SessionRepository
 @inject EchoAPI _echoAPI
-@* @inject IServiceProvider Services *@
 
 
 @*
@@ -57,16 +55,11 @@ else
                 var result = await _echoAPI.LoadUserSessionDataAsync(token);
                 if(result != null)
                 {
-                    // if (Services.GetService<IUserContainer>() is { } env)
-                    // {
-                    //     env.self = self;
-                    // }
 
                     loggedIn = true;
                     result.ActiveStatus.DisplayedContent = result.ActiveStatus.Name;
-                    self = result;
-
-                    SessionRepository.self = self;
+                    SessionRepository.self = result;
+                    self = SessionRepository.self;
                 }
                 else
                 {
