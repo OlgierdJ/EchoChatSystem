@@ -6,6 +6,7 @@ using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Abstractions;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using DomainCoreApi.EFCORE.Interceptors;
 
 namespace DomainCoreApi.Services
 {
@@ -21,7 +22,7 @@ namespace DomainCoreApi.Services
         {
             var domainEvts = DomainEvents.Select(evt => new DomainEvent()
             {
-                Entity = JsonSerializer.Serialize(evt.Entity, evt.Entity.GetType(), new JsonSerializerOptions()
+                Entity = JsonSerializer.Serialize(evt.Entry.Entity, evt.Entry.Entity.GetType(), new JsonSerializerOptions()
                 {
                     ReferenceHandler = ReferenceHandler.Preserve
                 }),

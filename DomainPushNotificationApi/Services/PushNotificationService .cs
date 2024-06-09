@@ -51,9 +51,10 @@ namespace DomainPushNotificationApi.Services
             {
                 OutgoingFriendRequest outgoingFriendRequest = entity as OutgoingFriendRequest;
                 //hopefully account, profile, activestatus and customstatus is included in context
+                var map = mapper.Map<FriendRequestDTO>(outgoingFriendRequest);
                 await _hubContext.Clients
                 .User(outgoingFriendRequest.SenderId.ToString())
-                .FriendRequestAdded(mapper.Map<FriendRequestDTO>(outgoingFriendRequest));
+                .FriendRequestAdded(map);
             });
 
             _hubManager.Add((nameof(OutgoingFriendRequest), EntityAction.Deleted), async (entity) =>
@@ -343,7 +344,7 @@ namespace DomainPushNotificationApi.Services
                 ChatParticipancy participancy = entity as ChatParticipancy;
                 await _hubContext.Clients
                 .Group($"{typeof(Chat)}/{participancy.SubjectId}")
-                .ChatMemberOwnershipChanged(participancy.ParticipantId, participancy.IsOwner);
+                .ChatMemberOwnershipChanged(participancy.SubjectId, participancy.ParticipantId, participancy.IsOwner);
 
                 await _hubContext.Clients
                 .User(participancy.ParticipantId.ToString())

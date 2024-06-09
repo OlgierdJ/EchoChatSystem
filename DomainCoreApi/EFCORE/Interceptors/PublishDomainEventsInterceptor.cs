@@ -42,7 +42,7 @@ namespace DomainCoreApi.EFCORE.Interceptors
                 .Select(entry => new PreDomainEvent()
                 {
                     Type = entry.Entity.GetType().AssemblyQualifiedName,
-                    Entity = entry.Entity,
+                    Entry = entry,
                     Action = (EntityAction)Enum.Parse(typeof(EntityAction), entry.State.ToString())
                 })
                 .ToList();
@@ -63,7 +63,6 @@ namespace DomainCoreApi.EFCORE.Interceptors
 
             return result;
         }
-        
     }
     
 }
