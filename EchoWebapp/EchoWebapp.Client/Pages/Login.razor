@@ -9,6 +9,7 @@
 @inject EchoAPI _echoAPI
 @inject ILocalStorageService LocalStorage
 @inject IUserContainer SessionRepository
+@inject AccountIdContainer Container
 @inject AuthenticationStateProvider authstate
 @rendermode InteractiveAuto
 
@@ -54,6 +55,11 @@
     {
         if (firstRender)
         {
+            var token = await LocalStorage.GetItemAsStringAsync("Token");
+            if(Container.checktime(token))
+            {
+                nav.NavigateTo("/");
+            }
             await LocalStorage.ClearAsync();
         }
 
