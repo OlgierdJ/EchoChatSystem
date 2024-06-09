@@ -625,8 +625,8 @@ namespace DomainCoreApi.Services
                 }
                 Account receiverAcc = await dbContext.Set<Account>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(e => e.Name == requestDTO.Name);
                 //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
-
-                if (senderId == receiverAcc.Id) //validate user is other than self
+               
+                if (receiverAcc == null || senderId == receiverAcc.Id) //validate user is other than self
                 {
                     return false;
                 }
