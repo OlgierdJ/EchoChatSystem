@@ -25,7 +25,8 @@ namespace EchoWebapp.Services
 
         public async Task ConnectAsync(string token)
         {
-            if (signalRClient.Connection.State == HubConnectionState.Disconnected)
+            var connection = signalRClient.Connection;
+            if (connection != null && connection.State == HubConnectionState.Disconnected)
             {
                 await signalRClient.Connect(token);
             }

@@ -11,9 +11,11 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
 builder.Services.AddMudServices();
 
-builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddBlazoredLocalStorageAsSingleton();
 
 builder.Services.AddSingleton<AccountIdContainer>();
 builder.Services.AddSingleton<IUserContainer, UserContainer>();
@@ -26,7 +28,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>
 
 
 var host = builder.Build();
-var connSingleton = host.Services.GetRequiredService<UserContainer>();
+var connSingleton = host.Services.GetRequiredService<IUserContainer>();
 await connSingleton.InitializeAsync();
 
 // Now we can call RunAsync to render the first page component

@@ -21,7 +21,6 @@ namespace EchoWebapp.Client.Provider
     {
         private readonly SignalRClientService signalRClient;
         private readonly ILocalStorageService localStorage;
-        private string Token;
         public UserFullDTO self { get; set; }
 
         public UserContainer(SignalRClientService signalRClient, ILocalStorageService localStorage)
@@ -32,7 +31,8 @@ namespace EchoWebapp.Client.Provider
 
         public async Task ConnectAsync(string token)
         {
-            if (signalRClient.Connection.State == HubConnectionState.Disconnected)
+            var connection = signalRClient.Connection;
+            if (connection != null && connection.State == HubConnectionState.Disconnected)
             {
                 await signalRClient.Connect(token);
             }
