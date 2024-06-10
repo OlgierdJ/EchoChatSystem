@@ -1,5 +1,6 @@
 ﻿@using CoreLib.DTO.EchoCore.UserCore
 @using CoreLib.Entities.EchoCore.AccountCore
+@implements IDisposable
 @inject IUserContainer SessionRepository
 
 @*
@@ -52,18 +53,16 @@ else
         if (firstRender)
         {
             filtered = List.ToList();
-            Console.WriteLine("OnAfterRenderAsync");
-            SessionRepository.SessionChangeOccured += Changed;
+            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
             StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private async void Changed()
+    private async void SessionRepository_SessionChangeOccured()
     {
         filtered = List.ToList();
-        Console.WriteLine("Changed");
         await InvokeAsync(StateHasChanged);
     }
 
@@ -71,7 +70,10 @@ else
     {
         return base.OnInitializedAsync();
     }
-
+    public void Dispose()
+    {
+        SessionRepository.SessionChangeOccured -= SessionRepository_SessionChangeOccured;
+    }
     void SearchChanged()
     {
         Console.WriteLine(searchTerm);

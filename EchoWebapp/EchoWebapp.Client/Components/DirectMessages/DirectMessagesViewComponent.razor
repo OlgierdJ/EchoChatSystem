@@ -5,6 +5,8 @@
 @using MudBlazor
 @using EchoWebapp.Client.Components.DirectMessages.Friends
 @using EchoWebapp.Client.Components.DirectMessages.Chats
+@implements IDisposable
+@inject IUserContainer SessionRepository
 @rendermode InteractiveAuto
 @*
     Layout for the friends section that exists within the DirectMessagesViewComponent in the indexcomponent.
@@ -49,10 +51,21 @@
         if (firstRender)
         {
             chat = self.DirectMessages.FirstOrDefault();
+            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
+            StateHasChanged();
         }
+
         await base.OnAfterRenderAsync(firstRender);
     }
 
+    private async void SessionRepository_SessionChangeOccured()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        SessionRepository.SessionChangeOccured -= SessionRepository_SessionChangeOccured;
+    }
     public async void HandelOnChatChanged(ChatDTO c)
     {
         isLoading = true;

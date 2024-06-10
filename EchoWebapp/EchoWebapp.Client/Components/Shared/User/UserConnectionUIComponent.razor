@@ -4,6 +4,8 @@
 @using EchoWebapp.Client.Pages
 @inject NavigationManager nav
 @inject ILocalStorageService LocalStorage
+@implements IDisposable
+@inject IUserContainer SessionRepository
 @inject EchoAPI _echoAPI
 
 @*
@@ -68,6 +70,10 @@
 </MudOverlay>
 
 @code {
+
+    [Parameter]
+    public UserFullDTO self { get; set; }
+
     Popup popup = new();
 
     bool mute = false;
@@ -84,8 +90,24 @@
 
     public readonly StringToColor stringToColor = new();
 
-    [Parameter]
-    public UserFullDTO self { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    public void Dispose()
+    {
+        SessionRepository.SessionChangeOccured -= SessionRepository_SessionChangeOccured;
+    }
+    private async void SessionRepository_SessionChangeOccured()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
 
     private void OpenProfile()
     {

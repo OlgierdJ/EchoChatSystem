@@ -27,7 +27,10 @@ namespace DomainPushNotificationApi.Services
         protected readonly IHubContext<PushNotificationHub, IPushNotificationHub> _hubContext;
         private Dictionary<(string, EntityAction), Func<object, Task>> _hubManager = new();
         private readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.Preserve };
-        public PushNotificationService(IHubContext<PushNotificationHub, IPushNotificationHub> hubContext, IMapper mapper)
+        public PushNotificationService(
+            IHubContext<PushNotificationHub, IPushNotificationHub> hubContext, 
+            PushNotificationClientConnectionStore userConnectionStore, 
+            IMapper mapper)
         {
             _hubContext = hubContext;
 
@@ -329,14 +332,21 @@ namespace DomainPushNotificationApi.Services
             _hubManager.Add((nameof(ChatParticipancy), EntityAction.Added), async (entity) =>
             {
                 ChatParticipancy participancy = entity as ChatParticipancy;
-
                 await _hubContext.Clients
                 .Group($"{nameof(Chat)}/{participancy.SubjectId}")
                 .ChatMemberJoined(participancy.SubjectId, mapper.Map<MemberDTO>(participancy));
 
+                if (userConnectionStore.UserConnectionMappings.TryGetValue(participancy.ParticipantId, out var connectionIds))
+                {
+                    foreach (var connectionId in connectionIds.ToList())
+                    {
+                        await _hubContext.Groups.AddToGroupAsync(connectionId, $"{nameof(Chat)}/{participancy.SubjectId}");
+                    }
+                }
+                var map = mapper.Map<ChatDTO>(participancy);
                 await _hubContext.Clients
                 .User(participancy.ParticipantId.ToString())
-                .ChatJoined(mapper.Map<ChatDTO>(participancy));
+                .ChatJoined(map);
             });
 
             _hubManager.Add((nameof(ChatParticipancy), EntityAction.Modified), async (entity) =>

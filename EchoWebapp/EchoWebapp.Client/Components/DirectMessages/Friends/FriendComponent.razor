@@ -3,6 +3,8 @@
 @using CoreLib.Entities.EchoCore.AccountCore
 @using EchoWebapp.Client.Pages
 @inject ILocalStorageService LocalStorage
+@inject IUserContainer SessionRepository
+@implements IDisposable
 @inject EchoAPI _echoAPI
 @inject IDialogService Dialog
 
@@ -57,6 +59,23 @@
     //     }
     // }
 
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void SessionRepository_SessionChangeOccured()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
     async void startChat()
     {
         var token = await LocalStorage.GetItemAsStringAsync("Token");
@@ -88,7 +107,10 @@
             }
         }
     }
-
+    public void Dispose()
+    {
+        SessionRepository.SessionChangeOccured -= SessionRepository_SessionChangeOccured;
+    }
     async void setNickname()
     {
         var options = new DialogOptions { Position = DialogPosition.TopCenter, CloseOnEscapeKey = true };

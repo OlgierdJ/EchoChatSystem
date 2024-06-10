@@ -7,6 +7,7 @@
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager nav
 @inject IUserContainer SessionRepository
+@implements IDisposable
 @inject EchoAPI _echoAPI
 
 
@@ -65,12 +66,21 @@ else
                 {
                     nav.NavigateTo("/login");
                 }
+                SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
                 StateHasChanged();
             }
         }
         await base.OnAfterRenderAsync(firstRender);
     }
 
+    private async void SessionRepository_SessionChangeOccured()
+    {
+        //await InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        SessionRepository.SessionChangeOccured -= SessionRepository_SessionChangeOccured;
+    }
     public void HandleOnChanged(bool selected)
     {
         display = selected;
