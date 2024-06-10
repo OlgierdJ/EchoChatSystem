@@ -68,7 +68,7 @@
         </div>
 
         <div class="d-flex" style="width: 83vw;">
-                    <MudPaper Elevation="0" Class="py-2" Style="@($"background:{Colors.Shades.Transparent};float: left;")" Width="83vw" Height="83vh">
+                    <MudPaper Elevation="0" Class="py-2" Style="@($"background:{Colors.Shades.Transparent};float: left;")" Width="83vw" Height="80vh">
 
                         <MudList id="MessageList" Class="my-4 py-0 overflow-auto" Style="@($"background:{Colors.Shades.Transparent}; width: 100%; height: 100%;")">
                             <MudListItem>
@@ -170,7 +170,7 @@
                                                             <MudMenuItem OnClick="()=>_echoAPI.PinChatMessage(Token, Content.Id, message.Id)">Pin Message</MudMenuItem>
                                                         }
                                                         <MudMenuItem Disabled OnClick="()=>_echoAPI.MarkMessageUnread(Token, Content.Id, message.Id)">Mark Unread</MudMenuItem>
-                                                         <MudMenuItem OnClick="()=>ReplyingTo=message">Reply</MudMenuItem>
+                                                         <MudMenuItem OnClick="()=>{ReplyingTo=message; replyingToVisibility = true; }">Reply</MudMenuItem>
                                                          <MudMenuItem Disabled>Create Thread</MudMenuItem>
                                                      <MudMenuItem OnClick="()=>CopyMessageText(message)">Copy Text</MudMenuItem>
                                                      <MudMenuItem OnClick="()=>CopyMessageLink(message)">Copy Message Link</MudMenuItem>
@@ -208,7 +208,7 @@
                                                             <MudMenuItem Disabled OnClick="()=>_echoAPI.PinChatMessage(Token, Content.Id, message.Id)">Pin Message</MudMenuItem>
                                                         }
                                                         <MudMenuItem Disabled OnClick="()=>_echoAPI.MarkMessageUnread(Token, Content.Id, message.Id)">Mark Unread</MudMenuItem>
-                                                         <MudMenuItem Disabled OnClick="()=>ReplyingTo=message">Reply</MudMenuItem>
+                                                         <MudMenuItem Disabled OnClick="()=>{ReplyingTo=message; replyingToVisibility = true; }">Reply</MudMenuItem>
                                                          <MudMenuItem Disabled>Create Thread</MudMenuItem>
                                                          <MudMenuItem OnClick="()=>CopyMessageText(message)">Copy Text</MudMenuItem>
                                                          <MudMenuItem OnClick="()=>CopyMessageLink(message)">Copy Message Link</MudMenuItem>
@@ -229,7 +229,7 @@
                                                     </MudPaper>
                                                     <MudMenu Variant="Variant.Filled" Icon="@Icons.Material.Filled.MoreVert" Label="More">
                                                 <MudMenuItem Disabled>Add reaction</MudMenuItem>
-                                             @if (message.IsPinned)
+                                            @if (message.IsPinned)
                                                 {
                                                     <MudMenuItem Disabled=@(message.Sender==null) OnClick="()=>_echoAPI.UnpinChatMessage(Token, Content.Id, message.Id)">Unpin Message</MudMenuItem>
                                                 }
@@ -238,14 +238,14 @@
                                                     <MudMenuItem Disabled=@(message.Sender==null) OnClick="()=>_echoAPI.PinChatMessage(Token, Content.Id, message.Id)">Pin Message</MudMenuItem>
                                                 }
                                                 <MudMenuItem Disabled OnClick="()=>_echoAPI.MarkMessageUnread(Token, Content.Id, message.Id)">Mark Unread</MudMenuItem>
-                                                 <MudMenuItem Disabled=@(message.Sender==null) OnClick="()=>ReplyingTo=message">Reply</MudMenuItem>
-                                                 <MudMenuItem Disabled>Create Thread</MudMenuItem>
-                                             <MudMenuItem OnClick="()=>CopyMessageText(message)">Copy Text</MudMenuItem>
-                                             <MudMenuItem OnClick="()=>CopyMessageLink(message)">Copy Message Link</MudMenuItem>
-                                             <MudMenuItem OnClick="()=>_echoAPI.RemoveChatMessage(Token, Content.Id, message.Id)"><MudText Color="Color.Error">Delete Message</MudText></MudMenuItem>
-                                             <MudMenuItem Disabled>Report Message</MudMenuItem>
+                                                <MudMenuItem Disabled=@(message.Sender==null) OnClick="()=>{ReplyingTo=message; replyingToVisibility = true; }">Reply</MudMenuItem>
+                                                <MudMenuItem Disabled>Create Thread</MudMenuItem>
+                                                <MudMenuItem OnClick="()=>CopyMessageText(message)">Copy Text</MudMenuItem>
+                                                <MudMenuItem OnClick="()=>CopyMessageLink(message)">Copy Message Link</MudMenuItem>
+                                                <MudMenuItem OnClick="()=>_echoAPI.RemoveChatMessage(Token, Content.Id, message.Id)"><MudText Color="Color.Error">Delete Message</MudText></MudMenuItem>
+                                                <MudMenuItem Disabled>Report Message</MudMenuItem>
                                               
-                                                 </MudMenu>
+                                                </MudMenu>
                                                 </div>
                                             </MudPaper>
                                         }
@@ -254,24 +254,32 @@
                                 </MudPaper>
                             </MudListItem>
                         </MudList>
-                        @if (ReplyingTo != null)
-                        {
-                         <MudText>Replying to @ReplyingTo.Content</MudText>
-                        }
-                        <MudToolBar Class="d-flex flex-column-reverse flex-grow-1 gap-0 py-0 my-0" Style="@($"background:{Colors.Shades.Transparent}; height: 5vh;")">
-                            <MudTextField FullWidth
-                                @ref="RefEntryField"
-                                AutoGrow
-                                @bind-Value="MessageModel.Content"
-                                Immediate="true"
-                                OnKeyUp="OnTextChatSend"
-                                Lines="1"
-                                MaxLines="11"
-                                MaxLength="1000"
-                                Variant="Variant.Filled"
-                                Margin="Margin.Dense"
-                                Style="background: var(--mud-palette-dark);opacity:1;margin-top: 10px;" />
-                        </MudToolBar>
+
+                        <div class="d-flex flex-column flex-grow-1" style="width: 83vw;">
+                            <!-- This bar is initially loaded in so it calculates its size. then hides it until replying. -->
+                            <div style="visibility: @(replyingToVisibility ? "none" : "hidden"); height: 3vh;">
+                                @if (ReplyingTo != null)
+                                {
+                            <MudButton Class="ml-8" Style="background: var(--mud-palette-dark-darken);"
+                                    @onclick="()=>{ReplyingTo=null; replyingToVisibility = false; }">Replying to @ReplyingTo?.Sender?.DisplayName   -  Click here to stop replying</MudButton>
+                                }   
+                            </div>
+                            <MudToolBar Class="d-flex flex-column-reverse flex-grow-1 gap-0 py-0 my-0" Style="@($"background:{Colors.Shades.Transparent}; height: 5vh;")">
+                                <MudTextField FullWidth
+                                    @ref="RefEntryField"
+                                    AutoGrow
+                                    @bind-Value="MessageModel.Content"
+                                    Immediate="true"
+                                    OnKeyUp="OnTextChatSend"
+                                    Lines="1" 
+                                    Placeholder="@TextPlaceholder"
+                                    MaxLines="11"
+                                    MaxLength="1000"
+                                    Variant="Variant.Filled"
+                                    Margin="Margin.Dense"
+                                    Style="background: var(--mud-palette-dark);opacity:1;margin-top: 10px;" />
+                            </MudToolBar>
+                        </div>
                     
                     </MudPaper>
                          @if (Content?.Participants?.Count() > 2)
@@ -315,6 +323,8 @@
 
 @code {
     private MudTextField<string> RefEntryField;
+
+    /* This is what we use to send text messages, the other ones are not in use. */
     private async Task OnTextChatSend(KeyboardEventArgs args)
     {
         if (!args.ShiftKey && args.Key is "Enter" or "NumppadEnter")
@@ -324,7 +334,8 @@
             Console.WriteLine("SENDING TO API ETC");
             await SendMessage();
             MessageModel.Content = string.Empty;
-
+            ReplyingTo = null;
+            replyingToVisibility = false;
             await InvokeAsync(StateHasChanged);
             await Task.Run(async () =>
             {
@@ -337,6 +348,8 @@
     MessageDTO? ReplyingTo { get; set; }
     EditContext MyCurrentEditContext { get; set; }
 
+    bool replyingToVisibility = true;
+
     void KeyDownHandler(KeyboardEventArgs args)
     {
         if (args.Key == "Backspace" && MessageModel.Content.Length >= 1)
@@ -347,7 +360,7 @@
     }
 
     protected override Task OnInitializedAsync()
-    {
+    {   
         MyCurrentEditContext = new(MessageModel);
         SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
         return base.OnInitializedAsync();
@@ -471,6 +484,7 @@
     }
     protected override async Task OnParametersSetAsync()
     {
+        ReplyingTo = null;
         DateBundledMessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date).OrderBy(e => e.Key); //mayb move to initialized
         await base.OnParametersSetAsync();
     }
@@ -492,6 +506,7 @@
     {
         if (firstRender)
         {
+            replyingToVisibility = false;
             friends = self?.Friends.Where(e => !Content.Participants.Select(e => e.Id).Contains(e.Id)).ToList();
 
             Token = await LocalStorage.GetItemAsStringAsync("Token");
