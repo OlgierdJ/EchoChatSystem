@@ -79,6 +79,11 @@
             if (!string.IsNullOrWhiteSpace(token))
             {
                 var result = await _echoAPI.CreateChat(token, selectedFriends.Select(e => e.Id).ToList());
+                if (result)
+                {
+                    DisplayStartGroupChat = false;
+                    this.selectedFriends.Clear();
+                }
                 //handle navigation to new chat, whatever else you do here.
             }
         }

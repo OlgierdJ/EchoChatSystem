@@ -46,11 +46,16 @@
     [Parameter]
     public ulong OwnId { get; set; }
 
+    protected override Task OnInitializedAsync()
+    {
+        SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
+        return base.OnInitializedAsync();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
             StateHasChanged();
         }
 
@@ -63,7 +68,7 @@
     }
     public void Dispose()
     {
-        Console.WriteLine("disposed here from "+Chat.Id);
+        Console.WriteLine("disposed here from " + Chat.Id);
         SessionRepository.SessionChangeOccured -= SessionRepository_SessionChangeOccured;
     }
 
