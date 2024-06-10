@@ -87,7 +87,7 @@ namespace CoreLib.Handlers
             //Map events
             
             #region Map over the events
-            connection.ServerTimeout = TimeSpan.FromSeconds(2);
+            connection.ServerTimeout = TimeSpan.FromSeconds(30);
             connection.On<UserMinimalDTO>(nameof(IPushNotificationHub.BlockedUserAdded), minimaluser => BlockedUserAdded?.Invoke(minimaluser));
             connection.On<ulong>(nameof(IPushNotificationHub.BlockedUserRemoved), accountId => BlockedUserRemoved?.Invoke(accountId));
             connection.On<ulong, bool>(nameof(IPushNotificationHub.ChatHiddenStateChanged), (chatId, hidden) => ChatHiddenStateChanged?.Invoke(chatId, hidden));

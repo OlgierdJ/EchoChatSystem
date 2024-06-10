@@ -412,6 +412,9 @@ namespace DomainCoreApi.Services
                 var accs = await context.Set<Account>()
                     //blocked relations are appearently useless for determining participation in chat or voice and such -> see reference in accountblock entity.
                     //.Include(e => e.BlockedAccounts.Where(e=>lookupIds.Contains(e.BlockedId))) 
+                    .Include(e => e.ActivityStatus)
+                    .Include(e => e.CustomStatus)
+                    .Include(e => e.Profile)
                     .Include(e => e.Friendships).ThenInclude(e => e.Subject)
                     .ThenInclude(e => e.Participants.Where(e => lookupIds.Contains(e.ParticipantId))) //filter away non context participants
                     .Where(e => lookupIds.Contains(e.Id))
