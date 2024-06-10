@@ -39,6 +39,8 @@ namespace CoreLib.Handlers
         public event Action<ulong,ulong, bool> ChatMemberOwnershipChanged;
         public event Action<ulong, MessageDTO> ChatMessageAdded;
         public event Action<ulong, ulong > ChatMessageRemoved;
+        public event Action<ulong, ulong > ChatMessagePinAdded;
+        public event Action<ulong, ulong > ChatMessagePinRemoved;
         public event Action<ulong, ulong, string, DateTime?> ChatMessageUpdated;
         public event Action<ulong, bool> ChatMutedStateChanged;
         public event Action<ulong, string, string?> ChatUpdated;
@@ -99,6 +101,8 @@ namespace CoreLib.Handlers
             connection.On<ulong, ulong, bool>(nameof(IPushNotificationHub.ChatMemberOwnershipChanged), (chatId, accountId, isOwner) => ChatMemberOwnershipChanged?.Invoke(chatId, accountId, isOwner));
             connection.On<ulong, MessageDTO>(nameof(IPushNotificationHub.ChatMessageAdded), (chatId, messageDTO) => ChatMessageAdded?.Invoke(chatId, messageDTO));
             connection.On<ulong, ulong>(nameof(IPushNotificationHub.ChatMessageRemoved), (chatId, messageId) => ChatMessageRemoved?.Invoke(chatId, messageId));
+            connection.On<ulong, ulong>(nameof(IPushNotificationHub.ChatMessagePinAdded), (chatId, messageId) => ChatMessagePinAdded?.Invoke(chatId, messageId));
+            connection.On<ulong, ulong>(nameof(IPushNotificationHub.ChatMessagePinRemoved), (chatId, messageId) => ChatMessagePinRemoved?.Invoke(chatId, messageId));
             connection.On<ulong, ulong, string, DateTime?>(nameof(IPushNotificationHub.ChatMessageUpdated), (chatId, messageId, content, timeEdited) => ChatMessageUpdated?.Invoke(chatId, messageId, content, timeEdited));
             connection.On<ulong, bool>(nameof(IPushNotificationHub.ChatMutedStateChanged), (chatId, state) => ChatMutedStateChanged?.Invoke(chatId, state));
             connection.On<ulong, string, string?>(nameof(IPushNotificationHub.ChatUpdated), (chatId, chatName, iconUrl) => ChatUpdated?.Invoke(chatId, chatName, iconUrl));

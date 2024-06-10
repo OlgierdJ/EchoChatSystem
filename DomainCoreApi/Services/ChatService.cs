@@ -742,6 +742,7 @@ namespace DomainCoreApi.Services
 
         public async Task<bool> PinChatMessage(ulong senderId, ulong chatId, ulong messageId)
         {
+            using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
                 //verify sender is member
@@ -768,10 +769,11 @@ namespace DomainCoreApi.Services
                 await context.Set<ChatMessage>().AddAsync(sysmsg);
 
                 await context.SaveChangesAsync();
-
+                await transaction.CommitAsync();
             }
             catch (Exception e)
             {
+                await transaction.RollbackAsync();
                 return false;
             }
             return true;

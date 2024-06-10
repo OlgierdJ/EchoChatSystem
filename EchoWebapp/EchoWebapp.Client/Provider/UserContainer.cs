@@ -2,6 +2,7 @@
 using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.DTO.EchoCore.UserCore.SettingsCore;
 using CoreLib.Entities.EchoCore.AccountCore;
+using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.Enums;
 using CoreLib.Handlers;
 using CoreLib.Interfaces.Contracts;
@@ -83,6 +84,8 @@ namespace EchoWebapp.Client.Provider
             signalRClient.UserProfileChanged += SignalRClient_UserProfileChanged;
             signalRClient.UserUnmuted += SignalRClient_UserUnmuted;
             signalRClient.VoiceSettingsUpdated += SignalRClient_VoiceSettingsUpdated;
+            signalRClient.ChatMessagePinAdded += SignalRClient_ChatMessagePinAdded; ;
+            signalRClient.ChatMessagePinRemoved += SignalRClient_ChatMessagePinRemoved; ;
             #endregion
 
             var Token = await localStorage.GetItemAsStringAsync("Token");
@@ -95,6 +98,19 @@ namespace EchoWebapp.Client.Provider
             await ConnectAsync(Token);
         }
 
+        private void SignalRClient_ChatMessagePinRemoved(ulong chatId, ulong messageId)
+        {
+            var ChatMessageUpdated = self.DirectMessages.FirstOrDefault(e => e.Id == chatId).Messages.FirstOrDefault(e => e.Id == messageId);
+            ChatMessageUpdated.IsPinned = false;
+            SessionChangeOccured?.Invoke();
+        }
+
+        private void SignalRClient_ChatMessagePinAdded(ulong chatId, ulong messageId)
+        {
+            var ChatMessageUpdated = self.DirectMessages.FirstOrDefault(e => e.Id == chatId).Messages.FirstOrDefault(e => e.Id == messageId);
+            ChatMessageUpdated.IsPinned = true;
+            SessionChangeOccured?.Invoke();
+        }
 
         private void SignalRClient_ConnectionOpened()
         {

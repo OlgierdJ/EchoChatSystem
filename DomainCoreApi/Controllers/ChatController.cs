@@ -234,6 +234,31 @@ namespace DomainCoreApi.Controllers
                 return Problem(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpPut("{chatId}/{messageId}/markUnread")]
+        public async Task<IActionResult> MarkMessageAsUnread(ulong chatId, ulong messageId)
+        {
+            try
+            {
+                //var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+
+                //var result = await _chatService.MarkChatAsRead(id, chatId);
+                //if (!result)
+                //{
+                //    return Problem("Something went wrong. Contact an Admin / Server representative");
+                //}
+                //return Ok();
+
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+
         [Authorize]
         [HttpPut("{chatId}/mute")]
         public async Task<IActionResult> MuteChat(ulong chatId, MuteRequestDTO requestDTO)

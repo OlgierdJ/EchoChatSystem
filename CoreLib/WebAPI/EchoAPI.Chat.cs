@@ -129,6 +129,14 @@ namespace CoreLib.WebAPI
             var response = await client.SendAsync(request).ConfigureAwait(false);
             return response.IsSuccessStatusCode;
         }
+        public async Task<bool> MarkMessageUnread(string Token, ulong chatId, ulong messageId)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Put, $"Chat/{chatId}/{messageId}/MarkUnread");
+            request.Headers.Authorization = authenticationHeaderValue(Token);
+
+            var response = await client.SendAsync(request).ConfigureAwait(false);
+            return response.IsSuccessStatusCode;
+        }
 
         public async Task<bool> RemoveChatMessage(string Token, ulong chatId, ulong messageId)
         {
@@ -183,7 +191,7 @@ namespace CoreLib.WebAPI
 
         public async Task<bool> UnpinChatMessage(string Token, ulong chatId, ulong messageId)
         {
-            var request = new HttpRequestMessage(HttpMethod.Delete, $"Chat/{chatId}/{messageId}/unpin");
+            var request = new HttpRequestMessage(HttpMethod.Put, $"Chat/{chatId}/{messageId}/unpin");
             request.Headers.Authorization = authenticationHeaderValue(Token);
 
             var response = await client.SendAsync(request).ConfigureAwait(false);
