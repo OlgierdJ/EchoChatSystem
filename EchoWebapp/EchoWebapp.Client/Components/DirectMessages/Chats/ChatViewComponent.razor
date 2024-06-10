@@ -170,14 +170,14 @@
                                                     <MudAvatar Color="Color.Secondary" Size="Size.Medium">
                                                         else
                                                         {
-                                                            <MudIcon Icon="@Icons.Material.Filled.PushPin"></MudIcon>
+                                                        <MudIcon Icon="@Icons.Material.Filled.PushPin"></MudIcon>
                                                         }
                                                     </MudAvatar>
 
                                                     <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
                                                         <div class="d-flex flex-grow-1 gap-3">
                                                             <MudText Style="@($"color:{Colors.Grey.Default};")">@message.TimeSent.ToString("HH:mm")</MudText>
-                                                        </div>
+                                                            </div>
                                                             <MudText Typo="Typo.body1">@((MarkupString)message.Content.Replace(Environment.NewLine, "<br />"))</MudText>
                                                         </MudPaper>
                                                     </div>
@@ -202,35 +202,44 @@
                 </MudList>
 
                 <MudToolBar Class="d-flex flex-column-reverse flex-grow-1 gap-0 py-0 my-0" Style="@($"background:{Colors.Shades.Transparent}; height: 5vh;")">
-                    <EditForm Model="@TextValue" OnValidSubmit="SendMessage" @onkeypress:preventDefault>
+                    <EditForm Context=MyCurrentEditContext 
+                        Model="@MessageModel" 
+                        OnValidSubmit="SendMessage"
+                              @onkeydown="KeyDownHandler"
+                              @onkeypress="(e)=>KeyPressHandler(MyCurrentEditContext, e)">
                         <DataAnnotationsValidator />
-                        <MudTextField 
-                            FullWidth 
-                            @bind-Value="TextValue" 
-                            For="@(()=>Message.Content)"
-                            Variant="Variant.Filled" 
-                            Margin="Margin.Dense" />
-                    </EditForm>
-                       @*  <MudTextField FullWidth @bind-Value="TextValue" 
-                        Margin="Margin.Dense" Variant="Variant.Filled"
-                                   OnDebounceIntervalElapsed="OnDebounceIntervalElapsed" 
-                                   OnKeyUp="OnKeyUp" AutoGrow MaxLines="11"
-                                   
-                        Placeholder="@TextPlaceholder" Class="px-5 py-2" 
-                         MaxLength="1000"
-                        Style="background: var(--mud-palette-dark);opacity:1; margin-top: 10px;">
-                         </MudTextField> *@
 
-                   @*  <MudForm Class="d-flex flex-grow-1 px-4" @onsubmit="SendMessage" SuppressImplicitSubmission="true">
-                        <MudTextField  DebounceInterval="500" Immediate="true" OnDebounceIntervalElapsed="OnDebounceIntervalElapsed"
-                            Placeholder=" Search" @bind-Value="@TextValue"
-                                      />
-                        </MudForm> *@
-                     </MudToolBar>
-                
-             </MudPaper>
+                            <MudTextField FullWidth
+                                           AutoGrow
+                                           Text="@MessageModel.Content"
+                                           @onkeypress="TextKeyPressHandler"
+                                           Lines="1"
+                                           MaxLines="11"
+                                           
+                                           For="@(()=>MessageModel.Content)"
+                                           Variant="Variant.Filled"
+                                           Margin="Margin.Dense" />
+                         </EditForm>
+                         @*  <MudTextField FullWidth @bind-Value="TextValue"
+                Margin="Margin.Dense" Variant="Variant.Filled"
+                OnDebounceIntervalElapsed="OnDebounceIntervalElapsed"
+                OnKeyUp="OnKeyUp" AutoGrow MaxLines="11"
 
-             @if (Content?.Participants?.Count() > 2)
+                Placeholder="@TextPlaceholder" Class="px-5 py-2"
+                MaxLength="1000"
+                Style="background: var(--mud-palette-dark);opacity:1; margin-top: 10px;">
+                </MudTextField> *@
+
+                         @*  <MudForm Class="d-flex flex-grow-1 px-4" @onsubmit="SendMessage" SuppressImplicitSubmission="true">
+                <MudTextField  DebounceInterval="500" Immediate="true" OnDebounceIntervalElapsed="OnDebounceIntervalElapsed"
+                Placeholder=" Search" @bind-Value="@TextValue"
+                />
+                </MudForm> *@
+                         </MudToolBar>
+
+                         </MudPaper>
+
+                         @if (Content?.Participants?.Count() > 2)
             {
                 <MemberListComponent Visible="DisplaySidePanel" Members="@Content?.Participants?.ToList()" />
             }
@@ -269,9 +278,50 @@
 
 @code {
     bool _preventDefault;
-    protected void HandleKeyDown(KeyboardEventArgs e)
+    EditContext MyCurrentEditContext { get; set; }
+
+    void KeyDownHandler(KeyboardEventArgs args)
     {
-        _preventDefault = e.Key == "Enter" && !e.ShiftKey;
+        if (args.Key == "Backspace" && MessageModel.Content.Length >= 1)
+        {
+            MessageModel.Content = MessageModel.Content.Substring(0,
+                                       MessageModel.Content.Length - 1);
+        }
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        MyCurrentEditContext = new(MessageModel);
+        return base.OnInitializedAsync();
+    }
+
+    async void KeyPressHandler(EditContext editContext, KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter" && editContext.Validate())
+        {
+            //send
+            await SendMessage();
+            MessageModel.Content = string.Empty;
+            StateHasChanged();
+            return;
+        }
+    }
+
+    async void TextKeyPressHandler(KeyboardEventArgs args)
+    {
+        
+        if (args.Key == "Enter" && args.ShiftKey)
+        {
+            //newline
+            MessageModel.Content += Environment.NewLine;
+            return;
+        }
+        else if (args.Key == "Enter")
+        {
+            return;
+        }
+        var key = (string)args.Key;
+        MessageModel.Content += key;
     }
     [Parameter]
     public ChatDTO? Content { get; set; }
@@ -286,7 +336,7 @@
     private IOrderedEnumerable<IGrouping<DateTime, MessageDTO>> DateBundledMessageGroups { get; set; }
 
     private UserDTO selected { get; set; }
-    private SendMessageRequestForm Message { get; set; } = new();
+    private SendMessageRequestForm MessageModel { get; set; } = new();
 
 
     private string? token { get; set; }
@@ -325,7 +375,6 @@
         }
         await InvokeAsync(StateHasChanged);
     }
-    public bool IsDebouncing { get; set; } = false;
     private async void AddFriends()
     {
         if (selectedFriends.Count > 0)
@@ -368,7 +417,7 @@
         await base.OnParametersSetAsync();
     }
     public void Dispose()
-    { 
+    {
         SessionRepository.SessionChangeOccured -= SessionRepository_SessionChangeOccured;
     }
     private async void SessionRepository_SessionChangeOccured()
@@ -378,31 +427,7 @@
         Console.WriteLine(DateTime.Now);
     }
 
-    public void OnDebounceIntervalElapsed(string text)
-    {
-        IsDebouncing = false;
-    }
 
-    public async void OnKeyUp(KeyboardEventArgs args)
-    {
-
-        if (!IsDebouncing && args.Key == "Enter" && !string.IsNullOrWhiteSpace(TextValue))
-        {
-            SendMessageRequestDTO msg = new();
-            msg.Content = TextValue.Trim();
-
-            var result = await _echoAPI.SendChatMessage(Token, Content.Id, msg);
-            if (result)
-            {
-                // await Task.Delay(50);
-                TextValue = string.Empty;
-                // await InvokeAsync(StateHasChanged);
-                StateHasChanged();
-            }
-
-        }
-        IsDebouncing = true;
-    }
     public string Token { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -422,43 +447,19 @@
         var result = (dt < prevDt.AddMinutes(7));
         return result;
     }
-    private async Task SendMessage(EditContext e)
+    private async Task SendMessage()
     {
-        // if (e.Key is "Enter" && prevKey is not "Shift")
-        // {
-        //     TextValue += e.Key;
-
-            //     _js.InvokeVoidAsync("console.log", e.Key);
-            // }
-            // else if (!(e.Key is "Enter" or "NumppadEnter"))
-            // {
-            //     TextValue += e.Key;
-
-            //     _js.InvokeVoidAsync("console.log", e.Key);
-            // }
-            // else
-            // {
-            Console.WriteLine("submitted!");
-            if (!string.IsNullOrWhiteSpace(TextValue))
+        Console.WriteLine("submitted!");
+        if (!string.IsNullOrWhiteSpace(MessageModel.Content))
+        {
+            SendMessageRequestDTO msg = new() { };
+            msg.Content = MessageModel.Content.Trim();
+            if (!string.IsNullOrWhiteSpace(Token))
             {
-                SendMessageRequestDTO msg = new();
-                msg.Content = TextValue.Trim();
+                var result = await _echoAPI.SendChatMessage(Token, Content.Id, msg);
 
-                var token = await LocalStorage.GetItemAsStringAsync("Token");
-                if (!string.IsNullOrWhiteSpace(token))
-                {
-                    var result = await _echoAPI.SendChatMessage(token, Content.Id, msg);
-                    if (result)
-                    {
-                        // await Task.Delay(50);
-                        TextValue = string.Empty;
-                        // await InvokeAsync(StateHasChanged);
-                        StateHasChanged();
-                    }
-                }
             }
-        // }
-        //     prevKey = e.Key;
+        }
     }
 
     private string prevKey = "";
