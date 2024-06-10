@@ -12,33 +12,37 @@
     This component should either reflect the other member than the user itself if there is only 2 members within the chat.
     Otherwise reflect the chat name and image.
 *@
-
-    <div class="d-flex justify-space-between flex-grow-1 gap-4">
-
-        @if (Chat.Participants.Count() > 2)
-        {
-            <MudAvatar>
-                @if (!string.IsNullOrWhiteSpace(Chat.IconUrl))
-                {
-                    <MudImage Src="@Chat.IconUrl" />
-                }
-                else
-                {
-                    @Chat.Name.First()
-                }
-            </MudAvatar>
-            <MudText Typo="Typo.caption">@Chat.Name</MudText>
-        }
-        else //chat between 2 users
-        {
-            <MudAvatar>
-                <MudImage Src="@Chat.Participants.Where(e => e.Id != OwnId).First().ImageIconURL" />
-            </MudAvatar>
-            <MudText Typo="Typo.caption">@Chat.Participants.Where(e => e.Id != OwnId).First().DisplayName</MudText>
-        }
-        <MudIconButton OnClick=HideChat Class="align-end" Icon="@Icons.Material.Filled.Close"></MudIconButton>
+@if(Chat != null)
+{
+    <div @onmouseover="MouseOver" @onmouseout="MouseOut">
+        <div style="float: left; width: 80%;">
+            @if (Chat.Participants.Count() > 2)
+            {
+                <MudAvatar>
+                    @if (!string.IsNullOrWhiteSpace(Chat.IconUrl))
+                    {
+                        <MudImage Src="@Chat.IconUrl" />
+                    }
+                    else
+                    {
+                        @Chat.Name.First()
+                    }
+                </MudAvatar>
+                <MudText Typo="Typo.caption">@Chat.Name</MudText>
+            }
+            else //chat between 2 users
+            {
+                <MudAvatar>
+                    <MudImage Src="@Chat.Participants.Where(e => e.Id != OwnId).First().ImageIconURL" />
+                </MudAvatar>
+                <MudText Typo="Typo.caption">@Chat.Participants.Where(e => e.Id != OwnId).First().DisplayName</MudText>
+            }
+        </div>
+        <div style="float: right; width: 20%; visibility: @(hideChatVisibility ? "none" : "hidden");">
+            <MudIconButton OnClick=HideChat Class="align-end" Icon="@Icons.Material.Filled.Close" ></MudIconButton>
+        </div>
     </div>
-
+}
 
 @code {
     [Parameter] 
@@ -61,6 +65,10 @@
 
     [Parameter]
     public ulong OwnId { get; set; }
+
+    bool hideChatVisibility = false;
+    void MouseOver(MouseEventArgs e) { hideChatVisibility = true; }
+    void MouseOut(MouseEventArgs e) { hideChatVisibility = false; }
 
     protected override Task OnInitializedAsync()
     {
