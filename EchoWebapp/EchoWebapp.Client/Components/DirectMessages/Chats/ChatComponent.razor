@@ -1,52 +1,81 @@
-﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
+﻿@page "/chat/{ChatIdString}"
+@using CoreLib.DTO.EchoCore.ChatCore.TextCore
 @using CoreLib.Entities.EchoCore.ChatCore
 @inject IUserContainer SessionRepository
+@inject ILocalStorageService LocalStorage
 @implements IDisposable
+@inject IJSRuntime _js
 @*
     Chat layout for when it exists within the scrollable list in the direct message section.
 
     This component should either reflect the other member than the user itself if there is only 2 members within the chat.
     Otherwise reflect the chat name and image.
 *@
-@if (Chat.Participants.Count() > 2)
+@if(Chat != null)
 {
-    <MudAvatar>
-        @if (!string.IsNullOrWhiteSpace(Chat.IconUrl))
-        {
-            <MudImage Src="@Chat.IconUrl" />
-        }
-        else
-        {
-            @Chat.Name.First()
-        }
-    </MudAvatar>
-    <MudText Typo="Typo.caption">@Chat.Name</MudText>
-}
-else //chat between 2 users
-{
-    <MudAvatar>
-        <MudImage Src="@Chat.Participants.Where(e => e.Id != OwnId).First().ImageIconURL" />
-    </MudAvatar>
-    <MudText Typo="Typo.caption">@Chat.Participants.Where(e => e.Id != OwnId).First().DisplayName</MudText>
+    @if (Chat.Participants.Count() > 2)
+    {
+        <MudAvatar>
+            @if (!string.IsNullOrWhiteSpace(Chat.IconUrl))
+            {
+                <MudImage Src="@Chat.IconUrl" />
+            }
+            else
+            {
+                @Chat.Name.First()
+            }
+        </MudAvatar>
+        <MudText Typo="Typo.caption">@Chat.Name</MudText>
+    }
+    else //chat between 2 users
+    {
+        <MudAvatar>
+            <MudImage Src="@Chat.Participants.Where(e => e.Id != OwnId).First().ImageIconURL" />
+        </MudAvatar>
+        <MudText Typo="Typo.caption">@Chat.Participants.Where(e => e.Id != OwnId).First().DisplayName</MudText>
+    }
 }
 
 @code {
-
+    [Parameter] 
+    public string? ChatIdString
+    {
+        get { return ChatId.ToString(); }
+        set
+        {
+            if(value != null)
+            {
+                ChatId = Convert.ToUInt64(value);
+                RedirectedToChat();
+            }
+        }
+    }
     [Parameter]
-    public ChatDTO? Chat { get; set; }
+    public ulong ChatId { get; set; }
+
+    public ChatDTO Chat { get; set; }
 
     [Parameter]
     public ulong OwnId { get; set; }
+
+    public string Token { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
+            Token = await LocalStorage.GetItemAsStringAsync("Token");
+            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured; 
+            Chat = SessionRepository.self.DirectMessages.Where(e => e.Id == ChatId).FirstOrDefault();
             StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+    public async void RedirectedToChat()
+    {       
+        Chat = SessionRepository.self.DirectMessages.Where(e => e.Id == ChatId).FirstOrDefault();
+        StateHasChanged();        
     }
     public void Dispose()
     {
