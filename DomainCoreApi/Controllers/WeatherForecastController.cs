@@ -1,4 +1,5 @@
 using AutoMapper;
+using CoreLib.Handlers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DomainCoreApi.Controllers
@@ -41,6 +42,50 @@ namespace DomainCoreApi.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet("/getdata/{NumberOfDataSet}")]
+        public async Task<IActionResult> getdatasat(int NumberOfDataSet)
+        {
+
+            try
+            {
+                PopulateDatahandler populateDatahandler = new PopulateDatahandler();
+                if (populateDatahandler is null)
+                {
+                    return Problem("the object is null");
+                }
+                var data = populateDatahandler.GetRandomData(NumberOfDataSet);
+                return Ok(data);
+
+            }
+            catch (Exception e)
+            {
+
+                return Problem(e.Message); ;
+            }
+        }
+
+        [HttpGet("/getdatamessage/{NumberOfDataSet}")]
+        public async Task<IActionResult> getdatamessage(int NumberOfDataSet)
+        {
+
+            try
+            {
+                PopulateDatahandler populateDatahandler = new PopulateDatahandler();
+                if (populateDatahandler is null)
+                {
+                    return Problem("the object is null");
+                }
+                var data = populateDatahandler.GetRandomDateForSendMessageRequest(NumberOfDataSet);
+                return Ok(data);
+
+            }
+            catch (Exception e)
+            {
+
+                return Problem(e.Message); ;
+            }
         }
     }
 }

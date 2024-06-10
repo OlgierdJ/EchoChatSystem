@@ -15,6 +15,7 @@ using CoreLib.DTO.RequestCore.FriendCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.EchoCore.UserCore;
 using CoreLib.DTO.RequestCore.MessageCore;
+using CoreLib.Handlers;
 
 namespace DomainCoreApi.Controllers
 {
@@ -80,30 +81,6 @@ namespace DomainCoreApi.Controllers
                 return Problem(ex.Message);
             }
         }
-
-        //[Authorize]
-        //[HttpPost("logout")]
-        //public async Task<IActionResult> LogoutAsync()
-        //{
-        //    try
-        //    {
-        //        var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
-        //        var token = HttpContext.Request.Headers["Authorization"][0].Substring("Bearer ".Length);
-        //        var result = await _userService.LogoutAsync(id, prevTokens.RefreshToken);
-        //        if (result == false)
-        //        {
-        //            return Problem("Something went wrong. Contact an Admin / Server representative");
-        //        }
-        //        //await _notificationService.NotifyClients(result, EntityAction.Create);
-
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Problem(ex.Message);
-        //    }
-        //}
-
         [Authorize]
         [HttpPost("logout")]
         public async Task<IActionResult> LogoutAsync(TokenDTO prevTokens)
@@ -873,6 +850,64 @@ namespace DomainCoreApi.Controllers
                     return Problem("Something went wrong. Contact an Admin / Server representative");
                 }
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("AddDataSet")]
+        public async Task<IActionResult> AddDataSet(int NumberOfDataSet)
+        {
+            try
+            {
+                PopulateDatahandler populateDatahandler = new PopulateDatahandler();
+                if (populateDatahandler is null)
+                {
+                    return Problem("the object is null");
+                }
+                var data = populateDatahandler.GetRandomData(NumberOfDataSet);
+                foreach (var item in data)
+                {
+                    await _userService.RegisterAsync(item);
+                }
+
+                return Ok(data);
+
+            }
+            catch (Exception e)
+            {
+
+                return Problem(e.Message); ;
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("friend/request/sendRandom")]
+        public async Task<IActionResult> SendRandomFriendRequestAsync(int NumberOfDataSet)
+        {
+            try
+            {
+                PopulateDatahandler populateDatahandler = new PopulateDatahandler();
+                if (populateDatahandler is null)
+                {
+                    return Problem("the object is null");
+                }
+               
+                var result = await _userService.SendRandomFriendRequestAsync();
+
+                var data = populateDatahandler.GetRandomFriendRequest(NumberOfDataSet, result.Select(e => e.Item2).ToList()).ToList();
+                var senderid = populateDatahandler.GetRandomUserid(NumberOfDataSet, result.Select(e => e.Item1).ToList()).ToList();
+                var id = result.Select(e => e.Item1).ToList();
+                for (int i = 0; i < data.Count; i++)
+                {
+                    await _userService.SendFriendRequestAsync(id[i], data[i]);
+                    await _userService.StartDirectMessages(id[i], senderid[i].userid);
+                }
+                return Ok(data);
             }
             catch (Exception ex)
             {

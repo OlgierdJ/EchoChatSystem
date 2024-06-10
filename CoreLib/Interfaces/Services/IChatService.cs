@@ -4,6 +4,7 @@ using CoreLib.DTO.RequestCore.MessageCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.ServerCore;
 using CoreLib.DTO.RequestCore.ServerCore.ChannelCore;
+using CoreLib.Entities.EchoCore.ChatCore;
 
 namespace CoreLib.Interfaces.Services
 {
@@ -62,6 +63,9 @@ namespace CoreLib.Interfaces.Services
         /// <param name="requestDTO"></param>
         /// <returns></returns>
         Task<bool> RemoveChatInvite(ulong senderId, ulong chatId, string inviteCode) => throw new NotSupportedException();
+
+        Task<List<Chat>> getListOfchat();
+        Task<bool> sendDataToChat(ulong chatid, List<ChatMessage> chatdata);
     }
 
 }

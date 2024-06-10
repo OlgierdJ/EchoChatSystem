@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace EchoWebapp.Client.Provider
 {
@@ -20,8 +21,13 @@ namespace EchoWebapp.Client.Provider
             this.Value = id;
             NotifyStateChanged();
         }
-        public bool checktime(string token)
+        public bool checktime(string? token)
         {
+            if (token.IsNullOrEmpty())
+            {
+                return false;
+            }
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var parsedJwt = tokenHandler.ReadJwtToken(token);
             if (parsedJwt.ValidFrom < DateTime.UtcNow)

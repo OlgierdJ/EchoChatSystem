@@ -32,6 +32,7 @@ using Microsoft.IdentityModel.Tokens;
 using PhoneNumbers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace DomainCoreApi.Services
@@ -1804,6 +1805,12 @@ namespace DomainCoreApi.Services
                 throw;
             }
              return true;
+        }
+
+        public async Task<List<(ulong, string)>> SendRandomFriendRequestAsync()
+        {
+            var listofnames = await dbContext.Set<Account>().Include(e => e.Profile).ToListAsync();
+            return listofnames.Select(e => (e.Id, e.Profile.DisplayName)).ToList();
         }
     }
 }
