@@ -24,7 +24,7 @@
             @foreach (var c in chat.OrderByDescending(e => e.Id))
             {
                 <MudListItem Dense="true" OnClick="@(() => OnItemSelected.InvokeAsync(c))">
-                    <ChatComponent OwnId=self.Id Chat="SortChat(c)" />
+                    <ChatComponent OwnId=self.Id ChatId="c.Id" />
                 </MudListItem>
             }
         </MudList>
