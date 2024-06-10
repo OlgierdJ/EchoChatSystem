@@ -224,7 +224,11 @@ namespace EchoWebapp.Client.Provider
 
         private void SignalRClient_ChatMemberJoined(ulong chatId, MemberDTO memberDTO)
         {
-            self.DirectMessages.FirstOrDefault(e => e.Id == chatId).Participants.Add(memberDTO);
+            var chat = self.DirectMessages.FirstOrDefault(e => e.Id == chatId);
+            if (!chat.Participants.Select(e=>e.Id).Contains(memberDTO.Id))
+            {
+                chat.Participants.Add(memberDTO);
+            }
             SessionChangeOccured?.Invoke();
         }
 
@@ -287,6 +291,7 @@ namespace EchoWebapp.Client.Provider
         private void SignalRClient_ChatMessageAdded(ulong chatId, MessageDTO messageDTO)
         {
             self.DirectMessages.FirstOrDefault(e => e.Id == chatId)?.Messages?.Add(messageDTO);
+            Console.WriteLine(chatId +""+messageDTO.Id +""+ DateTime.UtcNow);
             SessionChangeOccured?.Invoke();
         }
 

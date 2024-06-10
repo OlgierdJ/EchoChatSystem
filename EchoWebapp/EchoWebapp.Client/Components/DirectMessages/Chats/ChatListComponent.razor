@@ -3,8 +3,9 @@
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.ChatCore
 @using MudBlazor
+@inject IUserContainer SessionRepository
 @rendermode InteractiveAuto
-
+@implements IDisposable
 @*
     Layout for the Scrollable list that exists within the directmessagesviewcomponent.
 
@@ -40,11 +41,21 @@
         if (firstRender)
         {
             chat = self.DirectMessages.ToList();
+            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
             StateHasChanged();
         }
+
         await base.OnAfterRenderAsync(firstRender);
     }
-
+    public void Dispose()
+    {
+        SessionRepository.SessionChangeOccured -= SessionRepository_SessionChangeOccured;
+    }
+    private async void SessionRepository_SessionChangeOccured()
+    {
+        chat = self.DirectMessages.ToList();
+       await InvokeAsync(StateHasChanged);
+    }
 
     public ChatDTO SortChat(ChatDTO c)
     {

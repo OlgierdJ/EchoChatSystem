@@ -343,10 +343,10 @@ namespace DomainPushNotificationApi.Services
                         await _hubContext.Groups.AddToGroupAsync(connectionId, $"{nameof(Chat)}/{participancy.SubjectId}");
                     }
                 }
-
+                var map = mapper.Map<ChatDTO>(participancy);
                 await _hubContext.Clients
                 .User(participancy.ParticipantId.ToString())
-                .ChatJoined(mapper.Map<ChatDTO>(participancy));
+                .ChatJoined(map);
             });
 
             _hubManager.Add((nameof(ChatParticipancy), EntityAction.Modified), async (entity) =>

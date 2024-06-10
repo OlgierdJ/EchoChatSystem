@@ -5,6 +5,8 @@
 @using MudBlazor
 @rendermode InteractiveAuto
 @inject ILocalStorageService LocalStorage
+@inject IUserContainer SessionRepository
+@implements IDisposable
 @inject NavigationManager nav
 @inject EchoAPI _echoAPI
 
@@ -80,10 +82,19 @@
     {
         if (firstRender)
         {
+            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
             StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+    public void Dispose()
+    { 
+        SessionRepository.SessionChangeOccured -= SessionRepository_SessionChangeOccured;
+    }
+    private async void SessionRepository_SessionChangeOccured()
+    {
+        await InvokeAsync(StateHasChanged);
     }
 
     @* 

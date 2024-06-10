@@ -62,6 +62,7 @@ namespace DomainCoreApi.Services
 
         public async Task<bool> AcceptFriendRequestAsync(ulong senderId, ulong requestId)
         {
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
             try
             {
 
@@ -106,10 +107,16 @@ namespace DomainCoreApi.Services
                 dbContext.Set<OutgoingFriendRequest>().Remove(request.SenderRequest);
                 dbContext.Set<IncomingFriendRequest>().Remove(request);
                 await dbContext.Set<Friendship>().AddAsync(friendship);
+                var accs = await dbContext.Set<Account>() //for tracking issues later move this to push notification api via outbox pattern probably better
+                    .Include(e => e.Profile)
+                    .Include(e => e.ActivityStatus)
+                    .Include(e => e.CustomStatus).Where(e=>e.Id == senderId || e.Id == request.SenderRequest.SenderId).ToListAsync();
                 var res = await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             catch (Exception e)
             {
+                await transaction.RollbackAsync();
                 return false;
             }
             return true;
@@ -1547,6 +1554,7 @@ namespace DomainCoreApi.Services
 
         public async Task<bool> StartDirectMessages(ulong senderId, ulong receiverId)
         {
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
             try
             {
                 if (senderId == receiverId)
@@ -1604,10 +1612,17 @@ namespace DomainCoreApi.Services
 
                 
                 await dbContext.Set<DirectMessageRelation>().AddAsync(directMessageRelation);
+                var accs = await dbContext.Set<Account>()
+                    .Include(e=>e.Profile)
+                    .Include(e=>e.ActivityStatus)
+                    .Include(e=>e.CustomStatus)
+                    .Where(e=>e.Id == senderId || e.Id == receiverId).ToListAsync();
                 var res = await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             catch (Exception e)
             {
+                await transaction.RollbackAsync();
                 return false;
             }
             return true;
