@@ -40,7 +40,7 @@ namespace CoreLib.Handlers
         public IEnumerable<ChatMessage> GetRandomDateformessages(List<ChatParticipancy> account, int NumberOfDataSet)
         {
             var dataset = new Faker<ChatMessage>()
-                .RuleFor(c=>c.Content,f =>f.Random.Words(f.Random.Number(10)))
+                .RuleFor(c=>c.Content,f =>f.WaffleText(f.Random.Number(1,2),false))
                 .RuleFor(c=>c.TimeSent,f => f.Date.Past(1,DateTime.UtcNow))
                 .RuleFor(c=>c.AuthorId, f => account[f.Random.Number()].ParticipantId);
             return dataset.Generate(NumberOfDataSet);

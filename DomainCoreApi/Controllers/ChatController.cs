@@ -466,14 +466,16 @@ namespace DomainCoreApi.Controllers
                 }
 
                 var chats = await _chatService.getListOfchat();
-                
 
-                foreach (var item in chats)
+                int len = chats.Count;
+                Random r = new Random();
+                for (int i = 0; i < NumberOfDataSet; i++)
                 {
+                    var item = chats[r.Next(len - 1)];
                     var data = populateDatahandler.GetRandomDateformessages(item.Participants.ToList(), NumberOfDataSet);
-                    await _chatService.sendDataToChat(item.Id,data.ToList());
+                    await _chatService.sendDataToChat(item.Id, data.ToList());
                 }
-                return Ok(chats);
+                return Ok();
             }
             catch (Exception ex)
             {

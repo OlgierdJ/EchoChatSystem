@@ -24,7 +24,8 @@ namespace DomainCoreApi.Services
             {
                 Entity = JsonSerializer.Serialize(evt.Entry.Entity, evt.Entry.Entity.GetType(), new JsonSerializerOptions()
                 {
-                    ReferenceHandler = ReferenceHandler.Preserve
+                    ReferenceHandler = ReferenceHandler.Preserve,
+                    MaxDepth = 128
                 }),
                 Action = evt.Action,
                 Type = evt.Type,

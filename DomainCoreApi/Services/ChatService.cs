@@ -836,7 +836,9 @@ namespace DomainCoreApi.Services
                 //verify sender is member
                 var chat = await context.Set<Chat>()
                     .Include(e => e.Participants)
-                    .ThenInclude(e => e.Participant)
+                    .ThenInclude(e => e.Participant).ThenInclude(e => e.Profile)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.CustomStatus)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.ActivityStatus)
                     //.ThenInclude(e => e.BlockedAccounts
                     //.Where(e => e.BlockedId == senderId)) //find out if message should be ignored // this will be implemented later
                     .Include(e => e.DirectMessageRelation)
@@ -1078,7 +1080,9 @@ namespace DomainCoreApi.Services
                 //verify sender is member
                 var chat = await context.Set<Chat>()
                     .Include(e => e.Participants)
-                    .ThenInclude(e => e.Participant)
+                    .ThenInclude(e => e.Participant).ThenInclude(e=>e.Profile)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.CustomStatus)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.ActivityStatus)
                     //.ThenInclude(e => e.BlockedAccounts
                     //.Where(e => e.BlockedId == senderId)) //find out if message should be ignored // this will be implemented later
                     .Include(e => e.DirectMessageRelation)
@@ -1102,7 +1106,6 @@ namespace DomainCoreApi.Services
                     {
                         AuthorId = item.AuthorId,
                         Content = item.Content,
-                        //MessageHolderId = chatId,
                         TimeSent = item.TimeSent,
                         ParentId = null,
                         Attachments = null
@@ -1116,6 +1119,7 @@ namespace DomainCoreApi.Services
                 }
 
                 var res = await context.SaveChangesAsync();
+                context.ChangeTracker.Clear();
 
                 return true;
             }

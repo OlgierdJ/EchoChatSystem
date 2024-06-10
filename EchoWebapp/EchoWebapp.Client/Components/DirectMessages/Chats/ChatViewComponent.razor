@@ -124,7 +124,7 @@
                                 .Select(e => e) //flatten bundle
                                 .OrderBy(e => e.TimeSent); //order bundle by specific time of day
 
-                                ulong prevSender = 0;
+                                ulong? prevSender = 0;
                                 DateTime prevTimeSent = DateTime.MinValue; //always reset on new bundle
 
                                 foreach (var message in timeOrderedMessages)
@@ -133,32 +133,56 @@
                                     //place authored message.
                                     var placeAsFirstMessageInBundle = !checkIfBundleByTime(message.TimeSent, prevTimeSent);
                                     prevTimeSent = message.TimeSent;
-                                    if (placeAsFirstMessageInBundle || prevSender != message.Sender.Id)
+                                    if (placeAsFirstMessageInBundle || prevSender != message.Sender?.Id)
                                     {
-                                        prevSender = message.Sender.Id;
-                                        //place message with image, name and such
-                                        <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 px-4 pt-4 mt-2" Style="@($"background:{Colors.Shades.Transparent}")">
-                                            <div class="d-flex flex-grow-1 gap-4">
-                                                <MudAvatar Color="Color.Secondary" Size="Size.Medium">
-                                                    @if (message.Sender != null)
-                                                    {
-                                                        <MudImage Src="@message.Sender.ImageIconURL"></MudImage>
-                                                    }
-                                                    else
-                                                    {
-                                                        @message.Sender?.DisplayName.First()
-                                                    }
-                                                </MudAvatar>
+                                        prevSender = message.Sender?.Id;
+                                        if (prevSender is not null)
+                                        {
+                                            //place message with image, name and such
+                                            <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 px-4 pt-4 mt-2" Style="@($"background:{Colors.Shades.Transparent}")">
+                                                <div class="d-flex flex-grow-1 gap-4">
+                                                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">
+                                                        @if (message.Sender != null)
+                                                        {
+                                                            <MudImage Src="@message.Sender.ImageIconURL"></MudImage>
+                                                        }
+                                                        else
+                                                        {
+                                                            @message.Sender?.DisplayName.First()
+                                                        }
+                                                    </MudAvatar>
 
-                                                <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
-                                                    <div class="d-flex flex-grow-1 gap-3">
-                                                        <MudText Color="Color.Primary">@message.Sender?.DisplayName </MudText>
+                                                    <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                                        <div class="d-flex flex-grow-1 gap-3">
+                                                            <MudText Color="Color.Primary">@message.Sender?.DisplayName </MudText>
+                                                                <MudText Style="@($"color:{Colors.Grey.Default};")">@message.TimeSent.ToString("HH:mm")</MudText>
+                                                            </div>
+                                                            <MudText Typo="Typo.body1">@((MarkupString)message.Content.Replace(Environment.NewLine, "<br />"))</MudText>
+                                                        </MudPaper>
+                                                    </div>
+                                                </MudPaper>
+                                        }
+                                        else
+                                        {
+                                            //place message with image, name and such
+                                            <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 px-4 pt-4 mt-2" Style="@($"background:{Colors.Shades.Transparent}")">
+                                                <div class="d-flex flex-grow-1 gap-4">
+                                                    <MudAvatar Color="Color.Secondary" Size="Size.Medium">
+                                                        else
+                                                        {
+                                                            <MudIcon Icon="@Icons.Material.Filled.PushPin"></MudIcon>
+                                                        }
+                                                    </MudAvatar>
+
+                                                    <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                                                        <div class="d-flex flex-grow-1 gap-3">
                                                             <MudText Style="@($"color:{Colors.Grey.Default};")">@message.TimeSent.ToString("HH:mm")</MudText>
                                                         </div>
-                                                        <MudText Typo="Typo.body1">@((MarkupString)message.Content.Replace(Environment.NewLine, "<br />"))</MudText>
-                                                    </MudPaper>
-                                                </div>
-                                            </MudPaper>
+                                                            <MudText Typo="Typo.body1">@((MarkupString)message.Content.Replace(Environment.NewLine, "<br />"))</MudText>
+                                                        </MudPaper>
+                                                    </div>
+                                                </MudPaper>
+                                        }
                                         continue; //skip to next message
                                     }
                                     //place message in bundle format (without sender name and image and only with hover effect for timesent)
