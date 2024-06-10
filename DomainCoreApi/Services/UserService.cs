@@ -277,7 +277,7 @@ namespace DomainCoreApi.Services
                 },
                 Profile = new()
                 {
-                    DisplayName = !String.IsNullOrEmpty(displayName) ? displayName : name,
+                    DisplayName = !string.IsNullOrEmpty(displayName) ? displayName : name,
                     AvatarFileURL = GetIconFromList(),
                     BannerColor = "#5C23D9",
                 },
@@ -1566,11 +1566,11 @@ namespace DomainCoreApi.Services
                     .AsSplitQuery()
                     .Where(e => e.OwnerId == senderId || e.OwnerId == receiverId) //filter rows by participantid part of key.
                  .ToListAsync();
-                var existingFriendship = participancies
+                var existingDM = participancies
                     .GroupBy(r => r.RelationId) // find rows where dm is same id and group them
                     .Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
                 .SelectMany(g => g); //flatten result into list
-                if (existingFriendship.Any()) //list will be empty if no matches
+                if (existingDM.Any()) //list will be empty if no matches
                 {
                     //here you would normally return the existing chats id via controller or publish a domain event via signalr or masstransit to tell the specific client of the chat and to navigate to it.
                     return false;

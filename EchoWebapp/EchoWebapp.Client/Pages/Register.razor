@@ -95,7 +95,7 @@
         User.Username = username;
         User.AllowEchoMails = allowmail;
         User.DateOfBirth = date.Value;
-        User.DisplayName = displayName != "" ? displayName : null;
+        User.DisplayName = displayName;
         //send user to api
         var data = await _echoAPI.RegisterAsync(User);
         if (data)

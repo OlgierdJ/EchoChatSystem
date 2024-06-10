@@ -150,8 +150,10 @@ namespace EchoWebapp.Client.Provider
 
         private void SignalRClient_FriendRequestRemoved(RequestType type, ulong requestId)
         {
+            Console.WriteLine(self.Requests.Count);
             var FriendRequestRemoved = self.Requests.FirstOrDefault(e => e.Id == requestId && e.Type == type);
             self.Requests?.Remove(FriendRequestRemoved);
+            Console.WriteLine(self.Requests.Count);
             SessionChangeOccured?.Invoke();
         }
 

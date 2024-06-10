@@ -369,6 +369,7 @@ namespace CoreLib.WebAPI
 
         public async Task<bool> RegisterAsync(RegisterRequestDTO requestDTO)
         {
+            Console.WriteLine(requestDTO.DisplayName);
             var load = JsonSerializer.Serialize(requestDTO, SerializerOptions);
             HttpContent content = new StringContent(load, Encoding.UTF8, "application/json");
             try
