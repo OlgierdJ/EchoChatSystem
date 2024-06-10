@@ -250,6 +250,7 @@ namespace EchoWebapp.Client.Provider
 
         private void SignalRClient_ChatHiddenStateChanged(ulong chatId, bool hidden)
         {
+            Console.WriteLine(nameof(SignalRClient_ChatHiddenStateChanged) + chatId);
             self.DirectMessages.FirstOrDefault(e => e.Id == chatId).Hidden = hidden;
             SessionChangeOccured?.Invoke();
         }

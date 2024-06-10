@@ -4,6 +4,8 @@
 @using CoreLib.Entities.EchoCore.ChatCore
 @using MudBlazor
 @inject IUserContainer SessionRepository
+@inject ILocalStorageService LocalStorage
+@inject EchoAPI _echoAPI
 @rendermode InteractiveAuto
 @implements IDisposable
 @*
@@ -15,13 +17,19 @@
 *@
 @* <h3>ChatListComponent</h3> *@
 
-@if (chat != null)
+@if (chats != null)
 {
     <MudPaper Width="13vw" Height="90vh"
             Square Style="background: var(--mud-palette-surface);">
-         <MudText Class="px-5 py-2">Direct Messages</MudText>
+         <div class="d-flex align-content-center justify-center flex-grow-1">
+
+                 <MudText Class="px-5 py-2">Direct Messages</MudText>
+                 <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
+                     <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="ToggleStartGroupChat" />
+                 </MudPaper>
+            </div>
          <MudList Clickable="true">
-            @foreach (var c in chat.OrderByDescending(e => e.Id))
+             @foreach (var c in chats.Where(e=>!e.Hidden).OrderByDescending(e => e.Id))
             {
                 <MudListItem Dense="true" OnClick="@(() => OnItemSelected.InvokeAsync(c))">
                     <ChatComponent OwnId=self.Id Chat="SortChat(c)" />
@@ -29,19 +37,65 @@
             }
         </MudList>
     </MudPaper>
+    <MudOverlay Visible="DisplayStartGroupChat" DarkBackground="true" ZIndex="2">
+        <MudPaper Width="20vw" Height="30vh" Style="background: var(--mud-palette-dark);" Class="d-flex align-content-center justify-center flex-column  flex-grow-1 gap-12" Elevation="2">
+            <MudButton Style="position: absolute; top: 15px; right: 15px; height: 25px;" Color="Color.Error" Variant="Variant.Filled" OnClick="ToggleStartGroupChat">x</MudButton>
+            <MudText Typo="Typo.h5" Align="Align.Center" Style="padding-top: 15px;">SELECT FRIENDS</MudText>
+
+            <MudSelect T="UserDTO" Label="Friends" MultiSelection="true" ToStringFunc="@((user)=>user.Name)" SelectedValues="@selectedFriends" SelectedValuesChanged="SelectedValuesChanged"
+                       AnchorOrigin="Origin.BottomCenter" PopoverClass="fixed">
+
+                @foreach (UserDTO f in friends)
+                {
+                    <MudSelectItem Value="@f">
+                        <MudAvatar>
+                            <MudImage Src="@f.ImageIconURL" />
+                        </MudAvatar>
+                        <MudText Class="pl-3" Typo="Typo.caption">@f.DisplayName</MudText>
+                        </MudSelectItem>
+                }
+
+            </MudSelect>
+            <MudButton Class="align-self-center justify-center" Color="Color.Primary" Variant="Variant.Filled" OnClick="StartGroupChat">Add</MudButton>
+        </MudPaper>
+    </MudOverlay>
 }
 @code {
     [Parameter]
     public UserFullDTO self { get; set; }
+    public ICollection<UserDTO> friends { get; set; }
+    private void SelectedValuesChanged(IEnumerable<UserDTO> values)
+    {
+        this.selectedFriends = values.ToList();
+    }
+    private ICollection<UserDTO> selectedFriends { get; set; }
+    public ICollection<ChatDTO> chats { get; set; }
+    private async void StartGroupChat()
+    {
+        if (selectedFriends.Count > 0)
+        {
+            var token = await LocalStorage.GetItemAsStringAsync("Token");
 
-    public ICollection<ChatDTO> chat { get; set; }
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                var result = await _echoAPI.CreateChat(token, selectedFriends.Select(e => e.Id).ToList());
+                //handle navigation to new chat, whatever else you do here.
+            }
+        }
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
+        return base.OnInitializedAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            chat = self.DirectMessages.ToList();
-            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
+            chats = self.DirectMessages.ToList();
+            friends = self?.Friends;
             StateHasChanged();
         }
 
@@ -53,10 +107,15 @@
     }
     private async void SessionRepository_SessionChangeOccured()
     {
-        chat = self.DirectMessages.ToList();
-       await InvokeAsync(StateHasChanged);
+        chats = self.DirectMessages.ToList();
+        await InvokeAsync(StateHasChanged);
     }
-
+    public bool DisplayStartGroupChat = false;
+    public async void ToggleStartGroupChat()
+    {
+        DisplayStartGroupChat = !DisplayStartGroupChat;
+        await InvokeAsync(StateHasChanged);
+    }
     public ChatDTO SortChat(ChatDTO c)
     {
         c.Messages = c.Messages.OrderBy(e => e.TimeSent).ToList();

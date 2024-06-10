@@ -168,10 +168,9 @@
                                             <MudPaper Elevation="0" class="d-flex flex-grow-1 gap-4 px-4 pt-4 mt-2" Style="@($"background:{Colors.Shades.Transparent}")">
                                                 <div class="d-flex flex-grow-1 gap-4">
                                                     <MudAvatar Color="Color.Secondary" Size="Size.Medium">
-                                                        else
-                                                        {
+                                                        
                                                         <MudIcon Icon="@Icons.Material.Filled.PushPin"></MudIcon>
-                                                        }
+                                                        
                                                     </MudAvatar>
 
                                                     <MudPaper Elevation="0" Style="@($"background:{Colors.Shades.Transparent}")">
@@ -292,6 +291,7 @@
     protected override Task OnInitializedAsync()
     {
         MyCurrentEditContext = new(MessageModel);
+        SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
         return base.OnInitializedAsync();
     }
 
@@ -413,7 +413,6 @@
     protected override async Task OnParametersSetAsync()
     {
         DateBundledMessageGroups = Content.Messages.GroupBy(e => e.TimeSent.Date).OrderBy(e => e.Key);
-        SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured;
         await base.OnParametersSetAsync();
     }
     public void Dispose()

@@ -1,6 +1,8 @@
 ﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
 @using CoreLib.Entities.EchoCore.ChatCore
 @inject IUserContainer SessionRepository
+@inject ILocalStorageService localStorage
+@inject EchoAPI _api
 @implements IDisposable
 @*
     Chat layout for when it exists within the scrollable list in the direct message section.
@@ -8,27 +10,33 @@
     This component should either reflect the other member than the user itself if there is only 2 members within the chat.
     Otherwise reflect the chat name and image.
 *@
-@if (Chat.Participants.Count() > 2)
-{
-    <MudAvatar>
-        @if (!string.IsNullOrWhiteSpace(Chat.IconUrl))
+
+    <div class="d-flex justify-space-between flex-grow-1 gap-4">
+
+        @if (Chat.Participants.Count() > 2)
         {
-            <MudImage Src="@Chat.IconUrl" />
+            <MudAvatar>
+                @if (!string.IsNullOrWhiteSpace(Chat.IconUrl))
+                {
+                    <MudImage Src="@Chat.IconUrl" />
+                }
+                else
+                {
+                    @Chat.Name.First()
+                }
+            </MudAvatar>
+            <MudText Typo="Typo.caption">@Chat.Name</MudText>
         }
-        else
+        else //chat between 2 users
         {
-            @Chat.Name.First()
+            <MudAvatar>
+                <MudImage Src="@Chat.Participants.Where(e => e.Id != OwnId).First().ImageIconURL" />
+            </MudAvatar>
+            <MudText Typo="Typo.caption">@Chat.Participants.Where(e => e.Id != OwnId).First().DisplayName</MudText>
         }
-    </MudAvatar>
-    <MudText Typo="Typo.caption">@Chat.Name</MudText>
-}
-else //chat between 2 users
-{
-    <MudAvatar>
-        <MudImage Src="@Chat.Participants.Where(e => e.Id != OwnId).First().ImageIconURL" />
-    </MudAvatar>
-    <MudText Typo="Typo.caption">@Chat.Participants.Where(e => e.Id != OwnId).First().DisplayName</MudText>
-}
+        <MudIconButton OnClick=HideChat Class="align-end" Icon="@Icons.Material.Filled.Close"></MudIconButton>
+    </div>
+
 
 @code {
 
@@ -48,8 +56,14 @@ else //chat between 2 users
 
         await base.OnAfterRenderAsync(firstRender);
     }
+    public async void HideChat()
+    {
+        var token = await localStorage.GetItemAsStringAsync("Token");
+        await _api.HideChat(token, Chat.Id);
+    }
     public void Dispose()
     {
+        Console.WriteLine("disposed here from "+Chat.Id);
         SessionRepository.SessionChangeOccured -= SessionRepository_SessionChangeOccured;
     }
 
