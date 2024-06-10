@@ -424,7 +424,8 @@
         await InvokeAsync(StateHasChanged);
         Console.WriteLine(DateTime.Now);
     }
-
+    //remember to add remove own message, remove others message if isowner except where they are owner too?
+    //also mayb remove participant
 
     public string Token { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
