@@ -178,7 +178,16 @@
                 </MudList>
 
                 <MudToolBar Class="d-flex flex-column-reverse flex-grow-1 gap-0 py-0 my-0" Style="@($"background:{Colors.Shades.Transparent}; height: 5vh;")">
-                        <MudTextField FullWidth @bind-Value="TextValue" 
+                    <EditForm Model="@TextValue" OnValidSubmit="SendMessage" @onkeypress:preventDefault>
+                        <DataAnnotationsValidator />
+                        <MudTextField 
+                            FullWidth 
+                            @bind-Value="TextValue" 
+                            For="@(()=>Message.Content)"
+                            Variant="Variant.Filled" 
+                            Margin="Margin.Dense" />
+                    </EditForm>
+                       @*  <MudTextField FullWidth @bind-Value="TextValue" 
                         Margin="Margin.Dense" Variant="Variant.Filled"
                                    OnDebounceIntervalElapsed="OnDebounceIntervalElapsed" 
                                    OnKeyUp="OnKeyUp" AutoGrow MaxLines="11"
@@ -186,7 +195,7 @@
                         Placeholder="@TextPlaceholder" Class="px-5 py-2" 
                          MaxLength="1000"
                         Style="background: var(--mud-palette-dark);opacity:1; margin-top: 10px;">
-                         </MudTextField>
+                         </MudTextField> *@
 
                    @*  <MudForm Class="d-flex flex-grow-1 px-4" @onsubmit="SendMessage" SuppressImplicitSubmission="true">
                         <MudTextField  DebounceInterval="500" Immediate="true" OnDebounceIntervalElapsed="OnDebounceIntervalElapsed"
@@ -253,6 +262,8 @@
     private IOrderedEnumerable<IGrouping<DateTime, MessageDTO>> DateBundledMessageGroups { get; set; }
 
     private UserDTO selected { get; set; }
+    private SendMessageRequestForm Message { get; set; } = new();
+
 
     private string? token { get; set; }
     public bool DisplaySidePanel = false;
@@ -387,7 +398,7 @@
         var result = (dt < prevDt.AddMinutes(7));
         return result;
     }
-    private async Task SendMessage(EventArgs e)
+    private async Task SendMessage(EditContext e)
     {
         // if (e.Key is "Enter" && prevKey is not "Shift")
         // {
