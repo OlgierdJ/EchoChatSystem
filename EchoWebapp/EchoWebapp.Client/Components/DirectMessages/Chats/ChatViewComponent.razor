@@ -201,44 +201,23 @@
                 </MudList>
 
                 <MudToolBar Class="d-flex flex-column-reverse flex-grow-1 gap-0 py-0 my-0" Style="@($"background:{Colors.Shades.Transparent}; height: 5vh;")">
-                    <EditForm Context=MyCurrentEditContext 
-                        Model="@MessageModel" 
-                        OnValidSubmit="SendMessage"
-                              @onkeydown="KeyDownHandler"
-                              @onkeypress="(e)=>KeyPressHandler(MyCurrentEditContext, e)">
-                        <DataAnnotationsValidator />
+                    <MudTextField FullWidth
+                        @ref="RefEntryField"
+                        AutoGrow
+                        @bind-Value="MessageModel.Content"
+                        Immediate="true"
+                        OnKeyUp="OnTextChatSend"
+                        Lines="1"
+                        MaxLines="11"
+                        MaxLength="1000"
+                        Variant="Variant.Filled"
+                        Margin="Margin.Dense"
+                        Style="background: var(--mud-palette-dark);opacity:1;margin-top: 10px;" />
+                </MudToolBar>
 
-                            <MudTextField FullWidth
-                                           AutoGrow
-                                           Text="@MessageModel.Content"
-                                           @onkeypress="TextKeyPressHandler"
-                                           Lines="1"
-                                           MaxLines="11"
-                                           
-                                           For="@(()=>MessageModel.Content)"
-                                           Variant="Variant.Filled"
-                                           Margin="Margin.Dense" />
-                         </EditForm>
-                         @*  <MudTextField FullWidth @bind-Value="TextValue"
-                Margin="Margin.Dense" Variant="Variant.Filled"
-                OnDebounceIntervalElapsed="OnDebounceIntervalElapsed"
-                OnKeyUp="OnKeyUp" AutoGrow MaxLines="11"
+            </MudPaper>
 
-                Placeholder="@TextPlaceholder" Class="px-5 py-2"
-                MaxLength="1000"
-                Style="background: var(--mud-palette-dark);opacity:1; margin-top: 10px;">
-                </MudTextField> *@
-
-                         @*  <MudForm Class="d-flex flex-grow-1 px-4" @onsubmit="SendMessage" SuppressImplicitSubmission="true">
-                <MudTextField  DebounceInterval="500" Immediate="true" OnDebounceIntervalElapsed="OnDebounceIntervalElapsed"
-                Placeholder=" Search" @bind-Value="@TextValue"
-                />
-                </MudForm> *@
-                         </MudToolBar>
-
-                         </MudPaper>
-
-                         @if (Content?.Participants?.Count() > 2)
+                     @if (Content?.Participants?.Count() > 2)
             {
                 <MemberListComponent Visible="DisplaySidePanel" Members="@Content?.Participants?.ToList()" />
             }
@@ -276,6 +255,25 @@
 }
 
 @code {
+    private MudTextField<string> RefEntryField;
+    private async Task OnTextChatSend(KeyboardEventArgs args)
+    {
+        if (!args.ShiftKey && args.Key is "Enter" or "NumppadEnter")
+        {
+            RefEntryField.TextUpdateSuppression = false;
+
+            Console.WriteLine("SENDING TO API ETC");
+            await SendMessage();
+            MessageModel.Content = string.Empty;
+
+            await InvokeAsync(StateHasChanged);
+            await Task.Run(async () =>
+            {
+                await Task.Delay(150);
+                RefEntryField.TextUpdateSuppression = true;
+            });
+        }
+    }
     bool _preventDefault;
     EditContext MyCurrentEditContext { get; set; }
 
