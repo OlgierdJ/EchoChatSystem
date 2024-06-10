@@ -18,6 +18,7 @@ using CoreLib.Interfaces.Services;
 using DomainCoreApi.EFCORE;
 using DomainCoreApi.Services.Bases;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace DomainCoreApi.Services
 {
@@ -835,7 +836,9 @@ namespace DomainCoreApi.Services
                 //verify sender is member
                 var chat = await context.Set<Chat>()
                     .Include(e => e.Participants)
-                    .ThenInclude(e => e.Participant)
+                    .ThenInclude(e => e.Participant).ThenInclude(e => e.Profile)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.CustomStatus)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.ActivityStatus)
                     //.ThenInclude(e => e.BlockedAccounts
                     //.Where(e => e.BlockedId == senderId)) //find out if message should be ignored // this will be implemented later
                     .Include(e => e.DirectMessageRelation)
@@ -1057,6 +1060,74 @@ namespace DomainCoreApi.Services
             return true;
         }
 
-        
+        public async Task<List<Chat>> getListOfchat()
+        {
+            try
+            {
+                return await context.Set<Chat>().Include(e => e.Participants).Include(e=>e.Messages).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<bool> sendDataToChat(ulong chatid , List<ChatMessage> chatdata)
+        {
+            try
+            {
+                //verify sender is member
+                var chat = await context.Set<Chat>()
+                    .Include(e => e.Participants)
+                    .ThenInclude(e => e.Participant).ThenInclude(e=>e.Profile)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.CustomStatus)
+                    .Include(e => e.Participants).ThenInclude(e => e.Participant).ThenInclude(e => e.ActivityStatus)
+                    //.ThenInclude(e => e.BlockedAccounts
+                    //.Where(e => e.BlockedId == senderId)) //find out if message should be ignored // this will be implemented later
+                    .Include(e => e.DirectMessageRelation)
+                    .Include(e => e.Messages.Take(0)) //make efcore init list kinda cheap but im lazy rn
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(e => e.Id == chatid);
+                if (chat == null)
+                {
+                    return false;
+                }
+                
+
+                foreach (var item in chatdata)
+                {
+                    var isMember = chat.Participants.Any(e => e.ParticipantId == item.AuthorId); //check if participants contain sender
+                    if (!isMember)
+                    {
+                        return false;
+                    }
+                    ChatMessage msg = new()
+                    {
+                        AuthorId = item.AuthorId,
+                        Content = item.Content,
+                        TimeSent = item.TimeSent,
+                        ParentId = null,
+                        Attachments = null
+                    };
+
+                    chat.Messages.Add(msg);
+                }
+                foreach (var participant in chat.Participants) //loop through participants
+                {
+                    participant.Hidden = false; //show chat if hidden since activity has been registered
+                }
+
+                var res = await context.SaveChangesAsync();
+                context.ChangeTracker.Clear();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
+        }
     }
 }

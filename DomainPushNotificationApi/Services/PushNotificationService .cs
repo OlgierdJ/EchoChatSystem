@@ -26,7 +26,7 @@ namespace DomainPushNotificationApi.Services
     {
         protected readonly IHubContext<PushNotificationHub, IPushNotificationHub> _hubContext;
         private Dictionary<(string, EntityAction), Func<object, Task>> _hubManager = new();
-        private readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.Preserve };
+        private readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.Preserve,MaxDepth = 128};
         public PushNotificationService(
             IHubContext<PushNotificationHub, IPushNotificationHub> hubContext, 
             PushNotificationClientConnectionStore userConnectionStore, 

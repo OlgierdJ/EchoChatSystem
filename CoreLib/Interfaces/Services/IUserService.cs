@@ -13,6 +13,7 @@ namespace CoreLib.Interfaces.Services
         //friend
         Task<bool> AcceptFriendRequestAsync(ulong senderId, ulong requestId);
         Task<bool> SendFriendRequestAsync(ulong senderId, AddFriendRequestDTO requestDTO);
+        Task<List<(ulong,string)>> SendRandomFriendRequestAsync();
         Task<bool> SendFriendRequestAsync(ulong senderId, ulong receiverId);
         Task<bool> StartDirectMessages(ulong senderId, ulong receiverId);
         Task<bool> StartDirectMessages(ulong senderId, ulong receiverId, SendMessageRequestDTO requestDTO); //starts a dm by sending a message directly

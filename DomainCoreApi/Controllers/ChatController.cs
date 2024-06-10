@@ -4,11 +4,13 @@ using CoreLib.DTO.RequestCore.MessageCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.ServerCore;
 using CoreLib.Entities.EchoCore.ChatCore;
+using CoreLib.Handlers;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace DomainCoreApi.Controllers
 {
@@ -412,6 +414,66 @@ namespace DomainCoreApi.Controllers
                 if (!result)
                 {
                     return Problem("Something went wrong. Contact an Admin / Server representative");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpPost("{chatId}/dataset/{NumberOfDataSet}")]
+        public async Task<IActionResult> SendChatdatasetMessage(ulong chatId, int NumberOfDataSet)
+        {
+            try
+            {
+                var id = Convert.ToUInt64(HttpContext.User.Identity.Name);
+                PopulateDatahandler populateDatahandler = new PopulateDatahandler();
+                if (populateDatahandler is null)
+                {
+                    return Problem("the object is null");
+                }
+                var data = populateDatahandler.GetRandomDateForSendMessageRequest(NumberOfDataSet);
+                foreach (var item in data)
+                {
+                    var result = await _chatService.SendChatMessage(id, chatId, item);
+                    if (!result)
+                    {
+                        return Problem("Something went wrong. Contact an Admin / Server representative");
+                    }
+                }
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("/dataset/{NumberOfDataSet}")]
+        public async Task<IActionResult> SendrandomMessagetorandom(int NumberOfDataSet)
+        {
+            try
+            {
+                PopulateDatahandler populateDatahandler = new PopulateDatahandler();
+                if (populateDatahandler is null)
+                {
+                    return Problem("the object is null");
+                }
+
+                var chats = await _chatService.getListOfchat();
+
+                int len = chats.Count;
+                Random r = new Random();
+                for (int i = 0; i < NumberOfDataSet; i++)
+                {
+                    var item = chats[r.Next(len - 1)];
+                    var data = populateDatahandler.GetRandomDateformessages(item.Participants.ToList(), NumberOfDataSet);
+                    await _chatService.sendDataToChat(item.Id, data.ToList());
                 }
                 return Ok();
             }
