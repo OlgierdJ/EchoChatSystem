@@ -32,7 +32,7 @@
              @foreach (var c in chats.Where(e=>!e.Hidden).OrderByDescending(e => e.Id))
             {
                 <MudListItem Dense="true" OnClick="@(() => OnItemSelected.InvokeAsync(c))">
-                    <ChatComponent OwnId=self.Id Chat="SortChat(c)" />
+                    <ChatComponent OwnId=self.Id ChatId="c.Id" />
                 </MudListItem>
             }
         </MudList>

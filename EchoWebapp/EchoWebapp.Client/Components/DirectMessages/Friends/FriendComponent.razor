@@ -7,6 +7,7 @@
 @implements IDisposable
 @inject EchoAPI _echoAPI
 @inject IDialogService Dialog
+@inject NavigationManager nav
 
 @*
     friendcomponent layout for when it exists within the scrollable list in the friendlistcomponent.
@@ -86,6 +87,16 @@
         {
             Console.WriteLine("Accept success!");
             StateHasChanged();
+        }
+        else
+        {
+            var chatid = SessionRepository.self.DirectMessages
+            .Where(e => e.Participants.Count == 2 && e.Participants
+                .All(x => x.IsOwner))
+                .Where(e => e.Participants.Any(e => e.Id == User.Id))
+                .Select(e => e.Id).FirstOrDefault();
+
+            nav.NavigateTo($"/chat/{chatid}");
         }
     }
 
