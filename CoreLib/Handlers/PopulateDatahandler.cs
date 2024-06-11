@@ -37,10 +37,10 @@ namespace CoreLib.Handlers
         }
 
 
-        public IEnumerable<ChatMessage> GetRandomDateformessages(List<ChatParticipancy> account, int NumberOfDataSet)
+        public ICollection<ChatMessage> GetRandomDateformessages(List<ChatParticipancy> account, int NumberOfDataSet)
         {
             var dataset = new Faker<ChatMessage>()
-                .RuleFor(c=>c.Content,f =>f.WaffleText(f.Random.Number(1,2),false))
+                .RuleFor(c=>c.Content, f =>f.WaffleText(f.Random.Number(1,2),false))
                 .RuleFor(c=>c.TimeSent,f => f.Date.Past(1,DateTime.UtcNow))
                 .RuleFor(c=>c.AuthorId, f => account[f.Random.Number()].ParticipantId);
             return dataset.Generate(NumberOfDataSet);
@@ -49,14 +49,14 @@ namespace CoreLib.Handlers
         public ICollection<AddFriendRequestDTO> GetRandomFriendRequest(int NumberOfDataSet, List<string> username)
         {
             var dataset = new Faker<AddFriendRequestDTO>()
-                .RuleFor(c => c.Name, f => username[f.Random.Number(username.Count)]);
+                .RuleFor(c => c.Name, f => username[f.Random.Number(0,username.Count - 1)]);
             return dataset.Generate(NumberOfDataSet);
         }
 
         public ICollection<holderUserId> GetRandomUserid(int NumberOfDataSet, List<ulong> userid)
         {
             var dataset = new Faker<holderUserId>()
-                .RuleFor(c => c.userid, f => userid[f.Random.Number(userid.Count)]);
+                .RuleFor(c => c.userid, f => userid[f.Random.Number(0,userid.Count-1)]);
             return dataset.Generate(NumberOfDataSet);
         }
 

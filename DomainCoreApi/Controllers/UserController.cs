@@ -902,10 +902,12 @@ namespace DomainCoreApi.Controllers
                 var data = populateDatahandler.GetRandomFriendRequest(NumberOfDataSet, result.Select(e => e.Item2).ToList()).ToList();
                 var senderid = populateDatahandler.GetRandomUserid(NumberOfDataSet, result.Select(e => e.Item1).ToList()).ToList();
                 var id = result.Select(e => e.Item1).ToList();
+                var cont = id.Count-1;
+                Random r = new Random();
                 for (int i = 0; i < NumberOfDataSet; i++)
                 {
-                    await _userService.SendFriendRequestAsync(id[i], data[i]);
-                    await _userService.StartDirectMessages(id[i], senderid[i].userid);
+                    await _userService.SendFriendRequestAsync(id[r.Next(0, cont)], data[r.Next(0, NumberOfDataSet-1)]);
+                    await _userService.StartDirectMessages(id[r.Next(0, cont)], senderid[r.Next(0, NumberOfDataSet-1)].userid);
                 }
                 return Ok(data);
             }
