@@ -1,31 +1,29 @@
-﻿using CoreLib.Entities.Base;
-using CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore;
+﻿using CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore;
+
+public class AcceptedCurrencyConfiguration : IEntityTypeConfiguration<AcceptedCurrency> //needs default currencies ("dkk"), ("eur"), ("usd")
 {
-    public class AcceptedCurrencyConfiguration : IEntityTypeConfiguration<AcceptedCurrency> //needs default currencies ("dkk"), ("eur"), ("usd")
+    public string Name { get; set; }
+
+    public ICollection<Subscription>? Subscriptions { get; set; }
+    public ICollection<SubscriptionTransactionGroup>? TransactionGroups { get; set; }
+    public ICollection<SubscriptionTransaction>? Transactions { get; set; }
+
+    public void Configure(EntityTypeBuilder<AcceptedCurrency> builder)
     {
-        public string Name { get; set; }
+        builder.HasKey(b => b.Id);
 
-        public ICollection<Subscription>? Subscriptions { get; set; }
-        public ICollection<SubscriptionTransactionGroup>? TransactionGroups { get; set; }
-        public ICollection<SubscriptionTransaction>? Transactions { get; set; }
+        builder.Property(b => b.Name);
 
-        public void Configure(EntityTypeBuilder<AcceptedCurrency> builder)
-        {
-            builder.HasKey(b => b.Id);
+        builder.HasMany(b => b.Subscriptions).WithOne(b => b.Currency).HasForeignKey(b => b.CurrencyId).IsRequired(false).OnDelete(DeleteBehavior.Restrict);
+        builder.HasMany(b => b.TransactionGroups).WithOne(b => b.Currency).HasForeignKey(b => b.CurrencyId).IsRequired(false).OnDelete(DeleteBehavior.Restrict);
+        builder.HasMany(b => b.Transactions).WithOne(b => b.Currency).HasForeignKey(b => b.CurrencyId).IsRequired(false).OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(b => b.Name);
-
-            builder.HasMany(b => b.Subscriptions).WithOne(b=>b.Currency).HasForeignKey(b=>b.CurrencyId).IsRequired(false).OnDelete(DeleteBehavior.Restrict);
-            builder.HasMany(b => b.TransactionGroups).WithOne(b => b.Currency).HasForeignKey(b => b.CurrencyId).IsRequired(false).OnDelete(DeleteBehavior.Restrict);
-            builder.HasMany(b => b.Transactions).WithOne(b => b.Currency).HasForeignKey(b => b.CurrencyId).IsRequired(false).OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasData(new AcceptedCurrency { Id = 1, Name = "dkk" });
-            builder.HasData(new AcceptedCurrency { Id = 2, Name = "eur" });
-            builder.HasData(new AcceptedCurrency { Id = 3, Name = "usd" });
-        }
+        builder.HasData(new AcceptedCurrency { Id = 1, Name = "dkk" });
+        builder.HasData(new AcceptedCurrency { Id = 2, Name = "eur" });
+        builder.HasData(new AcceptedCurrency { Id = 3, Name = "usd" });
     }
 }

@@ -1,13 +1,12 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Interfaces.Contracts;
 
-namespace CoreLib.Entities.EchoCore.AccountCore
+namespace CoreLib.Entities.EchoCore.AccountCore;
+
+public class AccountViolationAppeal : BaseEntity<ulong>, IViolationAppeal<AccountViolation, ulong, AccountViolationAppealReview>
 {
-    public class AccountViolationAppeal : BaseEntity<ulong>, IViolationAppeal<AccountViolation, ulong, AccountViolationAppealReview>
-    {
-        public ulong ViolationId { get; set; }
-        public AccountViolation Violation { get; set; }
-        public string Message { get; set; }
-        public AccountViolationAppealReview? Review { get; set; }
-    }
+    public ulong ViolationId { get; set; }
+    public AccountViolation Violation { get; set; }
+    public string Message { get; set; }
+    public AccountViolationAppealReview? Review { get; set; }
 }

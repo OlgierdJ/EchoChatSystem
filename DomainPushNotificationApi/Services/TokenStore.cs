@@ -1,12 +1,8 @@
-﻿namespace DomainPushNotificationApi.Services
-{
-    public interface ITokenStore
-    {
-        string Token { get; set; }
-    }
+﻿using CoreLib.Interfaces.Providers;
 
-    public class TokenStore : ITokenStore
-    {
-        public string Token { get; set; } //generated on startup once and used to make calls as server to domain
-    }
+namespace DomainPushNotificationApi.Services;
+public class TokenStore : ITokenProvider
+{
+    public string AccessToken { get; set; }
+    public string RefreshToken { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace DomainRTCApi
+﻿namespace DomainRTCApi;
+
+public class ChatHubGroupManager
 {
-    public class ChatHubGroupManager
-    {
-        public Dictionary<string, string> ClientGroupMappings { get; set; }
-    }
+    public Dictionary<string, string> ClientGroupMappings { get; set; }
 }

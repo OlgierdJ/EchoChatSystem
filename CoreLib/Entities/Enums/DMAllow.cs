@@ -1,9 +1,8 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum DMAllow
 {
-    public enum DMAllow
-    {
-        Show,
-        Blur,
-        Block
-    }
+    Show,
+    Blur,
+    Block
 }

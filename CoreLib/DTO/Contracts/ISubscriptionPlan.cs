@@ -1,11 +1,10 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface ISubscriptionPlan
 {
-    public interface ISubscriptionPlan
-    {
-        double CostEUR { get; set; }
-        //ulong Id { get; set; } inherit from iidentified or ientity instead
-        string Name { get; set; }
-        string PaymentPlan { get; set; }
-        string Type { get; set; }
-    }
+    double CostEUR { get; set; }
+    //ulong Id { get; set; } inherit from iidentified or ientity instead
+    string Name { get; set; }
+    string PaymentPlan { get; set; }
+    string Type { get; set; }
 }

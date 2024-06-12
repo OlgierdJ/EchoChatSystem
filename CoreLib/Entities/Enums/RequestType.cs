@@ -1,8 +1,7 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum RequestType
 {
-    public enum RequestType
-    {
-        Incoming,
-        Outgoing
-    }
+    Incoming,
+    Outgoing
 }

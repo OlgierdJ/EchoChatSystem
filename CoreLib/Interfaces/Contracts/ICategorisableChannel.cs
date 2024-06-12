@@ -1,8 +1,6 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface ICategorisableChannel<TChannelCategory, TChannelCategoryId> : IChannel, ICategorisable<TChannelCategory, TChannelCategoryId>
 {
-    public interface ICategorisableChannel<TChannelCategory, TChannelCategoryId> : IChannel, ICategorisable<TChannelCategory, TChannelCategoryId>
-    {//integrations? webhooks? invites? channelfollows?
-        public TChannelCategoryId? CategoryId { get; set; }
-        public TChannelCategory? Category { get; set; }
-    }
+    //integrations? webhooks? invites? channelfollows?
 }

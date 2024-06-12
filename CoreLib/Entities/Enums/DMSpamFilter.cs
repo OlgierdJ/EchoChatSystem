@@ -1,9 +1,8 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum DMSpamFilter
 {
-    public enum DMSpamFilter
-    {
-        All,
-        Unknown,
-        None
-    }
+    All,
+    Unknown,
+    None
 }

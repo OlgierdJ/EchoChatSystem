@@ -1,9 +1,8 @@
 ﻿using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Interfaces.Bases;
 
-namespace CoreLib.Interfaces.Repositorys
+namespace CoreLib.Interfaces.Repositories;
+
+public interface IChatRepository : IRepository<Chat>
 {
-    public interface IChatRepository : IRepository<Chat>
-    {
-    }
 }

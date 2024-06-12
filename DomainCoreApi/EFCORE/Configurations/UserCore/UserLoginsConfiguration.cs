@@ -1,6 +1,5 @@
-﻿namespace DomainCoreApi.EFCORE.Configurations.UserCore
+﻿namespace DomainCoreApi.EFCORE.Configurations.UserCore;
+
+internal class UserLoginsConfiguration
 {
-    internal class UserLoginsConfiguration
-    {
-    }
 }

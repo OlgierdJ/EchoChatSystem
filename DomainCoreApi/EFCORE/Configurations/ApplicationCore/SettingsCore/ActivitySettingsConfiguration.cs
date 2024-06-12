@@ -2,21 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore
+namespace DomainCoreApi.EFCORE.Configurations.ApplicationCore.SettingsCore;
+
+public class ActivitySettingsConfiguration : IEntityTypeConfiguration<ActivitySettings>
 {
-    public class ActivitySettingsConfiguration : IEntityTypeConfiguration<ActivitySettings>
+    public void Configure(EntityTypeBuilder<ActivitySettings> builder)
     {
-        public void Configure(EntityTypeBuilder<ActivitySettings> builder)
-        {
-            builder.HasKey(b => b.Id);
+        builder.HasKey(b => b.Id);
 
-            //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
-            builder.Property(b => b.DisplayCurrentActivityAsAStatusMessage).IsRequired();
-            builder.Property(b => b.ShareActivityStatusOnLargeServerJoin).IsRequired();
-            builder.Property(b => b.AllowFriendsToJoinGame).IsRequired();
-            builder.Property(b => b.AllowVoiceChannelParticipantsToJoinGame).IsRequired();
+        //builder.Property(b => b.SaturationPercent).IsRequired(); // not mapped most of stuff
+        builder.Property(b => b.DisplayCurrentActivityAsAStatusMessage).IsRequired();
+        builder.Property(b => b.ShareActivityStatusOnLargeServerJoin).IsRequired();
+        builder.Property(b => b.AllowFriendsToJoinGame).IsRequired();
+        builder.Property(b => b.AllowVoiceChannelParticipantsToJoinGame).IsRequired();
 
-            builder.HasOne(b => b.AccountSettings).WithOne(e => e.ActivitySettings).HasForeignKey<ActivitySettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
-        }
+        builder.HasOne(b => b.AccountSettings).WithOne(e => e.ActivitySettings).HasForeignKey<ActivitySettings>(b => b.Id).OnDelete(DeleteBehavior.ClientCascade).IsRequired();
     }
 }

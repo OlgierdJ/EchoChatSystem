@@ -1,81 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CoreLib.Abstractions;
 
-namespace CoreLib.Abstractions
+public sealed record Error(string Code, string? Description = null)
 {
-    public sealed record Error(string Code, string? Description = null)
-    {
-        public static readonly Error None = new(string.Empty);
+    public static readonly Error None = new(string.Empty);
 
-        public static implicit operator Result(Error error) => Result.Failure(error);
+    public static implicit operator Result(Error error) => Result.Failure(error);
+}
+
+public class Result
+{
+    private Result(bool isSuccess, Error error)
+    {
+        if (isSuccess && error != Error.None ||
+            !isSuccess && error == Error.None)
+        {
+            throw new ArgumentException("Invalid error", nameof(error));
+        }
+
+        IsSuccess = isSuccess;
+        Error = error;
     }
 
-    public class Result
+    public bool IsSuccess { get; }
+
+    public bool IsFailure => !IsSuccess;
+
+    public Error Error { get; }
+
+    public static Result Success() => new(true, Error.None);
+
+    public static Result Failure(Error error) => new(false, error);
+}
+
+public class Result<TValue>
+{
+    public Result()
+    { }
+
+    private TValue _value;
+
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
+    public TValue ValueOrDefault => _value;
+
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
+    public TValue Value
     {
-        private Result(bool isSuccess, Error error)
+        get
         {
-            if (isSuccess && error != Error.None ||
-                !isSuccess && error == Error.None)
-            {
-                throw new ArgumentException("Invalid error", nameof(error));
-            }
+            //ThrowIfFailed();
 
-            IsSuccess = isSuccess;
-            Error = error;
+            return _value;
         }
+        private set
+        {
+            //ThrowIfFailed();
 
-        public bool IsSuccess { get; }
-
-        public bool IsFailure => !IsSuccess;
-
-        public Error Error { get; }
-
-        public static Result Success() => new(true, Error.None);
-
-        public static Result Failure(Error error) => new(false, error);
+            _value = value;
+        }
     }
 
-    public class Result<TValue>
+    /// <summary>
+    /// Set value
+    /// </summary>
+    public Result<TValue> WithValue(TValue value)
     {
-        public Result()
-        { }
-
-        private TValue _value;
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public TValue ValueOrDefault => _value;
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public TValue Value
-        {
-            get
-            {
-                //ThrowIfFailed();
-
-                return _value;
-            }
-            private set
-            {
-                //ThrowIfFailed();
-
-                _value = value;
-            }
-        }
-
-        /// <summary>
-        /// Set value
-        /// </summary>
-        public Result<TValue> WithValue(TValue value)
-        {
-            Value = value;
-            return this;
-        }
+        Value = value;
+        return this;
     }
 }

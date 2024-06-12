@@ -1,7 +1,6 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface INote
 {
-    public interface INote
-    {
-        public string Note { get; set; }
-    }
+    public string Note { get; set; }
 }

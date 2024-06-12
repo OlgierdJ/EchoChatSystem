@@ -1,7 +1,6 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IMessageWithAttachments<TMessageAttachment> : IMessage
 {
-    public interface IMessageWithAttachments<TMessageAttachment> : IMessage
-    {
-        ICollection<TMessageAttachment>? Attachments { get; set; }
-    }
+    ICollection<TMessageAttachment>? Attachments { get; set; }
 }

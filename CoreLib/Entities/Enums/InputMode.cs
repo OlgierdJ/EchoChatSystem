@@ -1,8 +1,7 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum InputMode
 {
-    public enum InputMode
-    {
-        VoiceActivity,
-        PushToTalk
-    }
+    VoiceActivity,
+    PushToTalk
 }

@@ -1,31 +1,30 @@
-﻿namespace DomainPushNotificationApi.Services
+﻿namespace DomainPushNotificationApi.Services;
+
+public class PushNotificationClientConnectionStore
 {
-    public class PushNotificationClientConnectionStore
+    //used for accessing connections from outside hub so that we can add users to groups without making a roundtrip to the client.
+    public Dictionary<ulong, List<string>> UserConnectionMappings { get; set; } = new();
+
+    public void ClearUserConnections(ulong accountId)
     {
-        //used for accessing connections from outside hub so that we can add users to groups without making a roundtrip to the client.
-        public Dictionary<ulong, List<string>> UserConnectionMappings { get; set; } = new(); 
+        UserConnectionMappings.Remove(accountId);
+    }
+    public void RemoveUserConnection(ulong accountId, string connectionId)
+    {
+        if (UserConnectionMappings.TryGetValue(accountId, out var list))
+        {
+            list.Remove(connectionId);
+        }
+    }
 
-        public void ClearUserConnections(ulong accountId)
+    public void AddUserConnection(ulong accountId, string connectionId)
+    {
+        var exists = UserConnectionMappings.TryGetValue(accountId, out var list);
+        if (!exists)
         {
-            UserConnectionMappings.Remove(accountId);
+            UserConnectionMappings.Add(accountId, new List<string>());
         }
-        public void RemoveUserConnection(ulong accountId, string connectionId)
-        {
-            if (UserConnectionMappings.TryGetValue(accountId, out var list))
-            {
-                list.Remove(connectionId);
-            }
-        }
-
-        public void AddUserConnection(ulong accountId, string connectionId)
-        {
-            var exists = UserConnectionMappings.TryGetValue(accountId, out var list);
-            if (!exists)
-            {
-                UserConnectionMappings.Add(accountId, new List<string>());
-            }
-            var currentList = UserConnectionMappings[accountId]; //we know it exists by this point
-            currentList.Add(connectionId);
-        }
+        var currentList = UserConnectionMappings[accountId]; //we know it exists by this point
+        currentList.Add(connectionId);
     }
 }

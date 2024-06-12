@@ -1,11 +1,10 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum VerificationLevel
 {
-    public enum VerificationLevel
-    {
-        None,
-        Low,
-        Medium,
-        High,
-        Highest
-    }
+    None,
+    Low,
+    Medium,
+    High,
+    Highest
 }

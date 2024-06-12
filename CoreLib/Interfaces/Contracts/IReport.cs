@@ -1,8 +1,7 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IReport
 {
-    public interface IReport
-    {
-        public string Message { get; set; }
-        public DateTime TimeSent { get; set; }
-    }
+    public string Message { get; set; }
+    public DateTime TimeSent { get; set; }
 }

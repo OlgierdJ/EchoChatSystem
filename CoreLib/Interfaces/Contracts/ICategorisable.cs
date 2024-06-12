@@ -1,8 +1,7 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface ICategorisable<TCategory, TCategoryId>
 {
-    public interface ICategorisable<TCategory, TCategoryId>
-    {
-        public TCategoryId? CategoryId { get; set; }
-        public TCategory? Category { get; set; }
-    }
+    public TCategoryId? CategoryId { get; set; }
+    public TCategory? Category { get; set; }
 }

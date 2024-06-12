@@ -1,8 +1,7 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IPermission : IPermissionMinimal
 {
-    public interface IPermission : IPermissionMinimal
-    {
-        string? Description { get; set; }
-        string? GroupingName { get; set; }
-    }
+    string? Description { get; set; }
+    string? GroupingName { get; set; }
 }

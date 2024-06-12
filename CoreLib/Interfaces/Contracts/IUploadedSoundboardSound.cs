@@ -1,7 +1,6 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IUploadedSoundboardSound<TUploader> : ISoundboardSound
 {
-    public interface IUploadedSoundboardSound<TUploader> : ISoundboardSound
-    {
-        public TUploader? Uploader { get; set; }
-    }
+    public TUploader? Uploader { get; set; }
 }

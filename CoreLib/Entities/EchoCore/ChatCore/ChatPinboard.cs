@@ -1,8 +1,5 @@
-﻿using CoreLib.Entities.Base;
+﻿namespace CoreLib.Entities.EchoCore.ChatCore;
 
-namespace CoreLib.Entities.EchoCore.ChatCore
-{
-    //public class ChatPinboard : BasePinboard<ulong, Chat, ulong, ChatMessagePin>
-    //{
-    //}
-}
+//public class ChatPinboard : BasePinboard<ulong, Chat, ulong, ChatMessagePin>
+//{
+//}

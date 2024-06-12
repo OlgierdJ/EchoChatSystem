@@ -1,29 +1,28 @@
 ﻿using MudBlazor;
 
-namespace EchoWebapp.Client.Provider
+namespace EchoWebapp.Client.Provider;
+
+public class StringToColor
 {
-    public class StringToColor
+    public Color ConvertStringToColor(string s)
     {
-        public Color ConvertStringToColor(string s)
+        switch (s)
         {
-            switch (s)
-            {
-                case "Success":
-                    return Color.Success;
+            case "Success":
+                return Color.Success;
 
-                case "Warning":
-                    return Color.Warning;
+            case "Warning":
+                return Color.Warning;
 
-                case "Error":
-                    return Color.Error;
+            case "Error":
+                return Color.Error;
 
-                case "Dark":
-                    return Color.Default;
+            case "Dark":
+                return Color.Default;
 
-                default:
-                    return Color.Default;
-            }
-
+            default:
+                return Color.Default;
         }
+
     }
 }

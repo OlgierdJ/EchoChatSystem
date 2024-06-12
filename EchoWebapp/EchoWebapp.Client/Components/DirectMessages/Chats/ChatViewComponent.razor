@@ -3,9 +3,10 @@
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.ChatCore
 @using CoreLib.Handlers
+@using CoreLib.WebAPI.EchoClient
 @using EchoWebapp.Client.Components.Shared
 @implements IDisposable
-@inject EchoAPI _echoAPI
+@inject EchoAPIClient _echoAPI
 @inject SignalRClientService _client
 @inject ILocalStorageService LocalStorage
 @inject IJSRuntime _js

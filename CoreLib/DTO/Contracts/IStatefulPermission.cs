@@ -1,9 +1,8 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IStatefulPermission : IPermissionMinimal
 {
-    public interface IStatefulPermission : IPermissionMinimal
-    {
-        //ulong Id { get; set; } inherit from iidentified or ientity instead
-        string Name { get; set; }
-        bool? State { get; set; }
-    }
+    //ulong Id { get; set; } inherit from iidentified or ientity instead
+    
+    bool? State { get; set; }
 }

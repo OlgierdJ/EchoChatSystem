@@ -1,8 +1,7 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IHierarchalRole : IRoleMinimal
 {
-    public interface IHierarchalRole : IRoleMinimal
-    {
-        int Importance { get; set; }
-        bool IsAdmin { get; set; }
-    }
+    int Importance { get; set; }
+    bool IsAdmin { get; set; }
 }

@@ -1,10 +1,9 @@
 ﻿using CoreLib.DTO.EchoCore.UserCore;
 
-namespace CoreLib.DTO.Contracts
+namespace CoreLib.DTO.Contracts;
+
+public interface IUser
 {
-    public interface IUser
-    {
-        ActiveActivityStatusDTO ActiveStatus { get; set; }
-        string Name { get; set; }
-    }
+    ActiveActivityStatusDTO ActiveStatus { get; set; }
+    string Name { get; set; }
 }

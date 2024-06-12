@@ -2,9 +2,11 @@
 @using CoreLib.DTO.RequestCore.UserCore
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.WebAPI
+@using CoreLib.WebAPI.EchoClient
 @using MudBlazor
 @using System.Net.Http.Headers
 @inject ILocalStorageService LocalStorage
+@inject EchoAPIClient _echoAPI
 
 
 
@@ -58,7 +60,7 @@
 
 
 @code {
-    public readonly EchoAPI _echoAPI = new();
+   
     public string? Message { get; set; } = "";
     public string? Date { get; set; } = "";
     public string? Name { get; set; } = "";

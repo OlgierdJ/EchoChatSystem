@@ -1,14 +1,13 @@
 ﻿using CoreLib.Entities.Base;
 using CoreLib.Interfaces.Contracts;
 
-namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel
+namespace CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
+
+public class ServerTextChannelMessageAttachment : BaseEntity<ulong>, IMessageAttachment<ServerTextChannelMessage, ulong>
 {
-    public class ServerTextChannelMessageAttachment : BaseEntity<ulong>, IMessageAttachment<ServerTextChannelMessage, ulong>
-    {
-        public ulong MessageId { get; set; }
-        public string FileLocationURL { get; set; }
-        public string FileName { get; set; }
-        public string? Description { get; set; }
-        public ServerTextChannelMessage Message { get; set; }
-    }
+    public ulong MessageId { get; set; }
+    public string FileLocationURL { get; set; }
+    public string FileName { get; set; }
+    public string? Description { get; set; }
+    public ServerTextChannelMessage Message { get; set; }
 }

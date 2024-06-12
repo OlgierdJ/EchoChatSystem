@@ -1,8 +1,7 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum DefaultNotificationSettings
 {
-    public enum DefaultNotificationSettings
-    {
-        AllMessages,
-        OnlyAtMentions
-    }
+    AllMessages,
+    OnlyAtMentions
 }

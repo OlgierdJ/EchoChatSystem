@@ -1,7 +1,6 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface INotificationMessage
 {
-    public interface INotificationMessage
-    {
-        ulong Id { get; set; } //??
-    }
+    ulong Id { get; set; } //??
 }

@@ -1,12 +1,11 @@
 ﻿using CoreLib.Entities.Base;
 
-namespace CoreLib.Entities.EchoCore.ApplicationCore
+namespace CoreLib.Entities.EchoCore.ApplicationCore;
+
+public class RolePermission : BaseEntity<ulong>
 {
-    public class RolePermission : BaseEntity<ulong>
-    {
-        public ulong RoleId { get; set; }
-        public ulong PermissionId { get; set; }
-        public Role Role { get; set; }
-        public Permission Permission { get; set; }
-    }
+    public ulong RoleId { get; set; }
+    public ulong PermissionId { get; set; }
+    public Role Role { get; set; }
+    public Permission Permission { get; set; }
 }

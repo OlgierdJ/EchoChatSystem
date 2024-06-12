@@ -1,7 +1,6 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface ISentMessage<TSender> : IMessage
 {
-    public interface ISentMessage<TSender> : IMessage
-    {
-        TSender? Sender { get; set; }
-    }
+    TSender? Sender { get; set; }
 }

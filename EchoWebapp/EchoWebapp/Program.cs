@@ -1,22 +1,32 @@
-global using Microsoft.AspNetCore.Components.Authorization;
 global using Blazored.LocalStorage;
-using CoreLib.WebAPI;
+global using Microsoft.AspNetCore.Components.Authorization;
+using CoreLib.Handlers;
+using CoreLib.WebAPI.EchoClient;
+using EchoWebapp.Client.Provider;
 using EchoWebapp.Components;
-using MudBlazor.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using MudBlazor.Services;
 using System.Text;
-using CoreLib.Handlers;
-using EchoWebapp.Services;
-using EchoWebapp.Client.Provider;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
+
+// Add service defaults & Aspire components.
+builder.AddServiceDefaults();
+builder.AddRedisOutputCache("cache");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddHttpClient<EchoAPIClient>(client =>
+{
+    // This URL uses "https+http://" to indicate HTTPS is preferred over HTTP.
+    // Learn more about service discovery scheme resolution at https://aka.ms/dotnet/sdschemes.
+    client.BaseAddress = new("https+http://coreapiservice");
+});
 
 builder.Services.AddMudServices();
 
@@ -48,7 +58,7 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
 
-builder.Services.AddSingleton<EchoAPI>();
+//builder.Services.AddSingleton<EchoAPI>();
 builder.Services.AddScoped<AccountIdContainer>();
 builder.Services.AddScoped<SignalRClientService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomRevalidatingAuthenticationStateProvider>();
@@ -76,9 +86,13 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.UseOutputCache();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(EchoWebapp.Client._Imports).Assembly);
+
+app.MapDefaultEndpoints();
 
 app.Run();

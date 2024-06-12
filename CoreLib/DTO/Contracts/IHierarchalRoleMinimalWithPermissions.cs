@@ -1,7 +1,6 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IHierarchalRoleMinimalWithPermissions<TPermission> : IHierarchalRole
 {
-    public interface IHierarchalRoleMinimalWithPermissions<TPermission> : IHierarchalRole
-    {
-        ICollection<TPermission> Permissions { get; set; }
-    }
+    ICollection<TPermission> Permissions { get; set; }
 }

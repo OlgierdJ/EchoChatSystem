@@ -1,15 +1,25 @@
-using CoreLib.Interfaces;
+using CoreLib.Interfaces.Providers;
 using CoreLib.MapperProfiles;
+using CoreLib.WebAPI.EchoServerClient;
 using DomainPushNotificationApi.Hubs;
 using DomainPushNotificationApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add service defaults & Aspire components.
+builder.AddServiceDefaults();
+builder.AddRedisOutputCache("cache");
+
+builder.Services.AddHttpClient<EchoAPIServerClient>(client =>
+{
+    // This URL uses "https+http://" to indicate HTTPS is preferred over HTTP.
+    // Learn more about service discovery scheme resolution at https://aka.ms/dotnet/sdschemes.
+    client.BaseAddress = new("https+http://coreapiservice");
+});
 // Add services to the container.
 var config = builder.Configuration;
 //builder.Services.AddControllers();
@@ -20,17 +30,16 @@ builder.Services.AddAutoMapper(opts =>
 {
     opts.AddProfile<EchoCoreCommonMappings>();
 });
-builder.Services.AddSingleton<ITokenStore, TokenStore>();
+builder.Services.AddSingleton<ITokenProvider, TokenStore>();
 builder.Services.AddSingleton<PushNotificationClientConnectionStore>();
-builder.Services.AddSingleton<PushNotificationDomainApiService>();
 builder.Services.AddSingleton<PushNotificationService>();
 builder.Services.AddSingleton<DomainNotificationClientService>();
-builder.Services.AddHttpClient("DomainClient", e => 
-{
-    e.BaseAddress = new Uri("https://localhost:7269/api");
-    e.DefaultRequestHeaders.Accept.Clear();
-    e.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-});
+//builder.Services.AddHttpClient("DomainClient", e => 
+//{
+//    e.BaseAddress = new Uri("https://localhost:7269/api");
+//    e.DefaultRequestHeaders.Accept.Clear();
+//    e.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+//});
 builder.Services.AddHostedService<StartupBackgroundService>();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(x =>
@@ -77,10 +86,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("CorsPolicy");
+
 app.UseHttpsRedirection();
+app.UseOutputCache();
+
 app.MapHub<PushNotificationHub>("PushNotificationHub");
+
 app.UseAuthentication();
 app.UseAuthorization();
-//app.MapControllers();
+
+app.MapDefaultEndpoints();
 
 app.Run();

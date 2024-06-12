@@ -1,7 +1,6 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IPrivatisable
 {
-    public interface IPrivatisable
-    {
-        public bool IsPrivate { get; set; }
-    }
+    public bool IsPrivate { get; set; }
 }

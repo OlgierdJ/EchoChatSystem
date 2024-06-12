@@ -1,6 +1,5 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum DisplayNamesMode
 {
-    public enum DisplayNamesMode
-    {
-    }
 }

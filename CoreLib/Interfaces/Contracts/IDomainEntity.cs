@@ -1,6 +1,5 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IDomainEntity //marker interface
 {
-    public interface IDomainEntity //marker interface
-    {
-    }
 }

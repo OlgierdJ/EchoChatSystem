@@ -1,7 +1,6 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IUserMinimalWithPermissions<TPermission> : IUserMinimal
 {
-    public interface IUserMinimalWithPermissions<TPermission> : IUserMinimal
-    {
-        ICollection<TPermission> Permissions { get; set; }
-    }
+    ICollection<TPermission> Permissions { get; set; }
 }

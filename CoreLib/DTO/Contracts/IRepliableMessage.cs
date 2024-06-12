@@ -1,7 +1,6 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IRepliableMessage<TReply> : IMessage
 {
-    public interface IRepliableMessage<TReply> : IMessage
-    {
-        public TReply? Replied { get; set; } //message parent if present.
-    }
+    public TReply? Replied { get; set; } //message parent if present.
 }

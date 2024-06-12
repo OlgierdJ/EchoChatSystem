@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoreLib.DTO.Contracts;
+﻿using CoreLib.DTO.Contracts;
 
-namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore
+namespace CoreLib.DTO.EchoCore.MiscCore.ModerationCore;
+
+public class PermissionMinimalDTO : IPermissionMinimal
 {
-    public class PermissionMinimalDTO : IPermissionMinimal
-    {
-        public ulong Id { get; set; }
-        public string Name { get; set; }
-    }
+    public ulong Id { get; set; }
+    public string Name { get; set; }
 }

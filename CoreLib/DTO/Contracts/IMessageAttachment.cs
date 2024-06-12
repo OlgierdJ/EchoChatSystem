@@ -1,10 +1,9 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IMessageAttachment
 {
-    public interface IMessageAttachment
-    {
-        string? Description { get; set; }
-        string FileLocationURL { get; set; }
-        string FileName { get; set; }
-        //ulong Id { get; set; } inherit from iidentified or ientity instead
-    }
+    string? Description { get; set; }
+    string FileLocationURL { get; set; }
+    string FileName { get; set; }
+    //ulong Id { get; set; } inherit from iidentified or ientity instead
 }

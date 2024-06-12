@@ -2,18 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DomainCoreApi.EFCORE.Configurations.ChatCore
+namespace DomainCoreApi.EFCORE.Configurations.ChatCore;
+
+public class ChatParticipancyConfiguration : IEntityTypeConfiguration<ChatParticipancy>
 {
-    public class ChatParticipancyConfiguration : IEntityTypeConfiguration<ChatParticipancy>
+    public void Configure(EntityTypeBuilder<ChatParticipancy> builder)
     {
-        public void Configure(EntityTypeBuilder<ChatParticipancy> builder)
-        {
-            builder
-                .HasKey(b => new { b.ParticipantId, b.SubjectId });
-            builder
-               .Property(b => b.TimeJoined).HasDefaultValueSql("getdate()").IsRequired();
-            builder.HasOne(b => b.Subject).WithMany(e=>e.Participants).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
-            builder.HasOne(b => b.Participant).WithMany(e=>e.Chats).HasForeignKey(b => b.ParticipantId).OnDelete(DeleteBehavior.Cascade).IsRequired(); // have changed ClientCascade to cascade
-        }
+        builder
+            .HasKey(b => new { b.ParticipantId, b.SubjectId });
+        builder
+           .Property(b => b.TimeJoined).HasDefaultValueSql("getdate()").IsRequired();
+        builder.HasOne(b => b.Subject).WithMany(e => e.Participants).HasForeignKey(b => b.SubjectId).OnDelete(DeleteBehavior.Cascade).IsRequired();
+        builder.HasOne(b => b.Participant).WithMany(e => e.Chats).HasForeignKey(b => b.ParticipantId).OnDelete(DeleteBehavior.Cascade).IsRequired(); // have changed ClientCascade to cascade
     }
 }

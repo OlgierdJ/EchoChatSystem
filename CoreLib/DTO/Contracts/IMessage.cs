@@ -1,11 +1,10 @@
-﻿namespace CoreLib.DTO.Contracts
-{
-    public interface IMessage
-    {
+﻿namespace CoreLib.DTO.Contracts;
 
-        string Content { get; set; }
-        //ulong Id { get; set; } inherit from iidentified or ientity instead
-        DateTime? TimeEdited { get; set; }
-        DateTime TimeSent { get; set; }
-    }
+public interface IMessage
+{
+
+    string Content { get; set; }
+    //ulong Id { get; set; } inherit from iidentified or ientity instead
+    DateTime? TimeEdited { get; set; }
+    DateTime TimeSent { get; set; }
 }

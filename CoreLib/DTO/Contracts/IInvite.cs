@@ -1,11 +1,8 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IInvite : IInviteMinimal
 {
-    public interface IInvite : IInviteMinimal
-    {
-        string Description { get; set; }
-        string ImageIconURL { get; set; }
-        string Title { get; set; }
-    }
-
-
+    string Description { get; set; }
+    string ImageIconURL { get; set; }
+    string Title { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IRolePermission<TRole> : IPermission
 {
-    public interface IRolePermission<TRole> : IPermission
-    {
-        public ICollection<TRole>? Roles { get; set; }
-    }
+    public ICollection<TRole>? Roles { get; set; }
 }

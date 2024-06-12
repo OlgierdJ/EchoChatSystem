@@ -1,9 +1,8 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum ExplicitImageFilter
 {
-    public enum ExplicitImageFilter
-    {
-        DoNotFilter,
-        FilterFromAll,
-        FilterFromMembersWithoutRoles,
-    }
+    DoNotFilter,
+    FilterFromAll,
+    FilterFromMembersWithoutRoles,
 }

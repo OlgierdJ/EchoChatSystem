@@ -1,7 +1,6 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum InviteType
 {
-    public enum InviteType
-    {
-        Server = 0, VoiceChat = 1
-    }
+    Server = 0, VoiceChat = 1
 }

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>f301f5da-bc61-426a-a55a-9c1b34ee2d6c</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.0" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CoreLib\CoreLib.csproj" />
+    <ProjectReference Include="..\..\DomainCoreApi.Tests\DomainCoreApi.Tests.csproj" />
+    <ProjectReference Include="..\..\DomainCoreApi\DomainCoreApi.csproj" />
+    <ProjectReference Include="..\..\DomainPushNotificationApi\DomainPushNotificationApi.csproj" />
+    <ProjectReference Include="..\..\DomainRTCApi\DomainRTCApi.csproj" />
+    <ProjectReference Include="..\..\EchoWebapp\EchoWebapp.Client\EchoWebapp.Client.csproj" />
+    <ProjectReference Include="..\..\EchoWebapp\EchoWebapp\EchoWebapp.csproj" />
+    <ProjectReference Include="..\..\OAuthServer\OAuthServer.csproj" />
+    <ProjectReference Include="..\EchoAspire.ServiceDefaults\EchoAspire.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>

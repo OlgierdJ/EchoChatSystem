@@ -1,9 +1,8 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum RoleColorMode
 {
-    public enum RoleColorMode
-    {
-        ShowRoleColorsInNames = 0,
-        ShowRoleColorsNextToNames = 1,
-        DontShowRoleColors = 2,
-    }
+    ShowRoleColorsInNames = 0,
+    ShowRoleColorsNextToNames = 1,
+    DontShowRoleColors = 2,
 }

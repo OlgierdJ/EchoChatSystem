@@ -1,6 +1,6 @@
 using CoreLib.Handlers;
 using CoreLib.Interfaces;
-using CoreLib.Interfaces.Repositorys;
+using CoreLib.Interfaces.Repositories;
 using CoreLib.Interfaces.Services;
 using CoreLib.MapperProfiles;
 using DomainCoreApi.EFCORE;
@@ -11,7 +11,6 @@ using DomainCoreApi.Repositories;
 using DomainCoreApi.Services;
 using DomainCoreApi.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -22,8 +21,14 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-var config = builder.Configuration;
+
+// Add service defaults & Aspire components.
+builder.AddServiceDefaults();
 // Add services to the container.
+builder.Services.AddProblemDetails();
+
+// Add services to the container.
+var config = builder.Configuration;
 
 builder.Services.AddControllers().AddJsonOptions(opts =>
 {
@@ -34,13 +39,13 @@ builder.Services.Configure<JWTOptions>(
     builder.Configuration.GetSection(JWTOptions.Position));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-var connectionString = builder.Configuration.GetConnectionString("EchoDBConnection") 
+var connectionString = builder.Configuration.GetConnectionString("EchoDBConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<EchoDbContext>((sp, options) => 
+builder.Services.AddDbContext<EchoDbContext>((sp, options) =>
 options.UseSqlServer(connectionString).AddInterceptors(
             sp.GetRequiredService<PublishDomainEventsInterceptor>(),
             sp.GetRequiredService<PublishTransactionDomainEventsInterceptor>()
-            //sp.GetRequiredService<InsertOutboxMessagesInterceptor>() //dont need right now
+//sp.GetRequiredService<InsertOutboxMessagesInterceptor>() //dont need right now
 ));
 // Add services to the container.
 //builder.Services.AddTransient(typeof(IPushNotificationService), typeof(PushNotificationService));
@@ -86,10 +91,10 @@ builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
 builder.Services.AddTransient(typeof(IChatService), typeof(ChatService));
 builder.Services.AddTransient(typeof(IUserGroupService), typeof(UserGroupService));
 
-builder.Services.AddSignalR().AddJsonProtocol(opts => opts.PayloadSerializerOptions = new JsonSerializerOptions() 
+builder.Services.AddSignalR().AddJsonProtocol(opts => opts.PayloadSerializerOptions = new JsonSerializerOptions()
 {
     ReferenceHandler = ReferenceHandler.Preserve,
-    
+
 });
 
 builder.Services.AddTransient(typeof(IPasswordHandler), typeof(Passwordhandler));

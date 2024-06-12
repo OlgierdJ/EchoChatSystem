@@ -2,12 +2,13 @@
 @using CoreLib.Entities.EchoCore.AccountCore
 @using CoreLib.Entities.EchoCore.ChatCore
 @using CoreLib.Handlers
+@using CoreLib.WebAPI.EchoClient
 @using Microsoft.AspNetCore.SignalR.Client
 @using MudBlazor
 @using System.Net.Http.Headers
 @rendermode InteractiveWebAssembly
 @inject NavigationManager nav
-@inject EchoAPI _Echoapi
+@inject EchoAPIClient _Echoapi
 @inject SignalRClientService _client
 @inject ILocalStorageService LocalStorage
 @* @implements IAsyncDisposable *@

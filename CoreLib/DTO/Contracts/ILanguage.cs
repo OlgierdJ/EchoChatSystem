@@ -1,9 +1,8 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface ILanguage
 {
-    public interface ILanguage
-    {
-        //uint Id { get; set; } inherit from iidentified or ientity instead
-        string LanguageCode { get; set; }
-        string Name { get; set; }
-    }
+    //uint Id { get; set; } inherit from iidentified or ientity instead
+    string LanguageCode { get; set; }
+    string Name { get; set; }
 }

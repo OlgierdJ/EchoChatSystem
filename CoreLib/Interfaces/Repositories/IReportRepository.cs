@@ -1,9 +1,8 @@
 ﻿using CoreLib.Entities.EchoCore.ReportCore.Profile;
 using CoreLib.Interfaces.Bases;
 
-namespace CoreLib.Interfaces.Repositorys
+namespace CoreLib.Interfaces.Repositories;
+
+public interface IReportRepository : IRepository<ProfileReport>
 {
-    public interface IReportRepository : IRepository<ProfileReport>
-    {
-    }
 }

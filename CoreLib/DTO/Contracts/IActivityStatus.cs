@@ -1,7 +1,6 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IActivityStatus : IActivityStatusMinimal
 {
-    public interface IActivityStatus : IActivityStatusMinimal
-    {
-        string? Description { get; set; }
-    }
+    string? Description { get; set; }
 }

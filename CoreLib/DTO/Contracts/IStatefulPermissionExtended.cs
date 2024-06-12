@@ -1,6 +1,5 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IStatefulPermissionExtended : IStatefulPermission, IPermission
 {
-    public interface IStatefulPermissionExtended : IStatefulPermission, IPermission
-    {
-    }
 }

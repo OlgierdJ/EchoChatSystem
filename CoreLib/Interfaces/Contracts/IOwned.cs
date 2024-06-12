@@ -1,8 +1,7 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IOwned<TOwner, TOwnerId>
 {
-    public interface IOwned<TOwner, TOwnerId>
-    {
-        public TOwnerId? OwnerId { get; set; }
-        public TOwner? Owner { get; set; }
-    }
+    public TOwnerId? OwnerId { get; set; }
+    public TOwner? Owner { get; set; }
 }

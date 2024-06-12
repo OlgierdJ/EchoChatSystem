@@ -1,9 +1,8 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum PermissionState
 {
-    public enum PermissionState
-    {
-        Disabled,
-        Default,
-        Enabled,
-    }
+    Disabled,
+    Default,
+    Enabled,
 }

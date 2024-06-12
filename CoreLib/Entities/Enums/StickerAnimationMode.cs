@@ -1,9 +1,8 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum StickerAnimationMode
 {
-    public enum StickerAnimationMode
-    {
-        AlwaysAnimate = 0,
-        AnimateOnInteraction = 1,
-        NeverAnimate = 2,
-    }
+    AlwaysAnimate = 0,
+    AnimateOnInteraction = 1,
+    NeverAnimate = 2,
 }

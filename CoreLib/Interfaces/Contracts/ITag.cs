@@ -1,9 +1,6 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface ITag
 {
-    public interface ITag
-    {
-        public string Name { get; set; }
-    }
-
-
+    public string Name { get; set; }
 }

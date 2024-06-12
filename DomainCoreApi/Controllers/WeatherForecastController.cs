@@ -2,90 +2,89 @@ using AutoMapper;
 using CoreLib.Handlers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DomainCoreApi.Controllers
+namespace DomainCoreApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    private static readonly string[] Summaries = new[]
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    };
 
-        private readonly ILogger<WeatherForecastController> _logger;
-        private readonly IMapper mapper;
+    private readonly ILogger<WeatherForecastController> _logger;
+    private readonly IMapper mapper;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IMapper mapper)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IMapper mapper)
+    {
+        _logger = logger;
+        this.mapper = mapper;
+    }
+
+    [HttpGet(Name = "GetWeatherForecast")]
+    public IEnumerable<WeatherForecast> Get()
+    {
+        try
         {
-            _logger = logger;
-            this.mapper = mapper;
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+
         }
-
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        catch (Exception e)
         {
-            try
-            {
-              mapper.ConfigurationProvider.AssertConfigurationIsValid();
 
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            throw;
         }
-
-        [HttpGet("/getdata/{NumberOfDataSet}")]
-        public async Task<IActionResult> getdatasat(int NumberOfDataSet)
+        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
+            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        })
+        .ToArray();
+    }
 
-            try
+    [HttpGet("/getdata/{NumberOfDataSet}")]
+    public async Task<IActionResult> getdatasat(int NumberOfDataSet)
+    {
+
+        try
+        {
+            PopulateDatahandler populateDatahandler = new PopulateDatahandler();
+            if (populateDatahandler is null)
             {
-                PopulateDatahandler populateDatahandler = new PopulateDatahandler();
-                if (populateDatahandler is null)
-                {
-                    return Problem("the object is null");
-                }
-                var data = populateDatahandler.GetRandomData(NumberOfDataSet);
-                return Ok(data);
-
+                return Problem("the object is null");
             }
-            catch (Exception e)
-            {
+            var data = populateDatahandler.GetRandomData(NumberOfDataSet);
+            return Ok(data);
 
-                return Problem(e.Message); ;
-            }
         }
-
-        [HttpGet("/getdatamessage/{NumberOfDataSet}")]
-        public async Task<IActionResult> getdatamessage(int NumberOfDataSet)
+        catch (Exception e)
         {
 
-            try
-            {
-                PopulateDatahandler populateDatahandler = new PopulateDatahandler();
-                if (populateDatahandler is null)
-                {
-                    return Problem("the object is null");
-                }
-                var data = populateDatahandler.GetRandomDateForSendMessageRequest(NumberOfDataSet);
-                return Ok(data);
+            return Problem(e.Message); ;
+        }
+    }
 
-            }
-            catch (Exception e)
-            {
+    [HttpGet("/getdatamessage/{NumberOfDataSet}")]
+    public async Task<IActionResult> getdatamessage(int NumberOfDataSet)
+    {
 
-                return Problem(e.Message); ;
+        try
+        {
+            PopulateDatahandler populateDatahandler = new PopulateDatahandler();
+            if (populateDatahandler is null)
+            {
+                return Problem("the object is null");
             }
+            var data = populateDatahandler.GetRandomDateForSendMessageRequest(NumberOfDataSet);
+            return Ok(data);
+
+        }
+        catch (Exception e)
+        {
+
+            return Problem(e.Message); ;
         }
     }
 }

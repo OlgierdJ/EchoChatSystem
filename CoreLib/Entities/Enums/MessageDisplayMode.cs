@@ -1,8 +1,7 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum MessageDisplayMode
 {
-    public enum MessageDisplayMode
-    {
-        Cosy,
-        Compact
-    }
+    Cosy,
+    Compact
 }

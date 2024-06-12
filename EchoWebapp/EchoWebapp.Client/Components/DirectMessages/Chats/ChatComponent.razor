@@ -1,9 +1,10 @@
 ﻿@page "/chat/{ChatIdString}"
 @using CoreLib.DTO.EchoCore.ChatCore.TextCore
 @using CoreLib.Entities.EchoCore.ChatCore
+@using CoreLib.WebAPI.EchoClient
 @inject IUserContainer SessionRepository
 @inject ILocalStorageService localStorage
-@inject EchoAPI _api
+@inject EchoAPIClient _api
 @implements IDisposable
 @inject IJSRuntime _js
 @*

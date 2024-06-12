@@ -1,7 +1,6 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IPinboard<TMessagePin>
 {
-    public interface IPinboard<TMessagePin>
-    {
-        public ICollection<TMessagePin>? PinnedMessages { get; set; }
-    }
+    public ICollection<TMessagePin>? PinnedMessages { get; set; }
 }

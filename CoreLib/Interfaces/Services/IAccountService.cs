@@ -1,10 +1,9 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
 using CoreLib.Interfaces.Bases;
 
-namespace CoreLib.Interfaces.Services
+namespace CoreLib.Interfaces.Services;
+
+public interface IAccountService : IEntityService<Account, ulong>
 {
-    public interface IAccountService : IEntityService<Account, ulong>
-    {
-        Task<Account> GetByUserId(ulong UserId);
-    }
+    Task<Account> GetByUserId(ulong UserId);
 }

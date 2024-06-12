@@ -1,7 +1,6 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface ISeggregatableRole : IRoleMinimal
 {
-    public interface ISeggregatableRole : IRoleMinimal
-    {
-        public bool DisplaySeperatelyFromOnlineMembers { get; set; }
-    }
+    public bool DisplaySeperatelyFromOnlineMembers { get; set; }
 }

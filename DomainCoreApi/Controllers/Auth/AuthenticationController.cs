@@ -1,44 +1,41 @@
 ﻿using CoreLib.DTO.EchoCore.UserCore;
-using CoreLib.Interfaces.Services;
 using DomainCoreApi.Handlers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
-namespace DomainCoreApi.Controllers.Auth
+namespace DomainCoreApi.Controllers.Auth;
+
+[Route("api/[controller]")]
+[ApiController]
+public class AuthenticationController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthenticationController : ControllerBase
+
+    private readonly TokenHandler Handler;
+    private readonly JWTOptions options;
+
+    public AuthenticationController(TokenHandler handler, IOptions<JWTOptions> options)
     {
+        Handler = handler;
+        this.options = options.Value;
+    }
 
-        private readonly TokenHandler Handler;
-        private readonly JWTOptions options;
-
-        public AuthenticationController(TokenHandler handler,IOptions<JWTOptions> options)
+    [AllowAnonymous]
+    [HttpGet("gettokens")]
+    public async Task<IActionResult> GetTokens()
+    {
+        try
         {
-            Handler = handler;
-            this.options = options.Value;
+            //Note: look at the token lifetime
+            var token = Handler.CreateToken(new List<Claim>(), DateTime.UtcNow.AddDays(options.DefaultRefreshTokenLifeTimeDays), options.Issuer, options.Audiences[1], options.Key);
+
+            return Ok(new TokenDTO { RefreshToken = token });
         }
-
-        [AllowAnonymous]
-        [HttpGet("gettoken")]
-        public async Task<IActionResult> GetTokens()
+        catch (Exception)
         {
-            try
-            {
-                //Note: look at the token lifetime
-                var token = Handler.CreateToken(new List<Claim>(), DateTime.UtcNow.AddDays(options.DefaultRefreshTokenLifeTimeDays), options.Issuer, options.Audiences[1], options.Key);
-                
-                return Ok(new TokenDTO { RefreshToken = token});
-            }
-            catch (Exception)
-            {
 
-                return Problem();
-            }
+            return Problem();
         }
     }
 }

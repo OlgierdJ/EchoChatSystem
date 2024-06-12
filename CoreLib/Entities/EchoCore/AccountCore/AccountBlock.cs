@@ -1,17 +1,16 @@
 ﻿using CoreLib.Interfaces.Contracts;
 
-namespace CoreLib.Entities.EchoCore.AccountCore
+namespace CoreLib.Entities.EchoCore.AccountCore;
+
+public class AccountBlock : IBlock<Account, ulong, Account, ulong>, IDomainEntity
 {
-    public class AccountBlock : IBlock<Account, ulong, Account, ulong>, IDomainEntity
-    {
-        //You cease to be friends with them;
-        //You are unable to send them a friend request;
-        //You are unable to direct message them;
-        //You are unable to immediately read their messages(unless you click on the box to view them)
-        public ulong BlockerId { get; set; }
-        public ulong BlockedId { get; set; }
-        public DateTime TimeBlocked { get; set; }
-        public Account Blocker { get; set; }
-        public Account Blocked { get; set; }
-    }
+    //You cease to be friends with them;
+    //You are unable to send them a friend request;
+    //You are unable to direct message them;
+    //You are unable to immediately read their messages(unless you click on the box to view them)
+    public ulong BlockerId { get; set; }
+    public ulong BlockedId { get; set; }
+    public DateTime TimeBlocked { get; set; }
+    public Account Blocker { get; set; }
+    public Account Blocked { get; set; }
 }

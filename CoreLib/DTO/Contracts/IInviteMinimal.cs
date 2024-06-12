@@ -1,10 +1,9 @@
 ﻿using CoreLib.Entities.Enums;
 
-namespace CoreLib.DTO.Contracts
+namespace CoreLib.DTO.Contracts;
+
+public interface IInviteMinimal
 {
-    public interface IInviteMinimal
-    {
-        string InviteLink { get; set; }
-        InviteType Type { get; set; }
-    }
+    string InviteLink { get; set; }
+    InviteType Type { get; set; }
 }

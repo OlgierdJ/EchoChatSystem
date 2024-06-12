@@ -1,7 +1,6 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IAgeRestrictable
 {
-    public interface IAgeRestrictable
-    {
-        public bool IsAgeRestricted { get; set; }
-    }
+    public bool IsAgeRestricted { get; set; }
 }

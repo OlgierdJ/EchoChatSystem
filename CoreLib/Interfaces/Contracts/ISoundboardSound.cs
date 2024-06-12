@@ -1,11 +1,8 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface ISoundboardSound
 {
-    public interface ISoundboardSound
-    {
-        //ulong Id { get; set; } inherit from iidentified or ientity interface instead.
-        string Name { get; set; }
-        string SoundFileUrl { get; set; }
-    }
-
-
+    //ulong Id { get; set; } inherit from iidentified or ientity interface instead.
+    string Name { get; set; }
+    string SoundFileUrl { get; set; }
 }

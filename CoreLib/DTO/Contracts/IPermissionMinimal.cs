@@ -1,8 +1,7 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IPermissionMinimal
 {
-    public interface IPermissionMinimal
-    {
-        //ulong Id { get; set; } inherit from iidentified or ientity instead
-        string Name { get; set; }
-    }
+    //ulong Id { get; set; } inherit from iidentified or ientity instead
+    string Name { get; set; }
 }

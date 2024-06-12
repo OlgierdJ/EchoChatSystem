@@ -1,10 +1,9 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IKeybind
 {
-    public interface IKeybind
-    {
-        string? Action { get; set; }
-        string? Description { get; set; }
-        //ulong Id { get; set; } inherit from iidentified or ientity instead
-        string Name { get; set; }
-    }
+    string? Action { get; set; }
+    string? Description { get; set; }
+    //ulong Id { get; set; } inherit from iidentified or ientity instead
+    string Name { get; set; }
 }

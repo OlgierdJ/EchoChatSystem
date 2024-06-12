@@ -1,6 +1,5 @@
-﻿namespace CoreLib.Entities.EchoCore.UserCore
+﻿namespace CoreLib.Entities.EchoCore.UserCore;
+
+internal class UserClaims
 {
-    internal class UserClaims
-    {
-    }
 }

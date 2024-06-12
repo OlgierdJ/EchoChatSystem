@@ -1,9 +1,8 @@
-﻿namespace CoreLib.Entities.Enums
+﻿namespace CoreLib.Entities.Enums;
+
+public enum NoiseSuppression
 {
-    public enum NoiseSuppression
-    {
-        Krisp,
-        Standard,
-        None
-    }
+    Krisp,
+    Standard,
+    None
 }

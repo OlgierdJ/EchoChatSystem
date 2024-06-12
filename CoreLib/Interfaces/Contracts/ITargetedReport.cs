@@ -1,8 +1,7 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface ITargetedReport<TSubject, TSubjectId> : IReport
 {
-    public interface ITargetedReport<TSubject, TSubjectId> : IReport
-    {
-        public TSubjectId SubjectId { get; set; }
-        public TSubject Subject { get; set; }
-    }
+    public TSubjectId SubjectId { get; set; }
+    public TSubject Subject { get; set; }
 }

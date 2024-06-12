@@ -1,7 +1,6 @@
-﻿namespace CoreLib.DTO.RequestCore.InviteCore
+﻿namespace CoreLib.DTO.RequestCore.InviteCore;
+
+public class AddParticipantsRequestDTO
 {
-    public class AddParticipantsRequestDTO
-    {
-       public List<ulong> ParticipantIds { get; set; }
-    }
+    public List<ulong> ParticipantIds { get; set; }
 }

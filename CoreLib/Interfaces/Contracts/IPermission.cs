@@ -1,7 +1,6 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IPermission
 {
-    public interface IPermission
-    {
-        public string Name { get; set; } //Example app_view_admin_userinterface
-    }
+    public string Name { get; set; } //Example app_view_admin_userinterface
 }

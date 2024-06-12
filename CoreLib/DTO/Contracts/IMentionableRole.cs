@@ -1,7 +1,6 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IMentionableRole : IRoleMinimal
 {
-    public interface IMentionableRole : IRoleMinimal
-    {
-        bool AllowAnyoneToMention { get; set; }
-    }
+    bool AllowAnyoneToMention { get; set; }
 }

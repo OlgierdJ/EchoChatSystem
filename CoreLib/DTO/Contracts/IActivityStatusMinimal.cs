@@ -1,10 +1,9 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface IActivityStatusMinimal
 {
-    public interface IActivityStatusMinimal
-    {
-        string Icon { get; set; }
-        string IconColor { get; set; }
-        //byte Id { get; set; } inherit from iidentified or ientity instead
-        string Name { get; set; }
-    }
+    string Icon { get; set; }
+    string IconColor { get; set; }
+    //byte Id { get; set; } inherit from iidentified or ientity instead
+    string Name { get; set; }
 }

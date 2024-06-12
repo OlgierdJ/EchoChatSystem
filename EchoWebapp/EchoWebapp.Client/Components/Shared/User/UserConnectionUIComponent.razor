@@ -1,12 +1,13 @@
 ﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
 @using CoreLib.DTO.EchoCore.UserCore
 @using CoreLib.DTO.RequestCore.RelationCore
+@using CoreLib.WebAPI.EchoClient
 @using EchoWebapp.Client.Pages
 @inject NavigationManager nav
 @inject ILocalStorageService LocalStorage
 @implements IDisposable
 @inject IUserContainer SessionRepository
-@inject EchoAPI _echoAPI
+@inject EchoAPIClient _echoAPI
 
 @*
     Layout for a UserConnectionUIcomponent that exists within the indexcomponent.

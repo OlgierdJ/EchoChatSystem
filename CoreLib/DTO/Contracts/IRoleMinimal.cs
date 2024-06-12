@@ -1,9 +1,8 @@
-﻿namespace CoreLib.DTO.Contracts
-{
-    public interface IRoleMinimal
-    {
-        //ulong Id { get; set; } inherit from iidentified or ientity instead
+﻿namespace CoreLib.DTO.Contracts;
 
-        string Name { get; set; }
-    }
+public interface IRoleMinimal
+{
+    //ulong Id { get; set; } inherit from iidentified or ientity instead
+
+    string Name { get; set; }
 }

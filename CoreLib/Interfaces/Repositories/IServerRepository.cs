@@ -2,9 +2,8 @@
 using CoreLib.Interfaces.Bases;
 
 
-namespace CoreLib.Interfaces.Repositorys
+namespace CoreLib.Interfaces.Repositories;
+
+public interface IServerRepository : IRepository<Server>
 {
-    public interface IServerRepository : IRepository<Server>
-    {
-    }
 }

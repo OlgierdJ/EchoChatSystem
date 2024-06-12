@@ -1,10 +1,9 @@
-﻿namespace CoreLib.DTO.Contracts
+﻿namespace CoreLib.DTO.Contracts;
+
+public interface ICustomizableRole : IRoleMinimal, IMentionableRole, ISeggregatableRole
 {
-    public interface ICustomizableRole : IRoleMinimal, IMentionableRole, ISeggregatableRole
-    {
 
-        public string Colour { get; set; }
-        public string IconURL { get; set; }
+    public string Colour { get; set; }
+    public string IconURL { get; set; }
 
-    }
 }

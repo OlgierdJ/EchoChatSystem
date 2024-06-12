@@ -1,7 +1,6 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IAuditableMessage : IMessage
 {
-    public interface IAuditableMessage : IMessage
-    {
-        public DateTime? TimeEdited { get; set; }
-    }
+    public DateTime? TimeEdited { get; set; }
 }

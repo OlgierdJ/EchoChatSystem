@@ -1,8 +1,7 @@
-﻿namespace CoreLib.Interfaces.Contracts
+﻿namespace CoreLib.Interfaces.Contracts;
+
+public interface IMessage
 {
-    public interface IMessage
-    {
-        public string Content { get; set; }
-        public DateTime TimeSent { get; set; }
-    }
+    public string Content { get; set; }
+    public DateTime TimeSent { get; set; }
 }

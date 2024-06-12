@@ -1,31 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CoreLib.Abstractions;
 
-namespace CoreLib.Abstractions
+public abstract class Entity
 {
-    public abstract class Entity
+    private readonly List<IDomainEvent> _domainEvents = new();
+
+    protected Entity(Guid id)
     {
-        private readonly List<IDomainEvent> _domainEvents = new();
+        Id = id;
+    }
 
-        protected Entity(Guid id)
-        {
-            Id = id;
-        }
+    protected Entity()
+    {
+    }
 
-        protected Entity()
-        {
-        }
+    public Guid Id { get; init; }
 
-        public Guid Id { get; init; }
+    public List<IDomainEvent> DomainEvents => _domainEvents.ToList();
 
-        public List<IDomainEvent> DomainEvents => _domainEvents.ToList();
-
-        protected void Raise(IDomainEvent domainEvent)
-        {
-            _domainEvents.Add(domainEvent);
-        }
+    protected void Raise(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
     }
 }

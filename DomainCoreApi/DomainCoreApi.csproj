@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoreLib\CoreLib.csproj" />
+    <ProjectReference Include="..\EchoAspire\EchoAspire.ServiceDefaults\EchoAspire.ServiceDefaults.csproj" />
   </ItemGroup>
 
   <ItemGroup>
