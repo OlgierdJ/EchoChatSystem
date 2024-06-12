@@ -83,7 +83,7 @@
         if (firstRender)
         {
             Token = await localStorage.GetItemAsStringAsync("Token");
-            SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured; 
+            // SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured; 
             Chat = SessionRepository.self.DirectMessages.Where(e => e.Id == ChatId).FirstOrDefault();
             StateHasChanged();
         }
