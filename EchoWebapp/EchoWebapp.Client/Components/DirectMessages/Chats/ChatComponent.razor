@@ -86,7 +86,7 @@
             Token = await localStorage.GetItemAsStringAsync("Token");
             // SessionRepository.SessionChangeOccured += SessionRepository_SessionChangeOccured; 
             Chat = SessionRepository.self.DirectMessages.Where(e => e.Id == ChatId).FirstOrDefault();
-            StateHasChanged();
+            // StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -94,7 +94,7 @@
     public async void RedirectedToChat()
     {       
         //Chat = SessionRepository.self.DirectMessages.Where(e => e.Id == ChatId).FirstOrDefault();
-        StateHasChanged();        
+        // StateHasChanged();        
     }
     public async void HideChat()
     {
