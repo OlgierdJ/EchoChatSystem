@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using CoreLib.DTO.RequestCore.ChatCore;
-using CoreLib.DTO.RequestCore.InviteCore;
-using CoreLib.DTO.RequestCore.MessageCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.ServerCore;
 using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ChatCore;
-using CoreLib.Entities.EchoCore.FriendCore;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.EFCORE;
+using Echo.Application.Contracts.RequestCore;
+using Echo.Application.Contracts.RequestCore.ChatCore;
+using Echo.Application.Contracts.RequestCore.MessageCore;
 using Microsoft.EntityFrameworkCore;
+using Echo.Domain.Shared.Entities.EchoCore.ChatCore;
+using Echo.Domain.Shared.Entities.EchoCore.FriendCore;
 
 namespace DomainCoreApi.Services;
 

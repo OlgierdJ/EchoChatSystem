@@ -1,5 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.Enums;
+﻿using Echo.Domain.Shared.Entities.EchoCore.AccountCore;
+using Echo.Domain.Shared.Enums;
 
 namespace DomainRTCApi.Interfaces;
 

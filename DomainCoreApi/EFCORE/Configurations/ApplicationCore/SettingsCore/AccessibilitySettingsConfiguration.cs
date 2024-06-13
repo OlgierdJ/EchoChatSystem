@@ -1,5 +1,5 @@
 ﻿using CoreLib.Entities.EchoCore.ApplicationCore.Settings;
-using CoreLib.Entities.Enums;
+using Echo.Application.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

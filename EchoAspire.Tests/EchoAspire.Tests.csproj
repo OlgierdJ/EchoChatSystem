@@ -17,10 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EchoAspire\EchoAspire.AppHost\EchoAspire.AppHost.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Using Include="Aspire.Hosting.Testing" />
     <Using Include="Xunit" />
   </ItemGroup>

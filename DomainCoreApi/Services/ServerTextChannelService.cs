@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using CoreLib.DTO.RequestCore.InviteCore;
-using CoreLib.DTO.RequestCore.MessageCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.ServerCore.ChannelCore;
 using CoreLib.DTO.RequestCore.ServerCore.Role;
@@ -10,6 +8,8 @@ using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.EFCORE;
+using Echo.Application.Contracts.RequestCore;
+using Echo.Application.Contracts.RequestCore.MessageCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DomainCoreApi.Services;

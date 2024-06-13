@@ -1,24 +1,24 @@
-﻿using CoreLib.DTO.EchoCore.ChatCore.TextCore;
-using CoreLib.DTO.EchoCore.UserCore;
-using CoreLib.DTO.EchoCore.UserCore.SettingsCore;
-using CoreLib.Entities.Enums;
-using CoreLib.Handlers;
-using EchoWebapp.Client.Provider;
+﻿using Echo.Application.Clients.EchoChatPushNotificationServiceClients;
+using Echo.Application.Contracts.DTO.EchoCore.ChatCore.TextCore;
+using Echo.Application.Contracts.DTO.EchoCore.UserCore;
+using Echo.Application.Contracts.DTO.EchoCore.UserCore.SettingsCore;
+using Echo.Application.Contracts.Enums;
+using Echo.Chat.Web.Client.Provider;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace EchoWebapp.Services;
+namespace Echo.Chat.Web.Services;
 
 public class UserContainer : IAsyncDisposable, IUserContainer
 {
-    private readonly SignalRClientService signalRClient;
+    private readonly EchoChatPushNotificationServiceClient signalRClient;
     private readonly ProtectedSessionStorage sessionStorage;
 
     public event Action SessionChangeOccured;
 
     public UserFullDTO self { get; set; }
 
-    public UserContainer(SignalRClientService signalRClient, ProtectedSessionStorage sessionStorage)
+    public UserContainer(EchoChatPushNotificationServiceClient signalRClient, ProtectedSessionStorage sessionStorage)
     {
         this.signalRClient = signalRClient;
         this.sessionStorage = sessionStorage;

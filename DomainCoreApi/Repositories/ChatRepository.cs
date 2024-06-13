@@ -1,9 +1,9 @@
-﻿using CoreLib.Entities.EchoCore.ChatCore;
-using CoreLib.Interfaces.Repositories;
+﻿using CoreLib.Interfaces.Repositories;
 using CoreLib.Repositories.Bases;
 using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Echo.Domain.Shared.Entities.EchoCore.ChatCore;
 
 namespace DomainCoreApi.Repositories;
 

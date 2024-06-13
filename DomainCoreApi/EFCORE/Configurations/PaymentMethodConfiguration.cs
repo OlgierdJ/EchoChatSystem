@@ -1,5 +1,6 @@
 ﻿using CoreLib.Entities.EchoCore.ApplicationCore;
 using CoreLib.Entities.EchoCore.ApplicationCore.SettingsCore;
+using Echo.Domain.Shared.Entities.EchoCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

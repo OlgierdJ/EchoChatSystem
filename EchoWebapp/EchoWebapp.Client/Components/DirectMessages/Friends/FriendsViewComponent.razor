@@ -1,15 +1,10 @@
 ﻿@page "/friends"
-@using CoreLib.DTO.EchoCore.UserCore
-@using CoreLib.DTO.RequestCore.FriendCore
-@using CoreLib.WebAPI.EchoClient
-@using EchoWebapp.Client.Components.DirectMessages.Chats
-@using MudBlazor
 @rendermode InteractiveAuto
 @inject ILocalStorageService LocalStorage
 @inject IUserContainer SessionRepository
 @implements IDisposable
 @inject NavigationManager nav
-@inject EchoAPIClient _echoAPI
+@inject EchoChatApiServiceClient _echoAPI
 
 @*
     Layout for the friends section that exists within the DirectMessagesViewComponent in the Direct Messages section.

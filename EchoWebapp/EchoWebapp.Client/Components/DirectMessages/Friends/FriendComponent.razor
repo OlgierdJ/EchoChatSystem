@@ -1,12 +1,7 @@
-﻿@using CoreLib.DTO.EchoCore.UserCore
-@using CoreLib.DTO.RequestCore.RelationCore
-@using CoreLib.Entities.EchoCore.AccountCore
-@using CoreLib.WebAPI.EchoClient
-@using EchoWebapp.Client.Pages
-@inject ILocalStorageService LocalStorage
+﻿@inject ILocalStorageService LocalStorage
 @inject IUserContainer SessionRepository
 @implements IDisposable
-@inject EchoAPIClient _echoAPI
+@inject EchoChatApiServiceClient _echoAPI
 @inject IDialogService Dialog
 @inject NavigationManager nav
 

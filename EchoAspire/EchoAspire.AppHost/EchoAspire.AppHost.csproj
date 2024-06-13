@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -15,15 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreLib\CoreLib.csproj" />
-    <ProjectReference Include="..\..\DomainCoreApi.Tests\DomainCoreApi.Tests.csproj" />
-    <ProjectReference Include="..\..\DomainCoreApi\DomainCoreApi.csproj" />
-    <ProjectReference Include="..\..\DomainPushNotificationApi\DomainPushNotificationApi.csproj" />
-    <ProjectReference Include="..\..\DomainRTCApi\DomainRTCApi.csproj" />
-    <ProjectReference Include="..\..\EchoWebapp\EchoWebapp.Client\EchoWebapp.Client.csproj" />
-    <ProjectReference Include="..\..\EchoWebapp\EchoWebapp\EchoWebapp.csproj" />
-    <ProjectReference Include="..\..\OAuthServer\OAuthServer.csproj" />
-    <ProjectReference Include="..\EchoAspire.ServiceDefaults\EchoAspire.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\AuthTest\Echo.Auth.csproj" />
+    <ProjectReference Include="..\..\DomainCoreApi\Echo.Chat.API.csproj" />
+    <ProjectReference Include="..\..\DomainPushNotificationApi\Echo.Chat.PushNotification.csproj" />
+    <ProjectReference Include="..\..\DomainRTCApi\Echo.Chat.RTC.csproj" />
+    <ProjectReference Include="..\..\EchoWebapp\EchoWebapp\Echo.Chat.Web.csproj" />
   </ItemGroup>
 
 </Project>

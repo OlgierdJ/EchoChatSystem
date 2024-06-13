@@ -1,15 +1,10 @@
 ﻿@page "/"
-@using CoreLib.DTO.EchoCore.UserCore
-@using CoreLib.Entities.EchoCore.ChatCore
-@using CoreLib.WebAPI.EchoClient
-@using EchoWebapp.Client.Components.DirectMessages
-@using EchoWebapp.Client.Components.Servers
 @rendermode InteractiveAuto
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager nav
 @inject IUserContainer SessionRepository
 @implements IDisposable
-@inject EchoAPIClient _echoAPI
+@inject EchoChatApiServiceClient _echoAPI
 
 
 @*

@@ -1,12 +1,6 @@
-﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
-@using CoreLib.DTO.EchoCore.UserCore
-@using CoreLib.Entities.EchoCore.AccountCore
-@using CoreLib.Entities.EchoCore.ChatCore
-@using CoreLib.WebAPI.EchoClient
-@using MudBlazor
-@inject IUserContainer SessionRepository
+﻿@inject IUserContainer SessionRepository
 @inject ILocalStorageService LocalStorage
-@inject EchoAPIClient _echoAPI
+@inject EchoChatApiServiceClient _echoAPI
 @rendermode InteractiveAuto
 @implements IDisposable
 @*

@@ -1,10 +1,11 @@
-﻿using CoreLib.DTO.RequestCore.ChatCore;
-using CoreLib.DTO.RequestCore.InviteCore;
-using CoreLib.DTO.RequestCore.MessageCore;
-using CoreLib.DTO.RequestCore.RelationCore;
-using CoreLib.DTO.RequestCore.ServerCore;
-using CoreLib.Handlers;
-using CoreLib.Interfaces.Services;
+﻿using Echo.Application.Contracts.DTO.RequestCore.RelationCore;
+using Echo.Application.Contracts.DTO.RequestCore.ServerCore;
+using Echo.Application.Contracts.RequestCore.ChatCore;
+using Echo.Application.Contracts.RequestCore.InviteCore;
+using Echo.Application.Contracts.RequestCore.MessageCore;
+using Echo.Application.Contracts.RequestCore.ParticipantCore;
+using Echo.Domain.Shared.Handlers;
+using Echo.Domain.Shared.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CoreLib.DTO.RequestCore.InviteCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.ServerCore;
 using CoreLib.DTO.RequestCore.ServerCore.EmoteCore;
@@ -7,7 +6,6 @@ using CoreLib.DTO.RequestCore.ServerCore.Role;
 using CoreLib.DTO.RequestCore.ServerCore.Server;
 using CoreLib.DTO.RequestCore.ServerCore.SoundboardSound;
 using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.Category;
 using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.TextChannel;
@@ -16,11 +14,13 @@ using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
-using CoreLib.Entities.Enums;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.EFCORE;
+using Echo.Application.Contracts.RequestCore;
+using Echo.Application.Enums;
 using Microsoft.EntityFrameworkCore;
+using Echo.Domain.Shared.Entities.EchoCore.ChatCore;
 
 namespace DomainCoreApi.Services;
 

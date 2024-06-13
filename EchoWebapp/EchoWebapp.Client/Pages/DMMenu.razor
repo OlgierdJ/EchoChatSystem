@@ -1,21 +1,14 @@
 ﻿@page "/messages"
-@using CoreLib.Entities.EchoCore.AccountCore
-@using CoreLib.Entities.EchoCore.ChatCore
-@using CoreLib.Handlers
-@using CoreLib.WebAPI.EchoClient
-@using Microsoft.AspNetCore.SignalR.Client
-@using MudBlazor
-@using System.Net.Http.Headers
 @rendermode InteractiveWebAssembly
 @inject NavigationManager nav
-@inject EchoAPIClient _Echoapi
-@inject SignalRClientService _client
+@inject EchoChatApiServiceClient _Echoapi
+@inject EchoChatPushNotificationServiceClient _client
 @inject ILocalStorageService LocalStorage
 @* @implements IAsyncDisposable *@
 @* @attribute [Authorize] *@
 
 
-<AuthorizeView>
+@* <AuthorizeView>
     <Authorized>
         <span>You're authorized as @context?.User?.Identity?.Name</span>
     </Authorized>
@@ -35,7 +28,7 @@
 </ul>
 
 <ul>
-@*
+
 <div style="height:5vh;">
     <MudPaper Class="pa-2 d-flex align-content-center flex-wrap flex-grow-1 gap-2" Square Style="@($"background:{Colors.Shades.Transparent}")" Elevation="1">
          <MudAvatar Size="Size.Small">
@@ -137,7 +130,7 @@
             prevSender = m.Author;
         }
     </div>
- *@
+ 
 </ul>
 
 
@@ -145,8 +138,8 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
-    public Account acc1 = new();
-    public Account acc2 = new();
+    // public Account acc1 = new();
+    // public Account acc2 = new();
     private readonly List<string> _message = new();
 
     private string? messageInput;
@@ -232,4 +225,4 @@
     private DateTime prevDate = DateTime.MinValue;
     private Account prevSender = new();
     private Chat chat = null;
-}
+} *@

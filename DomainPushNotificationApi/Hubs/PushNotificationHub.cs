@@ -1,6 +1,6 @@
-﻿using CoreLib.Hubs;
-using CoreLib.WebAPI.EchoServerClient;
+﻿using CoreLib.WebAPI.EchoServerClient;
 using DomainPushNotificationApi.Services;
+using Echo.Application.ApiClients.EchoPushNotification;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;

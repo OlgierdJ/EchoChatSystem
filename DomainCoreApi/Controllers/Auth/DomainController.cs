@@ -1,4 +1,4 @@
-﻿using CoreLib.Interfaces.Services;
+﻿using Echo.Domain.Shared.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,13 +1,6 @@
-﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
-@using CoreLib.DTO.EchoCore.UserCore
-@using CoreLib.Entities.EchoCore.AccountCore
-@using CoreLib.Entities.EchoCore.ChatCore
-@using CoreLib.Handlers
-@using CoreLib.WebAPI.EchoClient
-@using EchoWebapp.Client.Components.Shared
-@implements IDisposable
-@inject EchoAPIClient _echoAPI
-@inject SignalRClientService _client
+﻿@implements IDisposable
+@inject EchoChatApiServiceClient _echoAPI
+@inject EchoChatPushNotificationServiceClient _client
 @inject ILocalStorageService LocalStorage
 @inject IJSRuntime _js
 @inject IScrollManager Scroll

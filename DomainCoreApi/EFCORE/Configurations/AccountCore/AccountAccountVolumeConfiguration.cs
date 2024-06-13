@@ -1,4 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.AccountCore;
+﻿using Echo.Domain.Shared.Entities.EchoCore.AccountCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

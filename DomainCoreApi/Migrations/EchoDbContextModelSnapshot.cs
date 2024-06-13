@@ -1883,7 +1883,7 @@ namespace DomainCoreApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.Chat", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.Chat", b =>
                 {
                     b.Property<decimal>("Id")
                         .ValueGeneratedOnAdd()
@@ -1908,7 +1908,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("Chat");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatAccountMessageTracker", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatAccountMessageTracker", b =>
                 {
                     b.Property<decimal>("OwnerId")
                         .HasColumnType("decimal(20,0)");
@@ -1928,7 +1928,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ChatAccountMessageTracker");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatInvite", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatInvite", b =>
                 {
                     b.Property<string>("InviteCode")
                         .HasMaxLength(10)
@@ -1958,7 +1958,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ChatInvite");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessage", b =>
                 {
                     b.Property<decimal>("Id")
                         .ValueGeneratedOnAdd()
@@ -1998,7 +1998,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ChatMessage");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMessageAttachment", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessageAttachment", b =>
                 {
                     b.Property<decimal>("Id")
                         .ValueGeneratedOnAdd()
@@ -2027,7 +2027,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ChatMessageAttachment");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMessagePin", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessagePin", b =>
                 {
                     b.Property<decimal>("PinboardId")
                         .HasColumnType("decimal(20,0)");
@@ -2043,7 +2043,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ChatMessagePin");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMute", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatMute", b =>
                 {
                     b.Property<decimal>("MuterId")
                         .HasColumnType("decimal(20,0)");
@@ -2066,7 +2066,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("ChatMute");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatParticipancy", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatParticipancy", b =>
                 {
                     b.Property<decimal>("ParticipantId")
                         .HasColumnType("decimal(20,0)");
@@ -2163,7 +2163,7 @@ namespace DomainCoreApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.FriendSuggestion", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.FriendSuggestion", b =>
                 {
                     b.Property<decimal>("ReceiverId")
                         .HasColumnType("decimal(20,0)");
@@ -2189,7 +2189,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("FriendSuggestion");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.Friendship", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.Friendship", b =>
                 {
                     b.Property<decimal>("Id")
                         .ValueGeneratedOnAdd()
@@ -2207,7 +2207,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("Friendship");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.FriendshipParticipancy", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.FriendshipParticipancy", b =>
                 {
                     b.Property<decimal>("ParticipantId")
                         .HasColumnType("decimal(20,0)");
@@ -2227,7 +2227,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("FriendshipParticipancy");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.IncomingFriendRequest", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.IncomingFriendRequest", b =>
                 {
                     b.Property<decimal>("Id")
                         .ValueGeneratedOnAdd()
@@ -2251,7 +2251,7 @@ namespace DomainCoreApi.Migrations
                     b.ToTable("IncomingFriendRequest");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.OutgoingFriendRequest", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.OutgoingFriendRequest", b =>
                 {
                     b.Property<decimal>("Id")
                         .ValueGeneratedOnAdd()
@@ -4678,7 +4678,7 @@ namespace DomainCoreApi.Migrations
 
             modelBuilder.Entity("CoreLib.Entities.EchoCore.AccountCore.DirectMessageRelation", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Chat")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.Chat", "Chat")
                         .WithOne("DirectMessageRelation")
                         .HasForeignKey("CoreLib.Entities.EchoCore.AccountCore.DirectMessageRelation", "ChatId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5027,9 +5027,9 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Currency");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatAccountMessageTracker", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatAccountMessageTracker", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "CoOwner")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.Chat", "CoOwner")
                         .WithMany("MessageTrackers")
                         .HasForeignKey("CoOwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5041,7 +5041,7 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", "Subject")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessage", "Subject")
                         .WithMany("MessageTrackers")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -5053,7 +5053,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatInvite", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatInvite", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Inviter")
                         .WithMany("ChatInvites")
@@ -5061,7 +5061,7 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Subject")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.Chat", "Subject")
                         .WithMany("Invites")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5072,20 +5072,20 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessage", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Author")
                         .WithMany("ChatMessages")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "MessageHolder")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.Chat", "MessageHolder")
                         .WithMany("Messages")
                         .HasForeignKey("MessageHolderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", "Parent")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessage", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -5097,9 +5097,9 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMessageAttachment", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessageAttachment", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", "Message")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessage", "Message")
                         .WithMany("Attachments")
                         .HasForeignKey("MessageId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5108,15 +5108,15 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Message");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMessagePin", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessagePin", b =>
                 {
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", "Message")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessage", "Message")
                         .WithOne("MessagePin")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.ChatCore.ChatMessagePin", "MessageId")
+                        .HasForeignKey("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessagePin", "MessageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Pinboard")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.Chat", "Pinboard")
                         .WithMany("PinnedMessages")
                         .HasForeignKey("PinboardId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -5127,7 +5127,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Pinboard");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMute", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatMute", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Muter")
                         .WithMany("MutedChats")
@@ -5135,7 +5135,7 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Subject")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.Chat", "Subject")
                         .WithMany("Muters")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5146,7 +5146,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatParticipancy", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatParticipancy", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Participant")
                         .WithMany("Chats")
@@ -5154,7 +5154,7 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.ChatCore.Chat", "Subject")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.ChatCore.Chat", "Subject")
                         .WithMany("Participants")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5165,7 +5165,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.FriendSuggestion", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.FriendSuggestion", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Receiver")
                         .WithMany("FriendSuggestions")
@@ -5184,7 +5184,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Suggestion");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.FriendshipParticipancy", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.FriendshipParticipancy", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Participant")
                         .WithMany("Friendships")
@@ -5192,7 +5192,7 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.FriendCore.Friendship", "Subject")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.FriendCore.Friendship", "Subject")
                         .WithMany("Participants")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5203,7 +5203,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.IncomingFriendRequest", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.IncomingFriendRequest", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Receiver")
                         .WithMany("IncomingFriendRequests")
@@ -5211,9 +5211,9 @@ namespace DomainCoreApi.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("CoreLib.Entities.EchoCore.FriendCore.OutgoingFriendRequest", "SenderRequest")
+                    b.HasOne("Echo.Domain.Shared.EchoCore.FriendCore.OutgoingFriendRequest", "SenderRequest")
                         .WithOne("ReceiverRequest")
-                        .HasForeignKey("CoreLib.Entities.EchoCore.FriendCore.IncomingFriendRequest", "SenderRequestId")
+                        .HasForeignKey("Echo.Domain.Shared.EchoCore.FriendCore.IncomingFriendRequest", "SenderRequestId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
@@ -5222,7 +5222,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("SenderRequest");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.OutgoingFriendRequest", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.OutgoingFriendRequest", b =>
                 {
                     b.HasOne("CoreLib.Entities.EchoCore.AccountCore.Account", "Sender")
                         .WithMany("OutgoingFriendRequests")
@@ -6699,7 +6699,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("AppearanceSettings");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.Chat", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.Chat", b =>
                 {
                     b.Navigation("DirectMessageRelation");
 
@@ -6716,7 +6716,7 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("PinnedMessages");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.ChatCore.ChatMessage", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.ChatCore.ChatMessage", b =>
                 {
                     b.Navigation("Attachments");
 
@@ -6732,12 +6732,12 @@ namespace DomainCoreApi.Migrations
                     b.Navigation("AccountConnections");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.Friendship", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.Friendship", b =>
                 {
                     b.Navigation("Participants");
                 });
 
-            modelBuilder.Entity("CoreLib.Entities.EchoCore.FriendCore.OutgoingFriendRequest", b =>
+            modelBuilder.Entity("Echo.Domain.Shared.EchoCore.FriendCore.OutgoingFriendRequest", b =>
                 {
                     b.Navigation("ReceiverRequest")
                         .IsRequired();

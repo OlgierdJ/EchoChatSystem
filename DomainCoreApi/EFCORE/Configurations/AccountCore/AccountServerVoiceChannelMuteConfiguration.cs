@@ -1,4 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel;
+﻿using Echo.Domain.Shared.Entities.EchoCore.ServerCore.ChannelCore.VoiceChannel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

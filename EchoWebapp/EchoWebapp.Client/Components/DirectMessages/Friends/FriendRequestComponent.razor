@@ -1,7 +1,5 @@
-﻿@using CoreLib.DTO.EchoCore.UserCore
-@using CoreLib.WebAPI.EchoClient
-@inject ILocalStorageService LocalStorage
-@inject EchoAPIClient _echoAPI
+﻿@inject ILocalStorageService LocalStorage
+@inject EchoChatApiServiceClient _echoAPI
 @implements IDisposable
 @inject IUserContainer SessionRepository
 
@@ -24,7 +22,7 @@
         </MudText>
         <MudSpacer />
 
-        @if (Request.Type == CoreLib.Entities.Enums.RequestType.Outgoing)
+        @if (Request.Type == RequestType.Outgoing)
         {
             <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Cancel" Title="Cancel" OnClick="cancelRequest" />
         }

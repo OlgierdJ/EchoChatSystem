@@ -1,14 +1,13 @@
-﻿using CoreLib.DTO.EchoCore.UserCore;
-using CoreLib.DTO.RequestCore.FriendCore;
-using CoreLib.DTO.RequestCore.MessageCore;
-using CoreLib.DTO.RequestCore.RelationCore;
-using CoreLib.DTO.RequestCore.UserCore;
-using CoreLib.Handlers;
-using CoreLib.Interfaces.Services;
-//using DomainCoreApi.Controllers.Bases;
+﻿using Echo.Application.Contracts.DTO.EchoCore.UserCore;
+using Echo.Application.Contracts.RequestCore.FriendCore;
+using Echo.Application.Contracts.RequestCore.MessageCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using Echo.Application.Contracts.DTO.RequestCore.UserCore;
+using Echo.Application.Contracts.DTO.RequestCore.RelationCore;
+using Echo.Domain.Shared.Interfaces.Services;
+using Echo.Domain.Shared.Handlers;
 
 namespace DomainCoreApi.Controllers;
 

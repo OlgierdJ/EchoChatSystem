@@ -1,4 +1,5 @@
-﻿using CoreLib.Entities.EchoCore.ApplicationCore.SubscriptionCore;
+﻿using Echo.Domain.Shared.Entities.EchoCore.ApplicationCore;
+using Echo.Domain.Shared.Entities.EchoCore.ApplicationCore.SubscriptionCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

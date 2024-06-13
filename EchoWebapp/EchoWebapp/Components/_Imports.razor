@@ -6,12 +6,15 @@
 @using static Microsoft.AspNetCore.Components.Web.RenderMode
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
-@using EchoWebapp
-@using EchoWebapp.Client
-@using EchoWebapp.Client.Pages
+@using Echo.Chat.Web.Client
+@using Echo.Chat.Web.Client.Pages
+@using Echo.Application.Clients.EchoChatPushNotificationServiceClients;
+@using Echo.Application.Contracts.DTO.EchoCore.UserCore;
+@* @using Echo.Chat.Web.Client.Provider *@
 @using EchoWebapp.Client.Provider
 @using EchoWebapp.Components
 @using MudBlazor
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Blazored.LocalStorage;
+@using Echo.Application.Contracts.DTO.EchoCore.ChatCore.TextCore

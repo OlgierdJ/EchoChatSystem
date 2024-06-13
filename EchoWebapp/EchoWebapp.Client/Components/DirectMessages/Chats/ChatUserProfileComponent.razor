@@ -1,10 +1,5 @@
-﻿@using CoreLib.DTO.EchoCore.ChatCore.TextCore
-@using CoreLib.DTO.RequestCore.RelationCore
-@using CoreLib.Entities.EchoCore.AccountCore
-@using CoreLib.Entities.EchoCore.UserCore
-@using CoreLib.WebAPI.EchoClient
-@inject EchoAPIClient _echoAPI
-@inject SignalRClientService _client
+﻿@inject EchoChatApiServiceClient _echoAPI
+@inject EchoChatPushNotificationServiceClient _client
 @inject ILocalStorageService LocalStorage
 @inject IUserContainer SessionRepository
 @implements IDisposable

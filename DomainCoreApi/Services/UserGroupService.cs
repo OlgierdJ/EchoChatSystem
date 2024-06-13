@@ -1,9 +1,9 @@
 ﻿using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ChatCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Interfaces.Services;
 using DomainCoreApi.EFCORE;
 using Microsoft.EntityFrameworkCore;
+using Echo.Domain.Shared.Entities.EchoCore.ChatCore;
 
 namespace DomainCoreApi.Services;
 

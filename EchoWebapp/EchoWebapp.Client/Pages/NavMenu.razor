@@ -1,10 +1,8 @@
-﻿@using CoreLib.Entities.EchoCore.AccountCore
-@using MudBlazor
-@inject NavigationManager nav
+﻿@inject NavigationManager nav
 @inject IDialogService DialogService
 
 
-<div class="d-flex">
+@* <div class="d-flex">
     <MudPaper Width="72px" Height="100vh" Square Style="background: var(--mud-palette-dark);">
          <MudList Clickable="true">
              <MudListItem OnClick="@OpenMessages">
@@ -128,7 +126,7 @@
                      <MudPaper Class="d-flex align-content-center" Square Style="@($"background:{Colors.Shades.Transparent};")" Elevation="0">
 
 
-                         @* <MudDialogProvider Position="DialogPosition.BottomLeft" NoHeader="true" CloseOnEscapeKey="true" /> *@
+                          <MudDialogProvider Position="DialogPosition.BottomLeft" NoHeader="true" CloseOnEscapeKey="true" /> 
 
                         <Popup @ref=popup />
                          <div class="d-flex align-content-center flex-wrap flex-grow-1 gap-2 pa-2 flex-0 cursor-pointer hoverable" @onclick="OpenProfile">
@@ -158,7 +156,7 @@
              </MudPaper>
          </div>
      </div>
- </div>
+ </div> 
 
  @code {
     // [CascadingParameter]
@@ -249,3 +247,4 @@
         new Account() { Id = 116, Name = "Jeppe", Profile = new AccountProfile(){ AvatarFileURL = "https://www.looper.com/img/gallery/the-ending-of-death-note-explained/intro-1620395655.jpg", } }
     };
 }
+*@

@@ -1,13 +1,6 @@
 ﻿@page "/register"
-@using CoreLib.DTO.RequestCore.UserCore
-@using CoreLib.Entities.EchoCore.UserCore
-@using CoreLib.WebAPI
-@using CoreLib.WebAPI.EchoClient
-@using MudBlazor
-@using System.Text.RegularExpressions
-@using System.ComponentModel.DataAnnotations
 @inject NavigationManager nav
-@inject EchoAPIClient _echoAPI
+@inject EchoChatApiServiceClient _echoAPI
 @rendermode InteractiveAuto
 
 @if (Alert)

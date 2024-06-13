@@ -2,21 +2,32 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var cache = builder.AddRedis("cache");
 
-var apiService = builder.AddProject<Projects.DomainCoreApi>("coreapiservice");
-var pushNotificationService = builder.AddProject<Projects.DomainPushNotificationApi>("pushnotificationservice")
-    .WithReference(cache)
-    .WithReference(apiService);
-var rtcService = builder.AddProject<Projects.DomainRTCApi>("rtcservice")
-    .WithReference(cache)
-    .WithReference(pushNotificationService)
-    .WithReference(apiService);
+var echoAuthDb = builder.AddConnectionString("EchoAuthDbConnection");
 
+var echoDb = builder.AddConnectionString("EchoDbConnection");
 
-builder.AddProject<Projects.EchoWebapp>("webfrontend")
+var echoAuthService = builder.AddProject<Projects.Echo_Auth>("echoauthservice")
+    .WithReference(echoAuthDb);
+
+var echoChatApiService = builder.AddProject<Projects.Echo_Chat_API>("echochatapiservice")
+    .WithReference(echoDb);
+
+var echoChatPushNotificationService = builder.AddProject<Projects.Echo_Chat_PushNotification>("echochatpushnotificationservice")
+    .WithReference(cache)
+    .WithReference(echoDb) //probably needs db direct access to get data without calling api.
+    .WithReference(echoChatApiService);
+
+var echoChatRTCService = builder.AddProject<Projects.Echo_Chat_RTC>("echochatrtcservice")
+    .WithReference(cache)
+    .WithReference(echoDb) //probably needs db direct access to get data without calling api.
+    .WithReference(echoChatPushNotificationService)
+    .WithReference(echoChatPushNotificationService);
+
+builder.AddProject<Projects.Echo_Chat_Web>("echochatwebservice")
     .WithExternalHttpEndpoints()
     .WithReference(cache)
-    .WithReference(pushNotificationService)
-    .WithReference(apiService)
-    .WithReference(rtcService);
+    .WithReference(echoChatPushNotificationService)
+    .WithReference(echoChatPushNotificationService)
+    .WithReference(echoChatRTCService);
 
 builder.Build().Run();

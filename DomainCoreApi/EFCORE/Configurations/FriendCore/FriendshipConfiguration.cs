@@ -1,4 +1,4 @@
-﻿using CoreLib.Entities.EchoCore.FriendCore;
+﻿using Echo.Domain.Shared.Entities.EchoCore.FriendCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

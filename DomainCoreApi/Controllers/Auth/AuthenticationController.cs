@@ -1,4 +1,4 @@
-﻿using CoreLib.DTO.EchoCore.UserCore;
+﻿using Echo.Application.Contracts.DTO.EchoCore.UserCore;
 using DomainCoreApi.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

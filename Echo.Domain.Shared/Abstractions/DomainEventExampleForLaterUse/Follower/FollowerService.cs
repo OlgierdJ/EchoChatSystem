@@ -1,0 +1,45 @@
+﻿using Echo.Domain.Shared.Abstractions;
+using Echo.Domain.Shared.Abstractions.DomainEventExampleForLaterUse.User;
+
+namespace Echo.Domain.Shared.Abstractions.DomainEventExampleForLaterUse.Follower;
+
+public sealed class FollowerService
+{
+    private readonly IFollowerRepository _followerRepository;
+
+    public FollowerService(IFollowerRepository followerRepository)
+    {
+        _followerRepository = followerRepository;
+    }
+
+    public async Task<Result> StartFollowingAsync(
+        Usera user,
+        Usera followed,
+        DateTime utcNow,
+        CancellationToken cancellationToken)
+    {
+        if (user.Id == followed.Id)
+        {
+            return FollowerErrors.SameUser;
+        }
+
+        if (!followed.HasPublicProfile)
+        {
+            return FollowerErrors.NonPublicProfile;
+        }
+
+        if (await _followerRepository.IsAlreadyFollowingAsync(
+                user.Id,
+                followed.Id,
+                cancellationToken))
+        {
+            return FollowerErrors.AlreadyFollowing;
+        }
+
+        var follower = Follower.Create(user.Id, followed.Id, utcNow);
+
+        _followerRepository.Insert(follower);
+
+        return Result.Success();
+    }
+}

@@ -1,13 +1,6 @@
 ﻿@page "/login"
-@using CoreLib.DTO.RequestCore.UserCore
-@using CoreLib.Entities.EchoCore.AccountCore
-@using CoreLib.WebAPI.EchoClient
-@using MudBlazor
-@using CoreLib.WebAPI
-@using System.ComponentModel.DataAnnotations
-@using System.Net.Http.Headers
 @inject NavigationManager nav
-@inject EchoAPIClient _echoAPI
+@inject EchoChatApiServiceClient _echoAPI
 @inject ILocalStorageService LocalStorage
 @inject IUserContainer SessionRepository
 @inject AccountIdContainer Container

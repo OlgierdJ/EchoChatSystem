@@ -1,7 +1,7 @@
-﻿using CoreLib.Entities.EchoCore.ChatCore;
-using DomainCoreApi.EFCORE.ValueGenerators;
+﻿using DomainCoreApi.EFCORE.ValueGenerators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Echo.Domain.Shared.Entities.EchoCore.ChatCore;
 
 namespace DomainCoreApi.EFCORE.Configurations.ChatCore;
 

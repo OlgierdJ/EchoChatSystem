@@ -1,26 +1,26 @@
 ﻿using AutoMapper;
 using CoreLib.DTO.EchoCore.ServerCore;
-using CoreLib.DTO.EchoCore.UserCore;
-using CoreLib.DTO.RequestCore.FriendCore;
-using CoreLib.DTO.RequestCore.MessageCore;
+using Echo.Application.Contracts.DTO.EchoCore.UserCore;
 using CoreLib.DTO.RequestCore.RelationCore;
 using CoreLib.DTO.RequestCore.UserCore;
 using CoreLib.Entities.EchoCore;
 using CoreLib.Entities.EchoCore.AccountCore;
-using CoreLib.Entities.EchoCore.ChatCore;
-using CoreLib.Entities.EchoCore.FriendCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore;
 using CoreLib.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore;
 using CoreLib.Entities.EchoCore.UserCore;
-using CoreLib.Entities.Enums;
 using CoreLib.Interfaces;
 using CoreLib.Interfaces.Services;
 using CoreLib.MapperProfiles.MapperProfileConverters;
 using DomainCoreApi.EFCORE;
 using DomainCoreApi.Handlers;
+using Echo.Application.Contracts.RequestCore.FriendCore;
+using Echo.Application.Contracts.RequestCore.MessageCore;
+using Echo.Application.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PhoneNumbers;
+using Echo.Domain.Shared.Entities.EchoCore.ChatCore;
+using Echo.Domain.Shared.Entities.EchoCore.FriendCore;
 
 namespace DomainCoreApi.Services;
 
