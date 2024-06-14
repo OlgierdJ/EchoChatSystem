@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CoreLib.MapperProfiles.MapperProfileConverters;
 using Echo.Application.Contracts.DTO.EchoCore.ChatCore.TextCore;
 using Echo.Application.Contracts.DTO.EchoCore.UserCore;
 using Echo.Application.Contracts.DTO.EchoCore.UserCore.SubscriptionCore;
@@ -26,6 +25,7 @@ using Echo.Domain.Shared.Entities.EchoCore.ServerCore.GeneralCore.ManagementCore
 using Echo.Domain.Shared.Entities.EchoCore.ServerCore.GeneralCore.ModerationCore;
 using Echo.Domain.Shared.Entities.EchoCore.ServerCore.GeneralCore.RoleCore;
 using Echo.Domain.Shared.Entities.EchoCore.ServerCore.GeneralCore.SettingsCore;
+using Echo.Domain.Shared.MapperProfiles.MapperProfileConverters;
 
 namespace Echo.Domain.Shared.MapperProfiles;
 

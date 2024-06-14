@@ -22,7 +22,7 @@ public class IntegrationTest1
         await app.StartAsync();
 
         // Act
-        var httpClient = app.CreateHttpClient("echochatweb");
+        var httpClient = app.CreateHttpClient("echochatwebservice");
         var response = await httpClient.GetAsync("/");
 
         // Assert

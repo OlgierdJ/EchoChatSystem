@@ -15,11 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AuthTest\Echo.Auth.csproj" />
-    <ProjectReference Include="..\..\DomainCoreApi\Echo.Chat.API.csproj" />
-    <ProjectReference Include="..\..\DomainPushNotificationApi\Echo.Chat.PushNotification.csproj" />
-    <ProjectReference Include="..\..\DomainRTCApi\Echo.Chat.RTC.csproj" />
-    <ProjectReference Include="..\..\EchoWebapp\EchoWebapp\Echo.Chat.Web.csproj" />
+    <ProjectReference Include="..\..\Echo.Auth\Echo.Auth.csproj" />
+    <ProjectReference Include="..\..\Echo.Chat.API\Echo.Chat.API.csproj" />
+    <ProjectReference Include="..\..\Echo.Chat.PushNotification\Echo.Chat.PushNotification.csproj" />
+    <ProjectReference Include="..\..\Echo.Chat.RTC\Echo.Chat.RTC.csproj" />
+    <ProjectReference Include="..\..\Echo.Chat.Web\Echo.Chat.Web\Echo.Chat.Web.csproj" />
   </ItemGroup>
 
 </Project>

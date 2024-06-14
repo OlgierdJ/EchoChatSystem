@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>e7de0d75-3088-4f8c-93ae-d3919536c521</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.0" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Echo.Auth\Echo.Auth.csproj" />
+    <ProjectReference Include="..\..\Echo.Chat.API\Echo.Chat.API.csproj" />
+    <ProjectReference Include="..\..\Echo.Chat.PushNotification\Echo.Chat.PushNotification.csproj" />
+    <ProjectReference Include="..\..\Echo.Chat.RTC\Echo.Chat.RTC.csproj" />
+    <ProjectReference Include="..\..\Echo.Chat.Web\Echo.Chat.Web\Echo.Chat.Web.csproj" />
+  </ItemGroup>
+
+</Project>
