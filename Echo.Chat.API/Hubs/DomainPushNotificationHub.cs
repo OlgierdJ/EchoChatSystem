@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using OpenIddict.Validation.AspNetCore;
 
 namespace DomainCoreApi.Hubs;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
 public class DomainPushNotificationHub : Hub<IDomainNotificationHub>
 {
     //simple hub only one call that offloads logic to listeners

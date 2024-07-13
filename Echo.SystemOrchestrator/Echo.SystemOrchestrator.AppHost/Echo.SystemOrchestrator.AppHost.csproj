@@ -10,8 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.0" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1" />
+    <PackageReference Include="Aspire.Hosting.Orleans" Version="8.0.1" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.0.1" />
     <PackageReference Include="Aspire.Hosting.Redis" Version="8.0.1" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="8.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +27,9 @@
     <ProjectReference Include="..\..\Echo.Chat.PushNotification\Echo.Chat.PushNotification.csproj" />
     <ProjectReference Include="..\..\Echo.Chat.RTC\Echo.Chat.RTC.csproj" />
     <ProjectReference Include="..\..\Echo.Chat.Web\Echo.Chat.Web\Echo.Chat.Web.csproj" />
+    <ProjectReference Include="..\..\Echo.Domain.EntityFrameworkCore\Echo.Domain.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\Echo.Domain.Shared\Echo.Domain.Shared.csproj" />
+    <ProjectReference Include="..\..\Echo.Orleans.Server\Echo.Orleans.Server.csproj" />
   </ItemGroup>
 
 </Project>

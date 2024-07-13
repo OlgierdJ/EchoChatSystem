@@ -17,12 +17,12 @@ public class IntegrationTest1
     public async Task GetWebResourceRootReturnsOkStatusCode()
     {
         // Arrange
-        var appHost = await DistributedApplicationTestingBuilder.CreateAsync<Projects.EchoAspire_AppHost>();
+        var appHost = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Echo_SystemOrchestrator_AppHost>();
         await using var app = await appHost.BuildAsync();
         await app.StartAsync();
 
         // Act
-        var httpClient = app.CreateHttpClient("echochatwebservice");
+        var httpClient = app.CreateHttpClient("echoauthservice");
         var response = await httpClient.GetAsync("/");
 
         // Assert

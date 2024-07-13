@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
+using Echo.Domain.Shared.Handlers;
 
 namespace DomainCoreApi.Controllers.Auth;
 
@@ -12,10 +13,10 @@ namespace DomainCoreApi.Controllers.Auth;
 public class AuthenticationController : ControllerBase
 {
 
-    private readonly TokenHandler Handler;
+    private readonly ITokenHandler Handler;
     private readonly JWTOptions options;
 
-    public AuthenticationController(TokenHandler handler, IOptions<JWTOptions> options)
+    public AuthenticationController(ITokenHandler handler, IOptions<JWTOptions> options)
     {
         Handler = handler;
         this.options = options.Value;
@@ -31,6 +32,7 @@ public class AuthenticationController : ControllerBase
             var token = Handler.CreateToken(new List<Claim>(), DateTime.UtcNow.AddDays(options.DefaultRefreshTokenLifeTimeDays), options.Issuer, options.Audiences[1], options.Key);
 
             return Ok(new TokenDTO { RefreshToken = token });
+            //return Ok(new TokenDTO { RefreshToken = "token" });
         }
         catch (Exception)
         {

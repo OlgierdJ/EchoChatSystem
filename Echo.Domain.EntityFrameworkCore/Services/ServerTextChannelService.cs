@@ -17,9 +17,9 @@ public class ServerTextChannelService : IServerTextChannelService
 {
     private readonly EchoDbContext context;
     private readonly IMapper mapper;
-    private readonly IPushNotificationService notificationService;
+    private readonly IEntityPushNotificationService notificationService;
 
-    public ServerTextChannelService(EchoDbContext context, IMapper mapper, IPushNotificationService notificationService)
+    public ServerTextChannelService(EchoDbContext context, IMapper mapper, IEntityPushNotificationService notificationService)
     {
         this.context = context;
         this.mapper = mapper;

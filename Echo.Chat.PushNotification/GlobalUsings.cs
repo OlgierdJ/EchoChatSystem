@@ -1,0 +1,14 @@
+﻿global using Asp.Versioning.Conventions;
+//global using eShop.Catalog.API.Infrastructure;
+//global using eShop.Catalog.API.Infrastructure.EntityConfigurations;
+//global using eShop.Catalog.API.Infrastructure.Exceptions;
+//global using eShop.Catalog.API.IntegrationEvents;
+//global using eShop.Catalog.API.IntegrationEvents.EventHandling;
+//global using eShop.Catalog.API.IntegrationEvents.Events;
+//global using eShop.IntegrationEventLogEF;
+//global using eShop.IntegrationEventLogEF.Services;
+//global using eShop.IntegrationEventLogEF.Utilities;
+global using Echo.SystemOrchestrator.ServiceDefaults;
+global using Echo.Chat.PushNotification.Extensions;
+global using Echo.Chat.PushNotification.API;
+//global using Npgsql;

@@ -12,7 +12,9 @@ public class TokenHandler : ITokenHandler
 {
     private readonly JWTOptions options;
 
-    public TokenHandler(IOptions<JWTOptions> options)
+    public TokenHandler(
+        IOptions<JWTOptions> options
+        )
     {
         this.options = options.Value;
     }

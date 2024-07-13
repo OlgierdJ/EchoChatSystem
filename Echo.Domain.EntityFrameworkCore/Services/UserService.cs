@@ -37,7 +37,8 @@ public class UserService
         IMapper mapper,
         //IPushNotificationService notificationService,
         IPasswordHandler pwdHandler,
-        ITokenHandler tokenHandler)
+        ITokenHandler tokenHandler
+        )
     //: base(repository)
     {
         this.dbContext = dbContext;

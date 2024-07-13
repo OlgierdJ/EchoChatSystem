@@ -4,7 +4,7 @@ using Echo.Domain.Shared.Interfaces.Services;
 
 namespace Echo.Domain.EntityFrameworkCore.Services;
 
-public class PushNotificationService : IPushNotificationService
+public class EntityPushNotificationService : IEntityPushNotificationService
 {
     private Dictionary<string, Func<IEntity, EntityAction, Task>> _hubManager = new();
     

@@ -1,5 +1,8 @@
 using AuthTest;
 using Echo.Auth.Data;
+using Echo.Auth.Extensions;
+using Echo.Domain.EntityFrameworkCore.EFCORE;
+using Echo.Domain.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -9,22 +12,29 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+//builder.AddApplicationServices();
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-var connectionString = builder.Configuration.GetConnectionString("EchoAuthDBConnection")
-    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//var connectionString = builder.Configuration.GetConnectionString(EchoDomainConstants.AuthDbConnection)
+//    ?? throw new InvalidOperationException($"Connection string '{EchoDomainConstants.AuthDbConnection}' not found.");
+builder.AddSqlServerDbContext<ApplicationDbContext>("identitydb", opts1 =>
 {
-    // Configure the context to use sqlite.
-    options.UseSqlServer(connectionString);
-
-    // Register the entity sets needed by OpenIddict.
-    // Note: use the generic overload if you need
-    // to replace the default OpenIddict entities.
-    options.UseOpenIddict();
+}, opts2 =>
+{
+    opts2.UseOpenIddict();
 });
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//{
+//    // Configure the context to use sqlite.
+//    options.UseSqlServer(connectionString);
+
+//    // Register the entity sets needed by OpenIddict.
+//    // Note: use the generic overload if you need
+//    // to replace the default OpenIddict entities.
+//    options.UseOpenIddict();
+//});
 
 // Register the Identity services.
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

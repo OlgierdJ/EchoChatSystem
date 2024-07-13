@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -10,16 +10,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="8.0.1" />
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
     <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="8.0.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="5.6.0" />
+    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="5.6.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Echo.Domain.EntityFrameworkCore\Echo.Domain.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Echo.Domain.Shared\Echo.Domain.Shared.csproj" />
-    <ProjectReference Include="..\EchoAspire\EchoAspire.ServiceDefaults\EchoAspire.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Echo.EventBusRabbitMQ\EventBusRabbitMQ.csproj" />
+    <ProjectReference Include="..\Echo.SystemOrchestrator\Echo.SystemOrchestrator.ServiceDefaults\Echo.SystemOrchestrator.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

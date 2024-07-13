@@ -26,10 +26,10 @@ public class ServerService : IServerService
 {
     private readonly EchoDbContext context;
     private readonly IMapper mapper;
-    private readonly IPushNotificationService notificationService;
+    private readonly IEntityPushNotificationService notificationService;
     private readonly IServerTextChannelService textChannelService;
 
-    public ServerService(EchoDbContext context, IMapper mapper, IPushNotificationService notificationService, IServerTextChannelService textChannelService)
+    public ServerService(EchoDbContext context, IMapper mapper, IEntityPushNotificationService notificationService, IServerTextChannelService textChannelService)
     {
         this.context = context;
         this.mapper = mapper;

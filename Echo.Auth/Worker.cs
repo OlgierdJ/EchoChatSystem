@@ -32,12 +32,42 @@ public class Worker : IHostedService
             var manager = provider.GetRequiredService<IOpenIddictApplicationManager>();
 
             // API
-            if (await manager.FindByClientIdAsync("resource_server_1") == null)
+            if (await manager.FindByClientIdAsync("echo-chat-api") == null)
             {
                 var descriptor = new OpenIddictApplicationDescriptor
                 {
-                    ClientId = "resource_server_1",
-                    ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
+                    ClientId = "echo-chat-api",
+                    ClientSecret = "C824ED28-B544-4AFC-8726-EDB54DD4264F",
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Introspection
+                    }
+                };
+
+                await manager.CreateAsync(descriptor);
+            }
+
+            if (await manager.FindByClientIdAsync("echo-chat-pushnotification") == null)
+            {
+                var descriptor = new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "echo-chat-pushnotification",
+                    ClientSecret = "A87EDF98-0BAC-4144-A400-CE30C0A63DC0",
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Introspection
+                    }
+                };
+
+                await manager.CreateAsync(descriptor);
+            }
+
+            if (await manager.FindByClientIdAsync("echo-chat-rtc") == null)
+            {
+                var descriptor = new OpenIddictApplicationDescriptor
+                {
+                    ClientId = "echo-chat-rtc",
+                    ClientSecret = "B918A6B6-3C97-4CAF-BBEC-7E0E24E14B6E",
                     Permissions =
                     {
                         Permissions.Endpoints.Introspection
@@ -48,11 +78,11 @@ public class Worker : IHostedService
             }
 
             // Blazor Hosted
-            if (await manager.FindByClientIdAsync("blazorcodeflowpkceclient") is null)
+            if (await manager.FindByClientIdAsync("echo-chat-web") is null)
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
-                    ClientId = "blazorcodeflowpkceclient",
+                    ClientId = "echo-chat-web",
                     ConsentType = ConsentTypes.Explicit,
                     DisplayName = "Blazor code PKCE",
                     PostLogoutRedirectUris =
@@ -63,7 +93,7 @@ public class Worker : IHostedService
                     {
                         new Uri("https://localhost:44348/callback/login/local")
                     },
-                    ClientSecret = "codeflow_pkce_client_secret",
+                    ClientSecret = "FCB65446-8CDB-4ED6-9F4E-008AEA45CC68",
                     Permissions =
                     {
                         Permissions.Endpoints.Authorization,
@@ -74,7 +104,9 @@ public class Worker : IHostedService
                         Permissions.Scopes.Email,
                         Permissions.Scopes.Profile,
                         Permissions.Scopes.Roles,
-                        Permissions.Prefixes.Scope + "api1"
+                        Permissions.Prefixes.Scope + "echo-chat-api",
+                        Permissions.Prefixes.Scope + "echo-chat-pushnotification",
+                        Permissions.Prefixes.Scope + "echo-chat-rtc",
                     },
                     Requirements =
                     {
@@ -88,19 +120,53 @@ public class Worker : IHostedService
         {
             var manager = provider.GetRequiredService<IOpenIddictScopeManager>();
 
-            if (await manager.FindByNameAsync("api1") is null)
+            if (await manager.FindByNameAsync("echo-chat-api") is null)
             {
                 await manager.CreateAsync(new OpenIddictScopeDescriptor
                 {
-                    DisplayName = "Dantooine API access",
+                    DisplayName = "Echo chat API access",
                     DisplayNames =
                     {
                         [CultureInfo.GetCultureInfo("fr-FR")] = "Accès à l'API de démo"
                     },
-                    Name = "api1",
+                    Name = "echo-chat-api",
                     Resources =
                     {
-                        "resource_server_1"
+                        "echo-chat-api"
+                    }
+                });
+            }
+
+            if (await manager.FindByNameAsync("echo-chat-pushnotification") is null)
+            {
+                await manager.CreateAsync(new OpenIddictScopeDescriptor
+                {
+                    DisplayName = "Echo chat Push-Notification access",
+                    DisplayNames =
+                    {
+                        [CultureInfo.GetCultureInfo("fr-FR")] = "Accès à l'API de démo"
+                    },
+                    Name = "echo-chat-pushnotification",
+                    Resources =
+                    {
+                        "echo-chat-pushnotification"
+                    }
+                });
+            }
+
+            if (await manager.FindByNameAsync("echo-chat-rtc") is null)
+            {
+                await manager.CreateAsync(new OpenIddictScopeDescriptor
+                {
+                    DisplayName = "Echo chat RTC access",
+                    DisplayNames =
+                    {
+                        [CultureInfo.GetCultureInfo("fr-FR")] = "Accès à l'API de démo"
+                    },
+                    Name = "echo-chat-rtc",
+                    Resources =
+                    {
+                        "echo-chat-rtc"
                     }
                 });
             }

@@ -9,15 +9,26 @@
 	<ItemGroup>
 		<PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="8.0.1" />
 		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
-		<PackageReference Include="MudBlazor" Version="6.15.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="MudBlazor" Version="6.20.0" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
+		<PackageReference Include="OpenIddict.Abstractions" Version="5.6.0" />
+		<PackageReference Include="OpenIddict.AspNetCore" Version="5.6.0" />
+		<PackageReference Include="OpenIddict.EntityFrameworkCore" Version="5.6.0" />
+		<PackageReference Include="OpenIddict.Quartz" Version="5.6.0" />
+		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.9.0" />
+		<PackageReference Include="Yarp.ReverseProxy" Version="2.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\EchoAspire\EchoAspire.ServiceDefaults\EchoAspire.ServiceDefaults.csproj" />
+	  <ProjectReference Include="..\..\Echo.SystemOrchestrator\Echo.SystemOrchestrator.ServiceDefaults\Echo.SystemOrchestrator.ServiceDefaults.csproj" />
 	  <ProjectReference Include="..\Echo.Chat.Web.Client\Echo.Chat.Web.Client.csproj" />
 	</ItemGroup>
 

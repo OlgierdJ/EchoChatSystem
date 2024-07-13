@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoAspire.AppHost", "EchoAspire\EchoAspire.AppHost\EchoAspire.AppHost.csproj", "{96B6F7D8-1BF2-4B2B-AC29-3B36A5B3459D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoAspire.ServiceDefaults", "EchoAspire\EchoAspire.ServiceDefaults\EchoAspire.ServiceDefaults.csproj", "{9B54B4A4-8CD4-473C-880C-A4F467A39070}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoAspire.Tests", "EchoAspire.Tests\EchoAspire.Tests.csproj", "{63011E93-928C-4C29-B8B3-206134BDB4CB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Echo.Application.Contracts", "Echo.Application.Contracts\Echo.Application.Contracts.csproj", "{F0B84172-2DA0-433D-965B-706346C0CF78}"
@@ -29,9 +25,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Echo.Chat.Web", "Echo.Chat.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Echo.Chat.Web.Client", "Echo.Chat.Web\Echo.Chat.Web.Client\Echo.Chat.Web.Client.csproj", "{AFA9D305-27EC-49D2-B821-2BE9EB0A9D5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Echo.SystemOrchestrator.AppHost", "Echo.SystemOrchestrator\Echo.SystemOrchestrator.AppHost\Echo.SystemOrchestrator.AppHost.csproj", "{D6D08832-96F1-49A1-B3F2-72DE025FD924}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Echo.SystemOrchestrator.AppHost", "Echo.SystemOrchestrator\Echo.SystemOrchestrator.AppHost\Echo.SystemOrchestrator.AppHost.csproj", "{D6D08832-96F1-49A1-B3F2-72DE025FD924}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Echo.SystemOrchestrator.ServiceDefaults", "Echo.SystemOrchestrator\Echo.SystemOrchestrator.ServiceDefaults\Echo.SystemOrchestrator.ServiceDefaults.csproj", "{0947D5FA-178D-4D14-B080-A4DE7431A00F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBusRabbitMQ", "Echo.EventBusRabbitMQ\EventBusRabbitMQ.csproj", "{FB222955-26F7-427B-83C2-1231D9F554DD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "Echo.EventBus\EventBus.csproj", "{83A7EBC4-CA2B-4ECE-8463-87BAF0F309CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Echo.Orleans.Server", "Echo.Orleans.Server\Echo.Orleans.Server.csproj", "{6382AF4A-6BCF-4BEF-BCB2-B28EF40A9674}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationEventLogEF", "IntegrationEventLogEF\IntegrationEventLogEF.csproj", "{CEA9D7DC-DD90-4173-9AEA-B61D85A6CEDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,14 +43,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{96B6F7D8-1BF2-4B2B-AC29-3B36A5B3459D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96B6F7D8-1BF2-4B2B-AC29-3B36A5B3459D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96B6F7D8-1BF2-4B2B-AC29-3B36A5B3459D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96B6F7D8-1BF2-4B2B-AC29-3B36A5B3459D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9B54B4A4-8CD4-473C-880C-A4F467A39070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B54B4A4-8CD4-473C-880C-A4F467A39070}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9B54B4A4-8CD4-473C-880C-A4F467A39070}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B54B4A4-8CD4-473C-880C-A4F467A39070}.Release|Any CPU.Build.0 = Release|Any CPU
 		{63011E93-928C-4C29-B8B3-206134BDB4CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{63011E93-928C-4C29-B8B3-206134BDB4CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63011E93-928C-4C29-B8B3-206134BDB4CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -99,6 +95,22 @@ Global
 		{0947D5FA-178D-4D14-B080-A4DE7431A00F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0947D5FA-178D-4D14-B080-A4DE7431A00F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0947D5FA-178D-4D14-B080-A4DE7431A00F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB222955-26F7-427B-83C2-1231D9F554DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB222955-26F7-427B-83C2-1231D9F554DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB222955-26F7-427B-83C2-1231D9F554DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB222955-26F7-427B-83C2-1231D9F554DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83A7EBC4-CA2B-4ECE-8463-87BAF0F309CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83A7EBC4-CA2B-4ECE-8463-87BAF0F309CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83A7EBC4-CA2B-4ECE-8463-87BAF0F309CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83A7EBC4-CA2B-4ECE-8463-87BAF0F309CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6382AF4A-6BCF-4BEF-BCB2-B28EF40A9674}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6382AF4A-6BCF-4BEF-BCB2-B28EF40A9674}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6382AF4A-6BCF-4BEF-BCB2-B28EF40A9674}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6382AF4A-6BCF-4BEF-BCB2-B28EF40A9674}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEA9D7DC-DD90-4173-9AEA-B61D85A6CEDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEA9D7DC-DD90-4173-9AEA-B61D85A6CEDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEA9D7DC-DD90-4173-9AEA-B61D85A6CEDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEA9D7DC-DD90-4173-9AEA-B61D85A6CEDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

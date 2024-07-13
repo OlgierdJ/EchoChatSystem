@@ -24,6 +24,16 @@
         "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19165",
         "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20052"
       }
+    },
+    "echoauthserver1": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7108;http://localhost:5014",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

@@ -48,7 +48,7 @@ public class DomainNotificationClientService : IDisposable
         //Map events
 
         connection.On<List<DomainEvent>>(nameof(IDomainNotificationHub.ReceiveDomainEvents), (events) => OnDomainEventsReceived?.Invoke(events));
-        connection.ServerTimeout = TimeSpan.FromSeconds(2);
+        connection.ServerTimeout = TimeSpan.FromSeconds(15);
 
 
         //Forward invocation of inner event to service event.
