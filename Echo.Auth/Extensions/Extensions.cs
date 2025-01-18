@@ -144,11 +144,11 @@ public static class Extensions
                 options.RequireProofKeyForCodeExchange();
                 // Enable the authorization, logout, token and userinfo endpoints.
                 options.SetAuthorizationEndpointUris("connect/authorize")
-                       .SetLogoutEndpointUris("connect/logout")
+                       .SetEndSessionEndpointUris("connect/endsession")
                        .SetIntrospectionEndpointUris("connect/introspect")
                        .SetTokenEndpointUris("connect/token")
-                       .SetUserinfoEndpointUris("connect/userinfo")
-                       .SetVerificationEndpointUris("connect/verify");
+                       .SetUserInfoEndpointUris("connect/userinfo")
+                       .SetEndUserVerificationEndpointUris("connect/verify");
 
                 // Mark the "email", "profile" and "roles" scopes as supported scopes.
                 options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
@@ -164,9 +164,9 @@ public static class Extensions
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                 options.UseAspNetCore()
                        .EnableAuthorizationEndpointPassthrough()
-                       .EnableLogoutEndpointPassthrough()
+                       .EnableEndSessionEndpointPassthrough()
                        .EnableTokenEndpointPassthrough()
-                       .EnableUserinfoEndpointPassthrough()
+                       .EnableUserInfoEndpointPassthrough()
                        .EnableStatusCodePagesIntegration();
             })
 

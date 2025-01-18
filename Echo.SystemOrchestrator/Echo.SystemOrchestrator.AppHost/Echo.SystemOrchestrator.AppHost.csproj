@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+	
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+	
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsAspireHost>true</IsAspireHost>
@@ -10,12 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1" />
-    <PackageReference Include="Aspire.Hosting.Orleans" Version="8.0.1" />
-    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.0.1" />
-    <PackageReference Include="Aspire.Hosting.Redis" Version="8.0.1" />
-    <PackageReference Include="Aspire.Hosting.SqlServer" Version="8.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.Orleans" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -28,6 +30,7 @@
     <ProjectReference Include="..\..\Echo.Chat.RTC\Echo.Chat.RTC.csproj" />
     <ProjectReference Include="..\..\Echo.Chat.Web\Echo.Chat.Web\Echo.Chat.Web.csproj" />
     <ProjectReference Include="..\..\Echo.Domain.EntityFrameworkCore\Echo.Domain.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\Echo.Domain.MigrationService\Echo.Domain.MigrationService.csproj" />
     <ProjectReference Include="..\..\Echo.Domain.Shared\Echo.Domain.Shared.csproj" />
     <ProjectReference Include="..\..\Echo.Orleans.Server\Echo.Orleans.Server.csproj" />
   </ItemGroup>

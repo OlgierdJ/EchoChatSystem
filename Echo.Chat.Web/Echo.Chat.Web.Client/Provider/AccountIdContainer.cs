@@ -23,7 +23,7 @@ public class AccountIdContainer
     }
     public bool checktime(string? token)
     {
-        if (token.IsNullOrEmpty()) return false;
+        if (string.IsNullOrEmpty(token)) return false;
         var tokenHandler = new JwtSecurityTokenHandler();
         var parsedJwt = tokenHandler.ReadJwtToken(token);
         if (parsedJwt.ValidFrom < DateTime.UtcNow)

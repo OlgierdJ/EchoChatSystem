@@ -21,9 +21,9 @@ public class StartupBackgroundService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if (!stoppingToken.IsCancellationRequested && tokenStore.RefreshToken.IsNullOrEmpty())
+        if (!stoppingToken.IsCancellationRequested && string.IsNullOrEmpty(tokenStore.RefreshToken))
         {
-            while (tokenStore.RefreshToken.IsNullOrEmpty())
+            while (string.IsNullOrEmpty(tokenStore.RefreshToken))
             {
                 var result = await _echoAPIServerClient.GetTokensAsync();
                 tokenStore.RefreshToken = result?.RefreshToken;

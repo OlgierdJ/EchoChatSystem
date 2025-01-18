@@ -4,6 +4,8 @@ using DomainPushNotificationApi.Services;
 using Echo.Domain.Shared.MapperProfiles;
 using Echo.Application.Contracts.Interfaces.Providers;
 using Echo.Domain.Shared.EchoChatApiServiceServerClients;
+using Echo.Domain.EntityFrameworkCore.DomainEvents;
+using Echo.Domain.EntityFrameworkCore.Services;
 //using eShop.Basket.API.IntegrationEvents.EventHandling;
 //using eShop.Basket.API.IntegrationEvents.EventHandling.Events;
 

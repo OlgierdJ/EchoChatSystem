@@ -32,11 +32,12 @@ public class Worker : IHostedService
             var manager = provider.GetRequiredService<IOpenIddictApplicationManager>();
 
             // API
-            if (await manager.FindByClientIdAsync("echo-chat-api") == null)
+            if (await manager.FindByClientIdAsync("chat-api") == null)
             {
                 var descriptor = new OpenIddictApplicationDescriptor
                 {
-                    ClientId = "echo-chat-api",
+                    //ClientId = "echo-chat-api",
+                    ClientId = "chat-api",
                     ClientSecret = "C824ED28-B544-4AFC-8726-EDB54DD4264F",
                     Permissions =
                     {
@@ -47,11 +48,12 @@ public class Worker : IHostedService
                 await manager.CreateAsync(descriptor);
             }
 
-            if (await manager.FindByClientIdAsync("echo-chat-pushnotification") == null)
+            if (await manager.FindByClientIdAsync("chat-pushnotification") == null)
             {
                 var descriptor = new OpenIddictApplicationDescriptor
                 {
-                    ClientId = "echo-chat-pushnotification",
+                    //ClientId = "echo-chat-pushnotification",
+                    ClientId = "chat-pushnotification",
                     ClientSecret = "A87EDF98-0BAC-4144-A400-CE30C0A63DC0",
                     Permissions =
                     {
@@ -62,11 +64,11 @@ public class Worker : IHostedService
                 await manager.CreateAsync(descriptor);
             }
 
-            if (await manager.FindByClientIdAsync("echo-chat-rtc") == null)
+            if (await manager.FindByClientIdAsync("chat-rtc") == null)
             {
                 var descriptor = new OpenIddictApplicationDescriptor
                 {
-                    ClientId = "echo-chat-rtc",
+                    ClientId = "chat-rtc",
                     ClientSecret = "B918A6B6-3C97-4CAF-BBEC-7E0E24E14B6E",
                     Permissions =
                     {
@@ -78,11 +80,11 @@ public class Worker : IHostedService
             }
 
             // Blazor Hosted
-            if (await manager.FindByClientIdAsync("echo-chat-web") is null)
+            if (await manager.FindByClientIdAsync("chat-web") is null)
             {
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
-                    ClientId = "echo-chat-web",
+                    ClientId = "chat-web",
                     ConsentType = ConsentTypes.Explicit,
                     DisplayName = "Blazor code PKCE",
                     PostLogoutRedirectUris =
@@ -97,16 +99,16 @@ public class Worker : IHostedService
                     Permissions =
                     {
                         Permissions.Endpoints.Authorization,
-                        Permissions.Endpoints.Logout,
+                        Permissions.Endpoints.EndSession,
                         Permissions.Endpoints.Token,
                         Permissions.GrantTypes.AuthorizationCode,
                         Permissions.ResponseTypes.Code,
                         Permissions.Scopes.Email,
                         Permissions.Scopes.Profile,
                         Permissions.Scopes.Roles,
-                        Permissions.Prefixes.Scope + "echo-chat-api",
-                        Permissions.Prefixes.Scope + "echo-chat-pushnotification",
-                        Permissions.Prefixes.Scope + "echo-chat-rtc",
+                        Permissions.Prefixes.Scope + "chat-api",
+                        Permissions.Prefixes.Scope + "chat-pushnotification",
+                        Permissions.Prefixes.Scope + "chat-rtc",
                     },
                     Requirements =
                     {
@@ -120,7 +122,7 @@ public class Worker : IHostedService
         {
             var manager = provider.GetRequiredService<IOpenIddictScopeManager>();
 
-            if (await manager.FindByNameAsync("echo-chat-api") is null)
+            if (await manager.FindByNameAsync("chat-api") is null)
             {
                 await manager.CreateAsync(new OpenIddictScopeDescriptor
                 {
@@ -129,15 +131,15 @@ public class Worker : IHostedService
                     {
                         [CultureInfo.GetCultureInfo("fr-FR")] = "Accès à l'API de démo"
                     },
-                    Name = "echo-chat-api",
+                    Name = "chat-api",
                     Resources =
                     {
-                        "echo-chat-api"
+                        "chat-api"
                     }
                 });
             }
 
-            if (await manager.FindByNameAsync("echo-chat-pushnotification") is null)
+            if (await manager.FindByNameAsync("chat-pushnotification") is null)
             {
                 await manager.CreateAsync(new OpenIddictScopeDescriptor
                 {
@@ -146,15 +148,15 @@ public class Worker : IHostedService
                     {
                         [CultureInfo.GetCultureInfo("fr-FR")] = "Accès à l'API de démo"
                     },
-                    Name = "echo-chat-pushnotification",
+                    Name = "chat-pushnotification",
                     Resources =
                     {
-                        "echo-chat-pushnotification"
+                        "chat-pushnotification"
                     }
                 });
             }
 
-            if (await manager.FindByNameAsync("echo-chat-rtc") is null)
+            if (await manager.FindByNameAsync("chat-rtc") is null)
             {
                 await manager.CreateAsync(new OpenIddictScopeDescriptor
                 {
@@ -163,10 +165,10 @@ public class Worker : IHostedService
                     {
                         [CultureInfo.GetCultureInfo("fr-FR")] = "Accès à l'API de démo"
                     },
-                    Name = "echo-chat-rtc",
+                    Name = "chat-rtc",
                     Resources =
                     {
-                        "echo-chat-rtc"
+                        "chat-rtc"
                     }
                 });
             }

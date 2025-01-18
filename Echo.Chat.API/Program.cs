@@ -1,5 +1,6 @@
 using Echo.Domain.Shared.Constants;
 using Echo.Chat.API.Extensions;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,9 +8,12 @@ builder.AddBasicServiceDefaults();
 builder.AddApplicationServices();
 builder.Services.AddProblemDetails();
 
-var withApiVersioning = builder.Services.AddApiVersioning();
+//var withApiVersioning = builder.Services.AddApiVersioning();
 
-builder.AddDefaultOpenApi(withApiVersioning);
+//builder.AddDefaultOpenApi(withApiVersioning);
+
+builder.Services.AddControllers();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
@@ -21,9 +25,22 @@ var app = builder.Build();
 //app.UseAuthorization();
 
 app.MapDefaultEndpoints();
+app.MapControllers();
 
-app.NewVersionedApi("Catalog")
-   .MapDomainApiV1();
+app.MapGet("/hi", () => "Hello");
 
-app.UseDefaultOpenApi();
+//app.NewVersionedApi("Catalog")
+//   .MapDomainApiV1();
+
+//app.UseDefaultOpenApi();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference(opts =>
+    {
+        opts.Servers = [];
+    });
+}
+
 app.Run();

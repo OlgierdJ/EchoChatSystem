@@ -395,102 +395,114 @@ public class ChatService : IChatService
     /// <returns></returns>
     public async Task<bool> CreateChat(ulong senderId, ICollection<ulong> startParticipants)
     {
-        using var transaction = await context.Database.BeginTransactionAsync(); //need transaction cause multiple database transaction steps and possibility of rollback
-        try
-        {
-            var lookupIds = new List<ulong>(startParticipants) { senderId }; //accounts to pull into context.
-            //find sender and receivers and include chat if present
-            var accs = await context.Set<Account>()
-                //blocked relations are appearently useless for determining participation in chat or voice and such -> see reference in accountblock entity.
-                //.Include(e => e.BlockedAccounts.Where(e=>lookupIds.Contains(e.BlockedId))) 
-                .Include(e => e.ActivityStatus)
-                .Include(e => e.CustomStatus)
-                .Include(e => e.Profile)
-                .Include(e => e.Friendships).ThenInclude(e => e.Subject)
-                .ThenInclude(e => e.Participants.Where(e => lookupIds.Contains(e.ParticipantId))) //filter away non context participants
-                .Where(e => lookupIds.Contains(e.Id))
-                .AsSplitQuery()
-                .ToListAsync();
-
-
-
-            //get sender and receivers for processing
-            var senderacc = accs.FirstOrDefault(e => e.Id == senderId);
-            //find accounts to be added
-            var receiverAccs = accs.Where(e => e.Id != senderId); //if chats are empty then they need to be added else just ignore them.
-            var noMembersToBeAdded = !receiverAccs.Any(); //if there are no members to add from participantids
-            if (noMembersToBeAdded)
+        bool success = false;
+        var strategy = context.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(
+            async () =>
             {
-                return false;
-            }
-            var friendIds = senderacc.Friendships.Where(fp => fp.Subject.Participants.Count > 1) //loop through sender friends, find friendships where has more than 1 participant loaded in context.
-                .SelectMany(e => e.Subject.Participants.Where(e => e.ParticipantId != senderId)) //get other end of friendship, then flatten
-                .Select(e => e.ParticipantId); //get ids
+                using var transaction = await context.Database.BeginTransactionAsync(); //need transaction cause multiple database transaction steps and possibility of rollback
+                try
+                {
+                    var lookupIds = new List<ulong>(startParticipants) { senderId }; //accounts to pull into context.
+                                                                                     //find sender and receivers and include chat if present
+                    var accs = await context.Set<Account>()
+                        //blocked relations are appearently useless for determining participation in chat or voice and such -> see reference in accountblock entity.
+                        //.Include(e => e.BlockedAccounts.Where(e=>lookupIds.Contains(e.BlockedId))) 
+                        .Include(e => e.ActivityStatus)
+                        .Include(e => e.CustomStatus)
+                        .Include(e => e.Profile)
+                        .Include(e => e.Friendships).ThenInclude(e => e.Subject)
+                        .ThenInclude(e => e.Participants.Where(e => lookupIds.Contains(e.ParticipantId))) //filter away non context participants
+                        .Where(e => lookupIds.Contains(e.Id))
+                        .AsSplitQuery()
+                        .ToListAsync();
 
-            var canAddParticipants = !receiverAccs.Select(e => e.Id).Except(friendIds).Any(); //check if receiver ids has ids which are not in friendids
-            if (!canAddParticipants)
-            {
-                return false;
-            }
 
-            var chatName = accs.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
-            if (chatName.Length > 100) //if chatname is too long given domain rules
-            {
-                chatName = chatName.Substring(0, 97) + "...";
-            }
 
-            Chat newChat = new()
-            {
-                Name = chatName,
-                //Pinboard = new(),
-                Participants = new List<ChatParticipancy>(),
-                MessageTrackers = new List<ChatAccountMessageTracker>()
+                    //get sender and receivers for processing
+                    var senderacc = accs.FirstOrDefault(e => e.Id == senderId);
+                    //find accounts to be added
+                    var receiverAccs = accs.Where(e => e.Id != senderId); //if chats are empty then they need to be added else just ignore them.
+                    var noMembersToBeAdded = !receiverAccs.Any(); //if there are no members to add from participantids
+                    if (noMembersToBeAdded)
+                    {
+                        success = false;
+                        return success;
+                    }
+                    var friendIds = senderacc.Friendships.Where(fp => fp.Subject.Participants.Count > 1) //loop through sender friends, find friendships where has more than 1 participant loaded in context.
+                        .SelectMany(e => e.Subject.Participants.Where(e => e.ParticipantId != senderId)) //get other end of friendship, then flatten
+                        .Select(e => e.ParticipantId); //get ids
 
-            };
+                    var canAddParticipants = !receiverAccs.Select(e => e.Id).Except(friendIds).Any(); //check if receiver ids has ids which are not in friendids
+                    if (!canAddParticipants)
+                    {
+                        success = false;
+                        return success;
+                    }
 
-            context.Set<Chat>().Add(newChat);
+                    var chatName = accs.Select(x => x.Name).Aggregate((current, next) => current + ", " + next);
+                    if (chatName.Length > 100) //if chatname is too long given domain rules
+                    {
+                        chatName = chatName.Substring(0, 97) + "...";
+                    }
 
-            await context.SaveChangesAsync();
+                    Chat newChat = new()
+                    {
+                        Name = chatName,
+                        //Pinboard = new(),
+                        Participants = new List<ChatParticipancy>(),
+                        MessageTrackers = new List<ChatAccountMessageTracker>()
 
-            context.Attach<Chat>(newChat);
+                    };
 
-            var participants = accs.Select(e => new ChatParticipancy()
-            {
-                IsOwner = e.Id == senderId,
-                ParticipantId = e.Id,
-                SubjectId = newChat.Id
-            }).ToList();
+                    context.Set<Chat>().Add(newChat);
 
-            foreach (var participant in participants)
-            {
-                //context.Set<ChatParticipancy>().Add(participant);
-                newChat.Participants.Add(participant);
-            }
+                    await context.SaveChangesAsync();
 
-            var trackers = participants.Select(e => new ChatAccountMessageTracker()
-            {
-                OwnerId = e.ParticipantId,
-                CoOwnerId = e.SubjectId,
-                SubjectId = null
+                    context.Attach<Chat>(newChat);
+
+                    var participants = accs.Select(e => new ChatParticipancy()
+                    {
+                        IsOwner = e.Id == senderId,
+                        ParticipantId = e.Id,
+                        SubjectId = newChat.Id
+                    }).ToList();
+
+                    foreach (var participant in participants)
+                    {
+                        //context.Set<ChatParticipancy>().Add(participant);
+                        newChat.Participants.Add(participant);
+                    }
+
+                    var trackers = participants.Select(e => new ChatAccountMessageTracker()
+                    {
+                        OwnerId = e.ParticipantId,
+                        CoOwnerId = e.SubjectId,
+                        SubjectId = null
+                    });
+                    foreach (var tracker in trackers)
+                    {
+                        //context.Set<ChatParticipancy>().Add(participant);
+                        newChat.MessageTrackers.Add(tracker);
+                    }
+
+                    await context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    //res = await context.SaveChangesAsync();
+                    success = true;
+
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    success = false;
+                    return success;
+                }
+                success = true;
+                return success;
             });
-            foreach (var tracker in trackers)
-            {
-                //context.Set<ChatParticipancy>().Add(participant);
-                newChat.MessageTrackers.Add(tracker);
+        return success;
             }
-
-            await context.SaveChangesAsync();
-            await transaction.CommitAsync();
-            //res = await context.SaveChangesAsync();
-
-        }
-        catch (Exception e)
-        {
-            await transaction.RollbackAsync();
-            return false;
-        }
-        return true;
-    }
 
     public async Task<bool> CreateChatInvite(ulong senderId, ulong chatId, CreateInviteRequestDTO requestDTO)
     {
@@ -733,41 +745,51 @@ public class ChatService : IChatService
 
     public async Task<bool> PinChatMessage(ulong senderId, ulong chatId, ulong messageId)
     {
-        using var transaction = await context.Database.BeginTransactionAsync();
-        try
-        {
-            //verify sender is member
-            var isMember = await context.Set<ChatParticipancy>().AnyAsync(o => o.ParticipantId == senderId && o.SubjectId == chatId);
-            //verify chat has message
-            var canPin = await context.Set<ChatMessage>().AnyAsync(o => o.Id == messageId && o.MessageHolderId == chatId && o.AuthorId != null); //filter away sys msg as you cant pin them business wise
-            //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
-            if (!isMember || !canPin)
+        bool success = false;
+        var strategy = context.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(
+            async () =>
             {
-                return false;
-            }
-            //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
-            ChatMessagePin relation = new()
-            {
-                PinboardId = chatId,
-                MessageId = messageId,
-            };
-            ChatMessage sysmsg = new()
-            {
-                Content = "@" + senderId.ToString() + " pinned https://echo.chat/" + chatId.ToString() + "/" + messageId.ToString() + " to this chat.",
-                MessageHolderId = chatId,
-            };
-            await context.Set<ChatMessagePin>().AddAsync(relation);
-            await context.Set<ChatMessage>().AddAsync(sysmsg);
+                using var transaction = await context.Database.BeginTransactionAsync();
+                try
+                {
+                    //verify sender is member
+                    var isMember = await context.Set<ChatParticipancy>().AnyAsync(o => o.ParticipantId == senderId && o.SubjectId == chatId);
+                    //verify chat has message
+                    var canPin = await context.Set<ChatMessage>().AnyAsync(o => o.Id == messageId && o.MessageHolderId == chatId && o.AuthorId != null); //filter away sys msg as you cant pin them business wise
+                                                                                                                                                         //var senderAcc = await context.Set<Account>().Include(e => e.Roles).ThenInclude(e=>e.Permissions).AsSplitQuery().FirstOrDefaultAsync();
+                    if (!isMember || !canPin)
+                    {
+                        success = false;
+                        return success;
+                    }
+                    //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+                    ChatMessagePin relation = new()
+                    {
+                        PinboardId = chatId,
+                        MessageId = messageId,
+                    };
+                    ChatMessage sysmsg = new()
+                    {
+                        Content = "@" + senderId.ToString() + " pinned https://echo.chat/" + chatId.ToString() + "/" + messageId.ToString() + " to this chat.",
+                        MessageHolderId = chatId,
+                    };
+                    await context.Set<ChatMessagePin>().AddAsync(relation);
+                    await context.Set<ChatMessage>().AddAsync(sysmsg);
 
-            await context.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
-        catch (Exception e)
-        {
-            await transaction.RollbackAsync();
-            return false;
-        }
-        return true;
+                    await context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    success = false;
+                    return success;
+                }
+                success = true;
+                return success;
+            });
+        return success;
     }
 
     public async Task<bool> RemoveChatMessage(ulong senderId, ulong chatId, ulong messageId)

@@ -1,0 +1,15 @@
+using Echo.Domain.EntityFrameworkCore.EFCORE;
+using Echo.Domain.MigrationService;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.AddServiceDefaults();
+builder.Services.AddHostedService<Worker>();
+
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing.AddSource(Worker.ActivitySourceName));
+
+builder.AddSqlServerDbContext<EchoDbContext>("domaindb");
+
+var host = builder.Build();
+host.Run();

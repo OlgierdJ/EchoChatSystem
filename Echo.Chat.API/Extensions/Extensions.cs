@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Echo.Domain.Shared.Constants;
 using Echo.Domain.Shared.Interfaces.Handlers;
+using Echo.Domain.Shared.MapperProfiles;
 //using eShop.Basket.API.IntegrationEvents.EventHandling;
 //using eShop.Basket.API.IntegrationEvents.EventHandling.Events;
 
@@ -26,6 +27,7 @@ public static class Extensions
     {
         //var connectionString = builder.Configuration.GetConnectionString("DbConnection")
         //    ?? throw new InvalidOperationException($"Connection string '{"DbConnection"}' not found.");
+        builder.Services.AddScoped<IDomainEventService, DomainEventService>();
         builder.AddSqlServerDbContext<EchoDbContext>("domaindb", configureDbContextOptions: dbContextOptions =>
         {
             dbContextOptions.AddInterceptors();
@@ -49,19 +51,18 @@ public static class Extensions
             .AddEventBusSubscriptions();
         //.ConfigureJsonOptions(options => options.TypeInfoResolverChain.Add(IntegrationEventContext.Default));
 
-        //builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
-        //builder.Services.AddScoped<IPublisher, PushNotificationPublisher>();
-        //builder.Services.AddScoped<IDomainEventService, DomainEventService>();
-        //builder.Services.AddScoped<PublishDomainEventsInterceptor>();
-        //builder.Services.AddScoped<PublishTransactionDomainEventsInterceptor>();
+        builder.Services.AddScoped<IPublisher, PushNotificationPublisher>();
+        builder.Services.AddScoped<PublishDomainEventsInterceptor>();
+        builder.Services.AddScoped<PublishTransactionDomainEventsInterceptor>();
 
-        //builder.Services.AddTransient<ITokenHandler, DomainCoreApi.Handlers.TokenHandler>();
-        //builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
-        //builder.Services.AddTransient(typeof(IChatService), typeof(ChatService));
+        builder.Services.AddTransient<ITokenHandler, DomainCoreApi.Handlers.TokenHandler>();
+        builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
+        builder.Services.AddTransient(typeof(IChatService), typeof(ChatService));
         //builder.Services.AddTransient(typeof(IUserGroupService), typeof(UserGroupService));
 
-        //builder.Services.AddTransient(typeof(IPasswordHandler), typeof(Passwordhandler));
+        builder.Services.AddTransient(typeof(IPasswordHandler), typeof(Passwordhandler));
 
         //builder.Services.AddEndpointsApiExplorer();
         //builder.Services.AddSwaggerGen();
@@ -82,16 +83,16 @@ public static class Extensions
         //    opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
         //});
 
-        //builder.Services.AddSignalR().AddJsonProtocol(opts => opts.PayloadSerializerOptions = new JsonSerializerOptions()
-        //{
-        //    ReferenceHandler = ReferenceHandler.Preserve,
+        builder.Services.AddSignalR().AddJsonProtocol(opts => opts.PayloadSerializerOptions = new JsonSerializerOptions()
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
 
-        //});
+        });
 
-        //builder.Services.AddAutoMapper(opts =>
-        //{
-        //    opts.AddProfile<EchoCoreCommonMappings>();
-        //});
+        builder.Services.AddAutoMapper(opts =>
+        {
+            opts.AddProfile<EchoCoreCommonMappings>();
+        });
     }
 
     private static void AddEventBusSubscriptions(this IEventBusBuilder eventBus)

@@ -18,8 +18,8 @@ public class EchoDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.AddInterceptors(new PublishDomainEventsInterceptor(_serviceProvider.GetRequiredService<IDomainEventService>()));
-        optionsBuilder.AddInterceptors(new PublishTransactionDomainEventsInterceptor(_serviceProvider.GetRequiredService<IDomainEventService>()));
+        //optionsBuilder.AddInterceptors(new PublishDomainEventsInterceptor(_serviceProvider.GetRequiredService<IDomainEventService>()));
+        //optionsBuilder.AddInterceptors(new PublishTransactionDomainEventsInterceptor(_serviceProvider.GetRequiredService<IDomainEventService>()));
         base.OnConfiguring(optionsBuilder);
     }
 

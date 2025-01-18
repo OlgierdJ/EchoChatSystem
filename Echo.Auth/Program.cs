@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Quartz;
+using Scalar.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -71,14 +72,33 @@ builder.Services.AddOpenIddict()
             // Register the OpenIddict server components.
             .AddServer(options =>
             {
+                //options.Configure(d =>
+                //{
+                //    d.TokenValidationParameters.ValidIssuers = new List<string>()
+                //    {
+                //        "https://localhost:22235",
+                //        "https://localhost:21078",
+                //        "https://localhost:15117",
+                //        "https://localhost:17176",
+                //        "https://localhost:7283",
+                //        "https://localhost:7269",
+                //        "Https://localhost:7269/api",
+                //        "https://localhost:7265",
+                //        "https://localhost:7208",
+                //        "https://localhost:7208/PushNotificationHub",
+                //        "https://localhost:7108",
+                //        "https://localhost:7103",
+                //    };
+                //});
+
                 options.RequireProofKeyForCodeExchange();
                 // Enable the authorization, logout, token and userinfo endpoints.
                 options.SetAuthorizationEndpointUris("connect/authorize")
-                       .SetLogoutEndpointUris("connect/logout")
+                       .SetEndSessionEndpointUris("connect/endsession")
                        .SetIntrospectionEndpointUris("connect/introspect")
                        .SetTokenEndpointUris("connect/token")
-                       .SetUserinfoEndpointUris("connect/userinfo")
-                       .SetVerificationEndpointUris("connect/verify");
+                       .SetUserInfoEndpointUris("connect/userinfo")
+                       .SetEndUserVerificationEndpointUris("connect/verify");
 
                 // Mark the "email", "profile" and "roles" scopes as supported scopes.
                 options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
@@ -94,9 +114,9 @@ builder.Services.AddOpenIddict()
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                 options.UseAspNetCore()
                        .EnableAuthorizationEndpointPassthrough()
-                       .EnableLogoutEndpointPassthrough()
+                       .EnableEndSessionEndpointPassthrough()
                        .EnableTokenEndpointPassthrough()
-                       .EnableUserinfoEndpointPassthrough()
+                       .EnableUserInfoEndpointPassthrough()
                        .EnableStatusCodePagesIntegration();
             })
 
@@ -115,8 +135,8 @@ builder.Services.AddOpenIddict()
 builder.Services.AddHostedService<Worker>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApi();
 
 
 var app = builder.Build();
@@ -126,8 +146,8 @@ app.MapDefaultEndpoints();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();

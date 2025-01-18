@@ -50,36 +50,43 @@ public class UserService
 
     public async Task<bool> AcceptFriendRequestAsync(ulong senderId, ulong requestId)
     {
-        using var transaction = await dbContext.Database.BeginTransactionAsync();
-        try
-        {
+        bool success = false;
+        var strategy = dbContext.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(
+            async () =>
+            {
+                using var transaction = await dbContext.Database.BeginTransactionAsync();
+                try
+                {
 
-            var request = await dbContext.Set<IncomingFriendRequest>()
-                .AsQueryable()
-                .Include(e => e.SenderRequest)
-                .FirstOrDefaultAsync(e => e.Id == requestId);
-            //verify acceptingacc is part of inc request.
-            if (request == null || request.ReceiverId != senderId)
-            {
-                return false;
-            }
-            var participancies = await dbContext.Set<FriendshipParticipancy>()
-                .AsQueryable()
-                //filter rows by participantid part of key.
-                .Where(e => e.ParticipantId == senderId || e.ParticipantId == request.SenderRequest.SenderId)
-                .GroupBy(r => r.SubjectId) // find rows where friendship is same id and group them
-             .ToListAsync();
-            var existingFriendship = participancies.Where(x =>
-            x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
-            .SelectMany(g => g); //flatten result into list
-            if (existingFriendship.Any()) //list will be empty if no matches
-            {
-                return false;
-            }
+                    var request = await dbContext.Set<IncomingFriendRequest>()
+                        .AsQueryable()
+                        .Include(e => e.SenderRequest)
+                        .FirstOrDefaultAsync(e => e.Id == requestId);
+                    //verify acceptingacc is part of inc request.
+                    if (request == null || request.ReceiverId != senderId)
+                    {
+                        success = false;
+                        return success;
+                    }
+                    var participancies = await dbContext.Set<FriendshipParticipancy>()
+                        .AsQueryable()
+                        //filter rows by participantid part of key.
+                        .Where(e => e.ParticipantId == senderId || e.ParticipantId == request.SenderRequest.SenderId)
+                        .GroupBy(r => r.SubjectId) // find rows where friendship is same id and group them
+                     .ToListAsync();
+                    var existingFriendship = participancies.Where(x =>
+                    x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
+                    .SelectMany(g => g); //flatten result into list
+                    if (existingFriendship.Any()) //list will be empty if no matches
+                    {
+                        success = false;
+                        return success;
+                    }
 
-            Friendship friendship = new()
-            {
-                Participants = new List<FriendshipParticipancy>()
+                    Friendship friendship = new()
+                    {
+                        Participants = new List<FriendshipParticipancy>()
                     {
                         new FriendshipParticipancy()
                         {
@@ -90,24 +97,27 @@ public class UserService
                                 ParticipantId = senderId,
                         }
                     },
-            };
+                    };
 
-            dbContext.Set<OutgoingFriendRequest>().Remove(request.SenderRequest);
-            dbContext.Set<IncomingFriendRequest>().Remove(request);
-            await dbContext.Set<Friendship>().AddAsync(friendship);
-            var accs = await dbContext.Set<Account>() //for tracking issues later move this to push notification api via outbox pattern probably better
-                .Include(e => e.Profile)
-                .Include(e => e.ActivityStatus)
-                .Include(e => e.CustomStatus).Where(e => e.Id == senderId || e.Id == request.SenderRequest.SenderId).ToListAsync();
-            var res = await dbContext.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
-        catch (Exception e)
-        {
-            await transaction.RollbackAsync();
-            return false;
-        }
-        return true;
+                    dbContext.Set<OutgoingFriendRequest>().Remove(request.SenderRequest);
+                    dbContext.Set<IncomingFriendRequest>().Remove(request);
+                    await dbContext.Set<Friendship>().AddAsync(friendship);
+                    var accs = await dbContext.Set<Account>() //for tracking issues later move this to push notification api via outbox pattern probably better
+                        .Include(e => e.Profile)
+                        .Include(e => e.ActivityStatus)
+                        .Include(e => e.CustomStatus).Where(e => e.Id == senderId || e.Id == request.SenderRequest.SenderId).ToListAsync();
+                    var res = await dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    success = true;
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    success = false;
+                }
+                return success;
+            });
+        return success;
     }
 
     public async Task<bool> AddUserConnectionAsync(ulong senderId, AddUserConnectionRequestDTO requestDTO)
@@ -379,33 +389,41 @@ public class UserService
 
     public async Task<bool> RegisterAsync(RegisterRequestDTO input)
     {
-        using var transaction = await dbContext.Database.BeginTransactionAsync();
-        try
-        {
-            var userPwd = await _pwdHandler.CreatePassword(input.Password);
-            Account account = GetNewDefaultAccount(
-                input.Username,
-                input.Email,
-                input.DateOfBirth,
-                input.DisplayName,
-                input.AllowEchoMails);
-            account.User.SecurityCredentials = userPwd;
-            await dbContext.Set<Account>().AddAsync(account);
+        bool success = false;
+        var strategy = dbContext.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(
+            async () =>
+            {
 
-            await dbContext.SaveChangesAsync();
-            //dbContext.Attach<Account>(account);
-            var role = new AccountRole() { RoleId = 1, AccountId = account.Id };
-            await dbContext.Set<AccountRole>().AddAsync(role);
-            //account.Roles.Add(role);
-            await dbContext.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
-        catch (Exception e)
-        {
-            await transaction.RollbackAsync();
-            return false;
-        }
-        return true;
+                await using var transaction = await dbContext.Database.BeginTransactionAsync();
+                try
+                {
+                    var userPwd = await _pwdHandler.CreatePassword(input.Password);
+                    Account account = GetNewDefaultAccount(
+                        input.Username,
+                        input.Email,
+                        input.DateOfBirth,
+                        input.DisplayName,
+                        input.AllowEchoMails);
+                    account.User.SecurityCredentials = userPwd;
+                    await dbContext.Set<Account>().AddAsync(account);
+
+                    await dbContext.SaveChangesAsync();
+                    //dbContext.Attach<Account>(account);
+                    var role = new AccountRole() { RoleId = 1, AccountId = account.Id };
+                    await dbContext.Set<AccountRole>().AddAsync(role);
+                    //account.Roles.Add(role);
+                    await dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    success = true;
+                }
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    success = false;
+                }
+            });
+        return success;
     }
 
     public async Task<bool> DeafenSelfAsync(ulong senderId)
@@ -612,45 +630,53 @@ public class UserService
 
     public async Task<bool> SendFriendRequestAsync(ulong senderId, AddFriendRequestDTO requestDTO)
     {
-        using var transaction = await dbContext.Database.BeginTransactionAsync();
-        try
-        {
-
-            if (requestDTO.Name.IsNullOrEmpty()) //request validation
+        bool success = false;
+        var strategy = dbContext.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(
+            async () =>
             {
-                return false;
-            }
-            var normalizedName = requestDTO.Name.ToLower(); //need to find user by normalized name sequence
-            Account receiverAcc = await dbContext.Set<Account>().AsQueryable().Include(e => e.Profile).FirstOrDefaultAsync(e => e.Name == normalizedName);
-            //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
-
-            if (receiverAcc == null || senderId == receiverAcc.Id) //validate user is other than self
-            {
-                return false;
-            }
-
-            var senderAcc = await dbContext.Set<Account>().AsQueryable()
-                .Include(e => e.Profile)
-                .Include(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants.Where(e => e.ParticipantId != senderId))
-                .Include(e => e.OutgoingFriendRequests).ThenInclude(e => e.ReceiverRequest)
-                .Include(e => e.IncomingFriendRequests).ThenInclude(e => e.SenderRequest)
-                .AsSplitQuery()
-                .FirstOrDefaultAsync(e => e.Id == senderId);
-
-
-            if (senderAcc.OutgoingFriendRequests.Any(e => e.ReceiverRequest.ReceiverId == receiverAcc.Id) || senderAcc.Friendships.Any(e => e.Subject.Participants.Select(e => e.ParticipantId).Contains(receiverAcc.Id)))
-            //check if already sent request or already friends
-            {
-                return false;
-            }
-
-            var incomingFromReceiver = senderAcc.IncomingFriendRequests.FirstOrDefault(e => e.SenderRequest.SenderId == receiverAcc.Id);
-            if (incomingFromReceiver != null) //if receiver already sent sender a request
-            {
-                // if already received friendrequest and trying to send one then just accept incoming.
-                Friendship friendship = new()
+                using var transaction = await dbContext.Database.BeginTransactionAsync();
+                try
                 {
-                    Participants = new List<FriendshipParticipancy>()
+
+                    if (requestDTO.Name.IsNullOrEmpty()) //request validation
+                    {
+                        success = false;
+                        return success;
+                    }
+                    var normalizedName = requestDTO.Name.ToLower(); //need to find user by normalized name sequence
+                    Account receiverAcc = await dbContext.Set<Account>().AsQueryable().Include(e => e.Profile).FirstOrDefaultAsync(e => e.Name == normalizedName);
+                    //var request = await dbContext.Set<IncomingFriendRequest>().AsQueryable().Include(e => e.SenderRequest).FirstOrDefaultAsync(e => e.Id == requestId);
+
+                    if (receiverAcc == null || senderId == receiverAcc.Id) //validate user is other than self
+                    {
+                        success = false;
+                        return success;
+                    }
+
+                    var senderAcc = await dbContext.Set<Account>().AsQueryable()
+                        .Include(e => e.Profile)
+                        .Include(e => e.Friendships).ThenInclude(e => e.Subject).ThenInclude(e => e.Participants.Where(e => e.ParticipantId != senderId))
+                        .Include(e => e.OutgoingFriendRequests).ThenInclude(e => e.ReceiverRequest)
+                        .Include(e => e.IncomingFriendRequests).ThenInclude(e => e.SenderRequest)
+                        .AsSplitQuery()
+                        .FirstOrDefaultAsync(e => e.Id == senderId);
+
+
+                    if (senderAcc.OutgoingFriendRequests.Any(e => e.ReceiverRequest.ReceiverId == receiverAcc.Id) || senderAcc.Friendships.Any(e => e.Subject.Participants.Select(e => e.ParticipantId).Contains(receiverAcc.Id)))
+                    //check if already sent request or already friends
+                    {
+                        success = false;
+                        return success;
+                    }
+
+                    var incomingFromReceiver = senderAcc.IncomingFriendRequests.FirstOrDefault(e => e.SenderRequest.SenderId == receiverAcc.Id);
+                    if (incomingFromReceiver != null) //if receiver already sent sender a request
+                    {
+                        // if already received friendrequest and trying to send one then just accept incoming.
+                        Friendship friendship = new()
+                        {
+                            Participants = new List<FriendshipParticipancy>()
                     {
                         new FriendshipParticipancy()
                         {
@@ -661,38 +687,43 @@ public class UserService
                                 ParticipantId = senderId,
                         }
                     },
-                };
+                        };
 
-                dbContext.Set<OutgoingFriendRequest>().Remove(incomingFromReceiver.SenderRequest);
-                dbContext.Set<IncomingFriendRequest>().Remove(incomingFromReceiver); //cleanup cause appearently clientcascade doesnt work????
-                await dbContext.Set<Friendship>().AddAsync(friendship);
-                await dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
-                return true;
-            }
+                        dbContext.Set<OutgoingFriendRequest>().Remove(incomingFromReceiver.SenderRequest);
+                        dbContext.Set<IncomingFriendRequest>().Remove(incomingFromReceiver); //cleanup cause appearently clientcascade doesnt work????
+                        await dbContext.Set<Friendship>().AddAsync(friendship);
+                        await dbContext.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                        success = true;
+                    }
 
-            //send request
-            IncomingFriendRequest request = new()
-            {
-                ReceiverId = receiverAcc.Id,
-                SenderRequest = new()
-                {
-                    SenderId = senderId
+                    //send request
+                    IncomingFriendRequest request = new()
+                    {
+                        ReceiverId = receiverAcc.Id,
+                        SenderRequest = new()
+                        {
+                            SenderId = senderId
+                        }
+                    };
+
+
+                    await dbContext.Set<IncomingFriendRequest>().AddAsync(request); //throws error if already blocked fyi
+
+                    var res = await dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    success = true;
                 }
-            };
-
-
-            await dbContext.Set<IncomingFriendRequest>().AddAsync(request); //throws error if already blocked fyi
-
-            var res = await dbContext.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
-        catch (Exception e)
-        {
-            await transaction.RollbackAsync();
-            return false;
-        }
-        return true;
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    success = false;
+                    return success;
+                }
+                success = true;
+                return success;
+            });
+        return success;
     }
 
     public async Task<bool> SetCustomStatusAsync(ulong senderId, SetCustomStatusRequestDTO requestDTO) //check if this works??
@@ -1543,31 +1574,38 @@ public class UserService
 
     public async Task<bool> StartDirectMessages(ulong senderId, ulong receiverId)
     {
-        using var transaction = await dbContext.Database.BeginTransactionAsync();
-        try
-        {
-            if (senderId == receiverId)
+        bool success = false;
+        var strategy = dbContext.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(
+            async () =>
             {
-                return false;
-            }
+                using var transaction = await dbContext.Database.BeginTransactionAsync();
+                try
+                {
+                    if (senderId == receiverId)
+                    {
+                        success = false;
+                        return success;
+                    }
 
-            var participancies = await dbContext.Set<AccountDirectMessageRelation>()
-                .AsSplitQuery()
-                .Where(e => e.OwnerId == senderId || e.OwnerId == receiverId) //filter rows by participantid part of key.
-             .ToListAsync();
-            var existingDM = participancies
-                .GroupBy(r => r.RelationId) // find rows where dm is same id and group them
-                .Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
-            .SelectMany(g => g); //flatten result into list
-            if (existingDM.Any()) //list will be empty if no matches
-            {
-                //here you would normally return the existing chats id via controller or publish a domain event via signalr or masstransit to tell the specific client of the chat and to navigate to it.
-                return false;
-            }
+                    var participancies = await dbContext.Set<AccountDirectMessageRelation>()
+                        .AsSplitQuery()
+                        .Where(e => e.OwnerId == senderId || e.OwnerId == receiverId) //filter rows by participantid part of key.
+                     .ToListAsync();
+                    var existingDM = participancies
+                        .GroupBy(r => r.RelationId) // find rows where dm is same id and group them
+                        .Where(x => x.Count() > 1) //check if more than 1 in group meaning that two different rows have been matched on subjectid
+                    .SelectMany(g => g); //flatten result into list
+                    if (existingDM.Any()) //list will be empty if no matches
+                    {
+                        //here you would normally return the existing chats id via controller or publish a domain event via signalr or masstransit to tell the specific client of the chat and to navigate to it.
+                        success = false;
+                        return success;
+                    }
 
-            DirectMessageRelation directMessageRelation = new()
-            {
-                AccountsInRelation = new List<AccountDirectMessageRelation>()
+                    DirectMessageRelation directMessageRelation = new()
+                    {
+                        AccountsInRelation = new List<AccountDirectMessageRelation>()
                     {
                         new AccountDirectMessageRelation()
                         {
@@ -1578,10 +1616,10 @@ public class UserService
                                 OwnerId = receiverId,
                         }
                     },
-                Chat = new Chat()
-                {
-                    Name = Guid.NewGuid().ToString(), //name doesnt matter since it will display as the other person for the viewer. //just put guid for now since cant be null and i want to see the chats easily in db
-                    Participants = new List<ChatParticipancy>()
+                        Chat = new Chat()
+                        {
+                            Name = Guid.NewGuid().ToString(), //name doesnt matter since it will display as the other person for the viewer. //just put guid for now since cant be null and i want to see the chats easily in db
+                            Participants = new List<ChatParticipancy>()
                        {
                            new()
                            {
@@ -1596,25 +1634,29 @@ public class UserService
                                 Hidden = true, //starts hidden, will remove dm relation if no messages are sent within a certain timeframe probably
                            },
                        },
+                        }
+                    };
+
+
+                    await dbContext.Set<DirectMessageRelation>().AddAsync(directMessageRelation);
+                    var accs = await dbContext.Set<Account>()
+                        .Include(e => e.Profile)
+                        .Include(e => e.ActivityStatus)
+                        .Include(e => e.CustomStatus)
+                        .Where(e => e.Id == senderId || e.Id == receiverId).ToListAsync();
+                    var res = await dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
                 }
-            };
-
-
-            await dbContext.Set<DirectMessageRelation>().AddAsync(directMessageRelation);
-            var accs = await dbContext.Set<Account>()
-                .Include(e => e.Profile)
-                .Include(e => e.ActivityStatus)
-                .Include(e => e.CustomStatus)
-                .Where(e => e.Id == senderId || e.Id == receiverId).ToListAsync();
-            var res = await dbContext.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
-        catch (Exception e)
-        {
-            await transaction.RollbackAsync();
-            return false;
-        }
-        return true;
+                catch (Exception e)
+                {
+                    await transaction.RollbackAsync();
+                    success = false;
+                    return success;
+                }
+                success = true;
+                return success;
+            });
+            return success;
     }
 
     public async Task<bool> StartDirectMessages(ulong senderId, ulong receiverId, SendMessageRequestDTO requestDTO)
