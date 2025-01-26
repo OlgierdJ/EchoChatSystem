@@ -36,7 +36,7 @@ public static class AuthenticationExtensions
 
         var identityUrl = identitySection.GetRequiredValue("Url");
 
-        builder.Services.AddOpenIddict()
+        services.AddOpenIddict()
     .AddValidation(options =>
     {
         // Note: the validation handler uses OpenID Connect discovery
@@ -61,7 +61,7 @@ public static class AuthenticationExtensions
         options.UseAspNetCore();
     });
 
-        builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+        services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
 
 
         services.AddAuthorization();

@@ -6,10 +6,12 @@ var builder = DistributedApplication.CreateBuilder(args);
 //var cache = builder.AddRedis("cache");
 builder.AddForwardedHeaders();
 
-var redis = builder.AddRedis("cache");//.WithDataVolume();
+var redis = builder.AddRedis("cache")
+    .WithLifetime(ContainerLifetime.Persistent); ;//.WithDataVolume();
 
 var sqlPassword = builder.AddParameter("sql-password", secret: true);
 var sqlServer = builder.AddSqlServer("sql", password: sqlPassword, 1433)
+    .WithDataVolume()
     .WithLifetime(ContainerLifetime.Persistent);
 
 var domainDb = sqlServer.AddDatabase("domaindb");
@@ -21,7 +23,8 @@ var identityDb = sqlServer.AddDatabase("identitydb");
 
 var rabbitMqUsername = builder.AddParameter("rabbitmq-username", secret: true);
 var rabbitMqPassword = builder.AddParameter("rabbitmq-password", secret: true);
-var rabbitMq = builder.AddRabbitMQ("eventbus", rabbitMqUsername, rabbitMqPassword);
+var rabbitMq = builder.AddRabbitMQ("eventbus", rabbitMqUsername, rabbitMqPassword)
+    .WithLifetime(ContainerLifetime.Persistent); ;
 
 var serverInstanceParamName = "ServerInstanceName";
 var clientSecretParamName = "ClientSecret";
@@ -60,19 +63,18 @@ var echoChatApiService = builder.AddProject<Projects.Echo_Chat_API>("chat-api")
     .WaitFor(domainDb)
     .WaitFor(rabbitMq);
 
-var echoChatPushNotificationService = builder.AddProject<Projects.Echo_Chat_PushNotification>("chat-pushnotification")
-    .WithReference(redis)
-    //.WithReference(rabbitMq)
-    //.WithReference(echoChatEventNotificationService)
-    .WithReference(rabbitMq)
-    .WithReference(domainDb)
-    .WithReference(echoChatApiService)
-    .WithEnvironment(identityEnvVarName, identityEndpoint)
-    .WithEnvironment(serverInstanceParamName, "chat-pushnotification")
-    .WithEnvironment(clientSecretParamName, "A87EDF98-0BAC-4144-A400-CE30C0A63DC0")
-    .WaitFor(redis)
-    .WaitFor(rabbitMq)
-    .WaitFor(domainDb);
+//var echoChatPushNotificationService = builder.AddProject<Projects.Echo_Chat_PushNotification>("chat-pushnotification")
+//    .WithReference(redis)
+//    //.WithReference(echoChatEventNotificationService)
+//    .WithReference(rabbitMq)
+//    .WithReference(domainDb)
+//    .WithReference(echoChatApiService)
+//    .WithEnvironment(identityEnvVarName, identityEndpoint)
+//    .WithEnvironment(serverInstanceParamName, "chat-pushnotification")
+//    .WithEnvironment(clientSecretParamName, "A87EDF98-0BAC-4144-A400-CE30C0A63DC0")
+//    .WaitFor(redis)
+//    .WaitFor(rabbitMq)
+//    .WaitFor(domainDb);
 
 ////var echoChatRTCService = builder.AddProject<Projects.Echo_Chat_RTC>("echo-chat-rtc")
 ////    .WithReference(redis)

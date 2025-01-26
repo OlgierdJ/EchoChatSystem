@@ -16,6 +16,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Echo.Domain.Shared.Constants;
 using Echo.Domain.Shared.Interfaces.Handlers;
 using Echo.Domain.Shared.MapperProfiles;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi.Models;
 //using eShop.Basket.API.IntegrationEvents.EventHandling;
 //using eShop.Basket.API.IntegrationEvents.EventHandling.Events;
 
@@ -27,11 +29,30 @@ public static class Extensions
     {
         //var connectionString = builder.Configuration.GetConnectionString("DbConnection")
         //    ?? throw new InvalidOperationException($"Connection string '{"DbConnection"}' not found.");
+
+        builder.Services.AddScoped<IPublisher, PushNotificationPublisher>();
         builder.Services.AddScoped<IDomainEventService, DomainEventService>();
-        builder.AddSqlServerDbContext<EchoDbContext>("domaindb", configureDbContextOptions: dbContextOptions =>
+        builder.Services.AddScoped<PublishDomainEventsInterceptor>();
+        builder.Services.AddScoped<PublishTransactionDomainEventsInterceptor>();
+
+        //builder.AddSqlServerDbContext<EchoDbContext>("domaindb", configureDbContextOptions: dbContextOptions =>
+        //{
+        //    dbContextOptions.UseApplicationServiceProvider(builder.Services.);
+        //    dbContextOptions.serv();
+        //    dbContextOptions.AddInterceptors();
+        //});
+
+        builder.Services.AddDbContext<EchoDbContext>((sp, options) =>
         {
-            dbContextOptions.AddInterceptors();
+            options.UseSqlServer(builder.Configuration.GetConnectionString("domaindb"));
+            options.AddInterceptors(
+                sp.GetRequiredService<PublishDomainEventsInterceptor>(),
+                   sp.GetRequiredService<PublishTransactionDomainEventsInterceptor>()
+                   );
         });
+
+        builder.EnrichSqlServerDbContext<EchoDbContext>();
+
         //builder.Services.AddDbContext<EchoDbContext>((sp, options) =>
         //options.UseSqlServer(connectionString).AddInterceptors(
         //            sp.GetRequiredService<PublishDomainEventsInterceptor>(),
@@ -53,9 +74,7 @@ public static class Extensions
 
         builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
-        builder.Services.AddScoped<IPublisher, PushNotificationPublisher>();
-        builder.Services.AddScoped<PublishDomainEventsInterceptor>();
-        builder.Services.AddScoped<PublishTransactionDomainEventsInterceptor>();
+
 
         builder.Services.AddTransient<ITokenHandler, DomainCoreApi.Handlers.TokenHandler>();
         builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
@@ -93,6 +112,40 @@ public static class Extensions
         {
             opts.AddProfile<EchoCoreCommonMappings>();
         });
+
+
+        //builder.Services.AddOpenApi("v1", options => { options.AddDocumentTransformer<BearerSecuritySchemeTransformer>(); });
+
+    }
+internal sealed class BearerSecuritySchemeTransformer(Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider authenticationSchemeProvider) : IOpenApiDocumentTransformer
+    {
+        public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+        {
+            var authenticationSchemes = await authenticationSchemeProvider.GetAllSchemesAsync();
+            if (authenticationSchemes.Any(authScheme => authScheme.Name == "Bearer"))
+            {
+                var requirements = new Dictionary<string, OpenApiSecurityScheme>
+                {
+                    ["Bearer"] = new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer",
+                        In = ParameterLocation.Header,
+                        BearerFormat = "Json Web Token"
+                    }
+                };
+                document.Components ??= new OpenApiComponents();
+                document.Components.SecuritySchemes = requirements;
+
+                foreach (var operation in document.Paths.Values.SelectMany(path => path.Operations))
+                {
+                    operation.Value.Security.Add(new OpenApiSecurityRequirement
+                    {
+                        [new OpenApiSecurityScheme { Reference = new OpenApiReference { Id = "Bearer", Type = ReferenceType.SecurityScheme } }] = Array.Empty<string>()
+                    });
+                }
+            }
+        }
     }
 
     private static void AddEventBusSubscriptions(this IEventBusBuilder eventBus)

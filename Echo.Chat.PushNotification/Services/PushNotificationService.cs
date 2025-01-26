@@ -29,6 +29,11 @@ public class PushNotificationService
         IMapper mapper)
     {
         _hubContext = hubContext;
+
+        _hubManager.Add((nameof(Account), EntityAction.Added), async (entity) =>
+        {
+            Console.WriteLine((entity as Account));
+        });
         _hubManager.Add((nameof(ChatInvite), EntityAction.Added), async (entity) =>
         {
             ChatInvite invite = entity as ChatInvite;

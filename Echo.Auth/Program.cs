@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 //builder.AddApplicationServices();
-
+builder.Services.AddRazorPages();
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -37,17 +37,20 @@ builder.AddSqlServerDbContext<ApplicationDbContext>("identitydb", opts1 =>
 //    options.UseOpenIddict();
 //});
 
+
+//builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+//    .AddEntityFrameworkStores<ApplicationDbContext>();
 // Register the Identity services.
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-//.AddDefaultUI();
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 
 // OpenIddict offers native integration with Quartz.NET to perform scheduled tasks
 // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
 builder.Services.AddQuartz(options =>
 {
-    options.UseMicrosoftDependencyInjectionJobFactory();
+    //options.UseMicrosoftDependencyInjectionJobFactory();
     options.UseSimpleTypeLoader();
     options.UseInMemoryStore();
 });
@@ -68,6 +71,43 @@ builder.Services.AddOpenIddict()
                 // Enable Quartz.NET integration.
                 options.UseQuartz();
             })
+
+            //// Register the OpenIddict client components.
+            //.AddClient(options =>
+            //{
+            //    // Note: this sample uses the code flow, but you can enable the other flows if necessary.
+            //    options.AllowAuthorizationCodeFlow();
+
+            //    // Register the signing and encryption credentials used to protect
+            //    // sensitive data like the state tokens produced by OpenIddict.
+            //    options.AddDevelopmentEncryptionCertificate()
+            //           .AddDevelopmentSigningCertificate();
+
+            //    // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+            //    options.UseAspNetCore()
+            //           .EnableStatusCodePagesIntegration()
+            //           .EnableRedirectionEndpointPassthrough();
+
+            //    // Register the System.Net.Http integration and use the identity of the current
+            //    // assembly as a more specific user agent, which can be useful when dealing with
+            //    // providers that use the user agent as a way to throttle requests (e.g Reddit).
+            //    options.UseSystemNetHttp()
+            //           .SetProductInformation(typeof(Program).Assembly);
+
+            //    // Register the Web providers integrations.
+            //    //
+            //    // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
+            //    // URI per provider, unless all the registered providers support returning a special "iss"
+            //    // parameter containing their URL as part of authorization responses. For more information,
+            //    // see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-4.4.
+            //    options.UseWebProviders()
+            //           .AddGitHub(options =>
+            //           {
+            //               options.SetClientId("c4ade52327b01ddacff3")
+            //                      .SetClientSecret("da6bed851b75e317bf6b2cb67013679d9467c122")
+            //                      .SetRedirectUri("callback/login/github");
+            //           });
+            //})
 
             // Register the OpenIddict server components.
             .AddServer(options =>
@@ -106,6 +146,7 @@ builder.Services.AddOpenIddict()
                 // Note: this sample only uses the authorization code flow but you can enable
                 // the other flows if you need to support implicit, password or client credentials.
                 options.AllowAuthorizationCodeFlow();
+                //.AllowRefreshTokenFlow(); //testing this 24/01/25
 
                 // Register the signing and encryption credentials.
                 options.AddDevelopmentEncryptionCertificate()
