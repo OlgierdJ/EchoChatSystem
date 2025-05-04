@@ -7,7 +7,8 @@ var builder = DistributedApplication.CreateBuilder(args);
 builder.AddForwardedHeaders();
 
 var redis = builder.AddRedis("cache")
-    .WithLifetime(ContainerLifetime.Persistent); ;//.WithDataVolume();
+    .WithLifetime(ContainerLifetime.Persistent) 
+    .WithDataVolume();
 
 var sqlPassword = builder.AddParameter("sql-password", secret: true);
 var sqlServer = builder.AddSqlServer("sql", password: sqlPassword, 1433)
@@ -24,7 +25,8 @@ var identityDb = sqlServer.AddDatabase("identitydb");
 var rabbitMqUsername = builder.AddParameter("rabbitmq-username", secret: true);
 var rabbitMqPassword = builder.AddParameter("rabbitmq-password", secret: true);
 var rabbitMq = builder.AddRabbitMQ("eventbus", rabbitMqUsername, rabbitMqPassword)
-    .WithLifetime(ContainerLifetime.Persistent); ;
+    .WithDataVolume(isReadOnly: false);
+    //.WithLifetime(ContainerLifetime.Persistent); ;
 
 var serverInstanceParamName = "ServerInstanceName";
 var clientSecretParamName = "ClientSecret";
