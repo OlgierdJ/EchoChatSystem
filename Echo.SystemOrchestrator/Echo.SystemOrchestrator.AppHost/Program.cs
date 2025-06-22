@@ -25,7 +25,7 @@ var identityDb = sqlServer.AddDatabase("identitydb");
 var rabbitMqUsername = builder.AddParameter("rabbitmq-username", secret: true);
 var rabbitMqPassword = builder.AddParameter("rabbitmq-password", secret: true);
 var rabbitMq = builder.AddRabbitMQ("eventbus", rabbitMqUsername, rabbitMqPassword)
-    .WithDataVolume(isReadOnly: false);
+    .WithDataVolume(isReadOnly: false).WithManagementPlugin();
     //.WithLifetime(ContainerLifetime.Persistent); ;
 
 var serverInstanceParamName = "ServerInstanceName";
