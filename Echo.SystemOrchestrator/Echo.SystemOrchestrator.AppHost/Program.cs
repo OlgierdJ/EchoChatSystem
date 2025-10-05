@@ -125,4 +125,66 @@ var echoChatApiService = builder.AddProject<Projects.Echo_Chat_API>("chat-api")
 ////    .WithEnvironment(serverInstanceParamName, "echo_chat_web")
 ////    .WithEnvironment(clientSecretParamName, "FCB65446-8CDB-4ED6-9F4E-008AEA45CC68");
 
+builder.AddProject<Projects.EInkTemplatingAPI>("einktemplatingapi");
+
+//var echoChatPushNotificationService = builder.AddProject<Projects.Echo_Chat_PushNotification>("chat-pushnotification")
+//    .WithReference(redis)
+//    //.WithReference(echoChatEventNotificationService)
+//    .WithReference(rabbitMq)
+//    .WithReference(domainDb)
+//    .WithReference(echoChatApiService)
+//    .WithEnvironment(identityEnvVarName, identityEndpoint)
+//    .WithEnvironment(serverInstanceParamName, "chat-pushnotification")
+//    .WithEnvironment(clientSecretParamName, "A87EDF98-0BAC-4144-A400-CE30C0A63DC0")
+//    .WaitFor(redis)
+//    .WaitFor(rabbitMq)
+//    .WaitFor(domainDb);
+
+////var echoChatRTCService = builder.AddProject<Projects.Echo_Chat_RTC>("echo-chat-rtc")
+////    .WithReference(redis)
+////    .WithReference(rabbitMq)
+////    .WithReference(domainDb)
+////    .WithEnvironment(identityEnvVarName, identityEndpoint)
+////    //.WithReference(echoChatApiService)
+////    .WithReference(echoChatPushNotificationService)
+////    .WithEnvironment(serverInstanceParamName, "echo-chat-rtc")
+////    .WithEnvironment(clientSecretParamName, "B918A6B6-3C97-4CAF-BBEC-7E0E24E14B6E");
+
+////var echoChatWebService = builder.AddProject<Projects.Echo_Chat_Web>(chatWebService)
+////    .WithExternalHttpEndpoints()
+////    //.WithReference(cache)
+////    .WithReference(echoDb) //probably needs db direct access to get data without calling api.
+////    .WithReference(echoAuthService)
+////    .WithReference(echoChatApiService)
+////    .WithReference(echoChatPushNotificationService)
+////    .WithReference(echoChatRTCService)
+////    .WithEnvironment(InstanceScopesParamName, "echo_chat_api, echo_chat_pushnotification, echo_chat_rtc")
+////    .WithEnvironment(authServerParamName, $"https://{authServer}")
+////    .WithEnvironment(serverInstanceParamName, "echo_chat_web")
+////    .WithEnvironment(clientSecretParamName, "FCB65446-8CDB-4ED6-9F4E-008AEA45CC68");
+
+
+////var echoChatRTCService = builder.AddProject<Projects.Echo_Chat_RTC>("echo-chat-rtc")
+////    .WithReference(redis)
+////    .WithReference(rabbitMq)
+////    .WithReference(domainDb)
+////    .WithEnvironment(identityEnvVarName, identityEndpoint)
+////    //.WithReference(echoChatApiService)
+////    .WithReference(echoChatPushNotificationService)
+////    .WithEnvironment(serverInstanceParamName, "echo-chat-rtc")
+////    .WithEnvironment(clientSecretParamName, "B918A6B6-3C97-4CAF-BBEC-7E0E24E14B6E");
+
+////var echoChatWebService = builder.AddProject<Projects.Echo_Chat_Web>(chatWebService)
+////    .WithExternalHttpEndpoints()
+////    //.WithReference(cache)
+////    .WithReference(echoDb) //probably needs db direct access to get data without calling api.
+////    .WithReference(echoAuthService)
+////    .WithReference(echoChatApiService)
+////    .WithReference(echoChatPushNotificationService)
+////    .WithReference(echoChatRTCService)
+////    .WithEnvironment(InstanceScopesParamName, "echo_chat_api, echo_chat_pushnotification, echo_chat_rtc")
+////    .WithEnvironment(authServerParamName, $"https://{authServer}")
+////    .WithEnvironment(serverInstanceParamName, "echo_chat_web")
+////    .WithEnvironment(clientSecretParamName, "FCB65446-8CDB-4ED6-9F4E-008AEA45CC68");
+
 builder.Build().Run();

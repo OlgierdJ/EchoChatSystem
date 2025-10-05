@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Echo.SystemOrchestrator\Echo.SystemOrchestrator.ServiceDefaults\Echo.SystemOrchestrator.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Templates\" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="PuppeteerSharp" Version="20.2.2" />
+		<PackageReference Include="Scriban" Version="6.4.0" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.7" />
+	</ItemGroup>
+
+</Project>

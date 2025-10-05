@@ -29,6 +29,7 @@
     <ProjectReference Include="..\..\Echo.Domain.MigrationService\Echo.Domain.MigrationService.csproj" />
     <ProjectReference Include="..\..\Echo.Domain.Shared\Echo.Domain.Shared.csproj" />
     <ProjectReference Include="..\..\Echo.Orleans.Server\Echo.Orleans.Server.csproj" />
+    <ProjectReference Include="..\..\EInkTemplatingAPI\EInkTemplatingAPI.csproj" />
   </ItemGroup>
 
 </Project>

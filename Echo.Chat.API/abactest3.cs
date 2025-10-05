@@ -27,7 +27,7 @@ using System.Reflection;
 public class AuthorizeActionAttribute : Attribute
 {
     /// <summary>
-    /// Actual primary key, can be any string, best kept unique and constant.
+    /// Actual primary key, can be any string, best kept unique and constant. //maybe change to guid like tenancy systems
     /// </summary>
     public string Id { get; }
     /// <summary>

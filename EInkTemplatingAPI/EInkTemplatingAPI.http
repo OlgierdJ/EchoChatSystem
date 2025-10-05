@@ -1,0 +1,6 @@
+@EInkTemplatingAPI_HostAddress = http://localhost:5069
+
+GET {{EInkTemplatingAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
